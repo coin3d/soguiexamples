@@ -77,7 +77,7 @@ event_cb(void * ud, SoEventCallback * n)
 
     const SoDetail * d = point->getDetail();
     if (d->getTypeId() == SoVolumeRenderDetail::getClassTypeId()) {
-      const SoVolumeRenderDetail * detail = (const SoVolumeRenderDetail *)d;
+      SoVolumeRenderDetail * detail = (SoVolumeRenderDetail *)d;
       const int nrprofilepoints = detail->getProfileDataPos();
       (void)fprintf(stdout, "hit %d voxels\n", nrprofilepoints);
       (void)fprintf(stdout, "voxel values: ");
