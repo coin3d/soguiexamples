@@ -78,6 +78,7 @@ SoGuiSnapshotViewerP::SoGuiSnapshotViewerP(So@Gui@SnapshotViewer * viewer)
   color->rgb.setValue(SbColor(1.0, 0.0, 0.0));
 
   this->inforoot = new SoSwitch;
+  this->inforoot->whichChild.setValue(SO_SWITCH_ALL);
   this->inforoot->addChild(cam);
   this->inforoot->addChild(color);
   this->inforoot->addChild(this->infotrans);
