@@ -174,12 +174,6 @@ int help( int argc, char ** argv )
   return 0;
 }
 
-int exit( int argc, char ** argv )
-{
-  // FIXME: doesn't clean up resources.  20010919 mortene.
-  exit(0);
-}
-
 int add( int argc, char ** argv )
 {
   if ( argc < 3 ) {
