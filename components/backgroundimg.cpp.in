@@ -84,9 +84,11 @@ MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
   this->bckgroundroot->ref();
 
   SoOrthographicCamera * cam = new SoOrthographicCamera;
+  cam->position = SbVec3f(0, 0, 1);
   cam->height = 1;
-  cam->nearDistance = 0;
-  cam->farDistance = 1;
+  // SoImage will be at z==0.0.
+  cam->nearDistance = 0.5;
+  cam->farDistance = 1.5;
 
   SoImage * img = new SoImage;
   img->vertAlignment = SoImage::HALF;
