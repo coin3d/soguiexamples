@@ -21,15 +21,20 @@
 \**************************************************************************/
 
 // This example shows how to put a permanent background image on your
-// viewer canvas, below the 3D graphics.  Written by mortene.
+// viewer canvas, below the 3D graphics, plus overlay foreground
+// geometry.  Written by mortene.
 
 // *************************************************************************
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoBaseColor.h>
 #include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoCube.h>
 #include <Inventor/nodes/SoImage.h>
+#include <Inventor/nodes/SoLightModel.h>
 #include <Inventor/nodes/SoOrthographicCamera.h>
+#include <Inventor/nodes/SoRotationXYZ.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoTranslation.h>
 
@@ -68,6 +73,8 @@ protected:
 
 private:
   SoSeparator * bckgroundroot;
+  SoSeparator * foregroundroot;
+  SoRotationXYZ * arrowrotation;
 };
 
 MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
@@ -78,7 +85,7 @@ MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
   this->setClearBeforeRender(FALSE, TRUE);
 
 
-  // Set up scenegraph with image in it.
+  // Set up background scenegraph with image in it.
 
   this->bckgroundroot = new SoSeparator;
   this->bckgroundroot->ref();
@@ -97,11 +104,52 @@ MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
 
   this->bckgroundroot->addChild(cam);
   this->bckgroundroot->addChild(img);
+
+  // Set up foreground, overlayed scenegraph.
+
+  this->foregroundroot = new SoSeparator;
+  this->foregroundroot->ref();
+
+  SoLightModel * lm = new SoLightModel;
+  lm->model = SoLightModel::BASE_COLOR;
+
+  SoBaseColor * bc = new SoBaseColor;
+  bc->rgb = SbColor(1, 1, 0);
+
+  cam = new SoOrthographicCamera;
+  cam->position = SbVec3f(0, 0, 5);
+  cam->height = 10;
+  cam->nearDistance = 0;
+  cam->farDistance = 10;
+
+  const double ARROWSIZE = 2.0;
+
+  SoTranslation * posit = new SoTranslation;
+  posit->translation = SbVec3f(-2.5 * ARROWSIZE, 1.5 * ARROWSIZE, 0);
+
+  arrowrotation = new SoRotationXYZ;
+  arrowrotation->axis = SoRotationXYZ::Z;
+
+  SoTranslation * offset = new SoTranslation;
+  offset->translation = SbVec3f(ARROWSIZE/2.0, 0, 0);
+
+  SoCube * cube = new SoCube;
+  cube->width = ARROWSIZE;
+  cube->height = ARROWSIZE/15.0;
+
+  this->foregroundroot->addChild(cam);
+  this->foregroundroot->addChild(lm);
+  this->foregroundroot->addChild(bc);
+  this->foregroundroot->addChild(posit);
+  this->foregroundroot->addChild(arrowrotation);
+  this->foregroundroot->addChild(offset);
+  this->foregroundroot->addChild(cube);
 }
 
 MyExaminerViewer::~MyExaminerViewer()
 {
   this->bckgroundroot->unref();
+  this->foregroundroot->unref();
 }
 
 void
@@ -124,7 +172,16 @@ MyExaminerViewer::actualRedraw(void)
   SoGLRenderAction * glra = this->getGLRenderAction();
   glra->apply(this->bckgroundroot);
 
+
+  // Render normal scenegraph.
   So@Gui@ExaminerViewer::actualRedraw();
+
+
+  // Increase arrow angle with 1/1000 ° every frame.
+  arrowrotation->angle = arrowrotation->angle.getValue() + (0.001 / M_PI * 180);
+  // Render overlay front scenegraph.
+  glClear(GL_DEPTH_BUFFER_BIT);
+  glra->apply(this->foregroundroot);
 }
 
 // *************************************************************************
