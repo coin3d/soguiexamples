@@ -328,18 +328,14 @@ makeSurface(SoSeparator *root)
 void
 frameCallback(void *userData, SoAction *action)
 {
-  static struct timeval *firsttime=NULL;
+  static SbTime * firsttime=NULL;
   if (!action->isOfType(SoGLRenderAction::getClassTypeId())) return;
 
   if (!firsttime) {
-    firsttime = new timeval;
-    gettimeofday(firsttime, NULL);
+    firsttime = new SbTime(SbTime::getTimeOfDay());
   }
-  struct timeval currtime;
-  gettimeofday(&currtime, NULL);
-  float deltat = 
-    currtime.tv_sec*1000+currtime.tv_usec/1000-
-    firsttime->tv_sec*1000-firsttime->tv_usec/1000;
+  SbTime currtime = SbTime::getTimeOfDay();
+  float deltat = currtime.getMsecValue() - firsttime->getMsecValue();
 
   float cosval = cos(360*deltat/2000*M_PI/180);
 
