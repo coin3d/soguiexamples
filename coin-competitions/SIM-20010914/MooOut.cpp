@@ -66,7 +66,7 @@ void MooOut::out( const char * string )   // output string
 }
 
 
-void MooOut::out( char c )                // output char
+void MooOut::out( const char c )                // output char
 {
   //putc( c, stdout );
 

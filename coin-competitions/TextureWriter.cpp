@@ -95,7 +95,7 @@ void TextureWriter::out( const char * string )   // output string
 }
 
 
-void TextureWriter::out( char c )                // output char
+void TextureWriter::out( const char c )                // output char
 {
   buffer[this->line*this->numCols+this->column] = c;
 
