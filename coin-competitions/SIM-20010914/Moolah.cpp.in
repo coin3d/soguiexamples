@@ -437,9 +437,15 @@ int select( int argc, char ** argv )
   return 0;
 }
 
+int exit_moolah( int argc, char ** argv )
+{
+  exit(0);
+}
+
 // Moolah main
 
-int main( int argc, char ** argv )
+int
+main( int argc, char ** argv )
 {
   // Coin stuff
 
@@ -456,7 +462,7 @@ int main( int argc, char ** argv )
 
   executive.addCommand( "test", test );
   executive.addCommand( "help", help );
-  executive.addCommand( "exit", exit );
+  executive.addCommand( "exit", exit_moolah );
   executive.addCommand( "add", add );
   executive.addCommand( "remove", remove );
   executive.addCommand( "list", list_command );
