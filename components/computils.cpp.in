@@ -117,8 +117,10 @@ get_scene_graph(
   case 3:  return shape_to_scene_graph( new SoSphere );
   default:
     SoText3 * textnode = new SoText3;
-    textnode->string.setValue( "Coin" );
+    const char * s[] = { "www", "Coin3D", "org" };
+    textnode->string.setValues( 0, 3, s );
     textnode->parts.setValue( SoText3::ALL );
+    textnode->justification = SoText3::CENTER;
     return shape_to_scene_graph( textnode );
   }
 } // get_scene_graph()
