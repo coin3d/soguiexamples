@@ -1381,7 +1381,6 @@ main(
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
   viewer->setDecoration(FALSE);
   viewer->setViewing(FALSE);
-  viewer->setAntialiasing(FALSE, 2);
   viewer->show();
   So@Gui@::show(window);
   viewer->setFullScreen(TRUE);
