@@ -1,3 +1,4 @@
+# 1 "extselection.cpp.in"
 /**************************************************************************\
  *
  *  This file is part of a set of example programs for the Coin library.
@@ -20,6 +21,16 @@
  *
 \**************************************************************************/
 
+/*
+
+Known Bugs:
+===========
+
+
+
+*/
+
+
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -32,10 +43,11 @@
 #include <Inventor/nodes/SoText3.h>
 #include <stdio.h>
 
+
 int
 main(int argc, char ** argv)
 {
-  @WIDGET@ window = So@Gui@::init(argv[0]);
+  QWidget * window = So@Gui@::init(argv[0]);
   if (window == NULL) exit(1);
 
   SoSeparator * root = new SoSeparator;
@@ -110,13 +122,25 @@ SbList <int32_t> myidxlist;
 SoCoordinate3 * mycoords = NULL;
 SoIndexedLineSet * mylineset = NULL;
 
+int trianglecounter;
+int linecounter;
+int pointcounter;
+
+SoExtSelection * selection;
+
 static void
 start_callback(void * userdata, SoSelection * sel)
 {
+  trianglecounter = 0;
+  linecounter = 0;
   if (sel->policy.getValue() == SoSelection::SINGLE ||
       (sel->policy.getValue() == SoSelection::SHIFT && !((SoExtSelection*)sel)->wasShiftDown())) {
     mybsptree.clear();
     myidxlist.truncate(0);
+
+    // This line is very important or the 'selection-lines' will be selected during the next selection as
+    // a part of the original object.
+    mylineset->coordIndex.setNum(0);
   }
 }
 
@@ -124,7 +148,10 @@ static void
 finish_callback(void * userdata, SoSelection * sel)
 {
   int n = mybsptree.numPoints();
-  
+  //SoDebugError::postInfo("finish_callback","trianglecounter=%d  linecounter=%d  pointcounter=%d",
+  //                       trianglecounter,linecounter,pointcounter);
+   
+
   mycoords->point.setNum(n);
   memcpy(mycoords->point.startEditing(), mybsptree.getPointsArrayPtr(), n*sizeof(SbVec3f));
   mycoords->point.finishEditing();
@@ -136,24 +163,84 @@ finish_callback(void * userdata, SoSelection * sel)
 }
 
 static SbBool 
+lineCB(void * userdata, 
+       SoCallbackAction * action, 
+       const SoPrimitiveVertex * v1, 
+       const SoPrimitiveVertex * v2)
+{
+  const SbMatrix & mm = action->getModelMatrix();
+
+  ++linecounter;
+
+  SbVec3f vec1 = v1->getPoint();
+  SbVec3f vec2 = v2->getPoint();
+  SbVec3f vec3 = v1->getPoint();
+  vec3[0] += 0.01;
+  vec3[1] += 0.01;
+  vec3[2] += 0.01;
+  
+  
+  mm.multVecMatrix(v1->getPoint(),vec1);
+  mm.multVecMatrix(v2->getPoint(),vec2);
+
+  myidxlist.append(mybsptree.addPoint(vec1)); // Ugly hack. A 'point' must have 3 points...
+  myidxlist.append(mybsptree.addPoint(vec2));
+  myidxlist.append(mybsptree.addPoint(vec1));
+ 
+  myidxlist.append(-1);
+
+  return FALSE;
+}
+
+static SbBool 
+pointCB(void * userdata, 
+        SoCallbackAction * action, 
+        const SoPrimitiveVertex * v1)
+{
+  const SbMatrix & mm = action->getModelMatrix();
+
+  ++pointcounter;
+
+  SbVec3f vec1 = v1->getPoint();
+  SbVec3f vec2 = v1->getPoint();
+  vec2[0] += .1;
+  vec2[1] += .1;
+  vec2[2] += .1;
+
+  mm.multVecMatrix(v1->getPoint(),vec1);
+  mm.multVecMatrix(v1->getPoint(),vec2);
+
+  myidxlist.append(mybsptree.addPoint(vec1)); // Ugly hack. A 'point' must have 3 points...
+  myidxlist.append(mybsptree.addPoint(vec2));
+  myidxlist.append(mybsptree.addPoint(vec1));
+ 
+  myidxlist.append(-1);
+
+  return FALSE;
+}
+
+static SbBool 
 triangleCB(void * userdata, 
            SoCallbackAction * action, 
            const SoPrimitiveVertex * v1, 
            const SoPrimitiveVertex * v2, 
            const SoPrimitiveVertex * v3)
 {
+
   // FIXME: need to test if face has already been added
   const SbMatrix & mm = action->getModelMatrix();
 
   SbVec3f op;
   SbVec3f wp;
 
-  
+  ++trianglecounter;
+
   const SoDetail * detail = v1->getDetail();
   // if not face, select entire object
-  if (!detail || !detail->isOfType(SoFaceDetail::getClassTypeId())) 
+  if(!detail || !detail->isOfType(SoFaceDetail::getClassTypeId())){
     return TRUE;
-  
+  }
+
   const SoFaceDetail * fd = (const SoFaceDetail*) detail;
   assert(fd->isOfType(SoFaceDetail::getClassTypeId()));
   assert(fd);
@@ -169,7 +256,6 @@ triangleCB(void * userdata,
   }
   
   myidxlist.append(-1);
-  
   return FALSE;
 }
 
@@ -205,8 +291,78 @@ show_instructions( void )
                 "  * terminate polygon either by selecting the same point twice,\n"
                 "    or by clicking the right mouse button.\n"
                 "  * hold SHIFT to avoid clearing selection when selecting new triangles\n"
-                "  * hit ESC to toggle back and forth to view mode\n\n");
+                "  * hit ESC to toggle back and forth to view mode\n\n"
+                "  * Toggle keys:\n"
+                "     'v' = VISIBLE_SHAPES selection\n"
+                "     'a' = ALL_SHAPES selection\n"
+                "     'f' = FULL mode\n"
+                "     'p' = PART mode\n"
+                "     '1' = FULL_BBOX selection\n"
+                "     '2' = PART_BBOX selection\n"
+                "     'l' = Lasso mode\n"
+                "     'r' = Rectangle mode\n"
+                "     'n' = Pick/NoLasso mode\n"
+                "     's' = Single selection\n"
+                "     'h' = Shift selection\n"
+                "     't' = toggle selection\n\n");
 }
+
+void
+event_cb(void * userdata, SoEventCallback * node)
+{
+  const SoEvent * event = node->getEvent();
+
+  if (SO_KEY_PRESS_EVENT(event, V)) {
+    selection->lassoMode = SoExtSelection::VISIBLE_SHAPES;
+    fprintf(stdout,"VISIBLE_SHAPES mode\n");
+  }
+  if (SO_KEY_PRESS_EVENT(event, A)) {
+    selection->lassoMode = SoExtSelection::ALL_SHAPES;
+    fprintf(stdout,"ALL_SHAPES mode\n");
+  }
+  if (SO_KEY_PRESS_EVENT(event, F)) {
+    selection->lassoPolicy = SoExtSelection::FULL;
+    fprintf(stdout,"FULL mode\n");
+  }
+  if (SO_KEY_PRESS_EVENT(event, P)) {
+    selection->lassoPolicy = SoExtSelection::PART;
+    fprintf(stdout,"PART mode\n");
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_1)) {
+    selection->lassoPolicy = SoExtSelection::FULL_BBOX;
+    fprintf(stdout,"FULL_BBOX mode\n");
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_2)) {
+    selection->lassoPolicy = SoExtSelection::PART_BBOX;
+    fprintf(stdout,"PART_BBOX mode\n");
+  }
+  if (SO_KEY_PRESS_EVENT(event, L)) {
+    selection->lassoType = SoExtSelection::LASSO;
+    fprintf(stdout,"Lasso mode\n");
+  }
+  if (SO_KEY_PRESS_EVENT(event, R)) {
+    selection->lassoType = SoExtSelection::RECTANGLE;
+    fprintf(stdout,"Rectangle mode\n");
+  }
+  if (SO_KEY_PRESS_EVENT(event, N)) {
+    selection->lassoType = SoExtSelection::NOLASSO;
+    fprintf(stdout,"NoLasso mode\n");
+  }
+  if (SO_KEY_PRESS_EVENT(event, S)) {
+    selection->policy = SoSelection::SINGLE;
+    fprintf(stdout,"Single selection\n");
+  }
+  if (SO_KEY_PRESS_EVENT(event, H)) {
+    selection->policy = SoSelection::SHIFT;
+    fprintf(stdout,"Shift selection\n");
+  }
+  if (SO_KEY_PRESS_EVENT(event, T)) {
+    selection->policy = SoSelection::TOGGLE;
+    fprintf(stdout,"Toggle selection\n");
+  }
+
+}
+
 
 int
 main(int argc, char ** argv)
@@ -243,11 +399,24 @@ main(int argc, char ** argv)
   po->on = TRUE;
   root->insertChild(po, 0);
 
-  SoExtSelection * selection = new SoExtSelection;
+
+
+  selection = new SoExtSelection;
+  selection->ref();
   selection->lassoPolicy = SoExtSelection::PART;
+  //selection->lassoPolicy = SoExtSelection::PART_BBOX;
+  //selection->lassoPolicy = SoExtSelection::FULL;
+  //selection->lassoPolicy = SoExtSelection::FULL_BBOX;
+
   selection->policy = SoSelection::SHIFT;
+
   selection->lassoType = SoExtSelection::LASSO;
-  // selection->lassoType = SoExtSelection::RECTANGLE;
+  //selection->lassoType = SoExtSelection::RECTANGLE;
+  //selection->lassoType = SoExtSelection::NOLASSO;
+
+  //selection->lassoMode = SoExtSelection::VISIBLE_SHAPES;
+  selection->lassoMode = SoExtSelection::ALL_SHAPES;
+
   selection->setLassoColor(SbColor(0.9f,0.7f,0.2f));
   selection->setLassoWidth(3);
   selection->setOverlayLassoPattern(0xf0f0);  // 0011 0011 0011 0011
@@ -255,7 +424,17 @@ main(int argc, char ** argv)
   selection->addStartCallback(start_callback);
   selection->addFinishCallback(finish_callback);
   selection->setTriangleFilterCallback(triangleCB, NULL);
+  selection->setLineSegmentFilterCallback(lineCB, NULL);
+  selection->setPointFilterCallback(pointCB, NULL);
+
+  
+  SoEventCallback * cb = new SoEventCallback;
+  cb->addEventCallback(SoKeyboardEvent::getClassTypeId(),
+                       event_cb, NULL);
+  root->insertChild(cb, 0);
+  
   selection->addChild(root);
+  
 
   SoSeparator * newroot = new SoSeparator;
   newroot->ref();
