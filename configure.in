@@ -12,7 +12,17 @@ SIM_AC_CVS_CHANGES([
   ], [test -d cfg/m4], [test ! -d conf-macros])
 ])
 
-SIM_AC_MSVC_SUPPORT
+# If the Microsoft Visual C++ cl.exe compiler is available, set us up for
+# compiling with it.
+
+SIM_AC_SETUP_MSVC_IFELSE([
+], [
+  case $host in
+  *-cygwin)
+    AC_MSG_ERROR([You need Microsoft Visual C++ to build on Cygwin])
+    ;;
+  esac
+])
 
 # **************************************************************************
 
