@@ -21,7 +21,11 @@
 \**************************************************************************/
 
 #include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/@Gui@/So@Gui@MaterialEditor.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoSeparator.h>
 
 // *************************************************************************
 
@@ -32,13 +36,27 @@ main(
 {
   @WIDGET@ window = So@Gui@::init( argv[0] );
 
-  So@Gui@MaterialEditor * editor = new So@Gui@MaterialEditor( window );
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  SoMaterial * material = new SoMaterial;
+  root->addChild(material);
+
+  root->addChild(new SoCone);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
+  viewer->setSceneGraph( root );
+  viewer->show();
+
+  So@Gui@MaterialEditor * editor = new So@Gui@MaterialEditor(NULL);
+  editor->attach(material);
   editor->show();
 
   So@Gui@::show( window );
   So@Gui@::mainLoop();
 
-  delete editor;
+  delete viewer;
+  root->unref();
 
   return 0;
 } // main()
