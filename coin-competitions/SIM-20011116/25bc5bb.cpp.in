@@ -26,16 +26,20 @@
  * Author: Thomas Hammer <thammer@sim.no>
  * ********************************************************************** */
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
 #include <math.h>
 #include <stdlib.h>
-
+#include <time.h>
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 
 #include <Inventor/SoDB.h>
 #include <Inventor/SoInput.h>
-#include <Inventor/SbRotation.h>
+#include <Inventor/SbLinear.h>
 #include <Inventor/nodes/SoScale.h>
 #include <Inventor/nodes/SoDrawStyle.h>
 #include <Inventor/nodes/SoMaterial.h>
@@ -206,9 +210,7 @@ static void timerSensorCallback(void *data, SoSensor *)
   y = 5.0+3.0*cos(now.getValue()*2*3.14*0.125);
   z = 20.0*cos(now.getValue()*2*3.14*0.065);
   camera->position.setValue(x,y,z);
-  camera->pointAt(SbVec3f(avgx, avgy, avgz),
-    SbVec3f(0.0f, 1.0f, 0.0f));
-
+  camera->pointAt(SbVec3f(avgx, avgy, avgz));
 }
 
 
@@ -346,9 +348,11 @@ main(
   viewer->show();
   So@Gui@::show( window );
 
+#ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
   // Must do this _after_ show() to avoid the "Start"-bar being
   // visible with SoWin. (Bug!)
   (void)viewer->setFullScreen(TRUE);
+#endif // HAVE_SOCOMPONENT_SETFULLSCREEN
 
   So@Gui@::mainLoop();
 
