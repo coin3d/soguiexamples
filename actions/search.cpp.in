@@ -28,6 +28,7 @@
 #include <Inventor/nodes/SoSelection.h>
 #include <Inventor/nodes/SoSphere.h>
 #include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoShapeHints.h>
 
 // *************************************************************************
 
@@ -146,6 +147,11 @@ main(
   // Any other policy than TOGGLE will lead to a crash in Inventor
   // when setting up SoSelection with multiple selections.
   selection->policy = SoSelection::TOGGLE;
+
+  // turn on backface culling
+  SoShapeHints * sh = new SoShapeHints;
+  sh->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  sh->shapeType = SoShapeHints::SOLID;
 
   selection->addChild( make_shapes_cube() );
   selection->addSelectionCallback( made_selection, (void *)1L );
