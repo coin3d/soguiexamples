@@ -1,0 +1,123 @@
+#Inventor V2.1 ascii
+
+DEF Head Separator {
+  Material {
+    diffuseColor 0.79 0.47 0.40
+  }
+  # Skull
+  Sphere {
+    radius 1.0
+  }
+  # Hair
+  Separator {
+    Translation {
+      translation 0 0.12 -0.12
+    }
+    Material {
+      diffuseColor 0.3 0.1 0.05
+    }
+    Sphere {
+      radius 0.96
+    }
+  }
+  # Right ear
+  Separator {
+    Transform {
+      translation 0.75 0.1 0.2
+      rotation -0.4 0 1 1.5708
+    }
+    DEF HeadEar Cone {
+      bottomRadius 0.3
+      height 0.4
+    }
+  }
+  # Left ear
+  Separator {
+    Transform {
+      translation -0.75 0.1 0.2
+      rotation 0.4 0 1 -1.5708
+    }
+    USE HeadEar
+  }
+  # Right eye
+  Separator {
+    Transform {
+      translation 0.31 0.31 0.7
+      rotation 1 0 0 1.5708
+    }
+    DEF HeadEye Separator {
+      Separator {
+        Translation {
+          translation 0 -0.2 -0.1
+        }
+        Material {
+          diffuseColor 0 0 0
+        }
+        Cylinder {
+          radius 0.2
+          height 0.5
+        }
+      }
+      Material {
+        diffuseColor 1 1 1
+      }
+      Cylinder {
+        radius 0.125
+        height 0.5
+      }
+      Translation {
+        translation 0 0.01 0
+      }
+      Material {
+        diffuseColor 0.1 0.3 0.5
+      }
+      Cylinder {
+        radius 0.06
+        height 0.5
+      }
+      Translation {
+        translation 0 0.01 0
+      }
+      Material {
+        diffuseColor 0 0 0
+      }
+      Cylinder {
+        radius 0.02
+        height 0.5
+      }
+    }
+  }
+  # Left eye
+  Separator {
+    Transform {
+      translation -0.31 0.31 0.7
+      rotation 1 0 0 1.5708
+    }
+    USE HeadEye
+  }
+  # Nose
+  Separator {
+    Transform {
+      translation 0 -0.1 0.88
+      rotation 1 0 0 2.0 
+    }
+    Cone {
+      bottomRadius 0.4
+      height 0.5
+    }
+  }
+  # Lips
+  Separator {
+    Transform {
+      translation 0 -0.21 0.6
+      rotation 1 0 0 1.5708
+    }
+    Material {
+      diffuseColor 0.8 0.1 0.1
+    }
+    Cylinder {
+      radius 0.3
+      height 0.55
+    }
+  }
+}

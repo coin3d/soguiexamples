@@ -3,5 +3,5 @@ README
 
 This directory contains examples of sound in Coin.
 
-Make sure you have built Coin with sound support before running
-these examples.
+Make sure you have built Coin with support for sound and
+VRML2 before running these examples.
