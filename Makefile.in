@@ -160,7 +160,10 @@ BUILT_SOURCES = \
 	eyecandy/juliaanim.cpp \
 	eyecandy/mandelzoom.cpp \
 	eyecandy/blob.cpp \
-	eyecandy/simbuoy.cpp
+	eyecandy/simbuoy.cpp \
+	coin-competitions/SIM-20010803/chart.cpp \
+	coin-competitions/SIM-20010803/plasmafun.cpp \
+	coin-competitions/SIM-20010803/stars.cpp
 
 
 noinst_DATA = $(BUILT_SOURCES)
@@ -687,6 +690,23 @@ eyecandy/blob.cpp: $(srcdir)/eyecandy/blob.cpp.in
 	@./config.status --file=$@
 
 eyecandy/simbuoy.cpp: $(srcdir)/eyecandy/simbuoy.cpp.in
+	@./config.status --file=$@
+
+############################################################################
+
+coin-competitions/SIM-20010803/moirepatterns.cpp: $(srcdir)/coin-competitions/SIM-20010803/moirepatterns.cpp.in
+	@./config.status --file=$@
+
+coin-competitions/SIM-20010803/juliaanim.cpp: $(srcdir)/coin-competitions/SIM-20010803/juliaanim.cpp.in
+	@./config.status --file=$@
+
+coin-competitions/SIM-20010803/mandelzoom.cpp: $(srcdir)/coin-competitions/SIM-20010803/mandelzoom.cpp.in
+	@./config.status --file=$@
+
+coin-competitions/SIM-20010803/blob.cpp: $(srcdir)/coin-competitions/SIM-20010803/blob.cpp.in
+	@./config.status --file=$@
+
+coin-competitions/SIM-20010803/simbuoy.cpp: $(srcdir)/coin-competitions/SIM-20010803/simbuoy.cpp.in
 	@./config.status --file=$@
 
 ############################################################################
