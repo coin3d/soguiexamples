@@ -68,6 +68,58 @@ function abs2dots ()
   return 0
 }
 
+function issubdir ()
+{
+  # usage: issubdir <basedir> <subdir>
+  #
+
+  local basedir=$1
+  local subdir=$2
+  local curdir=`pwd`
+  if test -d $1; then cd $1; basedir=`pwd`; cd "$curdir"; fi
+  if test -d $2; then cd $2; subdir=`pwd`; cd "$curdir"; fi
+
+  if test x"$basedir" = x"$subdir"; then
+    return 0
+  fi
+
+  local baselen=`echo "$basedir"|wc -c | sed -e "s% %%g"`
+  local subbase=`echo $subdir | cut -c-$((baselen-1))`
+
+  if ! test x"$basedir" = x"$subbase"; then
+    return -1
+  fi
+
+  return 0
+}
+
+function substitute_dir ()
+{
+  # usage: substitute_dir <dir>
+  #
+  # filter dir with substitutelist
+  # convert to windows-style directory
+  #
+  local value=$1
+  local substitute=
+  local from=
+  local to=
+  for substitute in $substitutes; do
+    to=`echo $substitute | cut -d= -f1`
+    from=`echo $substitute | cut -d= -f2`
+    value=`echo $value | sed -e "s%$from%$to%g"`
+  done
+
+  local curdir=`pwd`
+  local wvalue=`cygpath -w $value`
+  local wcurdir=`cygpath -w $curdir`
+  local wvalue2=`abs2dots $wvalue $wcurdir \\\\`
+  if ! test x"$wvalue2" = x""; then
+    wvalue=$wvalue2
+  fi
+  echo "$wvalue"
+}
+
 for arg
 do
   if test x"$outputfile" = x"next"; then
@@ -99,7 +151,7 @@ do
       project_template_source="project_template_source_$suffix.txt"
       ;;
     -Dsubstitutes=* )
-      substitutes=`echo $arg | cut -d= -f2-`
+      substitutes=`echo $arg | cut -d= -f2- | sed -e 's%,% %g'`
       ;;
     -l* )
       value=`echo $arg | cut -c3-`
@@ -116,27 +168,26 @@ do
       ;;
     -L* )
       value=`echo $arg | cut -c3-`
-      libdirs="$libdirs /libpath:\"`cygpath -w $value | sed -e 's%\\\\%\\\\\\\\%g'`\""
+      if test x"$sourcedir" != x""; then
+        curdir=`pwd`
+        value=`echo $value | sed -e "s%$sourcedir%$curdir%"`
+      fi
+      # if $value is not a subdir of $source
+      if ! issubdir "$sourcedir" "$value"; then
+        windir=`substitute_dir $value`
+        libdirs="$libdirs /libpath:\"`echo $windir | sed -e 's%\\\\%\\\\\\\\%g'`\""
+      fi
       ;;
     -I* )
       value=`echo $arg | cut -c3-`
-      # if $value is not a subdir of $source
-      if ! abs2dots "$sourcedir" "$value"; then
-        substitutes=`echo $substitutes | sed -e 's%,% %g'`
-        for substitute in $substitutes; do
-          to=`echo $substitute | cut -d= -f1`
-          from=`echo $substitute | cut -d= -f2`
-          value=`echo $value | sed -e "s%$from%$to%g"`
-        done
-
+      if test x"$sourcedir" != x""; then
         curdir=`pwd`
-        wvalue=`cygpath -w $value`
-        wcurdir=`cygpath -w $curdir`
-        wvalue2=`abs2dots $wvalue $wcurdir \\\\`
-        if ! test x"$wvalue2" = x""; then
-          wvalue=$wvalue2
-        fi
-        includedirs="$includedirs /I\"`echo $wvalue | sed -e 's%\\\\%\\\\\\\\%g'`\""
+        value=`echo $value | sed -e "s%$sourcedir%$curdir%"`
+      fi
+      # if $value is not a subdir of $source
+      if ! issubdir "$sourcedir" "$value"; then
+        windir=`substitute_dir $value`
+        includedirs="$includedirs /I\"`echo $windir | sed -e 's%\\\\%\\\\\\\\%g'`\""
       fi
       ;;
     -D* )

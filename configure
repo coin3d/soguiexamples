@@ -11284,12 +11284,13 @@ fi
   # Notes:
   # - these defines are picked up by gendspex.sh
   # - template basename (vc6) = vc6 -> workspace_template_vc6.txt, etc
-  # - $(DEFAULT_INCLUDES) is set by the generated Makefile scripts
+  # - $(DEFAULT_INCLUDES) and $(INCLUDES) are set by the generated
+  #   Makefile scripts. Yes, this is a hack.
   # 2003-11-04 thammer
-  LDFLAGS="-Dsourcedir=$soguiexamples_src_dir -Dtemplatesuffix=vc6 -Dsubstitutes=$soguiexamples_subst $LDFLAGS $CPPFLAGS \$(DEFAULT_INCLUDES)"
+  LDFLAGS="-Dsourcedir=$soguiexamples_src_dir -Dtemplatesuffix=vc6 -Dsubstitutes=$soguiexamples_subst $LDFLAGS $CPPFLAGS -DHAVE_CONFIG_H \$(DEFAULT_INCLUDES) \$(INCLUDES)"
 fi
 
-  LDFLAGS="$LDFLAGS -DHAVE_CONFIG_H"
+
 
 
 if $sim_ac_make_dspex; then
