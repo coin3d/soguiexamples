@@ -22,18 +22,23 @@
 
 #include "OrthoSliceHandler.h"
 #include <SoOrthoSlice_ctrl.h>
+#include "utility.h"
 
-#include <VolumeViz/nodes/SoOrthoSlice.h>
-#include <VolumeViz/nodes/SoVolumeData.h>
+#include <assert.h>
+
 #include <qvalidator.h>
 #include <qlineedit.h>
 #include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qslider.h>
 
+#include <VolumeViz/nodes/SoOrthoSlice.h>
+#include <VolumeViz/nodes/SoVolumeData.h>
+
+// *************************************************************************
 
 OrthoSliceHandler::OrthoSliceHandler(SoOrthoSlice * orthonode,
-                                     const SoVolumeData * volumedatanode,
+                                     SoVolumeData * volumedatanode,
                                      QWidget * parent)
 {
   this->node = orthonode;
@@ -151,7 +156,7 @@ OrthoSliceHandler::axisUpdate(int idx)
   const uint32_t maxsliceidx = dimension[idx] - 1;
 
   this->node->sliceNumber =
-    SbMin(this->node->sliceNumber.getValue(), maxsliceidx);
+    SbGuiExMin(this->node->sliceNumber.getValue(), maxsliceidx);
 
   this->ctrl->sliceNumberSlider->setMaxValue(maxsliceidx);
   this->ctrl->sliceNumberSlider->setValue(this->node->sliceNumber.getValue());

@@ -23,6 +23,8 @@
 #include "TransferFunctionHandler.h"
 #include <SoTransferFunction_ctrl.h>
 
+#include <assert.h>
+
 #include <qvalidator.h>
 #include <qlineedit.h>
 #include <qcombobox.h>

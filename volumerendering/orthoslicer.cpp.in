@@ -72,7 +72,7 @@ event_cb(void * ud, SoEventCallback * n)
 
     const SoDetail * d = point->getDetail();
     if (d && d->getTypeId() == SoOrthoSliceDetail::getClassTypeId()) {
-      const SoOrthoSliceDetail * detail = (const SoOrthoSliceDetail *)d;
+      SoOrthoSliceDetail * detail = (SoOrthoSliceDetail *)d;
 
       v = detail->getValueObjectPos();
       const SbVec3s ijk = detail->getValueDataPos();
@@ -114,7 +114,7 @@ main(int argc, char ** argv)
     filereader->setUserData(argv[1]);
 
     volumedata = new SoVolumeData();
-    volumedata->setReader(filereader);
+    volumedata->setReader(*filereader);
     root->addChild(volumedata);
   }
 
@@ -143,7 +143,7 @@ main(int argc, char ** argv)
     const SbBox3f & volumebbox = volumedata->getVolumeSize();
     float dx, dy, dz;
     volumebbox.getSize(dx, dy, dz);
-    float mindim = SbMin(dx, SbMin(dy, dz));
+    float mindim = SbGuiExMin(SbGuiExMin(dx, dy), dz);
 
     SoSphere * sph = new SoSphere;
     sph->radius = mindim * 0.1f;

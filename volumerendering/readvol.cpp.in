@@ -139,7 +139,7 @@ main(int argc, char ** argv)
   
   // Add VolumeData to scene graph
   SoVolumeData * voldata = new SoVolumeData();
-  voldata->setReader(filereader);
+  voldata->setReader(*filereader);
 
   { // Bounding box around the volume
     SoSwitch * sw = new SoSwitch;

@@ -23,8 +23,25 @@
  *
 \**************************************************************************/
 
-class SbVec3s;
+#include <Inventor/SbBasic.h>
 
+// *************************************************************************
+
+template <class Type>
+inline Type SbGuiExMax( const Type A, const Type B ) {
+  return (A < B) ? B : A;
+}
+
+template <class Type>
+inline Type SbGuiExMin( const Type A, const Type B ) {
+  return (A < B) ? A : B;
+}
+
+// *************************************************************************
+
+class SbVec3s;
 extern uint8_t * generate8bitVoxelSet(SbVec3s & dim);
+
+// *************************************************************************
 
 #endif // SIMVOLEON_TESTCODE_UTILITY_H

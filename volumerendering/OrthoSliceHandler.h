@@ -35,7 +35,7 @@ class OrthoSliceHandler : QObject
   Q_OBJECT
 
 public:
-  OrthoSliceHandler(SoOrthoSlice * node, const SoVolumeData * volumedatanode, QWidget * parent = NULL);
+  OrthoSliceHandler(SoOrthoSlice * node, SoVolumeData * volumedatanode, QWidget * parent = NULL);
   ~OrthoSliceHandler();
 
 private slots:
@@ -51,7 +51,7 @@ private:
   void initGUI(void);
 
   SoOrthoSlice * node;
-  const SoVolumeData * vdnode;
+  SoVolumeData * vdnode;
   SoOrthoSlice_ctrl * ctrl;
 };
 
