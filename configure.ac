@@ -223,6 +223,7 @@ AC_SUBST(EVENT)
 AC_SUBST(WIDGET)
 AC_SUBST(COMPONENTHEADER)
 
+
 # **************************************************************************
 # Inventor feature checking.
 
@@ -311,6 +312,36 @@ SIM_AC_HAVE_SMALLCHANGE_IFELSE([
     SIM_AC_CONFIGURATION_SETTING([SmallChange], [not used (enable with --with-smallchange)])
   fi
 ])
+
+# **************************************************************************
+# If we're using SoQt, check to see if SimVoleon is also available.
+# Those are the two dependencies of the examples under the
+# volumerendering/ directory.
+
+# Default to not look for SimVoleon, as we'll get lots of warnings
+# from configure in the common case that it is _not_ available.
+sim_ac_simvoleon_desired=false
+
+if test x"$sim_ac_gui_toolkit" = x"soqt"; then
+  SIM_AC_HAVE_SIMVOLEON_IFELSE([
+    CPPFLAGS="$sim_ac_simvoleon_cppflags $CPPFLAGS"
+    CFLAGS="$sim_ac_simvoleon_cflags $CFLAGS"
+    CXXFLAGS="$sim_ac_simvoleon_cxxflags $CXXFLAGS"
+    LDFLAGS="$sim_ac_simvoleon_ldflags $LDFLAGS"
+    LIBS="$sim_ac_simvoleon_libs $LIBS"
+
+    SIM_AC_CONFIGURATION_SETTING([SimVoleon], [is being used])
+  ], [
+  if $sim_ac_simvoleon_desired; then
+    SIM_AC_ERROR([simvoleon-unavailable])
+  else
+    SIM_AC_CONFIGURATION_SETTING([SimVoleon], [not used (enable with --with-simvoleon)])
+  fi
+  ])
+fi
+
+AM_CONDITIONAL(HAVE_SIMVOLEON, $sim_ac_simvoleon_avail)
+
 
 # **************************************************************************
 # Remove redundant options from certain option lists, to clean up the
@@ -422,6 +453,9 @@ AC_OUTPUT([
 
 	sensors/Makefile
 	sensors/timersensor.cpp
+
+	volumerendering/Makefile
+	volumerendering/readvol.cpp
 
 	coin-competitions/Makefile
 

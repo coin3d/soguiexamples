@@ -14,7 +14,9 @@
 
 @SET_MAKE@
 
-############################################################################
+# **************************************************************************
+# Conditionally build SimVoleon examples if the library was found by the
+# configure process.
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -79,6 +81,8 @@ HAVE_MATERIALLIST_FALSE = @HAVE_MATERIALLIST_FALSE@
 HAVE_MATERIALLIST_TRUE = @HAVE_MATERIALLIST_TRUE@
 HAVE_PRINTDIALOG_FALSE = @HAVE_PRINTDIALOG_FALSE@
 HAVE_PRINTDIALOG_TRUE = @HAVE_PRINTDIALOG_TRUE@
+HAVE_SIMVOLEON_FALSE = @HAVE_SIMVOLEON_FALSE@
+HAVE_SIMVOLEON_TRUE = @HAVE_SIMVOLEON_TRUE@
 HAVE_SLIDERSETS_FALSE = @HAVE_SLIDERSETS_FALSE@
 HAVE_SLIDERSETS_TRUE = @HAVE_SLIDERSETS_TRUE@
 INSTALL_DATA = @INSTALL_DATA@
@@ -146,6 +150,7 @@ prefix = @prefix@
 program_transform_name = @program_transform_name@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
+sim_ac_simvoleon_configcmd = @sim_ac_simvoleon_configcmd@
 sim_ac_smallchange_configcmd = @sim_ac_smallchange_configcmd@
 soguiconfig = @soguiconfig@
 sysconfdir = @sysconfdir@
@@ -155,9 +160,15 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 
+@HAVE_SIMVOLEON_TRUE@VOLUMERENDERINGDIR = volumerendering
+@HAVE_SIMVOLEON_FALSE@VOLUMERENDERINGDIR = 
+
+
+# **************************************************************************
 SUBDIRS = \
   . components eyecandy coin-competitions annex \
-  actions draggers engines manipulators nodes sensors nodekits
+  actions draggers engines manipulators nodes sensors nodekits \
+  $(VOLUMERENDERINGDIR)
 
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -175,7 +186,9 @@ DIST_COMMON = README AUTHORS COPYING ChangeLog INSTALL Makefile.am \
 	Makefile.in NEWS TODO aclocal.m4 cfg/config.guess \
 	cfg/config.sub cfg/depcomp cfg/install-sh cfg/missing \
 	cfg/mkinstalldirs config.h.in configure configure.ac
-DIST_SUBDIRS = $(SUBDIRS)
+DIST_SUBDIRS = . components eyecandy coin-competitions annex actions \
+	draggers engines manipulators nodes sensors nodekits \
+	volumerendering
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -355,7 +368,7 @@ distcleancheck_listfiles = find . -type f -print
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkinstalldirs) $(distdir)/actions $(distdir)/annex $(distdir)/cfg $(distdir)/coin-competitions/SIM-20010803 $(distdir)/coin-competitions/SIM-20010824 $(distdir)/coin-competitions/SIM-20010914 $(distdir)/coin-competitions/SIM-20011005 $(distdir)/coin-competitions/SIM-20011116 $(distdir)/coin-competitions/SIM-20020118 $(distdir)/coin-competitions/SIM-20020503 $(distdir)/components $(distdir)/draggers $(distdir)/engines $(distdir)/eyecandy $(distdir)/manipulators $(distdir)/nodekits $(distdir)/nodes $(distdir)/sensors
+	$(mkinstalldirs) $(distdir)/actions $(distdir)/annex $(distdir)/cfg $(distdir)/coin-competitions/SIM-20010803 $(distdir)/coin-competitions/SIM-20010824 $(distdir)/coin-competitions/SIM-20010914 $(distdir)/coin-competitions/SIM-20011005 $(distdir)/coin-competitions/SIM-20011116 $(distdir)/coin-competitions/SIM-20020118 $(distdir)/coin-competitions/SIM-20020503 $(distdir)/components $(distdir)/draggers $(distdir)/engines $(distdir)/eyecandy $(distdir)/manipulators $(distdir)/nodekits $(distdir)/nodes $(distdir)/sensors $(distdir)/volumerendering
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -382,7 +395,7 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-	list='$(SUBDIRS)'; for subdir in $$list; do \
+	list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
 	  if test "$$subdir" = .; then :; else \
 	    test -d $(distdir)/$$subdir \
 	    || mkdir $(distdir)/$$subdir \
@@ -559,7 +572,7 @@ uninstall-info: uninstall-info-recursive
 	uninstall-info-am uninstall-info-recursive uninstall-recursive
 
 
-############################################################################
+# **************************************************************************
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
