@@ -21,6 +21,7 @@ endif
 noinst_PROGRAMS = \
 	readvol changingdataset examine orthoslicer \
 	raypick simple8bit $(SIMAGE_DEPENDENTS) \
+	opaquechair voleonexplore volumefencediagram \
 	$(SMALLCHANGE_DEPENDENTS)
 
 ############################################################################
@@ -82,6 +83,8 @@ opaquechair_SOURCES = chair.cpp OpaqueChair.cpp OpaqueChair.h OpaqueChair-iv.h
 
 voleonexplore_SOURCES = voleonexplore.cpp
 
+volumefencediagram_SOURCES = volumefencediagram.cpp
+
 ############################################################################
 
 SoTransferFunction_ctrl.h: $(srcdir)/SoTransferFunction_ctrl.ui
@@ -130,6 +133,7 @@ BUILT_SOURCES = \
 	voleonexplore.cpp \
 	readvol.cpp \
 	changingdataset.cpp \
+	volumefencediagram.cpp \
 	\
 	SoTransferFunction_ctrl.cpp SoTransferFunction_ctrl.h moc_SoTransferFunction_ctrl.cpp \
 	moc_TransferFunctionHandler.cpp \

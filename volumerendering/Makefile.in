@@ -71,8 +71,6 @@ EVENT = @EVENT@
 EXEEXT = @EXEEXT@
 GUI = @GUI@
 Gui = @Gui@
-HAVE_COINSCENERY_FALSE = @HAVE_COINSCENERY_FALSE@
-HAVE_COINSCENERY_TRUE = @HAVE_COINSCENERY_TRUE@
 HAVE_DIRECTIONALLIGHTEDITOR_FALSE = @HAVE_DIRECTIONALLIGHTEDITOR_FALSE@
 HAVE_DIRECTIONALLIGHTEDITOR_TRUE = @HAVE_DIRECTIONALLIGHTEDITOR_TRUE@
 HAVE_MATERIALEDITOR_FALSE = @HAVE_MATERIALEDITOR_FALSE@
@@ -89,8 +87,6 @@ HAVE_SLIDERSETS_FALSE = @HAVE_SLIDERSETS_FALSE@
 HAVE_SLIDERSETS_TRUE = @HAVE_SLIDERSETS_TRUE@
 HAVE_SMALLCHANGE_FALSE = @HAVE_SMALLCHANGE_FALSE@
 HAVE_SMALLCHANGE_TRUE = @HAVE_SMALLCHANGE_TRUE@
-HAVE_VOLUMEVIZ_FALSE = @HAVE_VOLUMEVIZ_FALSE@
-HAVE_VOLUMEVIZ_TRUE = @HAVE_VOLUMEVIZ_TRUE@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -160,7 +156,6 @@ prefix = @prefix@
 program_transform_name = @program_transform_name@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
-sim_ac_coinscenery_configcmd = @sim_ac_coinscenery_configcmd@
 sim_ac_mks_make = @sim_ac_mks_make@
 sim_ac_qt_cygpath = @sim_ac_qt_cygpath@
 sim_ac_simage_configcmd = @sim_ac_simage_configcmd@
@@ -192,6 +187,7 @@ SUBDIRS = Cute .
 noinst_PROGRAMS = \
 	readvol changingdataset examine orthoslicer \
 	raypick simple8bit $(SIMAGE_DEPENDENTS) \
+	opaquechair voleonexplore volumefencediagram \
 	$(SMALLCHANGE_DEPENDENTS)
 
 
@@ -255,12 +251,15 @@ opaquechair_SOURCES = chair.cpp OpaqueChair.cpp OpaqueChair.h OpaqueChair-iv.h
 
 voleonexplore_SOURCES = voleonexplore.cpp
 
+volumefencediagram_SOURCES = volumefencediagram.cpp
+
 
 ############################################################################
 BUILT_SOURCES = \
 	voleonexplore.cpp \
 	readvol.cpp \
 	changingdataset.cpp \
+	volumefencediagram.cpp \
 	\
 	SoTransferFunction_ctrl.cpp SoTransferFunction_ctrl.h moc_SoTransferFunction_ctrl.cpp \
 	moc_TransferFunctionHandler.cpp \
@@ -285,6 +284,9 @@ CONFIG_CLEAN_FILES = readvol.cpp changingdataset.cpp examine.cpp \
 @HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_TRUE@	raypick$(EXEEXT) \
 @HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_TRUE@	simple8bit$(EXEEXT) \
 @HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_TRUE@	opaquechair$(EXEEXT) \
+@HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_TRUE@	voleonexplore$(EXEEXT) \
+@HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_TRUE@	volumefencediagram$(EXEEXT) \
+@HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_TRUE@	opaquechair$(EXEEXT) \
 @HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_TRUE@	voleonexplore$(EXEEXT)
 @HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_FALSE@noinst_PROGRAMS = \
 @HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_FALSE@	readvol$(EXEEXT) \
@@ -292,7 +294,10 @@ CONFIG_CLEAN_FILES = readvol.cpp changingdataset.cpp examine.cpp \
 @HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_FALSE@	examine$(EXEEXT) \
 @HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_FALSE@	orthoslicer$(EXEEXT) \
 @HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_FALSE@	raypick$(EXEEXT) \
-@HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_FALSE@	simple8bit$(EXEEXT)
+@HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_FALSE@	simple8bit$(EXEEXT) \
+@HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_FALSE@	opaquechair$(EXEEXT) \
+@HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_FALSE@	voleonexplore$(EXEEXT) \
+@HAVE_SIMAGE_FALSE@@HAVE_SMALLCHANGE_FALSE@	volumefencediagram$(EXEEXT)
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_TRUE@noinst_PROGRAMS = \
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_TRUE@	readvol$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_TRUE@	changingdataset$(EXEEXT) \
@@ -301,6 +306,9 @@ CONFIG_CLEAN_FILES = readvol.cpp changingdataset.cpp examine.cpp \
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_TRUE@	raypick$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_TRUE@	simple8bit$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_TRUE@	opaquechair$(EXEEXT) \
+@HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_TRUE@	voleonexplore$(EXEEXT) \
+@HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_TRUE@	volumefencediagram$(EXEEXT) \
+@HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_TRUE@	opaquechair$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_TRUE@	voleonexplore$(EXEEXT)
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_FALSE@noinst_PROGRAMS = \
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_FALSE@	readvol$(EXEEXT) \
@@ -308,7 +316,10 @@ CONFIG_CLEAN_FILES = readvol.cpp changingdataset.cpp examine.cpp \
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_FALSE@	examine$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_FALSE@	orthoslicer$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_FALSE@	raypick$(EXEEXT) \
-@HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_FALSE@	simple8bit$(EXEEXT)
+@HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_FALSE@	simple8bit$(EXEEXT) \
+@HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_FALSE@	opaquechair$(EXEEXT) \
+@HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_FALSE@	voleonexplore$(EXEEXT) \
+@HAVE_SIMAGE_TRUE@@HAVE_SMALLCHANGE_FALSE@	volumefencediagram$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_changingdataset_OBJECTS = changingdataset.$(OBJEXT)
@@ -362,6 +373,11 @@ voleonexplore_OBJECTS = $(am_voleonexplore_OBJECTS)
 @BUILD_WITH_MSVC_TRUE@voleonexplore_DEPENDENCIES = Cute/Cute.lst
 @BUILD_WITH_MSVC_FALSE@voleonexplore_DEPENDENCIES = Cute/Cute.a
 voleonexplore_LDFLAGS =
+am_volumefencediagram_OBJECTS = volumefencediagram.$(OBJEXT)
+volumefencediagram_OBJECTS = $(am_volumefencediagram_OBJECTS)
+volumefencediagram_LDADD = $(LDADD)
+volumefencediagram_DEPENDENCIES =
+volumefencediagram_LDFLAGS =
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
@@ -383,7 +399,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/moc_VolumeRenderHandler.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/orthoslicer.Po ./$(DEPDIR)/raypick.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/readvol.Po ./$(DEPDIR)/simple8bit.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/utility.Po ./$(DEPDIR)/voleonexplore.Po
+@AMDEP_TRUE@	./$(DEPDIR)/utility.Po ./$(DEPDIR)/voleonexplore.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/volumefencediagram.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -396,7 +413,7 @@ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) \
 	$(opaquechair_SOURCES) $(orthoslicer_SOURCES) \
 	$(raypick_SOURCES) $(readvol_SOURCES) $(simple8bit_SOURCES) \
-	$(voleonexplore_SOURCES)
+	$(voleonexplore_SOURCES) $(volumefencediagram_SOURCES)
 
 RECURSIVE_TARGETS = info-recursive dvi-recursive pdf-recursive \
 	ps-recursive install-info-recursive uninstall-info-recursive \
@@ -407,7 +424,7 @@ DIST_COMMON = Makefile.am Makefile.in changingdataset.cpp.in \
 	examine.cpp.in orthoslicer.cpp.in raypick.cpp.in readvol.cpp.in \
 	rgbload.cpp.in simple8bit.cpp.in
 DIST_SUBDIRS = $(SUBDIRS)
-SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) $(opaquechair_SOURCES) $(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) $(simple8bit_SOURCES) $(voleonexplore_SOURCES)
+SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) $(opaquechair_SOURCES) $(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) $(simple8bit_SOURCES) $(voleonexplore_SOURCES) $(volumefencediagram_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
@@ -460,6 +477,9 @@ simple8bit$(EXEEXT): $(simple8bit_OBJECTS) $(simple8bit_DEPENDENCIES)
 voleonexplore$(EXEEXT): $(voleonexplore_OBJECTS) $(voleonexplore_DEPENDENCIES) 
 	@rm -f voleonexplore$(EXEEXT)
 	$(CXXLINK) $(voleonexplore_LDFLAGS) $(voleonexplore_OBJECTS) $(voleonexplore_LDADD) $(LIBS)
+volumefencediagram$(EXEEXT): $(volumefencediagram_OBJECTS) $(volumefencediagram_DEPENDENCIES) 
+	@rm -f volumefencediagram$(EXEEXT)
+	$(CXXLINK) $(volumefencediagram_LDFLAGS) $(volumefencediagram_OBJECTS) $(volumefencediagram_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -489,6 +509,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simple8bit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utility.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/voleonexplore.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/volumefencediagram.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)
