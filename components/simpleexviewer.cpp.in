@@ -32,6 +32,7 @@ main(int argc, char ** argv)
 
   if (err.getLength() > 0) {
     SoText3 * t3 = new SoText3;
+    t3->parts = SoText3::ALL;
     t3->string.setValue(err);
     root = t3;
   }
