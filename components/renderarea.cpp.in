@@ -17,7 +17,7 @@
  *
 \**************************************************************************/
 
-#include <Inventor/nodes/SoGroup.h>
+#include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoDirectionalLight.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 
@@ -41,7 +41,7 @@ main(
   if ( ! userroot )
     return -1;
 
-  SoGroup * root = new SoGroup;
+  SoSeparator * root = new SoSeparator;
   root->ref();
   SoPerspectiveCamera * camera;
   root->addChild( camera = new SoPerspectiveCamera );
