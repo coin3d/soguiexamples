@@ -216,7 +216,6 @@ else
   AM_CONDITIONAL(HAVE_PRINTDIALOG, false)
 
   CPPFLAGS="$CPPFLAGS `$soguiconfig $alternate_option --cppflags`"
-  # CFLAGS="$CFLAGS `$soguiconfig $alternate_option --cflags`"
   CXXFLAGS="$CXXFLAGS `$soguiconfig $alternate_option --cxxflags`"
   LDFLAGS="$LDFLAGS `$soguiconfig $alternate_option --ldflags`"
   LIBS="`$soguiconfig $alternate_option --libs` $LIBS"
