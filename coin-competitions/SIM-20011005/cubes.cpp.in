@@ -683,7 +683,7 @@ SoSeparator *create_helpscene()
   // ...with its own camera
   SoOrthographicCamera *ocam = new SoOrthographicCamera;
   //FIXME: Uncommented is workaround for camera/text2 problem (gcc-2.96)
-  ocam->position.setValue(0,0,-10);
+//    ocam->position.setValue(0,0,-10);
   ocam->viewportMapping.setValue(SoCamera::LEAVE_ALONE);
   ocam->nearDistance.setValue(0.1);
   ocam->farDistance.setValue(100);
@@ -894,7 +894,7 @@ main(int argc, char **argv)
   // ...with its own camera
   SoOrthographicCamera *ocam = new SoOrthographicCamera;
   //FIXME: Uncommented is workaround for camera/text2 problem (gcc-2.96)
-  ocam->orientation.setValue(SbRotation(SbVec3f(0,1,0),M_PI));
+//    ocam->orientation.setValue(SbRotation(SbVec3f(0,1,0),M_PI));
   ocam->viewportMapping.setValue(SoCamera::LEAVE_ALONE);
   ocam->nearDistance.setValue(0.1);
   instructsep->addChild(ocam);
@@ -934,7 +934,7 @@ main(int argc, char **argv)
   So@Gui@::show(window);
   // Must do this _after_ show() to avoid the "Start"-bar being
   // visible. (Bug!)
-//    (void)viewer->setFullScreen(TRUE);
+  (void)viewer->setFullScreen(TRUE);
 
   So@Gui@::mainLoop();
 
