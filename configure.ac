@@ -356,6 +356,7 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
     fi
   ])
 else
+  sim_ac_simvoleon_avail=false
   SIM_AC_CONFIGURATION_SETTING([SimVoleon], [not used (examples only works with SoQt)])
 fi
 
