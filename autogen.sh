@@ -14,7 +14,7 @@ AUTOCONF_VER=2.49b   # Autoconf from CVS
 AUTOMAKE_VER=1.4a    # Automake from CVS
 LIBTOOL_VER=1.3.5
 
-MACRODIR=conf-macros
+MACRODIR=cfg/m4
 AUTOMAKE_ADD=
 
 echo "Checking the installed configuration tools..."

@@ -116,7 +116,7 @@ BUILT_SOURCES = \
 	blob.cpp
 
 subdir = eyecandy
-mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
 PROGRAMS =  $(noinst_PROGRAMS)
@@ -159,7 +159,7 @@ LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDF
 DIST_SOURCES =  $(blob_SOURCES) $(juliaanim_SOURCES) \
 $(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) \
 $(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES)
-depcomp = $(SHELL) $(top_srcdir)/depcomp
+depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/blob.Po $(DEPDIR)/juliaanim.Po \
 $(DEPDIR)/mandelzoom.Po $(DEPDIR)/moirepatterns.Po
 DIST_COMMON =  README Makefile.am Makefile.in

@@ -196,7 +196,7 @@ clipplane_SOURCES = clipplane.cpp
 
 levelofdetail_SOURCES = levelofdetail.cpp
 subdir = nodes
-mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
 PROGRAMS =  $(noinst_PROGRAMS)
@@ -372,7 +372,7 @@ $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) \
 $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) \
 $(texture_SOURCES) $(transform_SOURCES) $(translation_SOURCES) \
 $(trianglestripset_SOURCES)
-depcomp = $(SHELL) $(top_srcdir)/depcomp
+depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/atmospheric.Po $(DEPDIR)/blinker.Po \
 $(DEPDIR)/camera.Po $(DEPDIR)/clipplane.Po $(DEPDIR)/complexity.Po \
 $(DEPDIR)/directionallight.Po $(DEPDIR)/drawstyle.Po \

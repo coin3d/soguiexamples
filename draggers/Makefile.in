@@ -108,7 +108,7 @@ translate2_SOURCES = translate2.cpp
 
 dragpoint_SOURCES = dragpoint.cpp
 subdir = draggers
-mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
 PROGRAMS =  $(noinst_PROGRAMS)
@@ -140,7 +140,7 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES =  $(dragpoint_SOURCES) $(translate1_SOURCES) \
 $(translate2_SOURCES)
-depcomp = $(SHELL) $(top_srcdir)/depcomp
+depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/dragpoint.Po $(DEPDIR)/translate1.Po \
 $(DEPDIR)/translate2.Po
 DIST_COMMON =  Makefile.am Makefile.in
