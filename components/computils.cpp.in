@@ -173,6 +173,9 @@ setQuadBufferStereo(So@Gui@Viewer * v, SbBool f)
 void 
 config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
 {
+  int numpasses = 1;
+  SbBool smoothing = FALSE;
+
   int i = 1;
   while (i < argc) {
     if (!strcmp(argv[i], "--stereo")) {
@@ -207,6 +210,14 @@ config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
       viewer->setAutoClipping(FALSE);
       i++;
     }
+    else if (!strcmp(argv[i], "--smoothing")) {
+      smoothing = TRUE;
+      i++;
+    }
+    else if (!strcmp(argv[i], "--numpasses") && (i < argc -1)) {
+      numpasses = SbClamp(atoi(argv[i+1]), 1, 16);
+      i += 2;
+    }
     else if (!strcmp(argv[i], "--background")) {
       SbBool err = FALSE;
       if (argc < i+4) { err = TRUE; }
@@ -236,6 +247,13 @@ config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
     }
     else i++;
   }
+
+  if (numpasses > 1) viewer->setAccumulationBuffer(TRUE);
+
+  if (smoothing || numpasses > 1) {
+    viewer->setAntialiasing(smoothing, numpasses);
+  }
+
 } // config_viewer
 
 
