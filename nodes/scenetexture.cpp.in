@@ -1,8 +1,236 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2003 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoText3.h>
+#include <Inventor/SoInput.h>
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+// this example requires the SoTextureScalePolicy node
+#if !defined(HAVE_SOSCENETEXTURE2)
+
+#include <Inventor/nodes/SoText3.h>
 #include <stdio.h>
 
-int main(int argc, char ** argv)
+int
+main(int argc, char ** argv)
 {
-  fprintf(stderr,"Coming soon\n");
-  return 0;
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  const char * info[] = {
+    "This example depends on a Coin specifc",
+    "extensions. This is just an informational",
+    "message and not the real functionality",
+    "of the example."
+  };
+
+  SoText3 * msg = new SoText3;
+  msg->justification = SoText3::CENTER;
+  msg->string.setValues(0, sizeof(info) / sizeof(const char *), info);
+  root->addChild(msg);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->show();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+
+  return 1;
 }
+
+#else // ! HAVE_SOSCENETEXTURE2
+
+#include <stdlib.h> // exit()
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoSceneTexture2.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/actions/SoSearchAction.h>
+#include <Inventor/nodes/SoRotor.h>
+
+static void insert_rotor(SoSeparator * sep)
+{
+  SoRotor * rot = new SoRotor;
+  rot->rotation = SbRotation(SbVec3f(0.2f, 0.3f, 0.5f), 0.1f);
+  rot->speed = 0.1f;
+
+  SoSearchAction sa;
+  sa.setType(SoLight::getClassTypeId());
+  sa.setInterest(SoSearchAction::FIRST);
+  sa.apply(sep);
+  if (!sa.getPath()) {
+    sep->insertChild(rot, 0);
+  }
+  else {
+    SoFullPath * path = (SoFullPath*) sa.getPath();
+    SoGroup * g = (SoGroup*) path->getNodeFromTail(1);
+    int idx = path->getIndexFromTail(0);
+
+    // insert rotor after the light source
+    g->insertChild(rot, idx+1);
+  }
+}
+
+
+static void maybe_insert_light(SoSeparator * sep)
+{
+  SoSearchAction sa;
+  sa.setType(SoLight::getClassTypeId());
+  sa.setInterest(SoSearchAction::FIRST);
+  sa.apply(sep);
+  if (!sa.getPath()) {
+    sep->insertChild(new SoDirectionalLight, 0);
+  }
+}
+
+static void maybe_insert_camera(SoSeparator * sep)
+{
+  SoSearchAction sa;
+  sa.setType(SoCamera::getClassTypeId());
+  sa.setInterest(SoSearchAction::FIRST);
+  sa.apply(sep);
+  if (!sa.getPath()) {
+    SoPerspectiveCamera * cam = new SoPerspectiveCamera;
+    SbViewportRegion vp(256, 256);
+    cam->viewAll(sep, vp);
+    sep->insertChild(cam, 0);
+  }
+}
+
+
+static SoSeparator *
+create_simple_scene(void)
+{
+  SoSeparator * sep = new SoSeparator;
+  sep->ref();
+  sep->addChild(new SoCylinder);
+
+  maybe_insert_light(sep);
+  maybe_insert_camera(sep);
+
+  insert_rotor(sep);
+  
+  sep->unrefNoDelete();
+
+  return sep;
+}
+
+static SoSeparator *
+load_file(const char * filename)
+{
+  SoInput in;
+  if (in.openFile(filename)) {
+    SoSeparator * sep = SoDB::readAll(&in);
+    if (sep) {
+      sep->ref();
+      maybe_insert_light(sep);
+      maybe_insert_camera(sep);
+      insert_rotor(sep);
+      sep->unrefNoDelete();
+      return sep;
+    }
+  }
+  return create_simple_scene();
+}
+
+
+
+
+int
+main (int argc, char ** argv)
+{
+  (void)printf("This example shows how to use the SoSceneTexture2 node in "
+               "Coin to render\ndirectly into a texture. Specify an "
+               " Inventor/VRML file on the command\nline if you like.\n");
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+  
+  SoDB::setRealTimeInterval(1.0/50.0);
+  
+  // Scene graph
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  // Enable backface culling
+  SoShapeHints * hints = new SoShapeHints;
+
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  SoMaterial * mat = new SoMaterial;
+  mat->diffuseColor = SbColor(1,1,1);
+
+  root->addChild(mat);
+
+  SoSceneTexture2 * texnode = new SoSceneTexture2;
+  texnode->backgroundColor = SbVec4f(0.2f, 0.3f, 0.5f, 0.0f);
+  root->addChild(texnode);
+  SoRotation * rot = new SoRotation;
+  rot->rotation = SbRotation(SbVec3f(0.5f, 0.5f, 0.5f), 0.7f);
+  root->addChild(rot);
+  root->addChild(new SoCube);
+
+  if (argc > 1) {
+    texnode->scene = load_file(argv[1]);
+  }
+  else {
+    texnode->scene = create_simple_scene();
+  }
+
+  // Setting up the examiner viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("SoSceneTexture2 rendering");
+  viewer->viewAll();
+  viewer->show();
+  So@Gui@::show(window); // display the main window
+
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;
+  root->unref();
+
+  return 0;  
+}
+
+#endif // HAVE_SOSCENETEXTURE2
 
