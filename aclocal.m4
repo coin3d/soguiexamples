@@ -12,6 +12,175 @@
 # PARTICULAR PURPOSE.
 
 # **************************************************************************
+# gendspex.m4
+#
+# macros:
+#   SIM_AC_MSVC_DSPEX_ENABLE_OPTION
+#   SIM_AC_MSVC_DSPEX_SETUP(Project, source dir, template suffix, 
+#                           substitutes)
+#   SIM_AC_MSVC_DSPEX_PREPARE(source dir, dest dir)
+#
+# authors:
+#   Thomas Hammer <thammer@sim.no>
+#   Lars J. Aas <larsa@coin3d.org> (wrote the original gendsp.m4 script)
+#
+# **************************************************************************
+AC_DEFUN([SIM_AC_MSVC_DSPEX_ENABLE_OPTION], [
+AC_ARG_ENABLE([msvcdspex],
+  [AC_HELP_STRING([--enable-msvcdspex], [build .dsp, not executables])],
+  [case $enableval in
+  no | false) sim_ac_make_dspex=false ;;
+  *)          sim_ac_make_dspex=true ;;
+  esac],
+  [sim_ac_make_dspex=false])
+
+if $sim_ac_make_dspex; then
+  enable_dependency_tracking=no
+  enable_libtool_lock=no
+fi
+]) # SIM_AC_MSVC_DSPEX_ENABLE_OPTION
+
+# **************************************************************************
+AC_DEFUN([SIM_AC_MSVC_DSPEX_SETUP], [
+AC_REQUIRE([SIM_AC_MSVC_DSPEX_ENABLE_OPTION])
+
+if $sim_ac_make_dspex; then
+  SIM_AC_CONFIGURATION_SETTING([$1 build type], [msvc .dsp])
+
+  CC=$2/cfg/gendspex.sh
+  CXX=$2/cfg/gendspex.sh
+  CXXLD=$2/cfg/gendspex.sh
+
+  # Notes: 
+  # - these defines are picked up by gendspex.sh
+  # - template basename ($3) = vc6 -> workspace_template_vc6.txt, etc
+  # - $(DEFAULT_INCLUDES) is set by the generated Makefile scripts
+  # 2003-11-04 thammer
+  LDFLAGS="-Dsourcedir=$2 -Dtemplatesuffix=$3 -Dsubstitutes=$4 $LDFLAGS $CPPFLAGS \$(DEFAULT_INCLUDES)"
+fi
+])
+
+# **************************************************************************
+AC_DEFUN([SIM_AC_MSVC_DSPEX_PREPARE], [
+AC_REQUIRE([SIM_AC_MSVC_DSPEX_ENABLE_OPTION])
+
+if $sim_ac_make_dspex; then
+
+  # copy all headerfiles from sourcedir to config dir
+  if $sim_ac_make_dspex; then
+
+    sim_ac_dspex_src_dir_length=`echo $1 | wc -c | sed -e "s% %%g"`
+    sim_ac_dspex_headers=`find $1 -name "*.h" | cut -c$sim_ac_dspex_src_dir_length- | sed -e "s%^/%%"`
+
+    for sim_ac_dspex_header in $sim_ac_dspex_headers; do
+      sim_ac_dspex_justname=`echo $sim_ac_dspex_header | sed -e "s%.*/%%"`
+      sim_ac_dspex_dirname=`echo $sim_ac_dspex_header | sed -e "s%[[^/]]*\.h%%"`
+      if ! test -d "$2/$sim_ac_dspex_dirname"; then
+        mkdir -p "$2/$sim_ac_dspex_dirname"
+      fi
+      cp $1/$sim_ac_dspex_header \
+         $2/$sim_ac_dspex_header
+    done
+  fi
+
+fi
+])
+
+
+
+# **************************************************************************
+# configuration_summary.m4
+#
+# This file contains some utility macros for making it easy to have a short
+# summary of the important configuration settings printed at the end of the
+# configure run.
+#
+# Authors:
+#   Lars J. Aas <larsa@sim.no>
+#
+
+# **************************************************************************
+# SIM_AC_CONFIGURATION_SETTING( DESCRIPTION, SETTING )
+#
+# This macro registers a configuration setting to be dumped by the
+# SIM_AC_CONFIGURATION_SUMMARY macro.
+
+AC_DEFUN([SIM_AC_CONFIGURATION_SETTING],
+[ifelse($#, 2, [], [m4_fatal([SIM_AC_CONFIGURATION_SETTING: takes two arguments])])
+if test x"${sim_ac_configuration_settings+set}" = x"set"; then
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|$1:$2"
+else
+  sim_ac_configuration_settings="$1:$2"
+fi
+]) # SIM_AC_CONFIGURATION_SETTING
+
+# **************************************************************************
+# SIM_AC_CONFIGURATION_WARNING( WARNING )
+#
+# This macro registers a configuration warning to be dumped by the
+# SIM_AC_CONFIGURATION_SUMMARY macro.
+
+AC_DEFUN([SIM_AC_CONFIGURATION_WARNING],
+[ifelse($#, 1, [], [m4_fatal([SIM_AC_CONFIGURATION_WARNING: takes one argument])])
+if test x"${sim_ac_configuration_warnings+set}" = x"set"; then
+  sim_ac_configuration_warnings="$sim_ac_configuration_warnings|$1"
+else
+  sim_ac_configuration_warnings="$1"
+fi
+]) # SIM_AC_CONFIGURATION_WARNING
+
+# **************************************************************************
+# SIM_AC_CONFIGURATION_SUMMARY
+#
+# This macro dumps the settings and warnings summary.
+
+AC_DEFUN([SIM_AC_CONFIGURATION_SUMMARY],
+[ifelse($#, 0, [], [m4_fatal([SIM_AC_CONFIGURATION_SUMMARY: takes no arguments])])
+sim_ac_settings="$sim_ac_configuration_settings"
+sim_ac_num_settings=`echo "$sim_ac_settings" | tr -d -c "|" | wc -c`
+sim_ac_maxlength=0
+while test $sim_ac_num_settings -ge 0; do
+  sim_ac_description=`echo "$sim_ac_settings" | cut -d: -f1`
+  sim_ac_length=`echo "$sim_ac_description" | wc -c`
+  if test $sim_ac_length -gt $sim_ac_maxlength; then
+    sim_ac_maxlength=`expr $sim_ac_length + 0`
+  fi
+  sim_ac_settings=`echo $sim_ac_settings | cut -d"|" -f2-`
+  sim_ac_num_settings=`expr $sim_ac_num_settings - 1`
+done
+
+sim_ac_maxlength=`expr $sim_ac_maxlength + 3`
+sim_ac_padding=`echo "                                             " |
+  cut -c1-$sim_ac_maxlength`
+
+sim_ac_num_settings=`echo "$sim_ac_configuration_settings" | tr -d -c "|" | wc -c`
+echo ""
+echo "$PACKAGE configuration settings:"
+while test $sim_ac_num_settings -ge 0; do
+  sim_ac_setting=`echo $sim_ac_configuration_settings | cut -d"|" -f1`
+  sim_ac_description=`echo "$sim_ac_setting" | cut -d: -f1`
+  sim_ac_status=`echo "$sim_ac_setting" | cut -d: -f2-`
+  # hopefully not too many terminals are too dumb for this
+  echo -e "$sim_ac_padding $sim_ac_status\r  $sim_ac_description:"
+  sim_ac_configuration_settings=`echo $sim_ac_configuration_settings | cut -d"|" -f2-`
+  sim_ac_num_settings=`expr $sim_ac_num_settings - 1`
+done
+
+if test x${sim_ac_configuration_warnings+set} = xset; then
+sim_ac_num_warnings=`echo "$sim_ac_configuration_warnings" | tr -d -c "|" | wc -c`
+echo ""
+echo "$PACKAGE configuration warnings:"
+while test $sim_ac_num_warnings -ge 0; do
+  sim_ac_warning=`echo "$sim_ac_configuration_warnings" | cut -d"|" -f1`
+  echo "  * $sim_ac_warning"
+  sim_ac_configuration_warnings=`echo $sim_ac_configuration_warnings | cut -d"|" -f2-`
+  sim_ac_num_warnings=`expr $sim_ac_num_warnings - 1`
+done
+fi
+]) # SIM_AC_CONFIGURATION_SUMMARY
+
+
+# **************************************************************************
 # SIM_AC_SETUP_MSVC_IFELSE( IF-FOUND, IF-NOT-FOUND )
 #
 # This macro invokes IF-FOUND if the wrapmsvc wrapper can be run, and
@@ -1364,12 +1533,12 @@ fi
 # Description:
 #   Take care of making a sensible selection of warning messages
 #   to turn on or off.
-# 
+#
 #   Note: this macro must be placed after either AC_PROG_CC or AC_PROG_CXX
 #   in the configure.in script.
-# 
+#
 # Author: Morten Eriksen, <mortene@sim.no>.
-# 
+#
 # TODO:
 #   * [mortene:19991114] find out how to get GCC's
 #     -Werror-implicit-function-declaration option to work as expected
@@ -1398,16 +1567,16 @@ if test x"$enable_warnings" = x"yes"; then
       SIM_AC_CC_COMPILER_OPTION([$sim_ac_try_warning_option],
                                 [CFLAGS="$CFLAGS $sim_ac_try_warning_option"])
     fi
-  
+
     if test x"$GXX" = x"yes"; then
       SIM_AC_CXX_COMPILER_OPTION([$sim_ac_try_warning_option],
                                  [CXXFLAGS="$CXXFLAGS $sim_ac_try_warning_option"])
     fi
 
   done
-    
+
   case $host in
-  *-*-irix*) 
+  *-*-irix*)
     ### Turn on all warnings ######################################
     # we try to catch settings like CC="CC -n32" too, even though the
     # -n32 option belongs to C[XX]FLAGS
@@ -1464,6 +1633,117 @@ if test x"$enable_warnings" = x"yes"; then
   esac
 fi
 ])
+
+# **************************************************************************
+#
+# SIM_AC_DETECT_COMMON_COMPILER_FLAGS
+#
+# Sets sim_ac_compiler_CFLAGS and sim_ac_compiler_CXXFLAGS
+#
+
+AC_DEFUN([SIM_AC_DETECT_COMMON_COMPILER_FLAGS], [
+
+AC_REQUIRE([SIM_AC_CHECK_PROJECT_BETA_STATUS_IFELSE])
+AC_REQUIRE([SIM_AC_CHECK_SIMIAN_IFELSE])
+
+SIM_AC_COMPILE_DEBUG([
+  if test x"$GCC" = x"yes"; then
+    # no auto string.h-functions
+    SIM_AC_CC_COMPILER_OPTION([-fno-builtin], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS -fno-builtin"])
+    SIM_AC_CXX_COMPILER_OPTION([-fno-builtin], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS -fno-builtin"])
+
+    # disallow non-standard scoping of for()-variables
+    SIM_AC_CXX_COMPILER_OPTION([-fno-for-scoping], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS -fno-for-scope"])
+
+    SIM_AC_CC_COMPILER_OPTION([-finline-functions], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS -finline-functions"])
+    SIM_AC_CXX_COMPILER_OPTION([-finline-functions], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS -finline-functions"])
+
+    if $sim_ac_simian; then
+      if $sim_ac_source_release; then :; else
+      # break build on warnings, except for in official source code releases
+        SIM_AC_CC_COMPILER_OPTION([-Werror], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS -Werror"])
+        SIM_AC_CXX_COMPILER_OPTION([-Werror], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS -Werror"])
+      fi
+    fi
+
+    # warn on missing return-value
+    SIM_AC_CC_COMPILER_OPTION([-Wreturn-type], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS -Wreturn-type"])
+    SIM_AC_CXX_COMPILER_OPTION([-Wreturn-type], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS -Wreturn-type"])
+
+    SIM_AC_CC_COMPILER_OPTION([-Wchar-subscripts], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS -Wchar-subscripts"])
+    SIM_AC_CXX_COMPILER_OPTION([-Wchar-subscripts], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS -Wchar-subscripts"])
+
+    SIM_AC_CC_COMPILER_OPTION([-Wparentheses], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS -Wparentheses"])
+    SIM_AC_CXX_COMPILER_OPTION([-Wparentheses], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS -Wparentheses"])
+
+  else
+    case $CXX in
+    *wrapmsvc* )
+      if $sim_ac_simian; then
+        if $sim_ac_source_release; then :; else
+          # break build on warnings, except for in official source code releases
+          SIM_AC_CC_COMPILER_OPTION([/WX], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /WX"])
+          SIM_AC_CXX_COMPILER_OPTION([/WX], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /WX"])
+        fi
+      fi
+
+      # warning level 3
+      SIM_AC_CC_COMPILER_OPTION([/W3], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /W3"])
+      SIM_AC_CXX_COMPILER_OPTION([/W3], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /W3"])
+      ;;
+    esac
+  fi
+])
+
+ifelse($1, [], :, $1)
+
+])
+
+#
+# SIM_AC_CHECK_PROJECT_BETA_STATUS_IFELSE( IF-BETA, IF-BONA-FIDE )
+#
+# Sets sim_ac_source_release to true or false
+#
+
+AC_DEFUN([SIM_AC_CHECK_PROJECT_BETA_STATUS_IFELSE], [
+AC_MSG_CHECKING([for project release status])
+case $VERSION in
+*[[a-z]]* )
+  AC_MSG_RESULT([beta / inbetween releases])
+  sim_ac_source_release=false
+  ifelse($1, [], :, $1)
+  ;;
+* )
+  AC_MSG_RESULT([release version])
+  sim_ac_source_release=true
+  ifelse($2, [], :, $2)
+  ;;
+esac
+])
+
+
+#
+# SIM_AC_CHECK_SIMIAN_IFELSE( IF-SIMIAN, IF-NOT-SIMIAN )
+#
+# Sets $sim_ac_simian to true or false
+#
+
+AC_DEFUN([SIM_AC_CHECK_SIMIAN_IFELSE], [
+AC_MSG_CHECKING([if user is simian])
+case `hostname -d 2>/dev/null || domainname 2>/dev/null || hostname` in
+*.sim.no | sim.no )
+  AC_MSG_RESULT([probably])
+  sim_ac_simian=true
+  ifelse($1, [], :, $1)
+  ;;
+* )
+  AC_MSG_RESULT([probably not])
+  sim_ac_simian=false
+  ifelse($2, [], :, $2)
+  ;;
+esac
+])
+
 
 # **************************************************************************
 # SIM_AC_CHECK_HEADER_SILENT([header], [if-found], [if-not-found], [includes])
@@ -2165,7 +2445,7 @@ fi
 # **************************************************************************
 # SIM_AC_HAVE_AGL_IFELSE( IF-FOUND, IF-NOT-FOUND )
 #
-# Check whether WGL is on the system.
+# Check whether AGL is on the system.
 
 AC_DEFUN([SIM_AC_HAVE_AGL_IFELSE], [
 sim_ac_save_ldflags=$LDFLAGS
@@ -2190,6 +2470,22 @@ else
   ifelse([$2], , :, [$2])
 fi
 ]) # SIM_AC_HAVE_AGL_IFELSE()
+ 
+
+AC_DEFUN([SIM_AC_HAVE_AGL_PBUFFER], [
+  AC_CACHE_CHECK([whether we can use AGL pBuffers],
+    sim_cv_agl_pbuffer_avail,
+    [AC_TRY_LINK([ #include <AGL/agl.h> ],
+                 [AGLPbuffer pbuffer;],
+                 [sim_cv_agl_pbuffer_avail=yes],
+                 [sim_cv_agl_pbuffer_avail=no])])
+  
+  if test x"$sim_cv_agl_pbuffer_avail" = xyes; then
+    ifelse([$1], , :, [$1])
+  else
+    ifelse([$2], , :, [$2])
+  fi
+])
 
 
 # Usage:
@@ -3659,98 +3955,6 @@ fi
 ])
 
 
-# **************************************************************************
-# configuration_summary.m4
-#
-# This file contains some utility macros for making it easy to have a short
-# summary of the important configuration settings printed at the end of the
-# configure run.
-#
-# Authors:
-#   Lars J. Aas <larsa@sim.no>
-#
-
-# **************************************************************************
-# SIM_AC_CONFIGURATION_SETTING( DESCRIPTION, SETTING )
-#
-# This macro registers a configuration setting to be dumped by the
-# SIM_AC_CONFIGURATION_SUMMARY macro.
-
-AC_DEFUN([SIM_AC_CONFIGURATION_SETTING],
-[ifelse($#, 2, [], [m4_fatal([SIM_AC_CONFIGURATION_SETTING: takes two arguments])])
-if test x"${sim_ac_configuration_settings+set}" = x"set"; then
-  sim_ac_configuration_settings="$sim_ac_configuration_settings|$1:$2"
-else
-  sim_ac_configuration_settings="$1:$2"
-fi
-]) # SIM_AC_CONFIGURATION_SETTING
-
-# **************************************************************************
-# SIM_AC_CONFIGURATION_WARNING( WARNING )
-#
-# This macro registers a configuration warning to be dumped by the
-# SIM_AC_CONFIGURATION_SUMMARY macro.
-
-AC_DEFUN([SIM_AC_CONFIGURATION_WARNING],
-[ifelse($#, 1, [], [m4_fatal([SIM_AC_CONFIGURATION_WARNING: takes one argument])])
-if test x"${sim_ac_configuration_warnings+set}" = x"set"; then
-  sim_ac_configuration_warnings="$sim_ac_configuration_warnings|$1"
-else
-  sim_ac_configuration_warnings="$1"
-fi
-]) # SIM_AC_CONFIGURATION_WARNING
-
-# **************************************************************************
-# SIM_AC_CONFIGURATION_SUMMARY
-#
-# This macro dumps the settings and warnings summary.
-
-AC_DEFUN([SIM_AC_CONFIGURATION_SUMMARY],
-[ifelse($#, 0, [], [m4_fatal([SIM_AC_CONFIGURATION_SUMMARY: takes no arguments])])
-sim_ac_settings="$sim_ac_configuration_settings"
-sim_ac_num_settings=`echo "$sim_ac_settings" | tr -d -c "|" | wc -c`
-sim_ac_maxlength=0
-while test $sim_ac_num_settings -ge 0; do
-  sim_ac_description=`echo "$sim_ac_settings" | cut -d: -f1`
-  sim_ac_length=`echo "$sim_ac_description" | wc -c`
-  if test $sim_ac_length -gt $sim_ac_maxlength; then
-    sim_ac_maxlength=`expr $sim_ac_length + 0`
-  fi
-  sim_ac_settings=`echo $sim_ac_settings | cut -d"|" -f2-`
-  sim_ac_num_settings=`expr $sim_ac_num_settings - 1`
-done
-
-sim_ac_maxlength=`expr $sim_ac_maxlength + 3`
-sim_ac_padding=`echo "                                             " |
-  cut -c1-$sim_ac_maxlength`
-
-sim_ac_num_settings=`echo "$sim_ac_configuration_settings" | tr -d -c "|" | wc -c`
-echo ""
-echo "$PACKAGE configuration settings:"
-while test $sim_ac_num_settings -ge 0; do
-  sim_ac_setting=`echo $sim_ac_configuration_settings | cut -d"|" -f1`
-  sim_ac_description=`echo "$sim_ac_setting" | cut -d: -f1`
-  sim_ac_status=`echo "$sim_ac_setting" | cut -d: -f2-`
-  # hopefully not too many terminals are too dumb for this
-  echo -e "$sim_ac_padding $sim_ac_status\r  $sim_ac_description:"
-  sim_ac_configuration_settings=`echo $sim_ac_configuration_settings | cut -d"|" -f2-`
-  sim_ac_num_settings=`expr $sim_ac_num_settings - 1`
-done
-
-if test x${sim_ac_configuration_warnings+set} = xset; then
-sim_ac_num_warnings=`echo "$sim_ac_configuration_warnings" | tr -d -c "|" | wc -c`
-echo ""
-echo "$PACKAGE configuration warnings:"
-while test $sim_ac_num_warnings -ge 0; do
-  sim_ac_warning=`echo "$sim_ac_configuration_warnings" | cut -d"|" -f1`
-  echo "  * $sim_ac_warning"
-  sim_ac_configuration_warnings=`echo $sim_ac_configuration_warnings | cut -d"|" -f2-`
-  sim_ac_num_warnings=`expr $sim_ac_num_warnings - 1`
-done
-fi
-]) # SIM_AC_CONFIGURATION_SUMMARY
-
-
 # Usage:
 #   SIM_AC_HAVE_SMALLCHANGE_IFELSE( IF-FOUND, IF-NOT-FOUND )
 #
@@ -4185,6 +4389,7 @@ recommend you to upgrade.])
             "-lqt-mt -luser32 -lole32 -limm32 -lcomdlg32 -lgdi32 -lwinspool -lwinmm -ladvapi32 -lws2_32" \
             "-lqt-mt${sim_ac_qt_version}${sim_ac_qt_suffix} -lqtmain -lgdi32" \
             "-lqt-mt${sim_ac_qt_version}nc${sim_ac_qt_suffix} -lqtmain -lgdi32" \
+            "-lqt-mtedu${sim_ac_qt_version}${sim_ac_qt_suffix} -lqtmain -lgdi32" \
             "-lqt -lqtmain -lgdi32" \
             "-lqt${sim_ac_qt_version}${sim_ac_qt_suffix} -lqtmain -lgdi32" \
             "-lqt -luser32 -lole32 -limm32 -lcomdlg32 -lgdi32" \

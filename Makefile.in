@@ -159,6 +159,8 @@ sim_ac_simage_configcmd = @sim_ac_simage_configcmd@
 sim_ac_simvoleon_configcmd = @sim_ac_simvoleon_configcmd@
 sim_ac_smallchange_configcmd = @sim_ac_smallchange_configcmd@
 soguiconfig = @soguiconfig@
+soguiexamples_build_dir = @soguiexamples_build_dir@
+soguiexamples_src_dir = @soguiexamples_src_dir@
 sysconfdir = @sysconfdir@
 target = @target@
 target_alias = @target_alias@
@@ -577,6 +579,24 @@ uninstall-info: uninstall-info-recursive
 	ps-recursive tags tags-recursive uninstall uninstall-am \
 	uninstall-info-am uninstall-info-recursive uninstall-recursive
 
+
+# **************************************************************************
+# misc rules for automatic Microsoft Windows packaging.
+# main: `windows-packages'
+
+windows-files:
+	@if test -d windows; then :; else \
+	  echo " mkdir windows"; \
+	  mkdir windows; \
+	fi
+	@for file in $(top_srcdir)/packaging/windows/*.in; do \
+	  basename=`echo $$file | sed 's%^.*/%%g; s%\.in$$%%'`; \
+	  echo " config.status: generating windows/$$basename"; \
+	  ./config.status --file=-:- >"windows/$$basename" <"$$file"; \
+	done
+
+windows-packages: windows-files
+	@( cd windows; $(MAKE) VERSION=$(VERSION) )
 
 # **************************************************************************
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

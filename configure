@@ -308,7 +308,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS BUILD_WITH_MSVC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd sim_ac_qt_cygpath MOC UIC sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE sim_ac_simage_configcmd HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS BUILD_WITH_MSVC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd sim_ac_qt_cygpath MOC UIC sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE sim_ac_simage_configcmd HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE soguiexamples_src_dir soguiexamples_build_dir LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -865,6 +865,7 @@ if test -n "$ac_init_help"; then
 Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --enable-msvcdspex      build .dsp, not executables
   --disable-msvc          don't require MS Visual C++ on Cygwin
   --disable-dependency-tracking Speeds up one-time builds
   --enable-dependency-tracking  Do not reject slow dependency extractors
@@ -1351,6 +1352,24 @@ fi
 ac_config_guess="$SHELL $ac_aux_dir/config.guess"
 ac_config_sub="$SHELL $ac_aux_dir/config.sub"
 ac_configure="$SHELL $ac_aux_dir/configure" # This should be Cygnus configure.
+
+
+
+# Check whether --enable-msvcdspex or --disable-msvcdspex was given.
+if test "${enable_msvcdspex+set}" = set; then
+  enableval="$enable_msvcdspex"
+  case $enableval in
+  no | false) sim_ac_make_dspex=false ;;
+  *)          sim_ac_make_dspex=true ;;
+  esac
+else
+  sim_ac_make_dspex=false
+fi;
+
+if $sim_ac_make_dspex; then
+  enable_dependency_tracking=no
+  enable_libtool_lock=no
+fi
 
 
 # **************************************************************************
@@ -11109,6 +11128,67 @@ exec_prefix=$sim_ac_save_exec_prefix
 
 
 # **************************************************************************
+# Support for generating VisualStudio project files
+
+soguiexamples_src_dir=`cd "$srcdir"; pwd`
+soguiexamples_build_dir=`pwd`
+
+
+
+if $sim_ac_make_dspex; then
+  soguiexamples_subst="\\\$\$\\(COIN3DDIR\\)=`cygpath -u $COIN3DDIR`"
+
+
+
+if $sim_ac_make_dspex; then
+
+if test x"${sim_ac_configuration_settings+set}" = x"set"; then
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|So${Gui}Examples build type:msvc .dsp"
+else
+  sim_ac_configuration_settings="So${Gui}Examples build type:msvc .dsp"
+fi
+
+
+  CC=$soguiexamples_src_dir/cfg/gendspex.sh
+  CXX=$soguiexamples_src_dir/cfg/gendspex.sh
+  CXXLD=$soguiexamples_src_dir/cfg/gendspex.sh
+
+  # Notes:
+  # - these defines are picked up by gendspex.sh
+  # - template basename (vc6) = vc6 -> workspace_template_vc6.txt, etc
+  # - $(DEFAULT_INCLUDES) is set by the generated Makefile scripts
+  # 2003-11-04 thammer
+  LDFLAGS="-Dsourcedir=$soguiexamples_src_dir -Dtemplatesuffix=vc6 -Dsubstitutes=$soguiexamples_subst $LDFLAGS $CPPFLAGS \$(DEFAULT_INCLUDES)"
+fi
+
+
+
+
+if $sim_ac_make_dspex; then
+
+  # copy all headerfiles from sourcedir to config dir
+  if $sim_ac_make_dspex; then
+
+    sim_ac_dspex_src_dir_length=`echo $soguiexamples_src_dir | wc -c | sed -e "s% %%g"`
+    sim_ac_dspex_headers=`find $soguiexamples_src_dir -name "*.h" | cut -c$sim_ac_dspex_src_dir_length- | sed -e "s%^/%%"`
+
+    for sim_ac_dspex_header in $sim_ac_dspex_headers; do
+      sim_ac_dspex_justname=`echo $sim_ac_dspex_header | sed -e "s%.*/%%"`
+      sim_ac_dspex_dirname=`echo $sim_ac_dspex_header | sed -e "s%[^/]*\.h%%"`
+      if ! test -d "$soguiexamples_build_dir/$sim_ac_dspex_dirname"; then
+        mkdir -p "$soguiexamples_build_dir/$sim_ac_dspex_dirname"
+      fi
+      cp $soguiexamples_src_dir/$sim_ac_dspex_header \
+         $soguiexamples_build_dir/$sim_ac_dspex_header
+    done
+  fi
+
+fi
+
+fi
+
+
+# **************************************************************************
 # All files configure must automatically generate.
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ac_config_files="$ac_config_files Makefile components/Makefile components/SoGuiSnapshotViewer.cpp components/SoGuiSnapshotViewer.h components/backgroundimg.cpp components/computils.cpp components/computils.h components/examinerviewer.cpp components/flyviewer.cpp components/grapheditor.cpp components/lightsliderset.cpp components/materiallist.cpp components/materiallist2.cpp components/materialsliderset.cpp components/materialsliderset2.cpp components/overlay.cpp components/planeviewer.cpp components/renderarea.cpp components/roster.cpp components/snapshotviewer.cpp components/spaceballdemo.cpp components/transformsliderset.cpp actions/Makefile actions/search.cpp actions/raypick.cpp actions/intersection.cpp annex/Makefile annex/hardcopy.cpp draggers/Makefile draggers/translate1.cpp draggers/translate2.cpp draggers/dragpoint.cpp engines/Makefile engines/computebbox.cpp engines/computexfbbox.cpp eyecandy/Makefile eyecandy/moirepatterns.cpp eyecandy/juliaanim.cpp eyecandy/mandelzoom.cpp eyecandy/blob.cpp eyecandy/simbuoy.cpp manipulators/Makefile manipulators/pointlightmanip.cpp manipulators/tabboxmanip.cpp nodekits/Makefile nodekits/scalemarker.cpp nodekits/wavekitdemo.cpp nodes/Makefile nodes/drawstyle.cpp nodes/material.cpp nodes/selection.cpp nodes/slideshow.cpp nodes/sphere.cpp nodes/spherecolor.cpp nodes/rotation.cpp nodes/scale.cpp nodes/translation.cpp nodes/transform.cpp nodes/rotor.cpp nodes/directionallight.cpp nodes/pointlight.cpp nodes/spotlight.cpp nodes/lights.cpp nodes/faceset.cpp nodes/facesetindexed.cpp nodes/quadmesh.cpp nodes/trianglestripset.cpp nodes/camera.cpp nodes/blinker.cpp nodes/texture.cpp nodes/texture3.cpp nodes/environment.cpp nodes/atmospheric.cpp nodes/shuttle.cpp nodes/complexity.cpp nodes/text2.cpp nodes/text3.cpp nodes/clipplane.cpp nodes/levelofdetail.cpp nodes/extselection.cpp nodes/pointset.cpp nodes/markerset.cpp nodes/image.cpp nodes/bigimage.cpp sensors/Makefile sensors/timersensor.cpp volumerendering/Makefile volumerendering/readvol.cpp volumerendering/changingdataset.cpp volumerendering/examine.cpp volumerendering/orthoslicer.cpp volumerendering/raypick.cpp volumerendering/rgbload.cpp volumerendering/simple8bit.cpp coin-competitions/Makefile coin-competitions/SIM-20010803/Makefile coin-competitions/SIM-20010803/chart.cpp coin-competitions/SIM-20010803/plasmafun.cpp coin-competitions/SIM-20010803/stars.cpp coin-competitions/SIM-20010824/Makefile coin-competitions/SIM-20010824/smiley.cpp coin-competitions/SIM-20010824/plasmaball.cpp coin-competitions/SIM-20010824/styx.cpp coin-competitions/SIM-20010824/stars2.cpp coin-competitions/SIM-20010914/Makefile coin-competitions/SIM-20010914/Moolah.cpp coin-competitions/SIM-20010914/calculator.cpp coin-competitions/SIM-20010914/coinhistory.cpp coin-competitions/SIM-20010914/kaos.cpp coin-competitions/SIM-20010914/rec.cpp coin-competitions/SIM-20011005/Makefile coin-competitions/SIM-20011005/lorenz.cpp coin-competitions/SIM-20011005/nurbscurve.cpp coin-competitions/SIM-20011005/cubes.cpp coin-competitions/SIM-20011116/Makefile coin-competitions/SIM-20011116/25bc5bb.cpp coin-competitions/SIM-20011116/foo.cpp coin-competitions/SIM-20011116/shaker.cpp coin-competitions/SIM-20020118/Makefile coin-competitions/SIM-20020118/blocks.cpp coin-competitions/SIM-20020503/Makefile coin-competitions/SIM-20020503/ballinthehoop.cpp coin-competitions/SIM-20020503/flow.cpp coin-competitions/SIM-20020503/typeomatic.cpp"
@@ -12061,6 +12141,8 @@ s,@HAVE_SIMVOLEON_FALSE@,$HAVE_SIMVOLEON_FALSE,;t t
 s,@sim_ac_simage_configcmd@,$sim_ac_simage_configcmd,;t t
 s,@HAVE_SIMAGE_TRUE@,$HAVE_SIMAGE_TRUE,;t t
 s,@HAVE_SIMAGE_FALSE@,$HAVE_SIMAGE_FALSE,;t t
+s,@soguiexamples_src_dir@,$soguiexamples_src_dir,;t t
+s,@soguiexamples_build_dir@,$soguiexamples_build_dir,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 CEOF
