@@ -9179,7 +9179,7 @@ else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
 #include "confdefs.h"
-#include <Inventor/actions/SoIntersectionDetectionAction.h>
+#include <Inventor/collision/SoIntersectionDetectionAction.h>
 #ifdef F77_DUMMY_MAIN
 #  ifdef __cplusplus
      extern "C"
