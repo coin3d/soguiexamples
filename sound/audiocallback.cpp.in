@@ -3,7 +3,7 @@
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 
-#include <Inventor/SoDb.h>
+#include <Inventor/SoDB.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoSphere.h>
 #include <Inventor/VRMLnodes/SoVRMLAudioClip.h>
