@@ -26,10 +26,18 @@
 #include <Inventor/actions/SoRayPickAction.h>
 #include <Inventor/events/SoMouseButtonEvent.h>
 #include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoCube.h>
 #include <Inventor/nodes/SoEventCallback.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoPickStyle.h>
+#include <Inventor/nodes/SoPointSet.h>
 #include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoDrawStyle.h>
+
+// *************************************************************************
+
+static SoCoordinate3 * pickpoints = NULL;
 
 // *************************************************************************
 
@@ -118,6 +126,10 @@ event_cb(void * ud, SoEventCallback * n)
     (void)fprintf(stdout, "point=<%f, %f, %f>, normvec=<%f, %f, %f>\n",
                   v[0], v[1], v[2], nv[0], nv[1], nv[2]);
 
+    // Adds a point marker to the picked point.
+    const int idx = pickpoints->point.getNum();
+    pickpoints->point.set1Value(idx, v);
+
     const SoCamera * camera = viewer->getCamera();
     SbVec3f camerapos = viewer->getCamera()->position.getValue();
     SbVec3f hitvec = v - camerapos;
@@ -136,6 +148,29 @@ event_cb(void * ud, SoEventCallback * n)
     float elevation = elevation_angle(GROUNDPLANE, hitvec);
     (void)fprintf(stdout, "Elevation angle: %f\n", elevation * 180.0f / M_PI);
   }
+}
+
+// *************************************************************************
+
+static SoSeparator *
+pickedPointsSubGraph(void)
+{
+  SoSeparator * picksep = new SoSeparator;
+  SoPickStyle * pickstyle = new SoPickStyle;
+  pickstyle->style = SoPickStyle::UNPICKABLE;
+  picksep->addChild(pickstyle);
+
+  SoDrawStyle * drawstyle = new SoDrawStyle;
+  drawstyle->pointSize = 10;
+  picksep->addChild(drawstyle);
+
+  // The SoCoordinate3 pointer is a global variable.
+  pickpoints = new SoCoordinate3;
+  picksep->addChild(pickpoints);
+
+  picksep->addChild(new SoPointSet);
+
+  return picksep;
 }
 
 // *************************************************************************
@@ -182,27 +217,29 @@ main(int argc, char ** argv)
 
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
 
-  SoSeparator * sep = new SoSeparator;
-  sep->ref();
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  root->addChild(pickedPointsSubGraph());
 
   SoEventCallback * ecb = new SoEventCallback;
   ecb->addEventCallback(SoMouseButtonEvent::getClassTypeId(), event_cb, viewer);
-  sep->addChild(ecb);
+  root->addChild(ecb);
 
   SoInput in;
   in.setBuffer((void *)scene_iv, strlen(scene_iv));
   SoSeparator * r = SoDB::readAll(&in);
   assert(r);
-  sep->addChild(r);
+  root->addChild(r);
 
-  viewer->setSceneGraph(sep);
+  viewer->setSceneGraph(root);
   viewer->show();
   So@Gui@::show(window);
 
   So@Gui@::mainLoop();
 
   delete viewer;
-  sep->unref();
+  root->unref();
   return 0;
 }
 
