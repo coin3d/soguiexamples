@@ -97,7 +97,6 @@ TransferFunctionHandler::initGUI(void)
   this->ctrl->shiftEdit->setValidator(v);
   this->ctrl->offsetEdit->setValidator(v);
 
-  s;
   s.sprintf("%d", this->node->shift.getValue());
   this->ctrl->shiftEdit->setText(s);
   s.sprintf("%d", this->node->offset.getValue());
