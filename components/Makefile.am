@@ -34,6 +34,7 @@ flyviewer_SOURCES = \
 	computils.cpp \
 	computils.h
 
+backgroundimg_SOURCES = backgroundimg.cpp
 
 ## So@Gui@LightSliderSet component
 if HAVE_SLIDERSETS
@@ -98,6 +99,7 @@ BUILT_SOURCES = \
 	computils.h \
 	roster.cpp \
 	renderarea.cpp \
+	backgroundimg.cpp \
 	examinerviewer.cpp \
 	planeviewer.cpp \
 	walkviewer.cpp \
@@ -110,7 +112,7 @@ BUILT_SOURCES = \
 	materiallist2.cpp \
 	grapheditor.cpp
 
-noinst_PROGRAMS = renderarea examinerviewer overlay \
+noinst_PROGRAMS = renderarea backgroundimg examinerviewer overlay \
 	planeviewer flyviewer walkviewer \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
 	$(MATERIALLIST) $(PRINTDIALOG)
@@ -125,6 +127,9 @@ computils.h: $(srcdir)/computils.h.in
 
 renderarea.cpp: $(srcdir)/renderarea.cpp.in
 	@( cd $(top_builddir); ./config.status --file=components/renderarea.cpp )
+
+backgroundimg.cpp: $(srcdir)/backgroundimg.cpp.in
+	@( cd $(top_builddir); ./config.status --file=components/backgroundimg.cpp )
 
 examinerviewer.cpp: $(srcdir)/examinerviewer.cpp.in
 	@( cd $(top_builddir); ./config.status --file=components/examinerviewer.cpp )

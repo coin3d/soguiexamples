@@ -20,6 +20,11 @@
  *
 \**************************************************************************/
 
+// This example shows how to put a permanent background image on your
+// viewer canvas, below the 3D graphics.  Written by mortene.
+
+// *************************************************************************
+
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoCone.h>
