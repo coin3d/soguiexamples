@@ -209,16 +209,11 @@ else
 
   # Which component examples to build.
 
-  AM_CONDITIONAL(HAVE_SLIDERSETS,
-    $soguiconfig $alternate_option --have-feature sliderset)
-  AM_CONDITIONAL(HAVE_MATERIALEDITOR,
-    $soguiconfig $alternate_option --have-feature materialeditor)
-  AM_CONDITIONAL(HAVE_DIRECTIONALLIGHTEDITOR,
-    $soguiconfig $alternate_option --have-feature directionallighteditor)
-  AM_CONDITIONAL(HAVE_MATERIALLIST,
-    $soguiconfig $alternate_option --have-feature materiallist)
-  AM_CONDITIONAL(HAVE_PRINTDIALOG,
-    $soguiconfig $alternate_option --have-feature printdialog)
+  AM_CONDITIONAL(HAVE_SLIDERSETS, false)
+  AM_CONDITIONAL(HAVE_MATERIALEDITOR, false)
+  AM_CONDITIONAL(HAVE_DIRECTIONALLIGHTEDITOR, false)
+  AM_CONDITIONAL(HAVE_MATERIALLIST, false)
+  AM_CONDITIONAL(HAVE_PRINTDIALOG, false)
 
   CPPFLAGS="$CPPFLAGS `$soguiconfig $alternate_option --cppflags`"
   # CFLAGS="$CFLAGS `$soguiconfig $alternate_option --cflags`"
