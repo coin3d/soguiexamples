@@ -368,6 +368,25 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic tags uninstall uninstall-am \
 	uninstall-info-am
 
+
+############################################################################
+
+moirepatterns.cpp: $(srcdir)/moirepatterns.cpp.in
+	@( cd ..; $(MAKE) eyecandy/moirepatterns.cpp )
+
+juliaanim.cpp: $(srcdir)/juliaanim.cpp.in
+	@( cd ..; $(MAKE) eyecandy/juliaanim.cpp )
+
+mandelzoom.cpp: $(srcdir)/mandelzoom.cpp.in
+	@( cd ..; $(MAKE) eyecandy/mandelzoom.cpp )
+
+blob.cpp: $(srcdir)/blob.cpp.in
+	@( cd ..; $(MAKE) eyecandy/blob.cpp )
+
+simbuoy.cpp: $(srcdir)/simbuoy.cpp.in
+	@( cd ..; $(MAKE) eyecandy/simbuoy.cpp )
+
+############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

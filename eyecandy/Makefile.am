@@ -27,3 +27,21 @@ BUILT_SOURCES = \
 	blob.cpp \
 	simbuoy.cpp
 
+############################################################################
+
+moirepatterns.cpp: $(srcdir)/moirepatterns.cpp.in
+	@( cd ..; $(MAKE) eyecandy/moirepatterns.cpp )
+
+juliaanim.cpp: $(srcdir)/juliaanim.cpp.in
+	@( cd ..; $(MAKE) eyecandy/juliaanim.cpp )
+
+mandelzoom.cpp: $(srcdir)/mandelzoom.cpp.in
+	@( cd ..; $(MAKE) eyecandy/mandelzoom.cpp )
+
+blob.cpp: $(srcdir)/blob.cpp.in
+	@( cd ..; $(MAKE) eyecandy/blob.cpp )
+
+simbuoy.cpp: $(srcdir)/simbuoy.cpp.in
+	@( cd ..; $(MAKE) eyecandy/simbuoy.cpp )
+
+############################################################################
