@@ -82,6 +82,7 @@ setColorMapRGBA(SoMFFloat * cmap)
 }
 
 static const char * MANIPSWITCH = "manipswitch";
+static const char * BBOXSWITCH = "bboxswitch";
 
 static void
 event_cb(void * userdata, SoEventCallback * node)
@@ -94,6 +95,14 @@ event_cb(void * userdata, SoEventCallback * node)
     const int val = manipswitch->whichChild.getValue();
     manipswitch->whichChild = (val == SO_SWITCH_NONE) ? SO_SWITCH_ALL : SO_SWITCH_NONE;
   }
+  // Switch volume bbox on/off with 'b'.
+  else if (SO_KEY_PRESS_EVENT(node->getEvent(), B)) {
+    SoSwitch * sw = (SoSwitch *)
+      SoBase::getNamedBase(BBOXSWITCH, SoSwitch::getClassTypeId());
+    assert(sw);
+    const int val = sw->whichChild.getValue();
+    sw->whichChild = (val == SO_SWITCH_NONE) ? SO_SWITCH_ALL : SO_SWITCH_NONE;
+  }
 }
 
 int
@@ -104,7 +113,10 @@ main(int argc, char ** argv)
     exit(1);
   }
 
-  (void)printf("\nNote: use 'm' to turn clip-plane manipulator on / off.\n\n");
+  (void)printf("\n");
+  (void)printf("\tUse 'm' to turn clip-plane manipulator on / off.\n");
+  (void)printf("\tUse 'b' to turn wireframe volume bounding box on / off.\n");
+  (void)printf("\n");
 
   @WIDGET@ window = So@Gui@::init(argv[0]);
   SoVolumeRendering::init();
@@ -129,9 +141,13 @@ main(int argc, char ** argv)
   SoVolumeData * voldata = new SoVolumeData();
   voldata->setReader(filereader);
 
-  { // Show bounding box.
+  { // Bounding box around the volume
+    SoSwitch * sw = new SoSwitch;
+    sw->setName(BBOXSWITCH);
+    root->addChild(sw);
+
     SoSeparator * bboxsep = new SoSeparator;
-    root->addChild(bboxsep);
+    sw->addChild(bboxsep);
 
     SoLightModel * lm = new SoLightModel;
     lm->model = SoLightModel::BASE_COLOR;
