@@ -156,6 +156,7 @@ prefix = @prefix@
 program_transform_name = @program_transform_name@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
+sim_ac_mks_make = @sim_ac_mks_make@
 sim_ac_qt_cygpath = @sim_ac_qt_cygpath@
 sim_ac_simage_configcmd = @sim_ac_simage_configcmd@
 sim_ac_simvoleon_configcmd = @sim_ac_simvoleon_configcmd@

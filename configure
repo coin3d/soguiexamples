@@ -308,7 +308,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS BUILD_WITH_MSVC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd HAVE_SMALLCHANGE_TRUE HAVE_SMALLCHANGE_FALSE sim_ac_qt_cygpath MOC UIC sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE sim_ac_simage_configcmd HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE soguiexamples_src_dir soguiexamples_build_dir LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS sim_ac_mks_make BUILD_WITH_MSVC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd HAVE_SMALLCHANGE_TRUE HAVE_SMALLCHANGE_FALSE sim_ac_qt_cygpath MOC UIC sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE sim_ac_simage_configcmd HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE soguiexamples_src_dir soguiexamples_build_dir LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1355,6 +1355,57 @@ ac_configure="$SHELL $ac_aux_dir/configure" # This should be Cygnus configure.
 
 
 
+case $build in
+*-mks )
+  AR=ar
+  # Extract the first word of "gmake", so it can be a program name with args.
+set dummy gmake; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_sim_ac_mks_make+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $sim_ac_mks_make in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_sim_ac_mks_make="$sim_ac_mks_make" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_sim_ac_mks_make="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_sim_ac_mks_make" && ac_cv_path_sim_ac_mks_make="make"
+  ;;
+esac
+fi
+sim_ac_mks_make=$ac_cv_path_sim_ac_mks_make
+
+if test -n "$sim_ac_mks_make"; then
+  echo "$as_me:$LINENO: result: $sim_ac_mks_make" >&5
+echo "${ECHO_T}$sim_ac_mks_make" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  MAKE="$sim_ac_mks_make"
+  SET_MAKE="MAKE=\"$sim_ac_mks_make\""
+  export AR MAKE
+  ;;
+esac
+
+
+
 # Check whether --enable-msvcdspex or --disable-msvcdspex was given.
 if test "${enable_msvcdspex+set}" = set; then
   enableval="$enable_msvcdspex"
@@ -1486,7 +1537,18 @@ fi
 
 # **************************************************************************
 
-## CPP needed for the Open Inventor version check.
+# cross_compiling: On MKS, configure will open a window when trying to run
+# the executable a.out in the cross-compilation test because it is not
+# named *.exe, halting the configure script until it has been closed, even
+# resulting in a faulty conclusion for the test (cross_compiling=yes).
+# By setting the $cross_compiling variable to yes in advance, this test is
+# skipped.  We are of course not cross-compiling, so we correct the variable
+# afterwards.  2003-06-25 larsa
+
+case $build in
+*-mks ) cross_compiling=yes ;;
+esac
+
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -2355,6 +2417,14 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
+
+case $build in
+*-mks ) cross_compiling=yes ;;
+esac
+
+# **************************************************************************
+
+## CPP needed for the Open Inventor version check.
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -11485,6 +11555,18 @@ fi
 # All files configure must automatically generate.
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ac_config_files="$ac_config_files Makefile components/Makefile components/SoGuiSnapshotViewer.cpp components/SoGuiSnapshotViewer.h components/backgroundimg.cpp components/computils.cpp components/computils.h components/examinerviewer.cpp components/flyviewer.cpp components/grapheditor.cpp components/lightsliderset.cpp components/materiallist.cpp components/materiallist2.cpp components/materialsliderset.cpp components/materialsliderset2.cpp components/multifileviewer.cpp components/overlay.cpp components/planeviewer.cpp components/renderarea.cpp components/roster.cpp components/snapshotviewer.cpp components/spaceballdemo.cpp components/transformsliderset.cpp actions/Makefile actions/search.cpp actions/raypick.cpp actions/intersection.cpp annex/Makefile annex/hardcopy.cpp draggers/Makefile draggers/translate1.cpp draggers/translate2.cpp draggers/dragpoint.cpp engines/Makefile engines/computebbox.cpp engines/computexfbbox.cpp eyecandy/Makefile eyecandy/moirepatterns.cpp eyecandy/juliaanim.cpp eyecandy/mandelzoom.cpp eyecandy/blob.cpp eyecandy/simbuoy.cpp manipulators/Makefile manipulators/pointlightmanip.cpp manipulators/tabboxmanip.cpp nodekits/Makefile nodekits/scalemarker.cpp nodekits/wavekitdemo.cpp nodes/Makefile nodes/drawstyle.cpp nodes/material.cpp nodes/selection.cpp nodes/slideshow.cpp nodes/sphere.cpp nodes/spherecolor.cpp nodes/rotation.cpp nodes/scale.cpp nodes/translation.cpp nodes/transform.cpp nodes/rotor.cpp nodes/directionallight.cpp nodes/pointlight.cpp nodes/spotlight.cpp nodes/lights.cpp nodes/faceset.cpp nodes/facesetindexed.cpp nodes/quadmesh.cpp nodes/trianglestripset.cpp nodes/camera.cpp nodes/blinker.cpp nodes/texture.cpp nodes/texture3.cpp nodes/environment.cpp nodes/atmospheric.cpp nodes/shuttle.cpp nodes/complexity.cpp nodes/text2.cpp nodes/text3.cpp nodes/clipplane.cpp nodes/levelofdetail.cpp nodes/extselection.cpp nodes/pointset.cpp nodes/markerset.cpp nodes/image.cpp nodes/bigimage.cpp nodes/textureunit.cpp nodes/bumpmap.cpp nodes/scenetexture.cpp sensors/Makefile sensors/timersensor.cpp sound/Makefile sound/audiocallback.cpp sound/manysources.cpp volumerendering/Makefile volumerendering/readvol.cpp volumerendering/changingdataset.cpp volumerendering/examine.cpp volumerendering/orthoslicer.cpp volumerendering/raypick.cpp volumerendering/rgbload.cpp volumerendering/simple8bit.cpp coin-competitions/Makefile coin-competitions/SIM-20010803/Makefile coin-competitions/SIM-20010803/chart.cpp coin-competitions/SIM-20010803/plasmafun.cpp coin-competitions/SIM-20010803/stars.cpp coin-competitions/SIM-20010824/Makefile coin-competitions/SIM-20010824/smiley.cpp coin-competitions/SIM-20010824/plasmaball.cpp coin-competitions/SIM-20010824/styx.cpp coin-competitions/SIM-20010824/stars2.cpp coin-competitions/SIM-20010914/Makefile coin-competitions/SIM-20010914/Moolah.cpp coin-competitions/SIM-20010914/calculator.cpp coin-competitions/SIM-20010914/coinhistory.cpp coin-competitions/SIM-20010914/kaos.cpp coin-competitions/SIM-20010914/rec.cpp coin-competitions/SIM-20011005/Makefile coin-competitions/SIM-20011005/lorenz.cpp coin-competitions/SIM-20011005/nurbscurve.cpp coin-competitions/SIM-20011005/cubes.cpp coin-competitions/SIM-20011116/Makefile coin-competitions/SIM-20011116/25bc5bb.cpp coin-competitions/SIM-20011116/foo.cpp coin-competitions/SIM-20011116/shaker.cpp coin-competitions/SIM-20020118/Makefile coin-competitions/SIM-20020118/blocks.cpp coin-competitions/SIM-20020503/Makefile coin-competitions/SIM-20020503/ballinthehoop.cpp coin-competitions/SIM-20020503/flow.cpp coin-competitions/SIM-20020503/typeomatic.cpp"
+
+
+# MKS will have "\c" as $ECHO_C, but that string in the config.status
+# substitution command will cause config.status to hang because it is
+# somehow translated to "&c".  We therefore blank it here, and restore
+# it further below, after AC_OUTPUT.
+
+sim_ac_ECHO_C=$ECHO_C
+case $build in
+*-mks ) ECHO_C="" ;;
+esac
+
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -12356,6 +12438,7 @@ s,@ECHO_C@,$ECHO_C,;t t
 s,@ECHO_N@,$ECHO_N,;t t
 s,@ECHO_T@,$ECHO_T,;t t
 s,@LIBS@,$LIBS,;t t
+s,@sim_ac_mks_make@,$sim_ac_mks_make,;t t
 s,@BUILD_WITH_MSVC@,$BUILD_WITH_MSVC,;t t
 s,@CC@,$CC,;t t
 s,@CFLAGS@,$CFLAGS,;t t
@@ -13085,6 +13168,10 @@ if test "$no_create" != yes; then
   $ac_cs_success || { (exit 1); exit 1; }
 fi
 
+
+ECHO_C=$sim_ac_ECHO_C
+
+# *******************************************************************
 
 
 sim_ac_settings="$sim_ac_configuration_settings"
