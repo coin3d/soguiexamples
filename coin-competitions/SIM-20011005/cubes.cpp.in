@@ -1,0 +1,945 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of demo programs for the Coin library.
+ *  Copyright (C) 2000-2001 by Systems in Motion. All rights reserved.
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, Prof Brochs gate 6, 7030 Trondheim, NORWAY
+ *  http://www.sim.no support@sim.no Voice: +47 22114160 Fax: +47 22207097
+ *
+\**************************************************************************/
+/* ********************************************************************** *
+ * Cubes
+ *
+ * A C++/Coin rewrite of the famous game CUBES originally written by
+ * the same author in MC68000 assembly for Commodore Amiga computers
+ * in 1990/91.
+ *
+ * Author: Marius Kintel (kintel@sim.no)
+ * ********************************************************************** */
+
+/* TODO
+ *=================
+ *
+ * - Tune draggers; constraints ?
+ * X Keyboard-mode: Full game play
+ * - Drag & drop balls
+ * - Textured board/balls?
+ * - Add manipulator-camera
+ * - Ball line-up
+ * - Ball animation (bounce)
+ * X 4-on-a-row animation (blink?, fireworks?)
+ * - Instructions: Ghost balls?, Coin-logo, text
+ * - AI
+ *   o Deepen search on forced moved
+ *   o Randomization
+ *   o Computer vs. Computer
+ * - Undo winning move
+ */
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/events/SoLocation2Event.h>
+#include <Inventor/events/SoMouseButtonEvent.h>
+#include <Inventor/nodes/SoAntiSquish.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoFaceSet.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoCallback.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoOrthographicCamera.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoRotor.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoSwitch.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoSurroundScale.h>
+#include <Inventor/nodes/SoText2.h>
+#include <Inventor/nodes/SoText3.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoTextureCoordinate2.h>
+#include <Inventor/nodes/SoTextureCoordinateBinding.h>
+#include <Inventor/nodes/SoTextureCoordinateEnvironment.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoSelection.h>
+#include <Inventor/nodes/SoLight.h>
+#include <Inventor/fields/SoMFInt32.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+#include <Inventor/elements/SoViewportRegionElement.h>
+#include <Inventor/engines/SoCompose.h>
+#include <Inventor/engines/SoSelectOne.h>
+#include <Inventor/engines/SoTimeCounter.h>
+#include <Inventor/engines/SoOnOff.h>
+#include <Inventor/draggers/SoTranslate1Dragger.h>
+#include <Inventor/draggers/SoTranslate2Dragger.h>
+#include <Inventor/manips/SoTransformerManip.h>
+#include <Inventor/actions/SoSearchAction.h>
+#include <Inventor/actions/SoRayPickAction.h>
+#include <Inventor/actions/SoWriteAction.h>
+#include <Inventor/SoPickedPoint.h>
+
+#include <coin-competitions/coinlogo.h>
+#include <coin-competitions/TextureWriter.h>
+
+#include "GameLogic.h"
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+So@Gui@RenderArea *viewer;
+//  So@Gui@ExaminerViewer *viewer;
+
+SoSwitch *tokenmat;
+SoSwitch *tokensw;
+SoTranslation *tokenTrans;
+SoSwitch *redswitches[4*4*4];
+SoSwitch *blueswitches[4*4*4];
+SoSelectOne *selectone;
+SoTimeCounter *timecounter;
+SoPath *isectpath;
+SoFaceSet *isectfaceset;
+SoSwitch *sceneswitch;
+
+TextureWriter out(80,26);
+GameLogic *game;
+bool mouseInside=false;
+
+// Enables the "hovering" token
+void enable_token(Token color)
+{
+  if (color==NONE) {
+    tokensw->whichChild.setValue(SO_SWITCH_NONE);
+  }
+  else if (color==RED) {
+    tokensw->whichChild.setValue(SO_SWITCH_ALL);
+    tokenmat->whichChild.setValue(0);
+  }
+  else if (color==BLUE) {
+    tokensw->whichChild.setValue(SO_SWITCH_ALL);
+    tokenmat->whichChild.setValue(1);
+  }
+  else assert(false);
+}
+
+void move_token(int x, int y)
+{
+  SbVec3f currPos = tokenTrans->translation.getValue();
+  currPos[0] = x*2-3;
+  currPos[2] = -y*2+3;
+  tokenTrans->translation.setValue(currPos);
+}
+
+void move_token()
+{
+  int x,y;
+  game->getCurrPos(x,y);
+  move_token(x,y);
+}
+
+void place_token(int x, int y, int z, Token color)
+{
+  int idx = x+4*y+16*z;
+  if (color==RED)
+    redswitches[idx]->whichChild.setValue(SO_SWITCH_ALL);
+  else if (color==BLUE)
+    blueswitches[idx]->whichChild.setValue(SO_SWITCH_ALL);
+  else assert(false);
+}
+
+void remove_token(int x, int y, int z, Token color)
+{
+  int idx = x+4*y+16*z;
+  if (color==RED)
+    redswitches[idx]->whichChild.setValue(SO_SWITCH_NONE);
+  else if (color==BLUE)
+    blueswitches[idx]->whichChild.setValue(SO_SWITCH_NONE);
+  else assert(false);
+}
+
+void clear_board()
+{
+  for (int i=0;i<4*4*4;i++) {
+    redswitches[i]->whichChild.setValue(SO_SWITCH_NONE);
+    blueswitches[i]->whichChild.setValue(SO_SWITCH_NONE);
+  }
+  timecounter->on.setValue(false);
+}
+
+void add_token()
+{
+  int x,y,z;
+  Token col;
+  if (game->getLastPos(x,y,z,col)) {
+    place_token(x,y,z,col);
+    bool winner = game->validate();
+    if (winner) {
+//        printf("WINNER: %s\n",col==RED?"Red":"Blue");
+      enable_token(NONE);
+      int idx[4];
+      game->getSolution(idx[0],idx[1],idx[2],idx[3]);
+      if (col==RED) {
+        redswitches[idx[0]]->whichChild.connectFrom(selectone->output);
+        redswitches[idx[1]]->whichChild.connectFrom(selectone->output);
+        redswitches[idx[2]]->whichChild.connectFrom(selectone->output);
+        redswitches[idx[3]]->whichChild.connectFrom(selectone->output);
+      }
+      else {
+        blueswitches[idx[0]]->whichChild.connectFrom(selectone->output);
+        blueswitches[idx[1]]->whichChild.connectFrom(selectone->output);
+        blueswitches[idx[2]]->whichChild.connectFrom(selectone->output);
+        blueswitches[idx[3]]->whichChild.connectFrom(selectone->output);
+      }
+      timecounter->on.setValue(true);
+    }
+    else {
+      if (game->onePlayer() && game->isComputersTurn()) {
+        game->getSuggestedMove(x,y);
+        game->moveTo(x,y);
+        if (game->add()) {
+          add_token();
+        }
+      }
+      else {
+        enable_token(game->getWhoseTurn());
+      }
+    }
+  }
+  else assert(false);
+}
+
+void
+move_token(SbVec2s screenpos)
+{
+    SoRayPickAction pick(viewer->getViewportRegion());
+    pick.setPoint(screenpos);
+    pick.apply(isectpath);
+    SoPickedPoint *pp = pick.getPickedPoint();
+    if (pp) {
+      mouseInside=true;
+      const SoPath *path = pp->getPath();
+      int l=path->getLength();
+      SbVec3f op = pp->getObjectPoint();
+      
+      if (game->isInGame()) {
+        int x,y;
+        if (op[0]<-2) x=0;
+        else if (op[0]<0) x=1;
+        else if (op[0]<2) x=2;
+        else x=3;
+        if (op[2]<-2) y=3;
+        else if (op[2]<0) y=2;
+        else if (op[2]<2) y=1;
+        else y=0;
+        
+        if (game->moveTo(x,y))
+          move_token();
+      }
+    }
+    else mouseInside=false;
+} 
+
+void
+button_event_cb(void *userdata, SoEventCallback *node)
+{
+  const SoMouseButtonEvent *event = (SoMouseButtonEvent *)node->getEvent();
+  if (game->isInGame()) {
+    SbVec2s pos = event->getPosition(viewer->getViewportRegion());
+    move_token(pos); // To make sure it is updated even if user doesn't
+                     // move the mouse.
+    if (mouseInside &&
+        event->getButton()==SoMouseButtonEvent::BUTTON1 &&
+        event->getState()==SoButtonEvent::UP) {
+      if (game->add()) {
+        add_token();
+      }
+    }
+  }
+}
+
+void
+mouse_event_cb(void *userdata, SoEventCallback *node)
+{
+  const SoEvent *event = node->getEvent();
+
+  if (game->isInGame()) {
+    SbVec2s pos = event->getPosition(viewer->getViewportRegion());
+    
+    move_token(pos);
+  }
+}
+
+void
+event_cb(void *userdata, SoEventCallback *node)
+{
+  const SoEvent *event = node->getEvent();
+
+  if (SO_KEY_PRESS_EVENT(event, ENTER)) {
+    if (game->add()) {
+      add_token();
+    }
+  }
+  else if (SO_KEY_PRESS_EVENT(event, LEFT_ARROW)) {
+    if (game->move(-1,0)) {
+      move_token();
+    }
+  }
+  else if (SO_KEY_PRESS_EVENT(event, RIGHT_ARROW)) {
+    if (game->move(1,0)) {
+      move_token();
+    }
+  }
+  else if (SO_KEY_PRESS_EVENT(event, UP_ARROW)) {
+    if (game->move(0,1)) {
+      move_token();
+    }
+  }
+  else if (SO_KEY_PRESS_EVENT(event, DOWN_ARROW)) {
+    if (game->move(0,-1)) {
+      move_token();
+    }
+  }
+  else if (SO_KEY_PRESS_EVENT(event, BACKSPACE)) {
+    if (game->isInGame()) {
+      Token col;
+      int x,y,z;
+      if (game->undo(col,x,y,z)) {
+        remove_token(x,y,z,col);
+      }
+      if (game->onePlayer()) {
+        if (game->undo(col,x,y,z)) {
+          remove_token(x,y,z,col);
+        }
+      }
+    }
+  }
+  else if (SO_KEY_PRESS_EVENT(event, F1)) {
+    if (game->start(RED, true)) {
+      clear_board();
+      enable_token(game->getWhoseTurn());
+      move_token(0,0);
+    }
+  }
+  else if (SO_KEY_PRESS_EVENT(event, F2)) {
+    if (game->start(RED, false)) {
+      clear_board();
+      enable_token(game->getWhoseTurn());
+      move_token(0,0);
+    }
+  }
+  else if (SO_KEY_PRESS_EVENT(event, F12)) {
+    sceneswitch->whichChild.setValue(1);
+  }
+  else if (SO_KEY_PRESS_EVENT(event, Q)) {
+    exit(1);
+  }
+}
+
+void
+help_key_cb(void *userdata, SoEventCallback *node)
+{
+  const SoEvent *event = node->getEvent();
+
+  if (!SO_KEY_RELEASE_EVENT(event, F12)) {
+    sceneswitch->whichChild.setValue(0);
+  }
+}
+
+void setViewportCB(void *data, SoAction *action)
+{
+  if (action->isOfType(SoGLRenderAction::getClassTypeId())) {
+    SbViewportRegion curVP, newVP;
+    curVP = ((SoGLRenderAction*)action)->getViewportRegion();
+    newVP = curVP;
+    newVP.setViewport( 0.0, 0.0, 0.1, 0.1);
+    SoState *state = action->getState();
+    SoViewportRegionElement::set( state, newVP );
+  }
+}
+
+SoSeparator *create_board(SoEngineOutput *rotxfield,SoEngineOutput *rotyfield)
+{
+  SoSeparator *board = new SoSeparator;
+
+  // Rotations
+  SoRotation *rot = new SoRotation;
+  rot->rotation.connectFrom(rotyfield);
+  board->addChild(rot);
+  rot = new SoRotation;
+  rot->rotation.connectFrom(rotxfield);
+  board->addChild(rot);
+
+  SoSeparator *bsep = new SoSeparator;
+  board->addChild(bsep);
+
+  // Bottom plate
+  SoMaterial *mat = new SoMaterial;
+  mat->diffuseColor.setValue(0.44,0.20,0.11);
+  mat->specularColor.setValue(0.71,0.33,0.18);
+  bsep->addChild(mat);
+
+  SoCube *plate = new SoCube;
+  plate->height.setValue(0.5);
+  plate->width.setValue(10);
+  plate->depth.setValue(10);
+
+  bsep->addChild(plate);
+
+  // Intersection plane
+  SoSeparator *intersep = new SoSeparator;
+  bsep->addChild(intersep);
+  SoMaterial *imat = new SoMaterial;
+  imat->transparency.setValue(1);
+  intersep->addChild(imat);
+  SoTranslation *itrans = new SoTranslation;
+  itrans->translation.setValue(0,4.375,0);
+  intersep->addChild(itrans);
+  SoCoordinate3 *coord = new SoCoordinate3;
+  coord->point.set1Value(0,-5,0,-5);
+  coord->point.set1Value(1,5,0,-5);
+  coord->point.set1Value(2,5,0,5);
+  coord->point.set1Value(3,-5,0,5);
+  intersep->addChild(coord);
+  isectfaceset = new SoFaceSet;
+  isectfaceset->numVertices.setValue(4);
+  intersep->addChild(isectfaceset);
+
+  // Add cylinders
+  SoSeparator *cylsep = new SoSeparator;
+  bsep->addChild(cylsep);
+
+  mat = new SoMaterial;
+  mat->specularColor.setValue(1.0f, 0.0f, 0.0f);
+  mat->emissiveColor.setValue(0.5f, 0.3f, 0.0f);
+  mat->shininess = 0.8f;
+  cylsep->addChild(mat);
+
+
+  SoCylinder *cyl = new SoCylinder;
+  cyl->radius.setValue(0.05);
+  cyl->height.setValue(4.25);
+  SbVec3f move;
+  move.setValue(-3,2.25,-3);
+  for (int j=0;j<4;j++) {
+    for (int i=0;i<4;i++) {
+      SoTranslation *trans = new SoTranslation;
+      trans->translation.setValue(move);
+      cylsep->addChild(trans);
+      cylsep->addChild(cyl);
+      move.setValue(2,0,0);
+    }
+    move.setValue(-6,0,2);
+  }
+
+  SoSeparator *tokensep = new SoSeparator;
+  tokenTrans = new SoTranslation;
+  tokenmat = new SoSwitch;
+  tokensw = new SoSwitch;
+  SoSphere *token = new SoSphere;
+  SoMaterial *redmat = new SoMaterial;
+  SoMaterial *bluemat = new SoMaterial;
+  board->addChild(tokensep);
+  tokensep->addChild(tokenTrans);
+  tokensep->addChild(tokenmat);
+  tokensep->addChild(tokensw);
+  tokenmat->addChild(redmat);
+  tokenmat->addChild(bluemat);
+  tokensw->addChild(token);
+  
+  token->radius.setValue(0.5);
+  tokensw->whichChild.setValue(SO_SWITCH_NONE);
+  tokenmat->whichChild.setValue(SO_SWITCH_NONE);
+  redmat->diffuseColor.setValue(1.0, 0.0, 0.0);
+  redmat->specularColor.setValue(1.0, 1.0, 1.0);
+  bluemat->diffuseColor.setValue(0.0, 0.0, 1.0);
+  bluemat->specularColor.setValue(1.0, 1.0, 1.0);
+  tokenTrans->translation.setValue(0,4.75,0);
+
+  SoSeparator *redsep;
+  SoSeparator *bluesep;
+  SoMaterial *redmats = new SoMaterial;
+  redmats->diffuseColor.setValue(1.0, 0.0, 0.0);
+  redmats->specularColor.setValue(1.0, 1.0, 1.0);
+  board->addChild(redmats);
+  redsep = new SoSeparator;
+  board->addChild(redsep);
+
+  SoMaterial *bluemats = new SoMaterial;
+  bluemats->diffuseColor.setValue(0.0, 0.0, 1.0);
+  bluemats->specularColor.setValue(1.0, 1.0, 1.0);
+  board->addChild(bluemats);
+  bluesep = new SoSeparator;
+  board->addChild(bluesep);
+
+  SoSwitch *sw;
+  SbVec3f prevTrans(0,0,0);
+  SbVec3f newTrans(0,0,0);
+  for (int k=0;k<4;k++)
+    for (int j=0;j<4;j++)
+      for (int i=0;i<4;i++) {
+        newTrans.setValue(i*2-3, k+0.75, -j*2+3);
+        newTrans-=prevTrans;
+
+        sw = new SoSwitch;
+        redswitches[i+j*4+k*16] = sw;
+        SoTranslation *tt = new SoTranslation;
+        tt->translation.setValue(newTrans);
+        redsep->addChild(tt);
+        SoSphere *s = new SoSphere;
+        s->radius.setValue(0.5);
+        sw->addChild(s);
+        redsep->addChild(sw);
+
+        sw = new SoSwitch;
+        blueswitches[i+j*4+k*16] = sw;
+        tt = new SoTranslation;
+        tt->translation.setValue(newTrans);
+        bluesep->addChild(tt);
+        s = new SoSphere;
+        s->radius.setValue(0.5);
+        sw->addChild(s);
+        bluesep->addChild(sw);
+
+        prevTrans+=newTrans;
+      }
+
+
+  timecounter = new SoTimeCounter;
+  timecounter->frequency.setValue(2);
+  timecounter->on.setValue(false);
+  SoOnOff *onoff = new SoOnOff;
+  onoff->toggle.connectFrom(&timecounter->syncOut);
+  selectone = new SoSelectOne(SoMFInt32::getClassTypeId());
+  ((SoMFInt32 *)selectone->input)->set1Value(0,SO_SWITCH_NONE);
+  ((SoMFInt32 *)selectone->input)->set1Value(1,SO_SWITCH_ALL);
+  selectone->index.connectFrom(&onoff->isOn);
+  return board;
+}
+
+SoSeparator *create_winnerboard(int i0, int i1, int i2, int i3)
+{
+  SoSeparator *board = new SoSeparator;
+
+  SoRotation *rot = new SoRotation;
+  rot->rotation = SbRotation(SbVec3f(1,0,0),30*M_PI/180);
+  board->addChild(rot);
+
+  SoRotor *rotor = new SoRotor;
+  rotor->rotation = SbRotation(SbVec3f(0, 1, 0), 1);
+  rotor->speed = 0.1f;
+  board->addChild(rotor);
+
+  // Bottom plate
+  SoMaterial *mat = new SoMaterial;
+  mat->diffuseColor.setValue(0.44,0.20,0.11);
+  mat->specularColor.setValue(0.71,0.33,0.18);
+  mat->transparency.setValue(0.7);
+  board->addChild(mat);
+
+  SoCube *plate = new SoCube;
+  plate->height.setValue(0.5);
+  plate->width.setValue(10);
+  plate->depth.setValue(10);
+
+  board->addChild(plate);
+
+  // Add cylinders
+  SoSeparator *cylsep = new SoSeparator;
+  board->addChild(cylsep);
+
+  mat = new SoMaterial;
+  mat->specularColor.setValue(1.0f, 0.0f, 0.0f);
+  mat->emissiveColor.setValue(0.5f, 0.3f, 0.0f);
+  mat->transparency.setValue(0.7);
+  mat->shininess = 0.8f;
+  cylsep->addChild(mat);
+
+
+  SoCylinder *cyl = new SoCylinder;
+  cyl->radius.setValue(0.05);
+  cyl->height.setValue(4.25);
+  SbVec3f move;
+  move.setValue(-3,2.25,-3);
+  for (int j=0;j<4;j++) {
+    for (int i=0;i<4;i++) {
+      SoTranslation *trans = new SoTranslation;
+      trans->translation.setValue(move);
+      cylsep->addChild(trans);
+      cylsep->addChild(cyl);
+      move.setValue(2,0,0);
+    }
+    move.setValue(-6,0,2);
+  }
+
+  SoMaterial *redmats = new SoMaterial;
+  redmats->diffuseColor.setValue(1.0, 0.0, 0.0);
+  redmats->specularColor.setValue(1.0, 1.0, 1.0);
+  redmats->transparency.setValue(0.7);
+  board->addChild(redmats);
+
+  int idx[4] = {i0,i1,i2,i3};
+  SbVec3f prevTrans(0,0,0);
+  SbVec3f newTrans(0,0,0);
+  for (int a=0;a<4;a++) {
+    int i = idx[a]&0x03;
+    int j = (idx[a]&0x0c)>>2;
+    int k = (idx[a]&0x30)>>4;
+    newTrans.setValue(i*2-3, k+0.75, -j*2+3);
+    newTrans-=prevTrans;
+    SoTranslation *t0 = new SoTranslation;
+    t0->translation.setValue(newTrans);
+    board->addChild(t0);
+    SoSphere *s = new SoSphere;
+    s->radius.setValue(0.5);
+    board->addChild(s);
+    prevTrans+=newTrans;
+  }
+  return board;
+}
+
+//  void draggerCB(void *data, SoDragger *dragger)
+//  {
+//    SoTranslate1Dragger *drg = (SoTranslate1Dragger *)dragger;
+//    printf("Dragger: %f\n",drg->translation.getValue()[0]);
+//  }
+
+SoSeparator *create_helpscene()
+{
+  SoSeparator *root = new SoSeparator;
+
+  // Callback for keyboard events
+  SoEventCallback *cb = new SoEventCallback;
+  cb->addEventCallback(SoKeyboardEvent::getClassTypeId(), help_key_cb, NULL);
+  root->addChild(cb);
+
+  SoPerspectiveCamera *cam = new SoPerspectiveCamera;
+  root->addChild(cam);
+
+  SoDirectionalLight *light= new SoDirectionalLight;
+  root->addChild(light);
+
+  SoSeparator *boards = new SoSeparator;
+  root->addChild(boards);
+  SoTranslation *trans = new SoTranslation;
+  trans->translation.setValue(0,7.5,0);
+  boards->addChild(trans);
+  SoSeparator *b1 = create_winnerboard(4,5,6,7);
+  boards->addChild(b1);
+  trans = new SoTranslation;
+  trans->translation.setValue(15,0,0);
+  boards->addChild(trans);
+  b1 = create_winnerboard(5,21,37,53);
+  boards->addChild(b1);
+  trans = new SoTranslation;
+  trans->translation.setValue(15,0,0);
+  boards->addChild(trans);
+  b1 = create_winnerboard(16,21,26,31);
+  boards->addChild(b1);
+  trans = new SoTranslation;
+  trans->translation.setValue(-30,-15,0);
+  boards->addChild(trans);
+  b1 = create_winnerboard(8,25,42,59);
+  boards->addChild(b1);
+  trans = new SoTranslation;
+  trans->translation.setValue(15,0,0);
+  boards->addChild(trans);
+  b1 = create_winnerboard(0,21,42,63);
+  boards->addChild(b1);
+  trans = new SoTranslation;
+  trans->translation.setValue(15,0,0);
+  boards->addChild(trans);
+  b1 = create_winnerboard(44,45,46,47);
+  boards->addChild(b1);
+
+  float dist=50;
+  cam->position.setValue(15,0,dist);
+  cam->farDistance.setValue(1000.0f);
+  cam->nearDistance.setValue(0.1f);
+  cam->focalDistance.setValue(dist);
+
+  // 2D instructions
+  SoSeparator *instructsep = new SoSeparator;
+  root->addChild(instructsep);
+
+  // ...with its own camera
+  SoOrthographicCamera *ocam = new SoOrthographicCamera;
+  //FIXME: Uncommented is workaround for camera/text2 problem (gcc-2.96)
+  ocam->position.setValue(0,0,-10);
+  ocam->viewportMapping.setValue(SoCamera::LEAVE_ALONE);
+  ocam->nearDistance.setValue(0.1);
+  ocam->farDistance.setValue(100);
+  instructsep->addChild(ocam);
+
+  const char *str[] = {
+    "Instructions\n",
+    "============\n",
+    "\n",
+    "F1                - Start 1-player game (player vs. computer)\n",
+    "F2                - Start 2-player game\n",
+    "Backspace         - Undo last move\n",
+    "Arrows/Mouse      - Move token\n",
+    "Enter/Left button - Place token\n",
+    "Q                 - Quit\n",
+    "\n",
+    "Each player takes turn on placing a token of his color\n",
+    "on the board. The token can be placed on any of the 16\n",
+    "nails on the board. A placed token will drop down on the\n",
+    "board on top of any tokens previously placed on the same nail.\n",
+    "The maximum building height is 4 tokens, making the board a\n",
+    "4x4x4 cube.\n",
+    "The objective of the game is to obtain 4 tokens of your color\n",
+    "in a row. Any constellation of tokens making up a straight line\n",
+    "is a winner; diagonals both in-plane and in 3D are winners.\n",
+    "\n",
+    "This screen shows example winning combinations.\n",
+    "\n",
+    "(Press any key to return)\n",
+  };
+
+  for (int i=0;i<sizeof(str)/sizeof(char*);i++) {
+    out.out(str[i]);
+  }
+
+  out.render( );
+
+  // Add texture
+  SoTexture2 *consol_texture = new SoTexture2;
+  int xsize = out.getTextureXSize();
+  int ysize = out.getTextureYSize();
+  consol_texture->image.setValue(SbVec2s(xsize,ysize), 4, 
+                                 (const unsigned char *)out.getTexture());
+  instructsep->addChild(consol_texture);
+
+  SoCoordinate3 * coord = new SoCoordinate3;
+  instructsep->addChild(coord);
+  float aspect = out.getAspectRatio();
+  ocam->aspectRatio.setValue(aspect);
+  coord->point.set1Value(0, SbVec3f(-1.0*aspect, -1.0, 0));
+  coord->point.set1Value(1, SbVec3f( 1.0*aspect, -1.0, 0));
+  coord->point.set1Value(2, SbVec3f( 1.0*aspect,  1.0, 0));
+  coord->point.set1Value(3, SbVec3f(-1.0*aspect,  1.0, 0));
+
+  // Define the consol texture coordinates
+  SoTextureCoordinate2 *tex_coord = new SoTextureCoordinate2;
+  instructsep->addChild( tex_coord );
+  tex_coord->point.set1Value(0, SbVec2f(0.0f, 1.0f));
+  tex_coord->point.set1Value(1, SbVec2f(1.0f, 1.0f));
+  tex_coord->point.set1Value(2, SbVec2f(1.0f, 0.0f));
+  tex_coord->point.set1Value(3, SbVec2f(0.0f, 0.0f));
+
+  // Define texture coordinate bindings
+  SoTextureCoordinateBinding * tex_bind = new SoTextureCoordinateBinding;
+  instructsep->addChild(tex_bind);
+  tex_bind->value.setValue(SoTextureCoordinateBinding::PER_VERTEX);
+
+  // Define a face set
+  SoFaceSet *face_set = new SoFaceSet;
+  instructsep->addChild(face_set);
+  face_set->numVertices.setValue(4);
+
+  return root;
+}
+
+int
+main(int argc, char **argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  game = new GameLogic;
+
+  SoSeparator *root = new SoSeparator;
+  root->ref();
+
+  sceneswitch = new SoSwitch;
+  root->addChild(sceneswitch);
+
+  SoSeparator *gameroot = new SoSeparator;
+  sceneswitch->addChild(gameroot);
+  SoSeparator *helpscene = create_helpscene();
+  sceneswitch->addChild(helpscene);
+  sceneswitch->whichChild.setValue(0);
+
+  SoDirectionalLight *light= new SoDirectionalLight;
+  gameroot->addChild(light);
+
+  // Callback for keyboard events
+  SoEventCallback *cb = new SoEventCallback;
+  cb->addEventCallback(SoKeyboardEvent::getClassTypeId(), event_cb, NULL);
+  cb->addEventCallback(SoLocation2Event::getClassTypeId(), mouse_event_cb, NULL);
+  cb->addEventCallback(SoMouseButtonEvent::getClassTypeId(), button_event_cb, NULL);
+  gameroot->insertChild(cb, 0);
+
+  SoPerspectiveCamera *cam = new SoPerspectiveCamera;
+  gameroot->addChild(cam);
+
+  // Setup draggers
+  SoSeparator *draggersep = new SoSeparator;
+  gameroot->addChild(draggersep);
+  SoTranslation *dtrans = new SoTranslation;
+  dtrans->translation.setValue(-0.6,0,0);
+  draggersep->addChild(dtrans);
+  SoTranslate1Dragger *xdragger = new SoTranslate1Dragger;
+  xdragger->translation.setValue(0.6,-3,10);
+//    xdragger->addValueChangedCallback(draggerCB,NULL);
+  draggersep->addChild(xdragger);
+
+  SoRotation *drot = new SoRotation;
+  drot->rotation.setValue(SbVec3f(0,0,1),-90*M_PI/180);
+  draggersep->addChild(drot);
+  dtrans = new SoTranslation;
+  dtrans->translation.setValue(2.4,0,0);
+  draggersep->addChild(dtrans);
+  SoTranslate1Dragger *ydragger = new SoTranslate1Dragger;
+  ydragger->translation.setValue(0.6,0.6,10);
+//    ydragger->addValueChangedCallback(draggerCB,NULL);
+  draggersep->addChild(ydragger);
+  
+  // Engines for connecting draggers to rotation nodes
+  SoDecomposeVec3f *decomp = new SoDecomposeVec3f;
+  decomp->ref();
+  decomp->vector.connectFrom(&xdragger->translation);
+  SoComposeRotation *comprot = new SoComposeRotation;
+  comprot->ref();
+  comprot->axis.setValue(0,1,0);
+  comprot->angle.connectFrom(&decomp->x);
+
+  SoDecomposeVec3f *ydecomp = new SoDecomposeVec3f;
+  ydecomp->ref();
+  ydecomp->vector.connectFrom(&ydragger->translation);
+  SoComposeRotation *ycomprot = new SoComposeRotation;
+  ycomprot->ref();
+  ycomprot->axis.setValue(1,0,0);
+  ycomprot->angle.connectFrom(&ydecomp->x);
+
+  // Board
+  SoSeparator *boardsep = create_board(&comprot->rotation,&ycomprot->rotation);
+  gameroot->addChild(boardsep);
+
+  // Sets up the examiner viewer
+  viewer = new So@Gui@RenderArea(window);
+//    viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setBackgroundColor( SbColor( 0.37f, 0.61f, 0.27f )  );
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Cubes");
+//    viewer->setAnimationEnabled(false);
+//    viewer->setViewing(false);
+  viewer->setTransparencyType(SoGLRenderAction::BLEND);
+
+  // Places the camera correctly
+  float dist=20;
+  cam->position.setValue(0,0,dist);
+  cam->farDistance.setValue(1000.0f);
+  cam->nearDistance.setValue(0.1f);
+  cam->focalDistance.setValue(dist);
+
+  // New camera for the Coin logo "legend"
+  SoPerspectiveCamera *logocam = new SoPerspectiveCamera;
+  gameroot->addChild(logocam);
+
+  SoSeparator *logosep = new SoSeparator;
+  gameroot->addChild(logosep);
+
+  // To make it render in a custom viewport
+  SoCallback *vpcb = new SoCallback();
+  vpcb->setCallback(setViewportCB, NULL);
+  logosep->addChild(vpcb);
+
+  SoRotor *logorot = new SoRotor;
+  logorot->rotation = SbRotation(SbVec3f(0, 1, 0), 1);
+  logorot->speed = 0.1f;
+  logosep->addChild(logorot);
+
+  SoTranslation *logotrans = new SoTranslation;
+  logotrans->translation.setValue(100,0,0);
+
+  SoMaterial *mat = new SoMaterial;
+  mat->specularColor.setValue( 1.0f, 0.0f, 0.0f );
+  mat->emissiveColor.setValue( 0.5f, 0.3f, 0.0f );
+  mat->shininess = 0.8f;
+  logosep->addChild(mat);
+  SoInput in;
+  in.setBuffer((void *)COIN_LOGO,strlen(COIN_LOGO));
+  SoNode *logo;
+  SoDB::read(&in,logo);
+  logosep->addChild(logo);
+
+  // FIXME: Place camera manually?
+  SbViewportRegion reg(100,100);
+  logocam->viewAll(logosep,reg);
+
+  // 2D instructions
+  SoSeparator *instructsep = new SoSeparator;
+  gameroot->addChild(instructsep);
+
+  // ...with its own camera
+  SoOrthographicCamera *ocam = new SoOrthographicCamera;
+  //FIXME: Uncommented is workaround for camera/text2 problem (gcc-2.96)
+  ocam->orientation.setValue(SbRotation(SbVec3f(0,1,0),M_PI));
+  ocam->viewportMapping.setValue(SoCamera::LEAVE_ALONE);
+  ocam->nearDistance.setValue(0.1);
+  instructsep->addChild(ocam);
+
+  SoTranslation *instructtrans = new SoTranslation;
+  instructsep->addChild(instructtrans);
+
+  SoText2 *instructions = new SoText2;
+  const char *str[] = {
+    "For instructions, press F12"
+  };
+  instructions->string.setValues(0, sizeof(str) / sizeof(char *), str);
+  instructions->justification = SoText2::LEFT;
+  instructsep->addChild(instructions);
+
+  SbViewVolume vv = ocam->getViewVolume();
+  SbVec3f p = vv.getPlanePoint(0.0f, SbVec2f(0.0f, 0.95f));
+  instructtrans->translation.setValue(p[0], p[1], 0);
+
+  // Create path to intersection plane
+  SoSearchAction search;
+  search.setNode(isectfaceset);
+  search.apply(gameroot);
+  isectpath = new SoPath(*search.getPath());
+  isectpath->ref();
+
+  // Write scene to disk
+//    SoOutput out;
+//    out.openFile("test.iv");
+//    SoWriteAction w(&out);
+//    w.apply(gameroot);
+//    out.closeFile();
+
+  // Get started
+//    viewer->setDecoration(FALSE);
+  viewer->show();
+  So@Gui@::show(window);
+  // Must do this _after_ show() to avoid the "Start"-bar being
+  // visible. (Bug!)
+//    (void)viewer->setFullScreen(TRUE);
+
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+  return 0;
+}
+
