@@ -9,6 +9,7 @@
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoShapeHints.h>
 #include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoRotation.h>
 #include <Inventor/sensors/SoTimerSensor.h>
 
 #include <Inventor/@Gui@/So@Gui@.h>
@@ -95,6 +96,16 @@ main(
   if ( window == NULL )
     exit( 1 );
 
+  (void) fprintf(stdout,
+                 "\n"
+                 "This example demonstrates how to use a QuadMesh to do 3D mandelbrot zoom.\n"
+                 "\n"
+                 "Quick instructions:\n"
+                 "\n"
+                 "Use the Dolly thumbwheel to zoom, other thumbwheels to change center position.\n"
+                 "\n");
+  
+
   Landscape * landscape = new Landscape( landscapewidth, landscapeheight );
   landscape->createJulia( 32 ); 
   landscape->smooth();
@@ -145,8 +156,8 @@ Landscape::Landscape(
   heightbuffer = new float[ w * h ]; 
   smoothbuffer = new float[ w * h ];
   texturebuffer = new unsigned char[ w * h * 4 ];
-  centerr = 0;
-  centeri = 0;
+  centerr = -0.810231;
+  centeri = 0.182508;
   zoom = 1;
   changed = TRUE;
 }
@@ -300,6 +311,11 @@ Landscape::createScene(void) {
 
   hints->vertexOrdering = SoShapeHintsElement::COUNTERCLOCKWISE;
   hints->shapeType = SoShapeHintsElement::SOLID;
+
+  // add initial rotation
+  SoRotation * rot = new SoRotation;
+  rot->rotation.setValue(SbVec3f(1.0f, 0.0f, 0.0f), 0.5f);
+  sep->addChild(rot);
 
   // add land
   sep->addChild(hints);
