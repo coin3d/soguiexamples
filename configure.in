@@ -63,6 +63,12 @@ AC_ARG_WITH([alternate],
   [alternate_option=])
 
 # **************************************************************************
+# For the examples which needs to include gl.h.
+
+AC_CHECK_HEADERS([windows.h])
+SIM_AC_CHECK_HEADER_GL
+
+# **************************************************************************
 # Search and set up necessary stuff to use the Inventor implementation.
 
 sim_ac_guiexamples_use_inventor=true

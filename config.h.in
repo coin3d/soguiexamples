@@ -36,6 +36,9 @@
 /* Define to enable use of Inventor feature */
 #undef HAVE_VIEWER_STEREO_VIEWING
 
+/* Define if you have the <windows.h> header file. */
+#undef HAVE_WINDOWS_H
+
 /* Define this to use OpenGL widget from <X11/GLw/GLwDrawA.h> */
 #undef HAVE_X11_GLW_GLWDRAWA_H
 
