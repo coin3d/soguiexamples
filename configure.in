@@ -135,6 +135,8 @@ EOF
   AM_CONDITIONAL(HAVE_MATERIALLIST, true)
   AM_CONDITIONAL(HAVE_PRINTDIALOG, true)
 
+  SIM_AC_CONFIGURATION_SETTING([GUI toolkit], [SGI InventorXt])
+
 else
   sim_ac_gui_default=soxt
 
@@ -158,10 +160,6 @@ else
     sogtk,
     AC_HELP_STRING([--with-sogtk], [build against the SoGtk toolkit]),
     [sim_ac_gui_default=sogtk])
-  AC_ARG_WITH(
-    oiv,
-    AC_HELP_STRING([--with-oiv], [build against the InventorXt toolkit]),
-    [sim_ac_gui_default=oivxt])
 
   AC_ARG_WITH(
     toolkit,
@@ -174,7 +172,6 @@ else
       win | sowin)   sim_ac_gui_toolkit=sowin ;;
       gtk | sogtk)   sim_ac_gui_toolkit=sogtk ;;
       be  | sobe)    sim_ac_gui_toolkit=sobe  ;;
-      oiv )          sim_ac_gui_toolkit=oivxt ;;
       *) AC_MSG_ERROR([invalid --with-toolkit value: "$withval"]) ;;
     esac],
     [sim_ac_gui_toolkit=$sim_ac_gui_default])
