@@ -9,13 +9,19 @@ else
 SIMAGE_DEPENDENTS = 
 endif
 
+if HAVE_SMALLCHANGE
+SMALLCHANGE_DEPENDENTS = opaquechair voleonexplore
+else
+SMALLCHANGE_DEPENDENTS = 
+endif
+
 ############################################################################
 # Executables.
 
 noinst_PROGRAMS = \
 	readvol changingdataset examine orthoslicer \
 	raypick simple8bit $(SIMAGE_DEPENDENTS) \
-	opaquechair voleonexplore
+	$(SMALLCHANGE_DEPENDENTS)
 
 ############################################################################
 # Executables using the Qt extensions in the "Cute/" subdir.

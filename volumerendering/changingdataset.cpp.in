@@ -20,14 +20,20 @@
  *
 \**************************************************************************/
 
-#include <Inventor/@Gui@/So@Gui@.h>
-#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <assert.h>
+
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/sensors/SoTimerSensor.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
 #include <VolumeViz/nodes/SoTransferFunction.h>
 #include <VolumeViz/nodes/SoVolumeData.h>
 #include <VolumeViz/nodes/SoVolumeRender.h>
 #include <VolumeViz/nodes/SoVolumeRendering.h>
+
+// *************************************************************************
 
 static float
 unit_rand(void)
@@ -103,7 +109,7 @@ main(int argc, char ** argv)
 
   // Timer sensor
   SoTimerSensor * timer = new SoTimerSensor(timersensorcallback, volumedata);
-  timer->setInterval(3);
+  timer->setInterval(3.0);
   timer->schedule();
 
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);

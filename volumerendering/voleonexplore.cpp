@@ -89,8 +89,11 @@ colorTableCallback(SoQtColorTableEditor * editor, void * userData)
   voltransfunc->predefColorMap.setValue(SoTransferFunction::NONE);
   voltransfunc->colorMapType.setValue(SoTransferFunction::RGBA);
   
-  for (int i=0;i<256*4;++i) 
+  for (int i=0;i<256*4;++i) {
     voltransfunc->colorMap.set1Value(i, colors[i]/256.0f);   
+  }
+
+  voltransfunc->reMap(1, 65535);
 }
 
 // *************************************************************************

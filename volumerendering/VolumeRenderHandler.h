@@ -35,7 +35,7 @@ class VolumeRenderHandler : QObject
   Q_OBJECT
 
 public:
-  VolumeRenderHandler(SoVolumeRender * node, const SoVolumeData * volumedatanode, QWidget * parent = NULL);
+  VolumeRenderHandler(SoVolumeRender * node, SoVolumeData * volumedatanode, QWidget * parent = NULL);
   ~VolumeRenderHandler();
 
 private slots:
@@ -50,7 +50,7 @@ private:
   void initGUI(void);
 
   SoVolumeRender * node;
-  const SoVolumeData * vdnode;
+  SoVolumeData * vdnode;
   SoVolumeRender_ctrl * ctrl;
 };
 

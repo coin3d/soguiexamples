@@ -20,6 +20,8 @@
  *
 \**************************************************************************/
 
+#include <assert.h>
+
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoCube.h>
@@ -139,6 +141,7 @@ main(int argc, char ** argv)
   
   // Add VolumeData to scene graph
   SoVolumeData * voldata = new SoVolumeData();
+  voldata->storageHint = SoVolumeData::TEX3D;
   voldata->setReader(*filereader);
 
   { // Bounding box around the volume
@@ -199,7 +202,7 @@ main(int argc, char ** argv)
     volspan.getSize(dx, dy, dz);
 
     SoScale * scale = new SoScale;
-    scale->scaleFactor.setValue(dx / 10.0f, dy / 10.0f, dz / 10.0f);
+    scale->scaleFactor.setValue(dx / 3.0f, dy / 3.0f, dz / 3.0f);
     sep->addChild(scale);
 
     SoTranslation * trans = new SoTranslation;
@@ -228,6 +231,7 @@ main(int argc, char ** argv)
 
   So@Gui@ExaminerViewer * ex = new So@Gui@ExaminerViewer(window);
   ex->setBackgroundColor(SbColor(0.1f, 0.3f, 0.5f));
+  ex->setFeedbackVisibility(TRUE);
   ex->setSceneGraph(root);
 
   ex->show();

@@ -23,8 +23,8 @@
 #include "VolumeRenderHandler.h"
 #include "SoVolumeRender_ctrl.h"
 
-#include <VolumeViz/nodes/SoVolumeRender.h>
-#include <VolumeViz/nodes/SoVolumeData.h>
+#include <assert.h>
+
 #include <qvalidator.h>
 #include <qlineedit.h>
 #include <qcombobox.h>
@@ -32,9 +32,15 @@
 #include <qslider.h>
 #include <qlabel.h>
 
+#include <VolumeViz/nodes/SoVolumeRender.h>
+#include <VolumeViz/nodes/SoVolumeData.h>
+
+#include "utility.h"
+
+// *************************************************************************
 
 VolumeRenderHandler::VolumeRenderHandler(SoVolumeRender * rendernode,
-                                         const SoVolumeData * volumedatanode,
+                                         SoVolumeData * volumedatanode,
                                          QWidget * parent)
 {
   this->node = rendernode;
@@ -68,7 +74,7 @@ VolumeRenderHandler::initGUI(void)
   // "numSlices" slider & edit
 
   this->ctrl->numSlicesSlider->setMinValue(0);
-  const unsigned short maxdim = SbMax(dimension[0], SbMax(dimension[1], dimension[2]));
+  const unsigned short maxdim = SbGuiExMax(dimension[0], SbGuiExMax(dimension[1], dimension[2]));
   this->ctrl->numSlicesSlider->setMaxValue(maxdim);
   this->ctrl->numSlicesSlider->setValue(this->node->numSlices.getValue());
 
