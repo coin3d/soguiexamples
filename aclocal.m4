@@ -377,7 +377,10 @@ fi
 
 AC_DEFUN([AM_AUX_DIR_EXPAND], [
 # expand $ac_aux_dir to an absolute path
-am_aux_dir=`CDPATH=:; cd $ac_aux_dir && pwd`
+if test "${CDPATH+set}" = set; then
+  CDPATH=${ZSH_VERSION+.}:   # as recommended in autoconf.texi
+fi
+am_aux_dir=`cd $ac_aux_dir && pwd`
 ])
 
 # AM_PROG_INSTALL_SH
@@ -1028,7 +1031,7 @@ AC_ARG_ENABLE(
   [case "${enableval}" in
     yes) enable_warnings=yes ;;
     no)  enable_warnings=no ;;
-    *) AC_MSG_ERROR(bad value "${enableval}" for --enable-warnings) ;;
+    *) AC_MSG_ERROR([bad value "$enableval" for --enable-warnings]) ;;
   esac],
   [enable_warnings=yes])
 

@@ -6,7 +6,7 @@ SUBDIRS = \
   coin-competitions/SIM-20010914 \
   coin-competitions/SIM-20010824 \
   coin-competitions/SIM-20010803 \
-  actions draggers manipulators nodes sensors 
+  actions draggers engines manipulators nodes sensors 
 
 ############################################################################
 
@@ -35,6 +35,7 @@ BUILT_SOURCES = \
 	draggers/dragpoint.cpp \
 	draggers/translate1.cpp \
 	draggers/translate2.cpp \
+	engines/computebbox.cpp \
 	manipulators/pointlightmanip.cpp \
 	nodes/atmospheric.cpp \
 	nodes/blinker.cpp \
@@ -175,6 +176,12 @@ draggers/translate1.cpp: $(srcdir)/draggers/translate1.cpp.in
 	@./config.status --file=$@
 
 draggers/translate2.cpp: $(srcdir)/draggers/translate2.cpp.in
+	@./config.status --file=$@
+
+############################################################################
+## sources in engines/
+
+engines/computebbox.cpp: $(srcdir)/engines/computebbox.cpp.in
 	@./config.status --file=$@
 
 ############################################################################

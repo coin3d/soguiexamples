@@ -270,6 +270,7 @@ AC_OUTPUT([
 	eyecandy/Makefile
 	actions/Makefile
 	draggers/Makefile
+	engines/Makefile
 	manipulators/Makefile
 	nodes/Makefile
 	sensors/Makefile

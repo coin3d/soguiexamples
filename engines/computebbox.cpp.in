@@ -1,0 +1,191 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of demo programs for the Coin library.
+ *  Copyright (C) 2000-2001 by Systems in Motion. All rights reserved.
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, Prof Brochs gate 6, 7030 Trondheim, NORWAY
+ *  http://www.sim.no support@sim.no Voice: +47 22114160 Fax: +47 22207097
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SoDB.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/SoInput.h>
+#include <Inventor/nodes/SoDrawStyle.h>
+#include <Inventor/nodes/SoLightModel.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoIndexedLineSet.h>
+#include <Inventor/engines/SoComputeBoundingBox.h>
+#include <Inventor/engines/SoDecomposeVec3f.h>
+#include <Inventor/engines/SoComposeVec3f.h>
+#include <Inventor/engines/SoConcatenate.h>
+#include <Inventor/nodes/SoPointSet.h>
+#include <assert.h>
+#include <stdio.h>
+
+// *************************************************************************
+
+// Print a quick instructions notice on stdout.
+static void
+show_instructions( void )
+{
+  (void)fprintf(stdout, 
+                "\nThis example program demonstrates the use of engines to compute and\n"
+                "render a bounding box. Engines used:\n\n"
+                "  * SoComputeBoundingBox - calculate the actual bounding box\n"
+                "  * SoDecomposeVec3f - split the min/max vectors into floating point values\n"
+                "  * SoComposeVec3f - create eight different vectors for a box\n"
+                "  * SoConcatenate - concatenate the eight vectors into a multi field, which\n"
+                "                    can be used by a SoCoordinate3 node\n");
+}
+
+int
+main(int argc, char ** argv )
+{
+  if (argc != 2) {
+    (void) fprintf(stderr,"\nSpecify an Inventor file as argument.\n");
+    return -1;
+  }
+
+  @WIDGET@ window = So@Gui@::init( argv[0] );
+
+  So@Gui@ExaminerViewer * ex1 = new So@Gui@ExaminerViewer( window );
+  
+  SoInput input;
+  SbBool ok = input.openFile(argv[1]);
+  if (!ok) {
+    (void) fprintf(stderr, "Unable to open file: %s\n", argv[1]);
+    return -1;
+  }
+  SoSeparator *root = SoDB::readAll(&input); 
+  if (!root) {
+    (void) fprintf(stderr, "Unable to read file: %s\n", argv[1]);
+    return -1;
+  }
+
+  show_instructions();
+
+  // set up an engine to calculate the bounding box of the loaded scene
+  SoComputeBoundingBox * bboxEngine = new SoComputeBoundingBox;
+  bboxEngine->node = root;
+
+  // decompose the vectors into separate floating point values
+  SoDecomposeVec3f * dep1 = new SoDecomposeVec3f;
+  SoDecomposeVec3f * dep2 = new SoDecomposeVec3f;
+  dep1->vector.connectFrom(&bboxEngine->min);
+  dep2->vector.connectFrom(&bboxEngine->max);
+
+  // create engines to compose vectors again. We need eight vectors,
+  // one for each vertex in the bounding box.
+  SoComposeVec3f * comp1 = new SoComposeVec3f;
+  SoComposeVec3f * comp2 = new SoComposeVec3f;
+  SoComposeVec3f * comp3 = new SoComposeVec3f;
+  SoComposeVec3f * comp4 = new SoComposeVec3f;
+  SoComposeVec3f * comp5 = new SoComposeVec3f;
+  SoComposeVec3f * comp6 = new SoComposeVec3f;
+  SoComposeVec3f * comp7 = new SoComposeVec3f;
+  SoComposeVec3f * comp8 = new SoComposeVec3f;
+
+  // connect the engines so that all corner points are covered
+  comp1->x.connectFrom(&dep1->x);
+  comp1->y.connectFrom(&dep1->y);
+  comp1->z.connectFrom(&dep1->z);
+
+  comp2->x.connectFrom(&dep2->x);
+  comp2->y.connectFrom(&dep1->y);
+  comp2->z.connectFrom(&dep1->z);
+
+  comp3->x.connectFrom(&dep2->x);
+  comp3->y.connectFrom(&dep2->y);
+  comp3->z.connectFrom(&dep1->z);
+
+  comp4->x.connectFrom(&dep1->x);
+  comp4->y.connectFrom(&dep2->y);
+  comp4->z.connectFrom(&dep1->z);
+
+  comp5->x.connectFrom(&dep1->x);
+  comp5->y.connectFrom(&dep1->y);
+  comp5->z.connectFrom(&dep2->z);
+
+  comp6->x.connectFrom(&dep2->x);
+  comp6->y.connectFrom(&dep1->y);
+  comp6->z.connectFrom(&dep2->z);
+  
+  comp7->x.connectFrom(&dep2->x);
+  comp7->y.connectFrom(&dep2->y);
+  comp7->z.connectFrom(&dep2->z);
+
+  comp8->x.connectFrom(&dep1->x);
+  comp8->y.connectFrom(&dep2->y);
+  comp8->z.connectFrom(&dep2->z);
+
+  // concatenate the eight vectors into a single SoMFVec3f field
+  SoConcatenate * con = new SoConcatenate(SoMFVec3f::getClassTypeId());
+  con->input[0]->connectFrom(&comp1->vector);
+  con->input[1]->connectFrom(&comp2->vector);
+  con->input[2]->connectFrom(&comp3->vector);
+  con->input[3]->connectFrom(&comp4->vector);
+  con->input[4]->connectFrom(&comp5->vector);
+  con->input[5]->connectFrom(&comp6->vector);
+  con->input[6]->connectFrom(&comp7->vector);
+  con->input[7]->connectFrom(&comp8->vector);
+
+  // construct a new scene graph, that includes an indexed line to
+  // render the bounding box.
+  SoSeparator * sep = new SoSeparator;
+  sep->ref();
+
+  SoSeparator * sep2 = new SoSeparator;
+
+  SoLightModel * lm = new SoLightModel;
+  lm->model = SoLightModel::BASE_COLOR;
+  SoCoordinate3 * coords = new SoCoordinate3;
+
+  // use the points calculated by our engines
+  coords->point.connectFrom(con->output);
+
+  SoDrawStyle * ds = new SoDrawStyle;
+  ds->lineWidth = 2;
+  ds->linePattern = 0xf0f0;
+
+  SoIndexedLineSet * ls = new SoIndexedLineSet;
+  const int32_t idx[] = {0,1,2,3,0,-1,4,5,6,7,4,-1,
+                         1,5,-1,2,6,-1,3,7,-1,0,4,-1};
+  ls->coordIndex.setNum(24);
+  ls->coordIndex.setValues(0, 24, idx);
+
+  sep2->addChild(lm);
+  sep2->addChild(coords);
+  sep2->addChild(ds);
+  sep2->addChild(ls);
+
+  sep->addChild(sep2);
+  sep->addChild(root);
+
+  ex1->setSceneGraph( sep );
+  ex1->setTransparencyType(SoGLRenderAction::SORTED_OBJECT_BLEND);
+
+  ex1->show();
+
+  So@Gui@::show( window );
+
+  So@Gui@::mainLoop();
+  delete ex1;
+
+  sep->unref();
+  return 0;
+} // main()
+
