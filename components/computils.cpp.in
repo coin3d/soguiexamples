@@ -73,8 +73,7 @@ get_scene_graph(
       return shape_to_scene_graph( new SoCylinder );
     } else if ( ! strcmp( argv[1], "--text3" ) ) {
       SoText3 * textnode = new SoText3;
-      if ( argc > 2 ) textnode->string.setValue( argv[2] );
-      else textnode->string.setValue( "Coin" );
+      textnode->string.setValue( "Coin" );
       textnode->parts.setValue( SoText3::ALL );
       return shape_to_scene_graph( textnode );
     } else if ( ! in.openFile( argv[1] ) ) {
@@ -83,12 +82,17 @@ get_scene_graph(
     return SoDB::readAll( &in );
   }
 
-  int randval = rand() % 4;
+  int randval = rand() % 5;
   switch ( randval ) {
   case 0:  return shape_to_scene_graph( new SoCone );
   case 1:  return shape_to_scene_graph( new SoCube );
   case 2:  return shape_to_scene_graph( new SoCylinder );
-  default: return shape_to_scene_graph( new SoSphere );
+  case 3:  return shape_to_scene_graph( new SoSphere );
+  default:
+    SoText3 * textnode = new SoText3;
+    textnode->string.setValue( "Coin" );
+    textnode->parts.setValue( SoText3::ALL );
+    return shape_to_scene_graph( textnode );
   }
 } // get_scene_graph()
 
