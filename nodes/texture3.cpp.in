@@ -93,7 +93,9 @@ unsigned char * generateTexture(int w, int h, int d)
   unsigned char pixval;
   unsigned char * bitmap = new unsigned char[w*h*d];
 
+  (void)fprintf(stdout, "Generating 3D-texture");
   for (int k = 0;k<d;k++) {
+    (void)fprintf(stdout, "."); fflush(stdout);
     z = k*360/d;
     for (int j = 0;j<h;j++) {
       y = (j-h/2)/2;
@@ -106,6 +108,8 @@ unsigned char * generateTexture(int w, int h, int d)
       }
     }
   }
+
+  (void)fprintf(stdout, "\n"); fflush(stdout);
   
   return bitmap;
 }
