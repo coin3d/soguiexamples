@@ -1264,7 +1264,7 @@ create_piece()
   SbBool ok = TRUE;
   SbTime *time = new SbTime;
   time->setToTimeOfDay();
-  unsigned long piecetype = (time->getMsecValue())%5;
+  unsigned long piecetype = int(fmod(time->getValue(), 1.0) * 1000)%5;
 
   int i = 0;
 
