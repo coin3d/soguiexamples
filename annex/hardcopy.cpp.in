@@ -1,0 +1,239 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2003 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+#define HAVE_HARDCOPY 1
+
+// this example requires HardCopy support, and uses Coin-specific
+// HarcCopy features as well...
+#if !defined(HAVE_HARDCOPY) || !defined(__COIN__)
+
+#include <Inventor/nodes/SoText3.h>
+#include <stdio.h>
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  const char * info[] = {
+    "This example depends on Coin >= 2.1 specific",
+    "extensions. This is just an informational",
+    "message and not the real functionality",
+    "of the example."
+  };
+
+  SoText3 * msg = new SoText3;
+  msg->justification = SoText3::CENTER;
+  msg->string.setValues(0, sizeof(info) / sizeof(const char *), info);
+  root->addChild(msg);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->show();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+
+  return 1;
+}
+
+#else // ! HAVE_HARDCOPY || ! __COIN__
+
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SoDB.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoCamera.h>
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/errors/SoDebugError.h>
+#include <Inventor/SoInput.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <assert.h>
+#include <HardCopy/SoHardCopy.h>
+#include <HardCopy/SoVectorizePSAction.h>
+#include <HardCopy/SoVectorOutput.h>
+
+#define BORDER 10.0f
+
+void
+show_instructions(void)
+{
+  (void) fprintf(stdout,
+                 "\nThis example shows how to use the HardCopy extension.\n"
+                 "\nQuick instruction:\n"
+                 "  * specify an Inventor/VRML file as the first argument\n"
+                 "  * specify a postscript filename as the second argument\n"
+                 "  * rotate the model to a view you'd like vectorized\n"
+                 "  * press ESC, then 'V' or 'G' to export a postscript file\n"
+                 "    ('V' for a flat shading, 'G' for gouraud shading)\n"
+                 "  * use a postscript viewer to examine the result\n\n"); 
+}
+
+// *************************************************************************
+
+static So@Gui@ExaminerViewer * viewer;
+static char * exportfilename = NULL;
+
+static void
+event_cb(void * userdata, SoEventCallback * node)
+{
+  SoVectorizePSAction * va = (SoVectorizePSAction*) userdata;    
+    
+  if (SO_KEY_PRESS_EVENT(node->getEvent(), V) || SO_KEY_PRESS_EVENT(node->getEvent(), G)) {
+    if (SO_KEY_PRESS_EVENT(node->getEvent(), G)) {
+      va->setGouraudThreshold(0.1f);
+    }
+    else {
+      va->setGouraudThreshold(0.0f);
+    }
+    
+    va->setBackgroundColor(TRUE, SbColor(1.0f, 1.0f, 1.0f));
+  
+    SoVectorOutput * out = va->getOutput();
+    if (!out->openFile(exportfilename)) {
+      fprintf(stderr,"Unable to open %s for writing\n",
+              exportfilename);
+    }
+
+    SbVec2s vpsize = viewer->getViewportRegion().getViewportSizePixels();
+    float vpratio = ((float)vpsize[0]) / ((float)vpsize[1]); 
+
+    // 
+    if (vpratio > 1.0f) {
+      va->setOrientation(SoVectorizeAction::LANDSCAPE);
+      vpratio = 1.0f / vpratio;
+    }
+    else {
+      va->setOrientation(SoVectorizeAction::PORTRAIT);
+    }
+
+    va->beginStandardPage(SoVectorizeAction::A4, BORDER);
+
+    // try to fill as much "paper" as possible
+
+    // FIXME: consider making getPageSize() public 
+    //SbVec2f size = va->getPageSize();
+    SbVec2f size = SbVec2f(210.0f - BORDER*2.0f, 
+                           297.0f - BORDER*2.0f);
+
+    float pageratio = size[0] / size[1];
+    float xsize, ysize;
+
+    if (pageratio < vpratio) {
+      xsize = size[0];
+      ysize = xsize / vpratio;
+    }
+    else {
+      ysize = size[1];
+      xsize = ysize * vpratio;
+    }
+
+    float offx = BORDER + (size[0]-xsize) * 0.5f;
+    float offy = BORDER + (size[1]-ysize) * 0.5f;
+
+    va->beginViewport(SbVec2f(offx, offy), SbVec2f(xsize, ysize));
+    va->calibrate(viewer->getViewportRegion());
+    
+    va->apply(viewer->getSceneManager()->getSceneGraph());
+    va->endViewport();
+    va->endPage();
+
+    out->closeFile();
+  }
+}
+
+int
+main(int argc, char ** argv )
+{
+  if (argc != 3) {
+    (void) fprintf(stderr,"\nSpecify an Inventor file as the first argument,\n"
+                   "and a postscript filename as the second argument\n\n");
+    return -1;
+  }
+  show_instructions();
+
+  @WIDGET@ window = So@Gui@::init( argv[0] );
+  SoHardCopy::init();
+
+  So@Gui@ExaminerViewer * ex1 = new So@Gui@ExaminerViewer( window );
+  ex1->setBackgroundColor(SbColor(0.1f, 0.3f, 0.5f));
+  viewer = ex1;
+
+  SoVectorizePSAction * va = new SoVectorizePSAction;
+
+  exportfilename = argv[2];
+  
+  SoInput input;
+  SbBool ok = input.openFile(argv[1]);
+  if (!ok) {
+    fprintf(stderr,"Unable to open file.\n");
+    return -1;
+  }
+
+  SoSeparator *root = SoDB::readAll(&input);
+  if (!root) {
+    fprintf(stderr,"Unable to read file.\n");
+    return -1;
+  }
+
+  root->ref();
+
+  SoEventCallback * event = new SoEventCallback;
+  event->addEventCallback(SoKeyboardEvent::getClassTypeId(),
+                          event_cb, va);
+
+  root->addChild(event);
+  ex1->setSceneGraph( root );
+  ex1->setTransparencyType(SoGLRenderAction::SORTED_OBJECT_BLEND);
+
+  ex1->show();
+  So@Gui@::show( window );
+  
+  So@Gui@::mainLoop();
+  delete ex1;
+
+  root->unref();
+
+  delete va;
+  return 0;
+} // main()
+
+#endif // HAVE_HARDCOPY && __COIN__
