@@ -47,9 +47,8 @@
 #include <Inventor/nodes/SoText3.h>
 
 #include <Inventor/engines/SoCalculator.h>
-#include <Inventor/engines/SoComposeVec3f.h>
+#include <Inventor/engines/SoCompose.h>
 #include <Inventor/engines/SoTimeCounter.h>
-#include <Inventor/engines/SoComposeRotation.h>
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/So@Gui@RenderArea.h>
