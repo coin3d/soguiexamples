@@ -279,19 +279,12 @@ show_instructions( void )
                 "  * hit ESC to toggle back and forth to view mode\n\n"
                 "  * Toggle keys:\n"
 #if HAVE_SOEXTSELECTION_LASSOMODE
-                "     'v' = VISIBLE_SHAPES selection\n"
-                "     'a' = ALL_SHAPES selection\n"
+                "     'v' / 'a' = VISIBLE_SHAPES / ALL_SHAPES lasso-mode (default: ALL_SHAPES)\n"
 #endif // HAVE_SOEXTSELECTION_LASSOMODE
-                "     'f' = FULL mode\n"
-                "     'p' = PART mode\n"
-                "     '1' = FULL_BBOX selection\n"
-                "     '2' = PART_BBOX selection\n"
-                "     'l' = Lasso mode\n"
-                "     'r' = Rectangle mode\n"
-                "     'n' = Pick/NoLasso mode\n"
-                "     's' = Single selection\n"
-                "     'h' = Shift selection\n"
-                "     't' = toggle selection \n\n");
+                "     'f' / 'p' / '1' / '2' = FULL / PART / FULL_BBOX / PART_BBOX lasso-policy (default: PART) \n"
+                "     'l' / 'r' / 'n' = LASSO / RECTANGLE / NOLASSO lasso type (default: LASSO)\n"
+                "     's' / 't' / 'h' = SINGLE / TOGGLE / SHIFT selection policy (default: SHIFT)\n"
+                "\n");
 }
 
 void
