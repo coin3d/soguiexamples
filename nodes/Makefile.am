@@ -35,7 +35,8 @@ BUILT_SOURCES = \
 	extselection.cpp \
 	pointset.cpp \
 	markerset.cpp \
-	image.cpp
+	image.cpp \
+	bigimage.cpp
 
 
 
@@ -46,7 +47,7 @@ noinst_PROGRAMS = \
         faceset facesetindexed quadmesh trianglestripset \
         camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
-        pointset markerset image
+        pointset markerset image bigimage
 
 drawstyle_SOURCES = drawstyle.cpp
 material_SOURCES = material.cpp
@@ -83,6 +84,7 @@ extselection_SOURCES = extselection.cpp
 pointset_SOURCES = pointset.cpp
 markerset_SOURCES = markerset.cpp
 image_SOURCES = image.cpp
+bigimage_SOURCES = bigimage.cpp
 
 ############################################################################
 
@@ -190,5 +192,8 @@ markerset.cpp: $(srcdir)/markerset.cpp.in
 
 image.cpp: $(srcdir)/image.cpp.in
 	@( cd $(top_builddir); ./config.status --file=nodes/image.cpp)
+
+bigimage.cpp: $(srcdir)/bigimage.cpp.in
+	@( cd $(top_builddir); ./config.status --file=nodes/bigimage.cpp)
 
 ############################################################################

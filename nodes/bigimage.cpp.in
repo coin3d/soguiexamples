@@ -1,0 +1,164 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2003 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+#include <stdlib.h> // exit()
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+
+// Global constants
+const int texturewidth = 128;
+const int textureheight = 128;
+
+// Global variables
+double cr = 0.33;
+double ci = 0.43;
+
+// Global pointer
+unsigned char * bitmap = new unsigned char[texturewidth*textureheight];
+
+// Function to generate a julia set
+// Parameters:
+//  double cr   - real part of the julia set point
+//  double ci   - imaginary part of the julia set point
+//  float zoon  - lenth of the square to display (zoom*zoom), center (0,0)
+//  int width   - width of the bitmap
+//  int height  - height of the bitmap
+//  int mult    - number to multiply each color by.
+//  unsigned char * bmp - pointer to the bitmap
+//  int n       - number of itterations 
+void
+julia(double crr, double cii, float zoom, int width, int height, int mult, 
+      unsigned char * bmp, int n)
+{
+  double zr, zr_old, zi;
+  int w;
+
+  for (int y=0; y<height/2; y++)
+    for (int x=0; x<width; x++) {
+      zr = ((double)(x)/(double)width)*zoom-zoom/2;
+      zi = ((double)(y)/(double)height)*zoom-zoom/2;
+      for (w = 0; (w < n) && (zr*zr+zi*zi)<n; w++) {
+        zr_old = zr;
+        zr = zr*zr - zi*zi + crr;
+        zi = 2*zr_old*zi + cii;
+      }
+      bmp[y*width+x] = 255-w*mult;
+      bmp[((height-y)*width)-(x+1)] = 255-w*mult;
+    }
+}
+
+// Function that loads a texture from memory, and return a pointer to a
+// SoTexture2 node containing this texture..
+// Return:
+//  SoTexture2 *
+SoTexture2 *
+texture()
+{
+  SoTexture2 * texture = new SoTexture2;
+  texture->image.setValue(SbVec2s(texturewidth, textureheight), 1, bitmap);
+  texture->model = SoTexture2::MODULATE;
+  texture->blendColor.setValue(1.0, 0.0, 0.0);
+  return texture;
+}
+
+// This function is called 20 times each second. 
+static void
+timersensorcallback(void * data, SoSensor *)
+{
+  static SbBool direction = FALSE;
+
+  SoTexture2 * texnode = (SoTexture2*) data;
+
+  if (!direction) {
+    cr -= 0.0005;
+    ci += 0.0005;
+  }
+  else {
+    cr += 0.0005;
+    ci -= 0.0005;
+  }
+
+  if (ci<0.30)
+    direction = !direction;
+  else if (ci>0.83)
+    direction = !direction;
+
+  SbVec2s size;
+  int nc;
+  unsigned char * image = texnode->image.startEditing(size, nc);
+  // Generate a julia set to use as a texturemap
+  julia(cr, ci, 2.5, size[0], size[1], 4, image, 64);
+  texnode->image.finishEditing();
+}
+
+int
+main (int, char ** argv)
+{
+  (void)printf("This example shows how to use the SoTimerSensor.\n");
+
+  // Generate a julia set to use as a texturemap
+  julia(cr, ci, 2.5, texturewidth, textureheight, 4, bitmap, 64);
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+  
+  SoTexture2 * texnode = texture();
+
+  // Enable backface culling
+  SoShapeHints * hints = new SoShapeHints;
+
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  // Timer sensor
+  SoTimerSensor * texturetimer = new SoTimerSensor(timersensorcallback, texnode);
+  texturetimer->setInterval(0.05);
+  texturetimer->schedule();
+
+  // Scene graph
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  root->addChild(hints);
+  root->addChild(texnode);
+  root->addChild(new SoCube);
+
+  // Setting up the examiner viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Timer Sensor");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;
+  root->unref();
+  return 0;
+}

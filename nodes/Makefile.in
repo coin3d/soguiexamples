@@ -189,7 +189,8 @@ BUILT_SOURCES = \
 	extselection.cpp \
 	pointset.cpp \
 	markerset.cpp \
-	image.cpp
+	image.cpp \
+	bigimage.cpp
 
 
 noinst_PROGRAMS = \
@@ -199,7 +200,7 @@ noinst_PROGRAMS = \
         faceset facesetindexed quadmesh trianglestripset \
         camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
-        pointset markerset image
+        pointset markerset image bigimage
 
 
 drawstyle_SOURCES = drawstyle.cpp
@@ -237,6 +238,7 @@ extselection_SOURCES = extselection.cpp
 pointset_SOURCES = pointset.cpp
 markerset_SOURCES = markerset.cpp
 image_SOURCES = image.cpp
+bigimage_SOURCES = bigimage.cpp
 subdir = nodes
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
@@ -254,7 +256,7 @@ noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	atmospheric$(EXEEXT) shuttle$(EXEEXT) complexity$(EXEEXT) \
 	text2$(EXEEXT) text3$(EXEEXT) clipplane$(EXEEXT) \
 	levelofdetail$(EXEEXT) extselection$(EXEEXT) pointset$(EXEEXT) \
-	markerset$(EXEEXT) image$(EXEEXT)
+	markerset$(EXEEXT) image$(EXEEXT) bigimage$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_atmospheric_OBJECTS = atmospheric.$(OBJEXT)
@@ -262,6 +264,11 @@ atmospheric_OBJECTS = $(am_atmospheric_OBJECTS)
 atmospheric_LDADD = $(LDADD)
 atmospheric_DEPENDENCIES =
 atmospheric_LDFLAGS =
+am_bigimage_OBJECTS = bigimage.$(OBJEXT)
+bigimage_OBJECTS = $(am_bigimage_OBJECTS)
+bigimage_LDADD = $(LDADD)
+bigimage_DEPENDENCIES =
+bigimage_LDFLAGS =
 am_blinker_OBJECTS = blinker.$(OBJEXT)
 blinker_OBJECTS = $(am_blinker_OBJECTS)
 blinker_LDADD = $(LDADD)
@@ -437,8 +444,9 @@ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/atmospheric.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/blinker.Po ./$(DEPDIR)/camera.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/clipplane.Po ./$(DEPDIR)/complexity.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/bigimage.Po ./$(DEPDIR)/blinker.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/camera.Po ./$(DEPDIR)/clipplane.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/complexity.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/directionallight.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/drawstyle.Po ./$(DEPDIR)/environment.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/extselection.Po ./$(DEPDIR)/faceset.Po \
@@ -460,11 +468,12 @@ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
-DIST_SOURCES = $(atmospheric_SOURCES) $(blinker_SOURCES) \
-	$(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) \
-	$(directionallight_SOURCES) $(drawstyle_SOURCES) \
-	$(environment_SOURCES) $(extselection_SOURCES) \
-	$(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) \
+DIST_SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) \
+	$(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) \
+	$(complexity_SOURCES) $(directionallight_SOURCES) \
+	$(drawstyle_SOURCES) $(environment_SOURCES) \
+	$(extselection_SOURCES) $(faceset_SOURCES) \
+	$(facesetindexed_SOURCES) $(image_SOURCES) \
 	$(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) \
 	$(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) \
 	$(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) \
@@ -474,7 +483,7 @@ DIST_SOURCES = $(atmospheric_SOURCES) $(blinker_SOURCES) \
 	$(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) \
 	$(translation_SOURCES) $(trianglestripset_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(atmospheric_SOURCES) $(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
+SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) $(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -492,6 +501,9 @@ clean-noinstPROGRAMS:
 atmospheric$(EXEEXT): $(atmospheric_OBJECTS) $(atmospheric_DEPENDENCIES) 
 	@rm -f atmospheric$(EXEEXT)
 	$(CXXLINK) $(atmospheric_LDFLAGS) $(atmospheric_OBJECTS) $(atmospheric_LDADD) $(LIBS)
+bigimage$(EXEEXT): $(bigimage_OBJECTS) $(bigimage_DEPENDENCIES) 
+	@rm -f bigimage$(EXEEXT)
+	$(CXXLINK) $(bigimage_LDFLAGS) $(bigimage_OBJECTS) $(bigimage_LDADD) $(LIBS)
 blinker$(EXEEXT): $(blinker_OBJECTS) $(blinker_DEPENDENCIES) 
 	@rm -f blinker$(EXEEXT)
 	$(CXXLINK) $(blinker_LDFLAGS) $(blinker_OBJECTS) $(blinker_LDADD) $(LIBS)
@@ -602,6 +614,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atmospheric.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bigimage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blinker.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/camera.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clipplane.Po@am__quote@
@@ -943,6 +956,9 @@ markerset.cpp: $(srcdir)/markerset.cpp.in
 
 image.cpp: $(srcdir)/image.cpp.in
 	@( cd $(top_builddir); ./config.status --file=nodes/image.cpp)
+
+bigimage.cpp: $(srcdir)/bigimage.cpp.in
+	@( cd $(top_builddir); ./config.status --file=nodes/bigimage.cpp)
 
 ############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
