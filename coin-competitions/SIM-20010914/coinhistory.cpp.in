@@ -1008,7 +1008,7 @@ create_texture(int width, int height, int bpp, unsigned char * raw, bool blend)
   return texture;
 }
 
-void
+int
 main(
      int argc,
      char ** argv )
@@ -1159,5 +1159,6 @@ main(
 
   delete [] particles;
 
+  return 0;
 } // main()
 
