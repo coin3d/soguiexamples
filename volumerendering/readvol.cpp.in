@@ -203,7 +203,7 @@ main(int argc, char ** argv)
   // Add VolumeRender to scene graph
   SoVolumeRender * volrendnode = new SoVolumeRender();
 
-  volrendnode->numSlicesControl = SoVolumeRender::MANUAL;
+  volrendnode->numSlicesControl = SoVolumeRender::ALL;
   volrendnode->numSlices = 40;
 
   VolumeRenderHandler * vrdialog = new VolumeRenderHandler(volrendnode, voldata);
