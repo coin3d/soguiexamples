@@ -122,9 +122,9 @@ SoGuiSnapshotViewerP::hideCB(void * userdata, SoSensor * sensor)
 
 SO@GUI@_OBJECT_SOURCE(So@Gui@SnapshotViewer);
 
-So@Gui@SnapshotViewer::So@Gui@SnapshotViewer(@WIDGET@ parent = NULL,
-                                             const char * name = NULL,
-                                             SbBool embed = TRUE)
+So@Gui@SnapshotViewer::So@Gui@SnapshotViewer(@WIDGET@ parent,
+                                             const char * name,
+                                             SbBool embed)
   : So@Gui@ExaminerViewer(parent, name, embed)
 {
   THIS = new SoGuiSnapshotViewerP(this);
