@@ -33,6 +33,9 @@ else
 CUTEARCHIVE = Cute/Cute.a
 endif
 
+# FIXME: only these three examples actually have dependencies on Qt / SoQt,
+# and we should fix so the other examples can be built even when not using
+# SoQt. 20041021 mortene.
 readvol_LDADD = $(CUTEARCHIVE)
 orthoslicer_LDADD = $(CUTEARCHIVE)
 voleonexplore_LDADD = $(CUTEARCHIVE)
