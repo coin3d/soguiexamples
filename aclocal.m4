@@ -98,7 +98,7 @@ if $sim_ac_make_dspex; then
     for sim_ac_dspex_header in $sim_ac_dspex_headers; do
       sim_ac_dspex_justname=`echo $sim_ac_dspex_header | sed -e "s%.*/%%"`
       sim_ac_dspex_dirname=`echo $sim_ac_dspex_header | sed -e "s%[[^/]]*\.h%%"`
-      if ! test -d "$2/$sim_ac_dspex_dirname"; then
+      if test -d "$2/$sim_ac_dspex_dirname"; then :; else
         mkdir -p "$2/$sim_ac_dspex_dirname"
       fi
       cp $1/$sim_ac_dspex_header \
@@ -2149,7 +2149,7 @@ if test x"$with_opengl" != xno; then
 
   sim_ac_glchk_hit=false
   for sim_ac_tmp_outerloop in barebones withpthreads; do
-    if ! $sim_ac_glchk_hit; then
+    if $sim_ac_glchk_hit; then :; else
 
       sim_ac_oglchk_pthreadslib=""
       if test "$sim_ac_tmp_outerloop" = "withpthreads"; then
@@ -2167,7 +2167,7 @@ if test x"$with_opengl" != xno; then
       AC_MSG_CHECKING([for OpenGL library dev-kit])
       # Mac OS X uses nada (only LDFLAGS), which is why "" was set first
       for sim_ac_ogl_libcheck in "" $sim_ac_ogl_first $sim_ac_ogl_second; do
-        if ! $sim_ac_glchk_hit; then
+        if $sim_ac_glchk_hit; then :; else
           LIBS="$sim_ac_ogl_libcheck $sim_ac_oglchk_pthreadslib $sim_ac_save_libs"
           AC_TRY_LINK(
             [#ifdef HAVE_WINDOWS_H
@@ -2667,7 +2667,7 @@ if test x"$with_pthread" != xno; then
   AC_MSG_CHECKING([for POSIX threads])
   # At least under FreeBSD, we link to pthreads library with -pthread.
   for sim_ac_pthreads_libcheck in "-lpthread" "-pthread"; do
-    if ! $sim_ac_pthread_avail; then
+    if $sim_ac_pthread_avail; then :; else
       LIBS="$sim_ac_pthreads_libcheck $sim_ac_save_libs"
       AC_TRY_LINK([#include <pthread.h>],
                   [(void)pthread_create(0L, 0L, 0L, 0L);],
@@ -2850,7 +2850,7 @@ if test x"$with_dl" != xno; then
   # At least under FreeBSD, dlopen() et al is part of the C library.
   # On HP-UX, dlopen() might reside in a library "svld" instead of "dl".
   for sim_ac_dl_libcheck in "" "-ldl" "-lsvld"; do
-    if ! $sim_ac_dl_avail; then
+    if $sim_ac_dl_avail; then :; else
       LIBS="$sim_ac_dl_libcheck $sim_ac_save_libs"
       AC_TRY_LINK([
 #ifdef HAVE_DLFCN_H
@@ -4151,7 +4151,7 @@ if $sim_ac_smallchange_desired; then
 
   AC_PATH_PROG(sim_ac_smallchange_configcmd, smallchange-config, false, $sim_ac_path)
 
-  if ! test "X$sim_ac_smallchange_configcmd" = "Xfalse"; then
+  if test "X$sim_ac_smallchange_configcmd" = "Xfalse"; then :; else
     test -n "$CONFIG" &&
       $sim_ac_smallchange_configcmd --alternate=$CONFIG >/dev/null 2>/dev/null &&
       sim_ac_smallchange_configcmd="$sim_ac_smallchange_configcmd --alternate=$CONFIG"
@@ -4926,7 +4926,7 @@ if $sim_ac_simvoleon_desired; then
 
   AC_PATH_PROG(sim_ac_simvoleon_configcmd, simvoleon-config, false, $sim_ac_path)
 
-  if ! test "X$sim_ac_simvoleon_configcmd" = "Xfalse"; then
+  if test "X$sim_ac_simvoleon_configcmd" = "Xfalse"; then :; else
     test -n "$CONFIG" &&
       $sim_ac_simvoleon_configcmd --alternate=$CONFIG >/dev/null 2>/dev/null &&
       sim_ac_simvoleon_configcmd="$sim_ac_simvoleon_configcmd --alternate=$CONFIG"
@@ -4967,7 +4967,7 @@ if $sim_ac_simvoleon_desired; then
       LIBS=$sim_ac_save_libs
     ])
     sim_ac_simvoleon_avail=$sim_cv_simvoleon_avail
-    if ! $sim_ac_simvoleon_avail; then
+    if $sim_ac_simvoleon_avail; then :; else
       AC_MSG_WARN([
 Compilation and/or linking with the SimVoleon main library SDK failed, for
 unknown reason. If you are familiar with configure-based configuration
@@ -5063,7 +5063,7 @@ if $sim_ac_simage_desired; then
 
   AC_PATH_PROG(sim_ac_simage_configcmd, simage-config, false, $sim_ac_path)
 
-  if ! test "X$sim_ac_simage_configcmd" = "Xfalse"; then
+  if test "X$sim_ac_simage_configcmd" = "Xfalse"; then :; else
     test -n "$CONFIG" &&
       $sim_ac_simage_configcmd --alternate=$CONFIG >/dev/null 2>/dev/null &&
       sim_ac_simage_configcmd="$sim_ac_simage_configcmd --alternate=$CONFIG"
