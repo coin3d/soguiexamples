@@ -8562,4 +8562,11 @@ while test $sim_ac_num_warnings -ge 0; do
 done
 fi
 
+echo ""
+echo "Now run 'make' to build the examples."
+echo ""
+echo "(Note that they are not installed, so after building you should"
+echo "execute them straight from this directory's subdirectories.)"
+echo ""
+
 # **************************************************************************
