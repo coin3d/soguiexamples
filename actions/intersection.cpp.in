@@ -190,7 +190,15 @@ nodechangeCB(void * closure, SoSensor * s)
   ida.addIntersectionCallback(intersectionCB, NULL);
   ida.setManipsEnabled(FALSE);
   ida.setDraggersEnabled(FALSE);
+  // Enable this to test the epsilon-distance functionality:
+  // primitives within this distance is seen as intersecting.
+  //
+  // Disabled by default, as it will markedly slow down the
+  // intersection testing, and also look unnatural / buggy without an
+  // explanation.
+#if 0
   ida.setIntersectionEpsilon(0.5);
+#endif
   ida.apply(root);
   sensor->attach(root);
 }
