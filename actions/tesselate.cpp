@@ -151,5 +151,9 @@ main(int argc, char ** argv)
 
   triroot->unref();
 
+#ifdef __COIN__
+  delete bsptree;
+#endif __ COIN__
+
   return 0;
 }
