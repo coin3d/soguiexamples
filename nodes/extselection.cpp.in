@@ -41,8 +41,16 @@ main(int argc, char ** argv)
   SoSeparator * root = new SoSeparator;
   root->ref();
 
+  const char * info[] = {
+    "This example depends on Coin-specific",
+    "extensions. This is just an informational",
+    "message and not the real functionality",
+    "of the example."
+  };
+
   SoText3 * msg = new SoText3;
-  msg->string = "This example only works with Coin.";
+  msg->justification = SoText3::CENTER;
+  msg->string.setValues(0, sizeof(info) / sizeof(const char *), info);
   root->addChild(msg);
 
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
