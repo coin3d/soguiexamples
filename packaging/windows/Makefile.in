@@ -14,7 +14,7 @@ top_srcdir = @soguiexamples_src_dir@
 
 all: executables
 
-executables : # dspex
+executables : dspex
 	cd dspex; \
 	for filename in `find . -name '*.dsp' | sed -e 's%^\./%%'`; do \
 	  projectname=`echo $$filename | sed -e 's%.*/%%' -e 's%\.dsp$$%%'`; \
