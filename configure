@@ -308,7 +308,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS BUILD_WITH_MSVC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS BUILD_WITH_MSVC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -900,6 +900,8 @@ Optional Packages:
   --with-sogtk            build against the SoGtk toolkit
   --with-toolkit=<toolkit>
                           select GUI toolkit to use (default=SoXt)
+  --with-smallchange      enable use of SmallChange [default=no]
+  --with-smallchange=DIR  give prefix location of SmallChange
 
 Some influential environment variables:
   CC          C compiler command
@@ -8969,37 +8971,8 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-  if $soguiconfig $alternate_option; then
 
-if test x"${sim_ac_configuration_settings+set}" = x"set"; then
-  sim_ac_configuration_settings="$sim_ac_configuration_settings|Configuration Setting:'$sim_ac_alternate_keyword'"
-else
-  sim_ac_configuration_settings="Configuration Setting:'$sim_ac_alternate_keyword'"
-fi
-
-    GUI=`$soguiconfig $alternate_option --ac-subst GUI`
-    Gui=`$soguiconfig $alternate_option --ac-subst Gui`
-    gui=`$soguiconfig $alternate_option --ac-subst gui`
-    WIDGET=`$soguiconfig $alternate_option --ac-subst WIDGET`
-    EVENT=`$soguiconfig $alternate_option --ac-subst EVENT`
-    COMPONENTHEADER=`$soguiconfig $alternate_option --ac-subst COMPONENTHEADER`
-  elif $soguiconfig; then
-    { echo "$as_me:$LINENO: WARNING: configuration '$sim_ac_alternate_keyword' not found: fallback on default" >&5
-echo "$as_me: WARNING: configuration '$sim_ac_alternate_keyword' not found: fallback on default" >&2;}
-
-if test x"${sim_ac_configuration_settings+set}" = x"set"; then
-  sim_ac_configuration_settings="$sim_ac_configuration_settings|Configuration Setting:default (fallback: $sim_ac_alternate_keyword not found)"
-else
-  sim_ac_configuration_settings="Configuration Setting:default (fallback: $sim_ac_alternate_keyword not found)"
-fi
-
-    GUI=`$soguiconfig $alternate_option --ac-subst GUI`
-    Gui=`$soguiconfig $alternate_option --ac-subst Gui`
-    gui=`$soguiconfig $alternate_option --ac-subst gui`
-    WIDGET=`$soguiconfig $alternate_option --ac-subst WIDGET`
-    EVENT=`$soguiconfig $alternate_option --ac-subst EVENT`
-    COMPONENTHEADER=`$soguiconfig $alternate_option --ac-subst COMPONENTHEADER`
-  else
+  if ! $soguiconfig; then
 
 echo >&2 ""
 
@@ -9028,6 +9001,38 @@ echo "$as_me: error: aborting" >&2;}
    { (exit 1); exit 1; }; }
 
   fi
+
+  if ! $soguiconfig $alternate_option; then
+    { echo "$as_me:$LINENO: WARNING: configuration '$sim_ac_alternate_keyword' not found: fallback on default" >&5
+echo "$as_me: WARNING: configuration '$sim_ac_alternate_keyword' not found: fallback on default" >&2;}
+    alternate_option=
+  fi
+
+  if test x"$alternate_option" = x""; then
+
+if test x"${sim_ac_configuration_settings+set}" = x"set"; then
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|Configuration setting:default"
+else
+  sim_ac_configuration_settings="Configuration setting:default"
+fi
+
+  else
+
+if test x"${sim_ac_configuration_settings+set}" = x"set"; then
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|Configuration setting:$sim_ac_alternate_keyword"
+else
+  sim_ac_configuration_settings="Configuration setting:$sim_ac_alternate_keyword"
+fi
+
+  fi
+
+  GUI=`$soguiconfig $alternate_option --ac-subst GUI`
+  Gui=`$soguiconfig $alternate_option --ac-subst Gui`
+  gui=`$soguiconfig $alternate_option --ac-subst gui`
+  WIDGET=`$soguiconfig $alternate_option --ac-subst WIDGET`
+  EVENT=`$soguiconfig $alternate_option --ac-subst EVENT`
+  COMPONENTHEADER=`$soguiconfig $alternate_option --ac-subst COMPONENTHEADER`
+
 
   # Which component examples to build.
 
@@ -9877,6 +9882,250 @@ fi
 
 
 # **************************************************************************
+# Use SmallChange if available.
+
+
+
+
+# official variables
+sim_ac_smallchange_avail=false
+sim_ac_smallchange_cppflags=
+sim_ac_smallchange_cflags=
+sim_ac_smallchange_cxxflags=
+sim_ac_smallchange_ldflags=
+sim_ac_smallchange_libs=
+sim_ac_smallchange_datadir=
+sim_ac_smallchange_includedir=
+sim_ac_smallchange_version=
+
+# internal variables
+: ${sim_ac_smallchange_desired=false}
+sim_ac_smallchange_extrapath=
+
+
+# Check whether --with-smallchange or --without-smallchange was given.
+if test "${with_smallchange+set}" = set; then
+  withval="$with_smallchange"
+   case $withval in
+    no)  sim_ac_smallchange_desired=false ;;
+    yes) sim_ac_smallchange_desired=true ;;
+    *)   sim_ac_smallchange_desired=false
+         sim_ac_smallchange_extrapath=$withval ;;
+    esac
+fi;
+
+case $build in
+*-mks ) sim_ac_pathsep=";" ;;
+* )     sim_ac_pathsep="${PATH_SEPARATOR}" ;;
+esac
+
+if $sim_ac_smallchange_desired; then
+  sim_ac_path=$PATH
+  test -z "$sim_ac_smallchange_extrapath" || ## search in --with-smallchange path
+    sim_ac_path="$sim_ac_smallchange_extrapath/bin${sim_ac_pathsep}$sim_ac_path"
+  test x"$prefix" = xNONE ||          ## search in --prefix path
+    sim_ac_path="$sim_ac_path${sim_ac_pathsep}$prefix/bin"
+
+  # Extract the first word of "smallchange-config", so it can be a program name with args.
+set dummy smallchange-config; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_sim_ac_smallchange_configcmd+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $sim_ac_smallchange_configcmd in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_sim_ac_smallchange_configcmd="$sim_ac_smallchange_configcmd" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $sim_ac_path
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_sim_ac_smallchange_configcmd="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_sim_ac_smallchange_configcmd" && ac_cv_path_sim_ac_smallchange_configcmd="false"
+  ;;
+esac
+fi
+sim_ac_smallchange_configcmd=$ac_cv_path_sim_ac_smallchange_configcmd
+
+if test -n "$sim_ac_smallchange_configcmd"; then
+  echo "$as_me:$LINENO: result: $sim_ac_smallchange_configcmd" >&5
+echo "${ECHO_T}$sim_ac_smallchange_configcmd" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+
+  if ! test "X$sim_ac_smallchange_configcmd" = "Xfalse"; then
+    test -n "$CONFIG" &&
+      $sim_ac_smallchange_configcmd --alternate=$CONFIG >/dev/null 2>/dev/null &&
+      sim_ac_smallchange_configcmd="$sim_ac_smallchange_configcmd --alternate=$CONFIG"
+  fi
+
+  if $sim_ac_smallchange_configcmd; then
+    sim_ac_smallchange_version=`$sim_ac_smallchange_configcmd --version`
+    sim_ac_smallchange_cppflags=`$sim_ac_smallchange_configcmd --cppflags`
+    sim_ac_smallchange_cflags=`$sim_ac_smallchange_configcmd --cflags 2>/dev/null`
+    sim_ac_smallchange_cxxflags=`$sim_ac_smallchange_configcmd --cxxflags`
+    sim_ac_smallchange_ldflags=`$sim_ac_smallchange_configcmd --ldflags`
+    sim_ac_smallchange_libs=`$sim_ac_smallchange_configcmd --libs`
+    sim_ac_smallchange_datadir=`$sim_ac_smallchange_configcmd --datadir`
+    # Hide stderr on the following, as ``--includedir'', ``--msvcrt''
+    # and ``--cflags'' options were added late to smallchange-config.
+    sim_ac_smallchange_includedir=`$sim_ac_smallchange_configcmd --includedir 2>/dev/null`
+    sim_ac_smallchange_msvcrt=`$sim_ac_smallchange_configcmd --msvcrt 2>/dev/null`
+    sim_ac_smallchange_cflags=`$sim_ac_smallchange_configcmd --cflags 2>/dev/null`
+    echo "$as_me:$LINENO: checking whether libSmallChange is available" >&5
+echo $ECHO_N "checking whether libSmallChange is available... $ECHO_C" >&6
+if test "${sim_cv_smallchange_avail+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  sim_ac_save_cppflags=$CPPFLAGS
+      sim_ac_save_ldflags=$LDFLAGS
+      sim_ac_save_libs=$LIBS
+      CPPFLAGS="$CPPFLAGS $sim_ac_smallchange_cppflags"
+      LDFLAGS="$LDFLAGS $sim_ac_smallchange_ldflags"
+      LIBS="$sim_ac_smallchange_libs $LIBS"
+      ac_ext=cc
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <SmallChange/misc/Init.h>
+int
+main ()
+{
+smallchange_init();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  sim_cv_smallchange_avail=true
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+sim_cv_smallchange_avail=false
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+      ac_ext=cc
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      CPPFLAGS=$sim_ac_save_cppflags
+      LDFLAGS=$sim_ac_save_ldflags
+      LIBS=$sim_ac_save_libs
+
+fi
+echo "$as_me:$LINENO: result: $sim_cv_smallchange_avail" >&5
+echo "${ECHO_T}$sim_cv_smallchange_avail" >&6
+    sim_ac_smallchange_avail=$sim_cv_smallchange_avail
+  else
+    locations=`IFS="${sim_ac_pathsep}"; for p in $sim_ac_path; do echo " -> $p/smallchange-config"; done`
+    { echo "$as_me:$LINENO: WARNING: cannot find 'smallchange-config' at any of these locations:
+$locations" >&5
+echo "$as_me: WARNING: cannot find 'smallchange-config' at any of these locations:
+$locations" >&2;}
+  fi
+fi
+
+if $sim_ac_smallchange_avail; then
+
+  CPPFLAGS="$CPPFLAGS `$sim_ac_smallchange_configcmd $alternate_option --cppflags`"
+  CXXFLAGS="$CXXFLAGS `$sim_ac_smallchange_configcmd $alternate_option --cxxflags`"
+  CFLAGS="$CFLAGS `$sim_ac_smallchange_configcmd $alternate_option --cflags`"
+  LDFLAGS="$LDFLAGS `$sim_ac_smallchange_configcmd $alternate_option --ldflags`"
+  LIBS="`$sim_ac_smallchange_configcmd $alternate_option --libs` $LIBS"
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_SMALLCHANGE_LIBRARY 1
+_ACEOF
+
+
+if test x"${sim_ac_configuration_settings+set}" = x"set"; then
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|SmallChange:is being used"
+else
+  sim_ac_configuration_settings="SmallChange:is being used"
+fi
+
+
+else
+
+  if $sim_ac_smallchange_desired; then
+
+echo >&2 ""
+
+
+: ${sim_ac_message_file=$ac_aux_dir/errors.txt}
+if test -f $sim_ac_message_file; then
+  sim_ac_message="`sed -n -e '/^!smallchange-unavailable$/,/^!/ { /^!/ d; p; }' <$sim_ac_message_file`"
+  if test x"$sim_ac_message" = x""; then
+    { { echo "$as_me:$LINENO: error: no message named 'smallchange-unavailable' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: no message named 'smallchange-unavailable' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&2;}
+   { (exit 1); exit 1; }; }
+  else
+    eval "echo >&2 \"$sim_ac_message\""
+  fi
+else
+  { { echo "$as_me:$LINENO: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+
+echo >&2 ""
+{ { echo "$as_me:$LINENO: error: aborting" >&5
+echo "$as_me: error: aborting" >&2;}
+   { (exit 1); exit 1; }; }
+
+  else
+
+if test x"${sim_ac_configuration_settings+set}" = x"set"; then
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|SmallChange:not used (enable with --with-smallchange)"
+else
+  sim_ac_configuration_settings="SmallChange:not used (enable with --with-smallchange)"
+fi
+
+  fi
+
+fi
+
+
+# **************************************************************************
 # Remove redundant options from certain option lists, to clean up the
 # compiler and linker invocations.
 
@@ -9902,6 +10151,64 @@ for sim_ac_item in $CPPFLAGS; do
   fi
 done
 CPPFLAGS=$sim_ac_uniqued_list
+prefix=$sim_ac_save_prefix
+exec_prefix=$sim_ac_save_exec_prefix
+# unset sim_ac_save_prefix
+# unset sim_ac_save_exec_prefix
+# unset sim_ac_eval_item
+# unset sim_ac_eval_uniq
+
+
+sim_ac_save_prefix=$prefix
+sim_ac_save_exec_prefix=$exec_prefix
+test x"$prefix" = xNONE && prefix=/usr/local
+test x"$exec_prefix" = xNONE && exec_prefix='${prefix}'
+sim_ac_uniqued_list=
+for sim_ac_item in $CXXFLAGS; do
+  eval sim_ac_eval_item="$sim_ac_item"
+  eval sim_ac_eval_item="$sim_ac_eval_item"
+  if test x"$sim_ac_uniqued_list" = x; then
+    sim_ac_uniqued_list="$sim_ac_item"
+  else
+    sim_ac_unique=true
+    for sim_ac_uniq in $sim_ac_uniqued_list; do
+      eval sim_ac_eval_uniq="$sim_ac_uniq"
+      eval sim_ac_eval_uniq="$sim_ac_eval_uniq"
+      test x"$sim_ac_eval_item" = x"$sim_ac_eval_uniq" && sim_ac_unique=false
+    done
+    $sim_ac_unique && sim_ac_uniqued_list="$sim_ac_uniqued_list $sim_ac_item"
+  fi
+done
+CXXFLAGS=$sim_ac_uniqued_list
+prefix=$sim_ac_save_prefix
+exec_prefix=$sim_ac_save_exec_prefix
+# unset sim_ac_save_prefix
+# unset sim_ac_save_exec_prefix
+# unset sim_ac_eval_item
+# unset sim_ac_eval_uniq
+
+
+sim_ac_save_prefix=$prefix
+sim_ac_save_exec_prefix=$exec_prefix
+test x"$prefix" = xNONE && prefix=/usr/local
+test x"$exec_prefix" = xNONE && exec_prefix='${prefix}'
+sim_ac_uniqued_list=
+for sim_ac_item in $CFLAGS; do
+  eval sim_ac_eval_item="$sim_ac_item"
+  eval sim_ac_eval_item="$sim_ac_eval_item"
+  if test x"$sim_ac_uniqued_list" = x; then
+    sim_ac_uniqued_list="$sim_ac_item"
+  else
+    sim_ac_unique=true
+    for sim_ac_uniq in $sim_ac_uniqued_list; do
+      eval sim_ac_eval_uniq="$sim_ac_uniq"
+      eval sim_ac_eval_uniq="$sim_ac_eval_uniq"
+      test x"$sim_ac_eval_item" = x"$sim_ac_eval_uniq" && sim_ac_unique=false
+    done
+    $sim_ac_unique && sim_ac_uniqued_list="$sim_ac_uniqued_list $sim_ac_item"
+  fi
+done
+CFLAGS=$sim_ac_uniqued_list
 prefix=$sim_ac_save_prefix
 exec_prefix=$sim_ac_save_exec_prefix
 # unset sim_ac_save_prefix
@@ -10889,6 +11196,7 @@ s,@gui@,$gui,;t t
 s,@EVENT@,$EVENT,;t t
 s,@WIDGET@,$WIDGET,;t t
 s,@COMPONENTHEADER@,$COMPONENTHEADER,;t t
+s,@sim_ac_smallchange_configcmd@,$sim_ac_smallchange_configcmd,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 CEOF

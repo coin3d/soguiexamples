@@ -33,6 +33,9 @@
 /* define if pthread's struct timespec uses nsecs and not usecs */
 #undef HAVE_PTHREAD_TIMESPEC_NSEC
 
+/* Define to enable use of SmallChange library */
+#undef HAVE_SMALLCHANGE_LIBRARY
+
 /* Define to enable use of Inventor feature */
 #undef HAVE_SOCOMPONENT_SETFULLSCREEN
 

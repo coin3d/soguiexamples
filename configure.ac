@@ -170,26 +170,29 @@ else
 
   sim_ac_gui_configcmd=${sim_ac_gui_toolkit}-config
   AC_PATH_PROG(soguiconfig, $sim_ac_gui_configcmd, false, $sim_ac_path)
-  if $soguiconfig $alternate_option; then
-    SIM_AC_CONFIGURATION_SETTING([Configuration Setting], ['$sim_ac_alternate_keyword'])
-    GUI=`$soguiconfig $alternate_option --ac-subst GUI`
-    Gui=`$soguiconfig $alternate_option --ac-subst Gui`
-    gui=`$soguiconfig $alternate_option --ac-subst gui`
-    WIDGET=`$soguiconfig $alternate_option --ac-subst WIDGET`
-    EVENT=`$soguiconfig $alternate_option --ac-subst EVENT`
-    COMPONENTHEADER=`$soguiconfig $alternate_option --ac-subst COMPONENTHEADER`
-  elif $soguiconfig; then
-    AC_MSG_WARN([configuration '$sim_ac_alternate_keyword' not found: fallback on default])
-    SIM_AC_CONFIGURATION_SETTING([Configuration Setting], [default (fallback: $sim_ac_alternate_keyword not found)])
-    GUI=`$soguiconfig $alternate_option --ac-subst GUI`
-    Gui=`$soguiconfig $alternate_option --ac-subst Gui`
-    gui=`$soguiconfig $alternate_option --ac-subst gui`
-    WIDGET=`$soguiconfig $alternate_option --ac-subst WIDGET`
-    EVENT=`$soguiconfig $alternate_option --ac-subst EVENT`
-    COMPONENTHEADER=`$soguiconfig $alternate_option --ac-subst COMPONENTHEADER`
-  else
+
+  if ! $soguiconfig; then
     SIM_AC_ERROR([unable-to-run-soxx-config])
   fi
+
+  if ! $soguiconfig $alternate_option; then
+    AC_MSG_WARN([configuration '$sim_ac_alternate_keyword' not found: fallback on default])
+    alternate_option=
+  fi
+
+  if test x"$alternate_option" = x""; then
+    SIM_AC_CONFIGURATION_SETTING([Configuration setting], [default])
+  else
+    SIM_AC_CONFIGURATION_SETTING([Configuration setting], [$sim_ac_alternate_keyword])
+  fi
+
+  GUI=`$soguiconfig $alternate_option --ac-subst GUI`
+  Gui=`$soguiconfig $alternate_option --ac-subst Gui`
+  gui=`$soguiconfig $alternate_option --ac-subst gui`
+  WIDGET=`$soguiconfig $alternate_option --ac-subst WIDGET`
+  EVENT=`$soguiconfig $alternate_option --ac-subst EVENT`
+  COMPONENTHEADER=`$soguiconfig $alternate_option --ac-subst COMPONENTHEADER`
+
 
   # Which component examples to build.
 
@@ -284,10 +287,31 @@ SIM_AC_HAVE_INVENTOR_FEATURE(
   [HAVE_HARDCOPY])
 
 # **************************************************************************
+# Use SmallChange if available.
+
+SIM_AC_HAVE_SMALLCHANGE_IFELSE([
+  CPPFLAGS="$CPPFLAGS `$sim_ac_smallchange_configcmd $alternate_option --cppflags`"
+  CXXFLAGS="$CXXFLAGS `$sim_ac_smallchange_configcmd $alternate_option --cxxflags`"
+  CFLAGS="$CFLAGS `$sim_ac_smallchange_configcmd $alternate_option --cflags`"
+  LDFLAGS="$LDFLAGS `$sim_ac_smallchange_configcmd $alternate_option --ldflags`"
+  LIBS="`$sim_ac_smallchange_configcmd $alternate_option --libs` $LIBS"
+  AC_DEFINE(HAVE_SMALLCHANGE_LIBRARY, 1, [Define to enable use of SmallChange library])
+  SIM_AC_CONFIGURATION_SETTING([SmallChange], [is being used])
+], [
+  if $sim_ac_smallchange_desired; then
+    SIM_AC_ERROR([smallchange-unavailable])
+  else
+    SIM_AC_CONFIGURATION_SETTING([SmallChange], [not used (enable with --with-smallchange)])
+  fi
+])
+
+# **************************************************************************
 # Remove redundant options from certain option lists, to clean up the
 # compiler and linker invocations.
 
 SIM_AC_UNIQIFY_LIST(CPPFLAGS, $CPPFLAGS)
+SIM_AC_UNIQIFY_LIST(CXXFLAGS, $CXXFLAGS)
+SIM_AC_UNIQIFY_LIST(CFLAGS, $CFLAGS)
 SIM_AC_UNIQIFY_LIST(LDFLAGS, $LDFLAGS)
 SIM_AC_UNIQIFY_LIST(LIBS, $LIBS)
 

@@ -144,6 +144,7 @@ prefix = @prefix@
 program_transform_name = @program_transform_name@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
+sim_ac_smallchange_configcmd = @sim_ac_smallchange_configcmd@
 soguiconfig = @soguiconfig@
 sysconfdir = @sysconfdir@
 target = @target@
