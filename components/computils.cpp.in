@@ -45,8 +45,16 @@
 #endif // HAVE_CONFIG_H
 
 #ifdef HAVE_SIMVOLEON_LIBRARY
-#include <VolumeViz/nodes/SoVolumeRendering.h>
+#define VOLUMERENDERING
 #endif // HAVE_SIMVOLEON_LIBRARY
+
+#ifdef HAVE_VOLUMEVIZ_LIBRARY
+#define VOLUMERENDERING
+#endif // HAVE_VOLUMEVIZ_LIBRARY
+
+#ifdef VOLUMERENDERING
+#include <VolumeViz/nodes/SoVolumeRendering.h>
+#endif // VOLUMERENDERING
 
 #ifdef HAVE_SMALLCHANGE_LIBRARY
 #include <SmallChange/misc/Init.h>

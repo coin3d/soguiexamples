@@ -182,6 +182,7 @@ EOF
     COMPONENTHEADER="Q_OBJECT"
 
     SIM_AC_CONFIGURATION_SETTING([GUI toolkit], [InventorQt])
+    sim_ac_gui_toolkit=inventorqt
   fi
 
 else
@@ -424,7 +425,7 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
     SIM_AC_ERROR([no-uic])
   fi
 
-  # Default to not look for SimVoleon, as we'll get lots of warnings
+  # Default to not look for SIM Voleon, as we'll get lots of warnings
   # from configure in the common case that it is _not_ available.
   sim_ac_simvoleon_desired=false
 
@@ -435,8 +436,8 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
     LDFLAGS="$sim_ac_simvoleon_ldflags $LDFLAGS"
     LIBS="$sim_ac_simvoleon_libs $LIBS"
 
-    SIM_AC_CONFIGURATION_SETTING([SimVoleon], [is being used])
-    AC_DEFINE(HAVE_SIMVOLEON_LIBRARY, 1, [Define to enable use of SimVoleon library])
+    SIM_AC_CONFIGURATION_SETTING([SIM Voleon], [is being used])
+    AC_DEFINE(HAVE_SIMVOLEON_LIBRARY, 1, [Define to enable use of SIM Voleon library])
 
     # SIM Qt extension widgets needed for volumerendering examples.
     if test -d $srcdir/volumerendering/Cute; then
@@ -448,18 +449,70 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
     if $sim_ac_simvoleon_desired; then
       SIM_AC_ERROR([simvoleon-unavailable])
     else
-      SIM_AC_CONFIGURATION_SETTING([SimVoleon], [not used (enable with --with-simvoleon)])
+      SIM_AC_CONFIGURATION_SETTING([SIM Voleon], [not used (enable with --with-simvoleon)])
     fi
   ])
 else
   sim_ac_simvoleon_avail=false
-  SIM_AC_CONFIGURATION_SETTING([SimVoleon], [not used (examples only works with SoQt)])
+  if $sim_ac_guiexamples_use_inventor; then
+    :  # don't warn if we're using SGI or TGS Inventor, as SIM Voleon is an obvious no-go then
+  else
+    SIM_AC_CONFIGURATION_SETTING([SIM Voleon], [not used (examples only works with SoQt)])
+  fi
 fi
 
 AM_CONDITIONAL(HAVE_SIMVOLEON, $sim_ac_simvoleon_avail)
 
 # **************************************************************************
-# At least one of the SimVoleon examples needs simage. Will just do a
+# If we're using Inventor and InventorQt, check to see if VolumeViz is
+# also available. Those are the two alternate dependencies of the examples
+# under the volumerendering/ directory.
+
+sim_ac_volumeviz_avail=false
+if test x"$sim_ac_gui_toolkit" = x"inventorqt"; then
+
+  SIM_AC_QT_PROG(MOC, moc)
+  if test x"$MOC" = x"false"; then
+    SIM_AC_ERROR([no-moc])
+  fi
+
+  SIM_AC_QT_PROG(UIC, uic)
+  if test x"$UIC" = x"false"; then
+    SIM_AC_ERROR([no-uic])
+  fi
+
+  sim_ac_save_libs=$LIBS
+  LIBS="-lInventorVR $LIBS"
+  AC_MSG_CHECKING(for TGS VolumeViz)
+  AC_LANG_PUSH(C++)
+  AC_TRY_LINK(
+    [#include <VolumeViz/nodes/SoVolumeRendering.h>],
+    [SoVolumeRendering::init();],
+    [sim_ac_volumeviz_avail=true],
+    [sim_ac_volumeviz_avail=false])
+  AC_LANG_POP
+  AC_MSG_RESULT($sim_ac_volumeviz_avail)
+
+  if $sim_ac_volumeviz_avail; then
+    SIM_AC_CONFIGURATION_SETTING([TGS VolumeViz], [is being used])
+    AC_DEFINE(HAVE_VOLUMEVIZ_LIBRARY, 1, [Define to enable use of TGS VolumeViz library])
+  else
+    SIM_AC_CONFIGURATION_SETTING([TGS VolumeViz], [is not being used -- failed to build])
+    LIBS=$sim_ac_save_libs
+  fi
+
+  # SIM Qt extension widgets needed for volumerendering examples.
+  if test -d $srcdir/volumerendering/Cute; then
+    :
+  else
+    AC_MSG_ERROR([Detected old CVS checkout of SoGuiExamples, exiting. To fix, 'cd' to the SoGuiExamples/volumerendering/ directory, do a 'cvs co Cute' and re-run configure.])
+  fi
+fi
+
+AM_CONDITIONAL(HAVE_VOLUMEVIZ, $sim_ac_volumeviz_avail)
+
+# **************************************************************************
+# At least one of the SIM Voleon examples needs simage. Will just do a
 # general check for it, in case other examples pops up which uses it.
 
 SIM_AC_HAVE_SIMAGE_IFELSE([
