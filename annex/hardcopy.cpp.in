@@ -28,8 +28,6 @@
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
-#define HAVE_HARDCOPY 1
-
 // this example requires HardCopy support, and uses Coin-specific
 // HarcCopy features as well...
 #if !defined(HAVE_HARDCOPY) || !defined(__COIN__)
