@@ -36,14 +36,14 @@ snapshotviewer_SOURCES = \
 	SoGuiSnapshotViewer.cpp \
 	snapshotviewer.cpp
 
-cutterviewer_SOURCES = \
-	computils.h \
-	computils.cpp \
-	GLOption.h \
-	GLOption.cpp \
-	SoGuiCutterViewer.h \
-	SoGuiCutterViewer.cpp \
-	cutterviewer.cpp
+# cutterviewer_SOURCES = \
+# 	computils.h \
+# 	computils.cpp \
+# 	GLOption.h \
+# 	GLOption.cpp \
+# 	SoGuiCutterViewer.h \
+# 	SoGuiCutterViewer.cpp \
+# 	cutterviewer.cpp
 
 backgroundimg_SOURCES = backgroundimg.cpp
 
@@ -123,10 +123,10 @@ BUILT_SOURCES = \
 	grapheditor.cpp \
 	snapshotviewer.cpp \
 	SoGuiSnapshotViewer.h \
-	SoGuiSnapshotViewer.cpp \
-	cutterviewer.cpp \
-	SoGuiCutterViewer.h \
-	SoGuiCutterViewer.cpp
+	SoGuiSnapshotViewer.cpp
+# 	cutterviewer.cpp \
+# 	SoGuiCutterViewer.h \
+# 	SoGuiCutterViewer.cpp
 
 noinst_PROGRAMS = renderarea backgroundimg examinerviewer overlay \
 	planeviewer flyviewer snapshotviewer cutterviewer \

@@ -132,16 +132,15 @@ snapshotviewer_SOURCES = \
 	snapshotviewer.cpp
 
 
-cutterviewer_SOURCES = \
-	computils.h \
-	computils.cpp \
-	GLOption.h \
-	GLOption.cpp \
-	SoGuiCutterViewer.h \
-	SoGuiCutterViewer.cpp \
-	cutterviewer.cpp
 
-
+# cutterviewer_SOURCES = \
+# 	computils.h \
+# 	computils.cpp \
+# 	GLOption.h \
+# 	GLOption.cpp \
+# 	SoGuiCutterViewer.h \
+# 	SoGuiCutterViewer.cpp \
+# 	cutterviewer.cpp
 backgroundimg_SOURCES = backgroundimg.cpp
 
 @HAVE_SLIDERSETS_TRUE@SLIDERSETS = lightsliderset materialsliderset materialsliderset2 transformsliderset
@@ -207,12 +206,12 @@ BUILT_SOURCES = \
 	grapheditor.cpp \
 	snapshotviewer.cpp \
 	SoGuiSnapshotViewer.h \
-	SoGuiSnapshotViewer.cpp \
-	cutterviewer.cpp \
-	SoGuiCutterViewer.h \
-	SoGuiCutterViewer.cpp
+	SoGuiSnapshotViewer.cpp
 
 
+# 	cutterviewer.cpp \
+# 	SoGuiCutterViewer.h \
+# 	SoGuiCutterViewer.cpp
 noinst_PROGRAMS = renderarea backgroundimg examinerviewer overlay \
 	planeviewer flyviewer snapshotviewer cutterviewer \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
@@ -661,9 +660,8 @@ backgroundimg_OBJECTS = $(am_backgroundimg_OBJECTS)
 backgroundimg_LDADD = $(LDADD)
 backgroundimg_DEPENDENCIES =
 backgroundimg_LDFLAGS =
-am_cutterviewer_OBJECTS = computils.$(OBJEXT) GLOption.$(OBJEXT) \
-	SoGuiCutterViewer.$(OBJEXT) cutterviewer.$(OBJEXT)
-cutterviewer_OBJECTS = $(am_cutterviewer_OBJECTS)
+cutterviewer_SOURCES = cutterviewer.c
+cutterviewer_OBJECTS = cutterviewer.$(OBJEXT)
 cutterviewer_LDADD = $(LDADD)
 cutterviewer_DEPENDENCIES =
 cutterviewer_LDFLAGS =
@@ -750,9 +748,7 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/GLOption.Po \
-@AMDEP_TRUE@	$(DEPDIR)/SoGuiCutterViewer.Po \
-@AMDEP_TRUE@	$(DEPDIR)/SoGuiSnapshotViewer.Po \
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/SoGuiSnapshotViewer.Po \
 @AMDEP_TRUE@	$(DEPDIR)/backgroundimg.Po $(DEPDIR)/computils.Po \
 @AMDEP_TRUE@	$(DEPDIR)/cutterviewer.Po \
 @AMDEP_TRUE@	$(DEPDIR)/directionallighteditor.Po \
@@ -767,18 +763,18 @@ depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 @AMDEP_TRUE@	$(DEPDIR)/printdialog.Po $(DEPDIR)/renderarea.Po \
 @AMDEP_TRUE@	$(DEPDIR)/snapshotviewer.Po \
 @AMDEP_TRUE@	$(DEPDIR)/transformsliderset.Po
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+CFLAGS = @CFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 CXXFLAGS = @CXXFLAGS@
-CFLAGS = @CFLAGS@
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-CCLD = $(CC)
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(backgroundimg_SOURCES) $(cutterviewer_SOURCES) \
+DIST_SOURCES = $(backgroundimg_SOURCES) cutterviewer.c \
 	$(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) \
 	$(flyviewer_SOURCES) $(lightsliderset_SOURCES) \
 	$(materialeditor_SOURCES) $(materiallist_SOURCES) \
@@ -788,13 +784,13 @@ DIST_SOURCES = $(backgroundimg_SOURCES) $(cutterviewer_SOURCES) \
 	$(renderarea_SOURCES) $(snapshotviewer_SOURCES) \
 	$(transformsliderset_SOURCES)
 DIST_COMMON = README Makefile.am Makefile.in
-SOURCES = $(backgroundimg_SOURCES) $(cutterviewer_SOURCES) $(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) $(flyviewer_SOURCES) $(lightsliderset_SOURCES) $(materialeditor_SOURCES) $(materiallist_SOURCES) $(materiallist2_SOURCES) $(materialsliderset_SOURCES) $(materialsliderset2_SOURCES) $(overlay_SOURCES) $(planeviewer_SOURCES) $(printdialog_SOURCES) $(renderarea_SOURCES) $(snapshotviewer_SOURCES) $(transformsliderset_SOURCES)
+SOURCES = $(backgroundimg_SOURCES) cutterviewer.c $(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) $(flyviewer_SOURCES) $(lightsliderset_SOURCES) $(materialeditor_SOURCES) $(materiallist_SOURCES) $(materiallist2_SOURCES) $(materialsliderset_SOURCES) $(materialsliderset2_SOURCES) $(overlay_SOURCES) $(planeviewer_SOURCES) $(printdialog_SOURCES) $(renderarea_SOURCES) $(snapshotviewer_SOURCES) $(transformsliderset_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .cpp .o .obj
+.SUFFIXES: .c .cpp .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  components/Makefile
@@ -810,7 +806,7 @@ backgroundimg$(EXEEXT): $(backgroundimg_OBJECTS) $(backgroundimg_DEPENDENCIES)
 	$(CXXLINK) $(backgroundimg_LDFLAGS) $(backgroundimg_OBJECTS) $(backgroundimg_LDADD) $(LIBS)
 cutterviewer$(EXEEXT): $(cutterviewer_OBJECTS) $(cutterviewer_DEPENDENCIES) 
 	@rm -f cutterviewer$(EXEEXT)
-	$(CXXLINK) $(cutterviewer_LDFLAGS) $(cutterviewer_OBJECTS) $(cutterviewer_LDADD) $(LIBS)
+	$(LINK) $(cutterviewer_LDFLAGS) $(cutterviewer_OBJECTS) $(cutterviewer_LDADD) $(LIBS)
 directionallighteditor$(EXEEXT): $(directionallighteditor_OBJECTS) $(directionallighteditor_DEPENDENCIES) 
 	@rm -f directionallighteditor$(EXEEXT)
 	$(CXXLINK) $(directionallighteditor_LDFLAGS) $(directionallighteditor_OBJECTS) $(directionallighteditor_LDADD) $(LIBS)
@@ -863,8 +859,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/GLOption.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/SoGuiCutterViewer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/SoGuiSnapshotViewer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/backgroundimg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/computils.Po@am__quote@
@@ -887,6 +881,19 @@ distclean-compile:
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
+
+.c.o:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(COMPILE) -c `test -f $< || echo '$(srcdir)/'`$<
+
+.c.obj:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(COMPILE) -c `cygpath -w $<`
+CCDEPMODE = @CCDEPMODE@
 
 .cpp.o:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
