@@ -66,7 +66,7 @@ AC_ARG_WITH([alternate],
 # For the examples which needs to include gl.h.
 
 AC_CHECK_HEADERS([windows.h])
-SIM_AC_CHECK_HEADER_GL
+SIM_AC_CHECK_HEADER_GL(CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags")
 
 # **************************************************************************
 # Search and set up necessary stuff to use the Inventor implementation.
@@ -287,6 +287,14 @@ SIM_AC_HAVE_INVENTOR_FEATURE(
    So${Gui}ExaminerViewer * viewer = (So${Gui}ExaminerViewer *) 0;
    viewer->setQuadBufferStereo(0);],
   [HAVE_VIEWER_QUADBUFFER_STEREO])
+
+# **************************************************************************
+# Remove redundant options from certain option lists, to clean up the
+# compiler and linker invocations.
+
+SIM_AC_UNIQIFY_LIST(CPPFLAGS, $CPPFLAGS)
+SIM_AC_UNIQIFY_LIST(LDFLAGS, $LDFLAGS)
+SIM_AC_UNIQIFY_LIST(LIBS, $LIBS)
 
 # **************************************************************************
 # All files configure must automatically generate.
