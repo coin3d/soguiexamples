@@ -784,8 +784,7 @@ void updateSinus(void)
 void updateMesh(void)
 {		
   int   x,y,pos;
-  float a1,b1,c1;
-  float a2,b2,c2;
+
   // --- water+sinusmap -> coords
   SbVec3f *coords  = gridCoords->point.startEditing();
   SbVec3f *normals = gridNormals->vector.startEditing();
@@ -793,17 +792,17 @@ void updateMesh(void)
     for (y=0;y<GRID;y++) {
       pos = y*GRID+x;
       // --- vertices ---
-      a1 = vertices[pos][0];
-      b1 = vertices[pos][1];
-      c1 = water[pos] + sinusmap[pos];
-      coords[pos].setValue( a1,b1,c1 );
+      float a = vertices[pos][0];
+      float b = vertices[pos][1];
+      float c = water[pos] + sinusmap[pos];
+      coords[pos].setValue( a, b, c );
       // --- `almost` normals ---
       if ((x==0)||(x==GRID)||(y==0)||(y==GRID)) normals[pos].setValue( 0,0,-1 );
       else {
-        a1 = ( (water[pos+1]    + sinusmap[pos+1]    ) - (water[pos-1]    + sinusmap[pos-1])    )*0.5;
-        b1 = ( (water[pos+GRID] + sinusmap[pos+GRID] ) - (water[pos-GRID] + sinusmap[pos-GRID]) )*0.5;
-        c1 = 1;
-        normals[pos].setValue( a1,b1,c1 );
+        a = ( (water[pos+1]    + sinusmap[pos+1]    ) - (water[pos-1]    + sinusmap[pos-1])    )*0.5;
+        b = ( (water[pos+GRID] + sinusmap[pos+GRID] ) - (water[pos-GRID] + sinusmap[pos-GRID]) )*0.5;
+        c = 1;
+        normals[pos].setValue( a, b, c );
 				//normals[y*GRID+x].normalize();
       }
     }
