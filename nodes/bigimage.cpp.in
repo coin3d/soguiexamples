@@ -33,6 +33,7 @@
 
 #include <Inventor/nodes/SoText3.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int
 main(int argc, char ** argv)
@@ -83,8 +84,8 @@ main(int argc, char ** argv)
 #include <Inventor/nodes/SoTextureScalePolicy.h>
 
 // Global constants
-const int texturewidth = 5000;
-const int textureheight = 5000;
+static int texturewidth = 5000;
+static int textureheight = 5000;
 
 // Global variables
 static double cr = 0.33;
@@ -160,11 +161,29 @@ texture(void)
 }
 
 int
-main (int, char ** argv)
+main (int argc, char ** argv)
 {
+  if (argc > 1) {
+    int w = atoi(argv[1]);
+    if (w > 0 && w <= 32768) {
+      texturewidth = w;
+      textureheight = w;
+
+      if (argc > 2) {
+        int h = atoi(argv[2]);
+        if (h > 0 && h <= 32768) {
+          textureheight = h;
+        }
+      }
+    }
+  }
+
   (void)printf("This example shows how to use the BigImage functionality in "
-               "Coin to render\nlarge textures. Please wait, generating a %dx%d Julia texture.\n",
+               "Coin to render\nlarge textures. Please wait, generating a %dx%d Julia texture.\n"
+               "\nUsage: bigimage [width] [height]\n",
                texturewidth, textureheight);
+
+
 
   bitmap = new unsigned char[texturewidth*textureheight*3];
   // Generate a julia set to use as a texturemap
