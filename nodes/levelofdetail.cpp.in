@@ -1,7 +1,7 @@
 /**************************************************************************\
  *
  *  This file is part of a set of example programs for the Coin library.
- *  Copyright (C) 2000-2002 by Systems in Motion. All rights reserved.
+ *  Copyright (C) 2000-2003 by Systems in Motion. All rights reserved.
  *
  *                   <URL:http://www.coin3d.org>
  *
