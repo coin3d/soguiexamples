@@ -23,13 +23,13 @@
 /*!
   \var SoSFFloat ShapeScale::active
   
-  Turns the scaling on/off.
+  Turns the scaling on/off. Default value is TRUE.
 */
 
 /*!
   \var SoSFFloat ShapeScale::projectedSize
 
-  The requested projected size of the shape.
+  The requested projected size of the shape. Default value is 5.0.
 */
 
 #include "ShapeScale.h"
