@@ -2059,6 +2059,7 @@ if test x"$with_pthread" != xno; then
     sim_ac_pthread_cppflags="-I${with_pthread}/include"
     sim_ac_pthread_ldflags="-L${with_pthread}/lib"
   fi
+  sim_ac_pthread_cppflags="-D_REENTRANT ${sim_ac_pthread_cppflags}"
   sim_ac_pthread_libs="-lpthread"
 
   sim_ac_save_cppflags=$CPPFLAGS
@@ -2087,8 +2088,7 @@ if test x"$with_pthread" != xno; then
     $2
   fi
 fi
-])
-
+]) # SIM_AC_CHECK_PTHREAD
 
 
 # Usage:
@@ -2756,8 +2756,8 @@ fi
 AC_DEFUN([SIM_AC_WITH_INVENTOR], [
 : ${sim_ac_want_inventor=false}
 AC_ARG_WITH([inventor],
-  AC_HELP_STRING([--with-inventor], [use another Open Inventor than Coin [[default=no]]])
-AC_HELP_STRING([--with-inventor=PATH], [specify where Open Inventor resides]),
+  AC_HELP_STRING([--with-inventor], [use another Open Inventor than Coin [[default=no]], with InventorXt])
+AC_HELP_STRING([--with-inventor=PATH], [specify where Open Inventor and InventorXt resides]),
   [case "$withval" in
   no)  sim_ac_want_inventor=false ;;
   yes) sim_ac_want_inventor=true
