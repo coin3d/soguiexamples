@@ -33,6 +33,7 @@
 #include <Inventor/nodes/SoPickStyle.h>
 #include <Inventor/nodes/SoPointSet.h>
 #include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoBaseColor.h>
 #include <VolumeViz/nodes/SoTransferFunction.h>
 #include <VolumeViz/nodes/SoVolumeData.h>
 #include <VolumeViz/nodes/SoVolumeRender.h>
@@ -114,6 +115,10 @@ pickedPointsSubGraph(void)
   SoPickStyle * pickstyle = new SoPickStyle;
   pickstyle->style = SoPickStyle::UNPICKABLE;
   picksep->addChild(pickstyle);
+
+  SoBaseColor * pointcolor = new SoBaseColor;
+  pointcolor->rgb.setValue(1, 0, 0);
+  picksep->addChild(pointcolor);
 
   SoDrawStyle * drawstyle = new SoDrawStyle;
   drawstyle->pointSize = 10;
