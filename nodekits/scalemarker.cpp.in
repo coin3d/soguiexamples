@@ -22,24 +22,62 @@
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
-#include <Inventor/nodes/SoSeparator.h>
-#include <Inventor/nodes/SoEventCallback.h>
-#include <Inventor/nodes/SoTranslation.h>
-#include <Inventor/nodes/SoSwitch.h>
-#include <Inventor/nodes/SoCube.h>
-#include <Inventor/nodes/SoMaterial.h>
-#include <Inventor/actions/SoRayPickAction.h>
-#include <Inventor/SoPickedPoint.h>
 #include <Inventor/SoInput.h>
 #include <Inventor/SoOutput.h>
+#include <Inventor/SoPickedPoint.h>
+#include <Inventor/actions/SoRayPickAction.h>
 #include <Inventor/events/SoMouseButtonEvent.h>
+#include <Inventor/nodes/SoBaseColor.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoSwitch.h>
+#include <Inventor/nodes/SoTranslation.h>
 #include <assert.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "ShapeScale.h"
 
-// just some static variables to make life easier
-static SoTranslation * markertranslation = NULL;
-static SoSwitch * markerswitch = NULL;
+// Returns random value between 0.0f and 1.0f.
+static float
+normalized_rand(void)
+{
+  return float(rand())/float(RAND_MAX);
+}
+
+static SoSeparator *
+construct_new_marker(const SbVec3f & v)
+{
+  SoSeparator * markerroot = new SoSeparator;
+
+  SoTranslation * t = new SoTranslation;
+  t->translation = v;
+  markerroot->addChild(t);
+  
+  ShapeScale * kit = new ShapeScale;
+  kit->active = TRUE;
+  kit->projectedSize = 5.0f;
+  
+  // create the marker
+  SoSeparator * markersep = new SoSeparator;
+
+  SoBaseColor * mat = new SoBaseColor;
+  mat->rgb.setValue(normalized_rand(), normalized_rand(), normalized_rand());
+  markersep->addChild(mat);
+  
+  // marker shape should be unit size, with center in (0.0f, 0.0f, 0.0f)
+  SoCube * cube = new SoCube;
+  cube->width = 1.0f;
+  cube->height = 1.0f;
+  cube->depth = 1.0f;
+  
+  markersep->addChild(cube);
+  kit->setPart("shape", markersep);
+  markerroot->addChild(kit);
+
+  return markerroot;
+}
 
 static void
 event_cb(void * ud, SoEventCallback * n)
@@ -58,15 +96,21 @@ event_cb(void * ud, SoEventCallback * n)
     SoPickedPoint * point = rp.getPickedPoint();
     if (point == NULL) {
       (void)fprintf(stderr, "\n** miss! **\n\n");
-      markerswitch->whichChild = SO_SWITCH_NONE;;
       return;
     }
 
     n->setHandled();
 
-    SbVec3f v = point->getPoint();
-    markertranslation->translation = v;
-    markerswitch->whichChild = SO_SWITCH_ALL;
+    const SoPath * p = rp.getCurPath();
+
+    for (int i = 0; i < p->getLength(); i++) {
+      SoNode * n = p->getNodeFromTail(i);
+      if (n->isOfType(SoGroup::getClassTypeId())) {
+        SoGroup * g = (SoGroup *)n;
+        g->addChild(construct_new_marker(point->getPoint()));
+        break;
+      }
+    }
   }
 }
 
@@ -77,7 +121,8 @@ show_instructions( void )
                 "\nThis example program demonstrates the use of the ShapeScale nodekit.\n"
                 "\nQuick instructions:\n\n"
                 "  * place the marker by clicking on a shape with the left mouse button\n"
-                "  * hit ESC to toggle back and forth to view mode\n\n");
+                "  * hit ESC to toggle back and forth to view mode\n"
+                "  * zoom back and forth to see how the markers stay the same size\n\n");
 }
 
 int
@@ -89,7 +134,7 @@ main(int argc, char ** argv)
   }
 
   @WIDGET@ window = So@Gui@::init( argv[0] );
-  ShapeScale::initClass(); // init the ShapeScale nodekit
+  ShapeScale::initClass(); // init our extension nodekit
 
   So@Gui@ExaminerViewer * ex1 = new So@Gui@ExaminerViewer( window );
   
@@ -122,35 +167,6 @@ main(int argc, char ** argv)
   ecb->addEventCallback(SoMouseButtonEvent::getClassTypeId(), event_cb, ex1);
   sep->addChild(ecb);
   
-  SoSwitch * sw = new SoSwitch;
-  markerswitch = sw; // set static variable for event callback
-  sw->whichChild = SO_SWITCH_NONE;
-  sep->addChild(sw);
-  
-  SoTranslation * t = new SoTranslation;
-  markertranslation = t; // set static varible for event callback
-  sw->addChild(t);
-  
-  ShapeScale * kit = new ShapeScale;
-  sw->addChild(kit);
-  kit->active = TRUE;
-  kit->projectedSize = 5.0f;
-  
-  // create the marker
-  SoSeparator * markersep = new SoSeparator;
-  SoMaterial * mat = new SoMaterial;
-  mat->diffuseColor = SbColor(1.0f, 0.0f, 0.0f);
-  markersep->addChild(mat);
-  
-  // marker shape should be unit size, with center in (0.0f, 0.0f, 0.0f)
-  SoCube * cube = new SoCube;
-  cube->width = 1.0f;
-  cube->height = 1.0f;
-  cube->depth = 1.0f;
-  
-  markersep->addChild(cube);
-  kit->setPart("shape", markersep);
-
   ex1->setSceneGraph(newroot);
   ex1->setTransparencyType(SoGLRenderAction::SORTED_OBJECT_BLEND);
   ex1->setViewing(FALSE);
@@ -163,4 +179,4 @@ main(int argc, char ** argv)
 
   newroot->unref();
   return 0;
-} // main()
+}
