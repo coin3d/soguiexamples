@@ -1,14 +1,15 @@
-dnl aclocal.m4 generated automatically by aclocal 1.4a
+# aclocal.m4 generated automatically by aclocal 1.4a
 
-dnl Copyright (C) 1994, 1995-9, 2000 Free Software Foundation, Inc.
-dnl This file is free software; the Free Software Foundation
-dnl gives unlimited permission to copy and/or distribute it,
-dnl with or without modifications, as long as this notice is preserved.
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
+# Free Software Foundation, Inc.
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
 
-dnl This program is distributed in the hope that it will be useful,
-dnl but WITHOUT ANY WARRANTY, to the extent permitted by law; without
-dnl even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-dnl PARTICULAR PURPOSE.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
 
 # Do all the work for Automake.  This macro actually does too much --
 # some checks are only needed if your package does certain things.
@@ -38,7 +39,7 @@ AC_DEFUN([AM_INIT_AUTOMAKE],
 [dnl We require 2.13 because we rely on SHELL being computed by configure.
 AC_REQUIRE([AC_PROG_INSTALL])dnl
 # test to see if srcdir already configured
-if test "`CDPATH=: && cd $srcdir && pwd`" != "`pwd`" &&
+if test "`CDPATH=:; cd $srcdir && pwd`" != "`pwd`" &&
    test -f $srcdir/config.status; then
   AC_MSG_ERROR([source directory already configured; run "make distclean" there first])
 fi
@@ -146,7 +147,7 @@ AC_SUBST(install_sh)])
 # If it does, set am_missing_run to use it, otherwise, to nothing.
 AC_DEFUN([AM_MISSING_HAS_RUN], [
 test x"${MISSING+set}" = xset || \
-  MISSING="\${SHELL} `CDPATH=: && cd $ac_aux_dir && pwd`/missing"
+  MISSING="\${SHELL} `CDPATH=:; cd $ac_aux_dir && pwd`/missing"
 # Use eval to expand $SHELL
 if eval "$MISSING --run :"; then
   am_missing_run="$MISSING --run "
@@ -787,44 +788,7 @@ dnl This is just to silence aclocal about the macro not being used
 ifelse([AC_DISABLE_FAST_INSTALL])dnl
 
 # Usage:
-#   SIM_AC_CHECK_LINKSTYLE
-#
-# Description:
-#
-#   Detect how to link against external libraries; UNIX-style
-#   ("-llibname") or MSWin-style ("libname.lib"). As a side-effect of
-#   running this macro, the shell variable sim_ac_linking_style will be
-#   set to either "mswin" or "unix".
-#
-# Author:
-#   Marius B. Monsen <mariusbu@sim.no>
-
-AC_DEFUN([SIM_AC_CHECK_LINKSTYLE], [
-
-sim_ac_save_ldflags=$LDFLAGS
-LDFLAGS="$LDFLAGS version.lib"
-
-AC_CACHE_CHECK(
-  [if linking should be done "MSWin-style"],
-  sim_cv_mswin_linking,
-  AC_TRY_COMPILE([#include <windows.h>
-#include <version.h>],
-                 [(void)GetFileVersionInfoSize(0L, 0L);],
-                 [sim_cv_mswin_linking=yes],
-                 [sim_cv_mswin_linking=no])
-)
-
-LDFLAGS=$sim_ac_save_ldflags
-
-if test x"$sim_cv_mswin_linking" = x"yes"; then
-  sim_ac_linking_style=mswin
-else
-  sim_ac_linking_style=unix
-fi
-])
-
-# Usage:
-#   SIM_COMPILE_DEBUG( ACTION-IF-DEBUG, ACTION-IF-NOT-DEBUG )
+#   SIM_AC_COMPILE_DEBUG([ACTION-IF-DEBUG[, ACTION-IF-NOT-DEBUG]])
 #
 # Description:
 #   Let the user decide if compilation should be done in "debug mode".
@@ -837,9 +801,6 @@ fi
 #   macro arguments following the well-known ACTION-IF / ACTION-IF-NOT
 #   concept.
 #
-#   Note: this macro must be placed after either AC_PROG_CC or AC_PROG_CXX
-#   in the configure.in script.
-#
 # Authors:
 #   Morten Eriksen, <mortene@sim.no>
 #   Lars J. Aas, <larsa@sim.no>
@@ -849,28 +810,25 @@ fi
 #   default-value.
 #
 
-AC_DEFUN([SIM_COMPILE_DEBUG], [
-AC_PREREQ([2.13])
-
+AC_DEFUN([SIM_AC_COMPILE_DEBUG], [
 AC_ARG_ENABLE(
   [debug],
   AC_HELP_STRING([--enable-debug], [compile in debug mode [[default=yes]]]),
   [case "${enableval}" in
-    yes) enable_debug=yes ;;
-    no)  enable_debug=no ;;
+    yes) enable_debug=true ;;
+    no)  enable_debug=false ;;
+    true | false) enable_debug=${enableval} ;;
     *) AC_MSG_ERROR(bad value "${enableval}" for --enable-debug) ;;
   esac],
-  [enable_debug=yes])
+  [enable_debug=true])
 
-if test x"$enable_debug" = x"yes"; then
+if $enable_debug; then
   ifelse([$1], , :, [$1])
 else
-  CFLAGS="$CFLAGS -DNDEBUG"
-  CXXFLAGS="$CXXFLAGS -DNDEBUG"
+  CPPFLAGS="$CPPFLAGS -DNDEBUG"
   $2
 fi
 ])
-
 
 # Usage:
 #   SIM_AC_DEBUGSYMBOLS

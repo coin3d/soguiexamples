@@ -44,6 +44,19 @@ fi
 $sim_ac_cvs_syncproblem && echo "" && echo "Aborting..." && exit 1
 
 # **************************************************************************
+# If the Microsoft Visual C++ cl.exe compiler is available, set us up for
+# compiling with it and to generate an MSWindows .dll file.
+
+BUILD_WITH_MSVC=false
+sim_ac_msvccc=$srcdir/cfg/m4/msvccc
+if test -z "$CC" && test -z "$CXX" && $sim_ac_msvccc >/dev/null 2>&1; then
+  CC=$sim_ac_msvccc
+  CXX=$sim_ac_msvccc
+  BUILD_WITH_MSVC=true
+fi
+AC_SUBST(BUILD_WITH_MSVC)
+
+# **************************************************************************
 AC_PROG_CXX
 AC_LANG_CPLUSPLUS
 
@@ -56,20 +69,16 @@ AM_INIT_AUTOMAKE(examples, 1.0.0)
 # File to cram results from the configure tests into.
 AM_CONFIG_HEADER(config.h)
 
-# Turn off default maintainer make-rules -- use ./autogen.sh instead.
+# Turn off default maintainer make-rules -- use ./bootstrap instead.
 AM_MAINTAINER_MODE
 
 # Initialize libtool
 AC_PROG_LIBTOOL
 
-SIM_AC_CHECK_LINKSTYLE
-
 # **************************************************************************
 # Search and set up necessary stuff to use the GUI library.
 
 sim_ac_gui_default=soxt
-# No Xt on Windows, so we default to Qt for the Windows platform
-test x"$sim_ac_linking_style" = xmswin && sim_ac_gui_default=soqt
 
 test x${with_qt+set} = xset && sim_ac_gui_default=soqt
 test x${with_xt+set} = xset && sim_ac_gui_default=soxt
