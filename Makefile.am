@@ -34,3 +34,10 @@ windows-packages: windows-files
 	@( cd windows; $(MAKE) VERSION=$(VERSION) )
 
 # **************************************************************************
+
+# Create Mac OS X application bundles.
+install-exec-local:
+	@case $(target_os) in darwin* ) \
+	  echo "Making Mac OS application bundles." ;; \
+	esac
+	

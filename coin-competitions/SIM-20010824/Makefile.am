@@ -18,3 +18,12 @@ BUILT_SOURCES = \
 	plasmaball.cpp \
 	styx.cpp \
 	stars2.cpp
+
+# Create Mac OS X application bundles.
+install-exec-local:
+	@case $(target_os) in darwin* ) \
+	  for i in $(noinst_PROGRAMS); do \
+	    if test -f $$i; then $(soguiconfig) --build-app $$i; fi \
+	  done;; \
+	esac
+

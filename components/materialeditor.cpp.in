@@ -22,7 +22,7 @@
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
-#include <Inventor/@Gui@/So@Gui@MaterialEditor.h>
+#include <Inventor/@Gui@/editors/So@Gui@MaterialEditor.h>
 #include <Inventor/nodes/SoCone.h>
 #include <Inventor/nodes/SoMaterial.h>
 #include <Inventor/nodes/SoSeparator.h>

@@ -8,3 +8,12 @@ noinst_PROGRAMS = translate1 translate2 dragpoint
 translate1_SOURCES = translate1.cpp
 translate2_SOURCES = translate2.cpp
 dragpoint_SOURCES = dragpoint.cpp
+
+# Create Mac OS X application bundles.
+install-exec-local:
+	@case $(target_os) in darwin* ) \
+	  for i in $(noinst_PROGRAMS); do \
+	    if test -f $$i; then $(soguiconfig) --build-app $$i; fi \
+	  done;; \
+	esac
+
