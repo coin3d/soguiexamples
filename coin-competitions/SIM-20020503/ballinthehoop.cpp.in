@@ -1,6 +1,6 @@
 #define HAVE_SOCOMPONENT_SETFULLSCREEN
 
-#include <Inventor/Qt/So@Gui@RenderArea.h>
+#include <Inventor/@Gui@/So@Gui@RenderArea.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoSwitch.h>
 #include <Inventor/nodes/SoMaterial.h>
