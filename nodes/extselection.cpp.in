@@ -24,6 +24,10 @@
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
 // This example uses SoExtSelection, SoPolygonOffset and
 // SbBSPTree. All of these are missing from SGI Inventor. TGS Inventor
 // has the first two, but is missing SbBSPTree.
