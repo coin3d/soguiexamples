@@ -21,7 +21,7 @@
 \**************************************************************************/
 
 /*
- * Written by Tor-Helge Skei <skei@sim.no>.
+ * Written by Tor-Helge Skei.
  */
 
 #include <assert.h>
@@ -61,14 +61,14 @@
 
 // *************************************************************************
 
-#define SIZE           32      // number of polygons in water-mesh
-#define GRID          (SIZE+1) // number of vertices in water-mesh
-#define GRIDSCALE      2.0     // value for uniform scale of the water-mesh
+#define MESHSIZE       32      // number of polygons in water-mesh
+#define GRID          (MESHSIZE+1) // number of vertices in water-mesh
+#define GRIDSCALE      2.0f    // value for uniform scale of the water-mesh
 #define CUBESIZE       6       // size of cube
 #define SINHEIGHT      2       // 'height of sine' (in sine-table)
 #define WAVESIZE      -10.0f   // size of 'rain'
 #define WATERINTERVAL  6       // how often it rains (frames between each drop)
-#define WATERDAMPING   0.05    // how fast the ripples fade back to normal
+#define WATERDAMPING   0.05f   // how fast the ripples fade back to normal
 
 #define PTLGTON  25
 #define PTLGTOFF 30
@@ -82,6 +82,8 @@
 #define sinaddyinner2  6
 #define sinaddxouter2  3
 #define sinaddyouter2  5
+
+#define M_PI_F ((float)M_PI)
 
 // *************************************************************************
 
@@ -99,7 +101,7 @@ SoSeparator * grid;
 SoCoordinate3 * gridCoords;
 float vertices[ GRID*GRID ][3];
 SoIndexedFaceSet *gridFaceSet;
-int32_t indexes[ SIZE*SIZE*4*2 ];
+int32_t indexes[ MESHSIZE*MESHSIZE*4*2 ];
 SoNormal *gridNormals;
 float normals[ GRID*GRID ][3];
 
@@ -481,7 +483,7 @@ addText(
   SoTranslation * trans = new SoTranslation;
   trans->translation = SbVec3f( radius, height, 0 );
   SoRotation * rottext = new SoRotation;
-  rottext->rotation = SbRotation( SbVec3f(0,1,0), M_PI/2.0f );
+  rottext->rotation = SbRotation( SbVec3f(0,1,0), M_PI_F/2.0f );
   SoText3 * text3 = new SoText3;
   text3->string.setValue( text );
   text3->parts.setValue( SoText3::ALL );
@@ -499,8 +501,8 @@ makeBuoy(
   SoSeparator *result = new SoSeparator;
 
   SoMaterial * mat = new SoMaterial;
-  mat->diffuseColor.setValue( 0.8, 0.8, 0.8 );
-  mat->specularColor.setValue( 0.8, 0.8, 0.8 );
+  mat->diffuseColor.setValue( 0.8f, 0.8f, 0.8f );
+  mat->specularColor.setValue( 0.8f, 0.8f, 0.8f );
   result->addChild( mat );
   cubetrans = new SoTranslation;
   result->addChild( cubetrans );
@@ -524,16 +526,16 @@ makeBuoy(
   plcube->on = FALSE;
   SoTransform * transform1 = new SoTransform;
   SoTransform * transform2 = new SoTransform;
-  transform1->rotation = SbRotation( SbVec3f(1, 0, 0), -M_PI/2.0f );
+  transform1->rotation = SbRotation( SbVec3f(1, 0, 0), -M_PI_F/2.0f );
   transform1->translation = SbVec3f( 0, 0, -1.0f-0.1f );
-  transform2->rotation = SbRotation( SbVec3f(1, 0, 0), M_PI/2.0f );
+  transform2->rotation = SbRotation( SbVec3f(1, 0, 0), M_PI_F/2.0f );
   transform2->translation = SbVec3f( 0, 0, 0.5f-0.1f );
   cone1->parts = SoCone::SIDES;
   cone1->height = 2;
   cone2->parts = SoCone::SIDES;
   cone2->height = 1;
   SoComplexity * cmplx = new SoComplexity;
-  cmplx->textureQuality  = 0.01;
+  cmplx->textureQuality  = 0.01f;
   SoTexture2 * tex = new SoTexture2;
 
   unsigned char bytes[] = {
@@ -562,7 +564,7 @@ makeBuoy(
 
   SoCylinder * cyl = new SoCylinder;
   SoTransform * cyltrans = new SoTransform;
-  cyltrans->rotation = SbRotation( SbVec3f(1,0,0), M_PI/2.0f );
+  cyltrans->rotation = SbRotation( SbVec3f(1,0,0), M_PI_F/2.0f );
   cyltrans->translation = SbVec3f( 0, 0, 1.5f );
   cyl->radius = 0.02f;
   cyl->height = 2.0f;
@@ -571,7 +573,7 @@ makeBuoy(
 
   SoTransform * filetrans = new SoTransform;
   filetrans->scaleFactor = SbVec3f( 0.05f, 0.05f, 0.05f );
-  filetrans->rotation = SbRotation( SbVec3f( 1, 0, 0 ), M_PI/2.0 );
+  filetrans->rotation = SbRotation( SbVec3f( 1, 0, 0 ), M_PI_F / 2 );
   filetrans->translation = SbVec3f( 0, 0, 2.5 );
   sep4->addChild( filetrans );
 
@@ -585,8 +587,8 @@ makeBuoy(
   sep4->addChild( sep5 );
 
   SoRotor * rotor = new SoRotor;
-  rotor->rotation = SbRotation( SbVec3f( 0, 1, 0 ), 0.01 );
-  rotor->speed = -0.15;
+  rotor->rotation = SbRotation( SbVec3f( 0, 1, 0 ), 0.01f );
+  rotor->speed = -0.15f;
   sep5->addChild( rotor );
 
 #define RADIANS 0.2f
@@ -652,17 +654,17 @@ makeGridObject(
   //  | /       /|  
   // 3|/      3/_|2
 
-  for ( x = 0; x < SIZE; x++ ) {
-    for ( y = 0; y < SIZE; y++ ) {
-      indexes[((y*SIZE+x)*8)  ] = (y*GRID+x);
-      indexes[((y*SIZE+x)*8)+1] = (y*GRID+x+1);
-      indexes[((y*SIZE+x)*8)+2] = (y*GRID+x+GRID);
-      indexes[((y*SIZE+x)*8)+3] = SO_END_FACE_INDEX;
+  for ( x = 0; x < MESHSIZE; x++ ) {
+    for ( y = 0; y < MESHSIZE; y++ ) {
+      indexes[((y*MESHSIZE+x)*8)  ] = (y*GRID+x);
+      indexes[((y*MESHSIZE+x)*8)+1] = (y*GRID+x+1);
+      indexes[((y*MESHSIZE+x)*8)+2] = (y*GRID+x+GRID);
+      indexes[((y*MESHSIZE+x)*8)+3] = SO_END_FACE_INDEX;
       // b
-      indexes[((y*SIZE+x)*8)+4] = (y*GRID+x+1);
-      indexes[((y*SIZE+x)*8)+5] = (y*GRID+x+1+GRID);
-      indexes[((y*SIZE+x)*8)+6] = (y*GRID+x+GRID);
-      indexes[((y*SIZE+x)*8)+7] = SO_END_FACE_INDEX;
+      indexes[((y*MESHSIZE+x)*8)+4] = (y*GRID+x+1);
+      indexes[((y*MESHSIZE+x)*8)+5] = (y*GRID+x+1+GRID);
+      indexes[((y*MESHSIZE+x)*8)+6] = (y*GRID+x+GRID);
+      indexes[((y*MESHSIZE+x)*8)+7] = SO_END_FACE_INDEX;
     }
   }
 	
@@ -676,10 +678,10 @@ makeGridObject(
   SoSeparator *result = new SoSeparator;
   // --- material ---
   SoMaterial *mat = new SoMaterial;
-  mat->diffuseColor.setValue(0.2,0.6,1.0);
+  mat->diffuseColor.setValue(0.2f,0.6f,1.0f);
   mat->specularColor.setValue(1,1,1);
-  mat->shininess.setValue(0.2);
-  mat->transparency.setValue(0.5);
+  mat->shininess.setValue(0.2f);
+  mat->transparency.setValue(0.5f);
   result->addChild(mat);
   // --- normal binding ---
   SoNormalBinding *normbind = new SoNormalBinding;
@@ -689,7 +691,7 @@ makeGridObject(
   SoShapeHints *shint = new SoShapeHints;
   shint->vertexOrdering.setValue(SoShapeHints::COUNTERCLOCKWISE);
   shint->faceType.setValue(SoShapeHints::CONVEX);
-  shint->creaseAngle = M_PI;
+  shint->creaseAngle = M_PI_F;
   result->addChild(shint);
   // --- normal ---
   gridNormals = new SoNormal;
@@ -701,7 +703,7 @@ makeGridObject(
   result->addChild(gridCoords);
   // --- vertex index ---
   gridFaceSet = new SoIndexedFaceSet;
-  gridFaceSet->coordIndex.setValues(0,(SIZE*SIZE*4*2),indexes);
+  gridFaceSet->coordIndex.setValues(0,(MESHSIZE*MESHSIZE*4*2),indexes);
   result->addChild(gridFaceSet);
   return result;
 }
@@ -734,10 +736,10 @@ initialize(
 	oldwater = wavemap2;
 	watercount = 0;
 	a = 0;
-	b = (M_PI*2) / 256;
+	b = (M_PI_F*2) / 256;
 	for (x=0;x<256;x++)
 	{
-		sintable[x] = sin(a) * SINHEIGHT;	// max x size
+		sintable[x] = float(sin(a)) * SINHEIGHT;	// max x size
 		a += b;
 	}
 	sinposx1 = 0;
@@ -761,7 +763,7 @@ void updateWave(float *dst, float *src, float damp)
         c *= 0.5;
         c -= dst[pos];
         c -= (c*damp);
-        if (c < 0.01) c = 0;	// un-necessary? just to be sure that we reach '0' height...
+        if (c < 0.01f) c = 0;	// un-necessary? just to be sure that we reach '0' height...
       }
       dst[pos] = c;
     }
@@ -825,8 +827,8 @@ void updateMesh(void)
       // --- `almost` normals ---
       if ((x==0)||(x==GRID)||(y==0)||(y==GRID)) normals[pos].setValue( 0,0,-1 );
       else {
-        a = ( (water[pos+1]    + sinusmap[pos+1]    ) - (water[pos-1]    + sinusmap[pos-1])    )*0.5;
-        b = ( (water[pos+GRID] + sinusmap[pos+GRID] ) - (water[pos-GRID] + sinusmap[pos-GRID]) )*0.5;
+        a = ( (water[pos+1]    + sinusmap[pos+1]    ) - (water[pos-1]    + sinusmap[pos-1])    )*0.5f;
+        b = ( (water[pos+GRID] + sinusmap[pos+GRID] ) - (water[pos-GRID] + sinusmap[pos-GRID]) )*0.5f;
         c = 1;
         normals[pos].setValue( a, b, c );
 				//normals[y*GRID+x].normalize();
@@ -895,7 +897,7 @@ timerSensorCallback(
   z2 = sinusmap[ ((GRID/2)+CUBESIZE) * GRID + ((GRID/2)+CUBESIZE) ]; // bottomright
   float temp2 = (z2-z1) / (CUBESIZE*2);
   SbVec3f vec( 1.0f, 0.0f, 0.0f );
-  cuberotx->rotation.setValue( vec, (temp1+temp2)*0.5 );
+  cuberotx->rotation.setValue( vec, (temp1+temp2)*0.5f );
   // --- y-rotation ---
   z1 = sinusmap[ ((GRID/2)-CUBESIZE) * GRID + ((GRID/2)-CUBESIZE) ]; // topleft
   z2 = sinusmap[ ((GRID/2)-CUBESIZE) * GRID + ((GRID/2)+CUBESIZE) ]; // topright
@@ -904,7 +906,7 @@ timerSensorCallback(
   z2 = sinusmap[ ((GRID/2)+CUBESIZE) * GRID + ((GRID/2)+CUBESIZE) ]; // bottomright
   temp2 = (z2-z1) / (CUBESIZE*2);
   vec.setValue(0,-1,0);
-  cuberoty->rotation.setValue(vec,(temp1+temp2)*0.5);
+  cuberoty->rotation.setValue(vec,(temp1+temp2)*0.5f);
   // --- z-height ---
   cubetrans->translation.setValue( 0, 0, sinusmap[(GRID/2)*GRID + (GRID/2)] );
   
@@ -934,7 +936,7 @@ main(
   SoSeparator * root = new SoSeparator;
   SoRotor * rotor = new SoRotor;
   rotor->rotation = SbRotation( 0,0,1,0 );
-  rotor->speed = 0.02;
+  rotor->speed = 0.02f;
   root->addChild( rotor );
 
   SoLightModel * lm = new SoLightModel;
