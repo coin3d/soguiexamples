@@ -24,7 +24,7 @@
 #define SOGUIEXAMPLES_SOCOMPUTEBOUNDINGBOX_H
 
 #include <Inventor/engines/SoSubEngine.h>
-#include <Inventor/engines/SoEngineOutput.h>
+#include <Inventor/engines/SoEngine.h>
 #include <Inventor/fields/SoSFNode.h>
 #include <Inventor/fields/SoSFPath.h>
 #include <Inventor/SbViewportRegion.h>

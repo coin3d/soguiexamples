@@ -34,7 +34,7 @@
 #include <Inventor/errors/SoDebugError.h>
 #include <Inventor/fields/SoMFVec3f.h>
 #include <Inventor/fields/SoSFVec3f.h>
-#include <Inventor/lists/SoEngineOutputList.h>
+#include <Inventor/SoLists.h>
 
 SO_ENGINE_SOURCE(ComputeXfBoundingBox);
 
@@ -93,13 +93,7 @@ ComputeXfBoundingBox::evaluate(void)
   SoPath * bboxpath = this->path.getValue();
   SoNode * bboxnode = this->node.getValue();
 
-  if (!bboxpath && !bboxnode) {
-    // Nothing to see, move along.. (we "un-dirty" the fields to avoid
-    // them being re-evaluated again and again while the engine inputs
-    // are NULL).
-    SO_ENGINE_OUTPUT(corners, SoMFVec3f, setDirty(FALSE));
-    return;
-  }
+  if (!bboxpath && !bboxnode) { return; }
 
   if (bboxpath) this->bboxaction->apply(bboxpath);
   else this->bboxaction->apply(bboxnode);
