@@ -32,3 +32,25 @@
     20021002 mortene.
 
 =====================================================================
+
+002 On ``make clean'', several files are still left with MSVC-builds.
+
+    (Like for instance .pdb files.)
+
+    One way to fix this could be to hook into ``make clean'' (how can
+    that be done wtih Automake) with something like this:
+
+        clean-local:
+        	@for file in $(noinst_PROGRAMS); do \
+        	  if test -f "$$file.pdb"; then \
+        	    echo " rm -f" "$$file.pdb"; \
+        	    rm -f "$$file.pdb"; \
+        	  fi; \
+        	 done
+
+    ..but the best fix would be to improve Automake to handle
+    MSVC-built files automatically.
+
+    20021220 mortene.
+
+=====================================================================
