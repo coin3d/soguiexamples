@@ -65,6 +65,7 @@ AMTAR = @AMTAR@
 AWK = @AWK@
 BUILD_WITH_MSVC = @BUILD_WITH_MSVC@
 COMPONENTHEADER = @COMPONENTHEADER@
+CPP = @CPP@
 CXX = @CXX@
 DEPDIR = @DEPDIR@
 DSUFFIX = @DSUFFIX@
@@ -183,7 +184,7 @@ all: $(BUILT_SOURCES)
 .SUFFIXES: .cpp .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign  eyecandy/Makefile
+	  $(AUTOMAKE) --gnu  eyecandy/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
