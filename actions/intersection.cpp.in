@@ -1,0 +1,226 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2002 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+// This example visualizes which polygons in a scene intersects with other
+// polygons in the scene.  Interaction is provided through adding
+// manipulators to the scene.
+
+#include <assert.h>
+
+#include <Inventor/nodes/SoSelection.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoMaterial.h>
+
+#include <Inventor/manips/SoTransformBoxManip.h>
+#include <Inventor/sensors/SoNodeSensor.h>
+
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoIndexedFaceSet.h>
+#include <Inventor/nodes/SoIndexedLineSet.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoPolygonOffset.h>
+#include <Inventor/draggers/SoTranslate2Dragger.h>
+#include <Inventor/actions/SoIntersectionDetectionAction.h>
+
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/@Gui@/So@Gui@.h>
+
+static SoCoordinate3 * coords = NULL;
+static SoIndexedFaceSet * faces = NULL;
+
+// *************************************************************************
+
+SoIntersectionDetectionAction::Resp
+intersectionCB(void * closure, const SoIntersectingPrimitive * pr1, const SoIntersectingPrimitive * pr2)
+{
+  SbVec3f a1, a2, b1, b2, c1, c2;
+  a1 = pr1->xf_vertex[0];
+  b1 = pr1->xf_vertex[1];
+  c1 = pr1->xf_vertex[2];
+  a2 = pr2->xf_vertex[0];
+  b2 = pr2->xf_vertex[1];
+  c2 = pr2->xf_vertex[2];
+  // visualize the intersecting polygons 
+  const int cnum = coords->point.getNum();
+  coords->point.setNum(cnum + 6);
+  coords->point.set1Value(cnum + 0, a1);
+  coords->point.set1Value(cnum + 1, b1);
+  coords->point.set1Value(cnum + 2, c1);
+  coords->point.set1Value(cnum + 3, a2);
+  coords->point.set1Value(cnum + 4, b2);
+  coords->point.set1Value(cnum + 5, c2);
+  const int fnum = faces->coordIndex.getNum();
+  faces->coordIndex.setNum(fnum + 8);
+  faces->coordIndex.set1Value(fnum + 0, cnum + 0);
+  faces->coordIndex.set1Value(fnum + 1, cnum + 1);
+  faces->coordIndex.set1Value(fnum + 2, cnum + 2);
+  faces->coordIndex.set1Value(fnum + 3, -1);
+  faces->coordIndex.set1Value(fnum + 4, cnum + 3);
+  faces->coordIndex.set1Value(fnum + 5, cnum + 4);
+  faces->coordIndex.set1Value(fnum + 6, cnum + 5);
+  faces->coordIndex.set1Value(fnum + 7, -1);
+  const SoPath * p1 = pr1->path;
+  const SoPath * p2 = pr2->path;
+  SoSeparator * group;
+  SoMaterial * material;
+  group = (SoSeparator *) p1->getNode(p1->getLength()-2);
+  material = (SoMaterial *) group->getChild(1);
+  if ( material->diffuseColor[0] != SbVec3f(1.0f, 0.0f, 0.0f) )
+    material->diffuseColor.setValue(1.0f, 0.0f, 0.0f);
+  group = (SoSeparator *) p2->getNode(p2->getLength()-2);
+  material = (SoMaterial *) group->getChild(1);
+  if ( material->diffuseColor[0] != SbVec3f(1.0f, 0.0f, 0.0f) )
+    material->diffuseColor.setValue(1.0f, 0.0f, 0.0f);
+  return SoIntersectionDetectionAction::NEXT_PRIMITIVE;
+}
+
+SbBool
+filterCB(void * closure, const SoPath * p1, const SoPath * p2)
+{
+  // the overlayed polygons must be ignored...
+  if ( p1->getTail() == faces || p2->getTail() == faces ) return FALSE;
+  return TRUE;
+}
+
+// *************************************************************************
+
+void
+nodechangeCB(void * closure, SoSensor * s)
+{
+  SoNodeSensor * sensor = (SoNodeSensor *) s;
+  sensor->detach();
+  SoSelection * root = (SoSelection *) closure;
+  int i;
+  for ( i = 0; i < 4; i++ ) {
+    SoSeparator * group = (SoSeparator *) root->getChild(i);
+    SoMaterial * material = (SoMaterial *) group->getChild(1);
+    material->diffuseColor.setValue(1.0f, 1.0f, 0.0f);
+  }
+  facesset = FALSE;
+  coords->point.setNum(0);
+  faces->coordIndex.setNum(0);
+  SoIntersectionDetectionAction ida;
+  ida.setFilterCallback(filterCB, NULL);
+  ida.addIntersectionCallback(intersectionCB, NULL);
+  ida.setManipsEnabled(FALSE);
+  ida.setDraggersEnabled(FALSE);
+  ida.apply(root);
+  sensor->attach(root);
+}
+
+// *************************************************************************
+
+void
+selectCB(void * closure, SoPath * p)
+{
+  SoPath * path = new SoPath(*p);
+  path->ref();
+  path->truncate(path->getLength()-1);
+  SoSeparator * group = (SoSeparator *) path->getTail();
+  SoTransform * transform = (SoTransform *) group->getChild(0);
+  path->append(transform);
+  SoTransformBoxManip * manip = new SoTransformBoxManip;
+  manip->replaceNode(path);
+  path->unref();
+}
+
+void
+deselectCB(void * closure, SoPath * p)
+{
+  SoPath * path = new SoPath(*p);
+  path->ref();
+  path->truncate(path->getLength()-1);
+  SoSeparator * group = (SoSeparator *) path->getTail();
+  SoTransformBoxManip * manip = (SoTransformBoxManip *) group->getChild(0);
+  path->append(manip);
+  manip->replaceManip(path, new SoTransform);
+  path->unref();
+}
+
+// *************************************************************************
+
+SoSeparator *
+makeShapeGroup(float x, float y, float z, SoNode * shape)
+{
+  SoSeparator * group = new SoSeparator;
+  SoTransform * transform = new SoTransform;
+  transform->translation.setValue(SbVec3f(x, y, z));
+  SoMaterial * material = new SoMaterial;
+  material->diffuseColor.setValue(SbVec3f(1.0, 1.0, 0.0));
+  group->addChild(transform);
+  group->addChild(material);
+  group->addChild(shape);
+  return group;
+}
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ w = So@Gui@::init(argv[0]);
+  So@Gui@ExaminerViewer * v = new So@Gui@ExaminerViewer(w);
+
+  SoSelection * root = new SoSelection;
+  root->addChild(makeShapeGroup(-3,-3, 0, new SoCube));
+  root->addChild(makeShapeGroup(-3, 3, 0, new SoCone));
+  root->addChild(makeShapeGroup( 3,-3, 0, new SoSphere));
+  root->addChild(makeShapeGroup( 3, 3, 0, new SoCylinder));
+  // root->addChild(makeShapeGroup( 0, 0, 0, new SoTranslate2Dragger));
+  SoPolygonOffset * offset = new SoPolygonOffset;
+  offset->styles.setValue(SoPolygonOffset::FILLED);
+  offset->factor.setValue(-1);
+  offset->units.setValue(1);
+  offset->on.setValue(TRUE);
+  root->addChild(offset);
+  SoShapeHints * hints = new SoShapeHints;
+  hints->vertexOrdering.setValue(SoShapeHints::COUNTERCLOCKWISE);
+  hints->shapeType.setValue(SoShapeHints::UNKNOWN_SHAPE_TYPE);
+  root->addChild(hints);
+  SoMaterial * mat = new SoMaterial;
+  mat->diffuseColor.setValue(SbVec3f(1.0, 1.0, 1.0));
+  root->addChild(mat);
+  root->addChild(coords = new SoCoordinate3);
+  root->addChild(faces = new SoIndexedFaceSet);
+
+  root->addSelectionCallback(selectCB, NULL);
+  root->addDeselectionCallback(deselectCB, NULL);
+
+  SoNodeSensor * sensor = new SoNodeSensor(nodechangeCB, root);
+  sensor->attach(root);
+
+  v->setSceneGraph(root);
+  v->setViewing(FALSE);
+  v->redrawOnSelectionChange(root);
+
+  So@Gui@::show(w);
+  v->show();
+  So@Gui@::mainLoop();
+  v->hide();
+  delete v;
+  return 0;
+}
+
+// *************************************************************************
