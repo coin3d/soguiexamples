@@ -1,0 +1,50 @@
+#ifndef COIN_SO@GUI@SNAPSHOTVIEWER_H
+#define COIN_SO@GUI@SNAPSHOTVIEWER_H
+
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+class SoGuiSnapshotViewerP;
+
+class So@Gui@SnapshotViewer : public So@Gui@ExaminerViewer {
+  SO@GUI@_OBJECT_HEADER(So@Gui@SnapshotViewer, So@Gui@ExaminerViewer);
+
+public:
+  So@Gui@SnapshotViewer(@WIDGET@ parent = NULL,
+                        const char * name = NULL,
+                        SbBool embed = TRUE);
+  ~So@Gui@SnapshotViewer(void);
+
+  void setAntialiasingEnabled(SbBool enable);
+  SbBool isAntialiasingEnabled(void) const;
+
+  void setTransparencyEnabled(SbBool enable);
+  SbBool isTransparencyEnabled(void) const;
+
+  void setAutoCroppingEnabled(SbBool enable);
+  SbBool isAutoCroppingEnabled(void) const;
+
+  void setBackgroundColor(SbColor background);
+  SbColor getBackgroundColor(void) const;
+
+  void setDefaultSnapshotFilename(const char * filename);
+  const char * getDefaultSnapshotFilename(void) const;
+
+  void showInfo(float seconds = 10);
+  void hideInfo(void);
+
+  void createSnapshot(const char * filename);
+
+  virtual void setSceneGraph(SoNode * root);
+  virtual SoNode * getSceneGraph(void);
+
+protected:
+  virtual SbBool processSoEvent(const SoEvent * const event);
+
+  virtual void sizeChanged(const SbVec2s & size);
+
+private:
+  SoGuiSnapshotViewerP * pimpl;
+
+};
+
+#endif // !COIN_SO@GUI@SNAPSHOTVIEWER_H
