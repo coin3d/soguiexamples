@@ -1383,7 +1383,6 @@ main(
   viewer->setViewing(FALSE);
   viewer->show();
   So@Gui@::show(window);
-  viewer->setFullScreen(TRUE);
 
   unsigned int totlen;
   char * buf = strconcat(keyboard_iv, totlen);
@@ -1403,6 +1402,9 @@ main(
   assert(message != NULL);
   viewer->setSceneGraph(root);
   root->unref();
+
+  So@Gui@::show(window);
+  viewer->setFullScreen(TRUE);
 
   viewer->setTitle("Type-O-Matic");
   So@Gui@::mainLoop();
