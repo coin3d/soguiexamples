@@ -84,4 +84,4 @@ pointset_SOURCES = pointset.cpp
 markerset_SOURCES = markerset.cpp
 image_SOURCES = image.cpp
 bigimage_SOURCES = bigimage.cpp
-textureunit_SOURCS = textureunit.cpp
+textureunit_SOURCES = textureunit.cpp
