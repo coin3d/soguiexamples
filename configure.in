@@ -300,6 +300,7 @@ AC_OUTPUT([
 	manipulators/Makefile
 	nodes/Makefile
 	sensors/Makefile
+	nodekits/Makefile
 ])
 
 SIM_AC_CONFIGURATION_SUMMARY

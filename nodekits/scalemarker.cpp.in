@@ -1,0 +1,166 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2002 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoSwitch.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/actions/SoRayPickAction.h>
+#include <Inventor/SoPickedPoint.h>
+#include <Inventor/SoInput.h>
+#include <Inventor/SoOutput.h>
+#include <Inventor/events/SoMouseButtonEvent.h>
+#include <assert.h>
+
+#include "ShapeScale.h"
+
+// just some static variables to make life easier
+static SoTranslation * markertranslation = NULL;
+static SoSwitch * markerswitch = NULL;
+
+static void
+event_cb(void * ud, SoEventCallback * n)
+{
+  const SoMouseButtonEvent * mbe = (SoMouseButtonEvent *)n->getEvent();
+  
+  if (mbe->getButton() == SoMouseButtonEvent::BUTTON1 &&
+      mbe->getState() == SoButtonEvent::DOWN) {
+
+    So@Gui@ExaminerViewer * viewer = (So@Gui@ExaminerViewer *)ud;
+    
+    SoRayPickAction rp(viewer->getViewportRegion());
+    rp.setPoint(mbe->getPosition());
+    rp.apply(viewer->getSceneManager()->getSceneGraph());
+
+    SoPickedPoint * point = rp.getPickedPoint();
+    if (point == NULL) {
+      (void)fprintf(stderr, "\n** miss! **\n\n");
+      markerswitch->whichChild = SO_SWITCH_NONE;;
+      return;
+    }
+
+    n->setHandled();
+
+    SbVec3f v = point->getPoint();
+    markertranslation->translation = v;
+    markerswitch->whichChild = SO_SWITCH_ALL;
+  }
+}
+
+void
+show_instructions( void )
+{
+  (void)fprintf(stdout, 
+                "\nThis example program demonstrates the use of the ShapeScale nodekit.\n"
+                "\nQuick instructions:\n\n"
+                "  * place the marker by clicking on a shape with the left mouse button\n"
+                "  * hit ESC to toggle back and forth to view mode\n\n");
+}
+
+int
+main(int argc, char ** argv)
+{
+  if (argc != 2) {
+    (void) fprintf(stderr,"\nSpecify an Inventor file as argument.\n");
+    return -1;
+  }
+
+  @WIDGET@ window = So@Gui@::init( argv[0] );
+  ShapeScale::initClass(); // init the ShapeScale nodekit
+
+  So@Gui@ExaminerViewer * ex1 = new So@Gui@ExaminerViewer( window );
+  
+  SoInput input;
+  SbBool ok = input.openFile(argv[1]);
+  if (!ok) {
+    (void) fprintf(stderr, "Unable to open file: %s\n", argv[1]);
+    return -1;
+  }
+
+  SoSeparator * root = SoDB::readAll(&input); 
+  
+  if (root == NULL) {
+    (void) fprintf(stderr, "Unable to read file: %s\n", argv[1]);
+    return -1;
+  }
+
+  show_instructions();
+
+  SoSeparator * newroot = new SoSeparator;
+  newroot->ref();
+  
+  newroot->addChild(root);
+
+  // create event callback and marker nodes
+  SoSeparator * sep = new SoSeparator;
+  newroot->addChild(sep);
+  
+  SoEventCallback * ecb = new SoEventCallback;
+  ecb->addEventCallback(SoMouseButtonEvent::getClassTypeId(), event_cb, ex1);
+  sep->addChild(ecb);
+  
+  SoSwitch * sw = new SoSwitch;
+  markerswitch = sw; // set static variable for event callback
+  sw->whichChild = SO_SWITCH_NONE;
+  sep->addChild(sw);
+  
+  SoTranslation * t = new SoTranslation;
+  markertranslation = t; // set static varible for event callback
+  sw->addChild(t);
+  
+  ShapeScale * kit = new ShapeScale;
+  sw->addChild(kit);
+  kit->active = TRUE;
+  kit->projectedSize = 5.0f;
+  
+  // create the marker
+  SoSeparator * markersep = new SoSeparator;
+  SoMaterial * mat = new SoMaterial;
+  mat->diffuseColor = SbColor(1.0f, 0.0f, 0.0f);
+  markersep->addChild(mat);
+  
+  // marker shape should be unit size, with center in (0.0f, 0.0f, 0.0f)
+  SoCube * cube = new SoCube;
+  cube->width = 1.0f;
+  cube->height = 1.0f;
+  cube->depth = 1.0f;
+  
+  markersep->addChild(cube);
+  kit->setPart("shape", markersep);
+
+  ex1->setSceneGraph(newroot);
+  ex1->setTransparencyType(SoGLRenderAction::SORTED_OBJECT_BLEND);
+  ex1->setViewing(FALSE);
+  
+  ex1->show();
+  So@Gui@::show( window );
+
+  So@Gui@::mainLoop();
+  delete ex1;
+
+  newroot->unref();
+  return 0;
+} // main()
