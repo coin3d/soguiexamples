@@ -109,7 +109,8 @@ main(int argc, char *argv[])
   char *filename = "clips/synthloop_a.ogg";
   SbBool random = FALSE;
   num_sources = 5;
-  printf("Usage: manysources [ <filename> [ <num sources> [random]]]\n");
+  printf("\nUsage: manysources [ <clip_filename> [ <num_sources> [random]]]\n");
+  printf("       Click on a sphere to activate it as a sound source.\n");
   if (argc>1) 
     filename = argv[1];
   if (argc>2)
