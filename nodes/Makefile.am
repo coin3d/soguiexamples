@@ -113,3 +113,8 @@ pointset_SOURCES = pointset.cpp
 markerset_SOURCES = markerset.cpp
 
 ############################################################################
+
+markerset.cpp: $(srcdir)/markerset.cpp.in
+	@( cd ..; $(MAKE) nodes/markerset.cpp )
+
+############################################################################
