@@ -183,6 +183,11 @@ EOF
 
     SIM_AC_CONFIGURATION_SETTING([GUI toolkit], [InventorQt])
     sim_ac_gui_toolkit=inventorqt
+    # We'd rather not see all those ugly g++ warnings from the SGI / TGS 
+    # headers.
+    if test x"$GXX" = x"yes"; then
+      CXXFLAGS="$CXXFLAGS -w"
+    fi
   fi
 
 else
