@@ -9,6 +9,7 @@
 #include <Inventor/nodes/SoShapeHints.h>
 #include <Inventor/nodes/SoMaterial.h>
 #include <Inventor/nodes/SoComplexity.h>
+#include <Inventor/nodes/SoRotation.h>
 #include <Inventor/sensors/SoTimerSensor.h>
 
 #include <Inventor/@Gui@/So@Gui@.h>
@@ -246,6 +247,11 @@ Landscape::createScene(
 
   hints->vertexOrdering = SoShapeHintsElement::COUNTERCLOCKWISE;
   hints->shapeType = SoShapeHintsElement::SOLID;
+
+  // add initial rotation
+  SoRotation * rot = new SoRotation;
+  rot->rotation.setValue(SbVec3f(1.0f, 0.0f, 0.0f), 0.5f);
+  sep->addChild(rot);
 
   // add landscape
   sep->addChild( hints );
