@@ -1,0 +1,317 @@
+/**************************************************************************\
+ * kaos.cpp
+ * 
+ * This started out as a test to help me understand the Coin library. It
+ * turned out to be an excellent performance test (and actually helped
+ * us discover a few chances for optimisation within Coin), so "just for
+ * the record" I've decided to post it here.
+ *
+ * This program is Free Software and is released under the GNU General
+ * Public License. You can modify and distribute this program freely, as
+ * long as you do not change the licensing terms. This is information is
+ * only provided here for you convenience; please refer to 
+ * http://www.gnu.org/licenses/gpl.txt for the full conditions of this
+ * license.
+ * 
+ * If you have any comments or suggestions, feel free to contact me.
+ * All hail discordia!
+ *
+ * author:      karin "kyrah" kosina <kyrah@sim.no>
+ * date:        04/09/2001
+ * version:     0.2.1
+ *
+\**************************************************************************/
+
+#include <stdlib.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/actions/SoSearchAction.h>
+#include <Inventor/engines/SoElapsedTime.h>
+#include <Inventor/engines/SoTimeCounter.h>
+#include <Inventor/engines/SoOneShot.h>
+#include <Inventor/engines/SoCalculator.h>
+#include <Inventor/engines/SoGate.h>
+#include <Inventor/engines/SoOnOff.h>
+#include <Inventor/engines/SoBoolOperation.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoPointLight.h>
+#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoRotor.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoShuttle.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSwitch.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoTransformSeparator.h>
+#include <Inventor/nodes/SoText3.h>
+#include <Inventor/nodes/SoSelection.h>
+
+
+// --------------- global data ------------------ 
+
+SoOneShot * one;
+SoText3 *myText;
+SoElapsedTime *et;
+
+
+// ------------- function prototypes --------------------
+
+void addParticles(int numParticles, SoGroup * node);
+void addExplosionParticles(int numParticles, SoGroup * node);
+void connectEngines(SoCalculator * calcXYZ);
+
+
+void
+initRandomizer()
+{
+    /* initialise randomiser */
+    time_t t;
+    srand((unsigned) time(&t));
+}
+
+
+// -------------------- create lighting ------------------------
+
+SoTransformSeparator *
+light()
+{
+   SoTransformSeparator *tfs = new SoTransformSeparator;
+
+   // two directional white lights from front and back
+   SoDirectionalLight * dl1 = new SoDirectionalLight;
+   dl1->direction.setValue(-0.5, 0, -1);
+   dl1->color.setValue(1, 1, 1);  
+
+   SoDirectionalLight * dl2 = new SoDirectionalLight;
+   dl2->direction.setValue(0.5, 0, 1);
+   dl2->color.setValue(1, 1, 1);     
+
+   tfs->addChild(dl1);
+   tfs->addChild(dl2);
+   return tfs;
+}
+
+// ------------- connect engine IO ----------------------------------
+
+void connectEngines(SoCalculator * calcXZ){
+
+    // translate output of calculation from float to boolean
+    // we need this to trigger the "explosion" later
+    SoBoolOperation * bo = new SoBoolOperation;
+    bo->a.connectFrom(&calcXZ->oa);
+    bo->b = 1;
+    bo->operation.set1Value(0, SoBoolOperation::A_EQUALS_B);
+
+    // the gate engine is needed to notify only if the value *changes*,
+    // i.e. when it goes from 0 to 1. 
+    // without this, we would have 0 -> 0 "changes" all the time....
+    // we need this to trigger the "explosion" later
+    SoGate * sg = new SoGate (SoMFFloat::getClassTypeId());
+    sg->input->connectFrom(&calcXZ->oa);
+    sg->enable.connectFrom(&bo->output);
+
+    // connect trigger of explosion engine to start when output goes to "1"
+    one->disable = TRUE;
+    one->trigger.connectFrom(sg->output);
+    one->disable = FALSE;
+}
+
+
+// ----------------------- create one particle ---------------------
+
+
+SoSeparator *
+createParticle(float gravity, bool isRandom)
+{
+
+    SoSeparator * particle = new SoSeparator;
+
+    // shape for particle
+    SoCube * sBox = new SoCube;
+    sBox->width = .06;
+    sBox->height = .06;
+    sBox->depth = .06;
+
+    // arithmetic calculator engine 
+    // calculate y movement ("wurfparabel") according to formula
+    // y = vt - 0.5 at^ 2  --- this is the same as  y = t(v - 0.5at)
+    SoCalculator *calcXZ = new SoCalculator; 
+    calcXZ->b = 2 * (-0.5 + (1 * rand()/(float)(RAND_MAX + 1.0)));      // x direction
+    calcXZ->c = 2 * (-0.5 + (1 * rand()/(float)(RAND_MAX + 1.0)));  
+    calcXZ->d = 2 * (-0.5 + (1 * rand()/(float)(RAND_MAX + 1.0)));      // z direction
+    calcXZ->e = gravity;                                                // gravity
+
+    if (isRandom) {
+        calcXZ->a.connectFrom(&one->timeOut); 
+        calcXZ->f.connectFrom(&one->ramp);   
+    } else {
+        calcXZ->a.connectFrom(&et->timeOut); 
+    }
+
+    if (isRandom){
+        calcXZ->expression.set1Value(0, "ta = (f > 0.0) ? (a * b) : 0");    // distance in x
+        calcXZ->expression.set1Value(1, "tb = (f > 0.0) ? (a * d) : 0");    // distance in z
+        calcXZ->expression.set1Value(2, "tc = (f > 0.0) ? c : 0");          
+    } else {
+        calcXZ->expression.set1Value(0, "tc = 3");                      // speed; 
+        calcXZ->expression.set1Value(1, "ta = a * b");                  // distance in x
+        calcXZ->expression.set1Value(2, "tb = a * d");                  // distanze in z
+    }
+    calcXZ->expression.set1Value(3, "td = a*(tc - 0.5 * e * a)");   // distance in y
+    calcXZ->expression.set1Value(4, "oA = vec3f(ta,td,tb)");        // movement vector
+    calcXZ->expression.set1Value(5, "oa= (td > 4.5)? 1 : 0");         // check height
+
+    // current transformation -- depends on calculation above
+    SoTransform * tfParticle = new SoTransform;
+    tfParticle->translation.connectFrom(&calcXZ->oA);
+
+    particle->addChild(tfParticle);
+    particle->addChild(sBox);
+
+    if (!isRandom) {
+        addExplosionParticles(30, particle);
+        connectEngines(calcXZ);
+    }
+
+    return particle;
+
+}
+
+SoSeparator *
+plane()
+{
+
+    SoSeparator * plane = new SoSeparator;
+
+    SoTransform * tfPlane = new SoTransform;
+    SbRotation r (SbVec3f(1., 0., 0.), M_PI/2);
+    tfPlane->translation.setValue(0.0, 0.0, 0.0);
+    tfPlane->rotation = r;
+
+    SoCube * sPlane = new SoCube;
+    sPlane->width = 5;
+    sPlane->height = 5;
+    sPlane->depth = .05;
+
+    plane->addChild(tfPlane);
+    plane->addChild(sPlane);
+    
+    return plane;
+}
+
+
+void addParticles(int numParticles, SoGroup * node){
+    for (int i = 0; i < numParticles; i++){
+        node->addChild(createParticle(0.9, false));
+     }
+}
+
+void addExplosionParticles(int numParticles, SoGroup * node){
+    for (int i = 0; i < numParticles; i++){
+        node->addChild(createParticle(0.2, true));
+     }
+}
+
+
+SoSeparator *
+scene()
+{
+    et = new SoElapsedTime;
+
+    SoSeparator * obj = new SoSeparator;
+
+    one = new SoOneShot;
+    one->duration = 3;
+    one->flags.setValue(SoOneShot::HOLD_FINAL);
+
+    SoMaterial * mPlain = new SoMaterial;
+    mPlain->ambientColor.setValue(0.5, 0.5, 0.5);
+    mPlain->diffuseColor.setValue(1, 1, 1);
+    mPlain->specularColor.setValue(.5, .5, .5);
+    mPlain->shininess = .5;
+    mPlain->transparency = 0;
+
+    SoMaterial * mInv = new SoMaterial;
+    mInv->transparency = 1;
+
+    SoMaterial * mMetalS = new SoMaterial;
+    mMetalS->ambientColor.setValue(0.5, 0.5, 0.5);
+    mMetalS->diffuseColor.setValue(0.5, 0.7, 0.9);
+    mMetalS->specularColor.setValue(.5, .5, .5);
+    mMetalS->shininess = .5;
+    mMetalS->transparency = 0;
+    mMetalS->transparency.connectFrom(&one->ramp);
+
+    SoCube * sBox = new SoCube;
+    sBox->width = .1;
+    sBox->height = .1;
+    sBox->depth = .1;
+
+    SoSeparator * box1 = new SoSeparator;
+    SoTransform * tfBox1 = new SoTransform;
+    tfBox1->translation.setValue(1.9, 8.0, 1.9);
+    box1->addChild(tfBox1);
+    box1->addChild(sBox);
+
+    myText = new SoText3;
+
+    obj->addChild(mPlain);
+    obj->addChild(myText);
+    obj->addChild(plane());
+
+    obj->addChild(mInv);
+    obj->addChild(box1);
+
+    obj->addChild(mMetalS);
+    addParticles(10, obj);
+
+    return obj;
+}
+
+int
+main(int, char ** argv)
+{
+
+  (void)printf("firework simulation by kk.\n");
+
+    initRandomizer();
+
+    @WIDGET@ window = So@Gui@::init(argv[0]); // pass the application name
+    if (window==NULL) exit(1);
+
+    // Create scene graph
+    SoSeparator * root = new SoSeparator;
+    root->ref();
+
+    // Enable backface culling
+    SoShapeHints * hints = new SoShapeHints;
+    hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+    hints->shapeType = SoShapeHints::SOLID;
+
+    root->addChild(hints);
+    root->addChild(light());
+    root->addChild(scene());
+
+    // Set up ExaminerViewer
+    So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+    viewer->setSceneGraph(root);
+    viewer->setTitle("KAOS -- Kaos (is) An Ordered System");
+    viewer->setFullScreen(FALSE);
+    viewer->setTransparencyType(SoGLRenderAction::DELAYED_BLEND);
+    viewer->setHeadlight(FALSE);  // don't use default lighting
+    viewer->setDecoration(FALSE); // don't show the ugly interaction stuff
+    viewer->viewAll();
+    viewer->show();
+
+    So@Gui@::show(window); // display main window
+    So@Gui@::mainLoop();   // main Coin event loop
+    delete viewer;      // remove the viewer from memory
+    root->unref();     
+    return 0;
+}
