@@ -1,0 +1,515 @@
+/* ********************************************************************** *
+ * calculator
+ *
+ * Demo application for showcasing Coin.
+ *
+ * Written by Lars J. Aas <larsa@coin3d.org>.
+ * Additional copyright (C) 2001, Systems in Motion.
+ * ********************************************************************** */
+ 
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#include <Inventor/SbLinear.h>
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/actions/SoSearchAction.h>
+#include <Inventor/actions/SoHandleEventAction.h>
+#include <Inventor/actions/SoRayPickAction.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoCallback.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/events/SoMouseButtonEvent.h>
+#include <Inventor/events/SoLocation2Event.h>
+#include <Inventor/SoPickedPoint.h>
+
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
+
+/* ********************************************************************** */
+
+const char * scenegraph[] = {
+  "#Inventor V2.1 ascii",
+  "",
+  "Separator {",
+  "  Separator {",
+  "    DEF hook Callback {}",
+  "    ShapeHints {",
+  "      vertexOrdering COUNTERCLOCKWISE",
+  "      shapeType SOLID",
+  "    }",
+  "    DirectionalLight {",
+  "      color 0.4 0 0.8",
+  "      intensity 0.5",
+  "      direction 0.1 0 1",
+  "    }",
+  "    BaseColor {",
+  "      rgb 1 0 0",
+  "    }",
+  "    DEF camera PerspectiveCamera {}",
+  "    Separator {",
+  "      Translation { translation 0 0 0 }",
+  "      Scale { scaleFactor 36 1 4 }",
+  "      DEF UnitCube Separator {",
+  "        Coordinate3 {",
+  "          point [",
+  "            0 0 0",
+  "            1 0 0",
+  "            1 1 0",
+  "            0 1 0",
+  "            0 0 1",
+  "            1 0 1",
+  "            1 1 1",
+  "            0 1 1",
+  "          ]",
+  "        }",
+  "        SoIndexedFaceSet {",
+  "          coordIndex [",
+  "            0 1 5 4 -1",
+  "            0 3 2 1 -1",
+  "            0 4 7 3 -1",
+  "            1 2 6 5 -1",
+  "            2 3 7 6 -1",
+  "            4 5 6 7 -1",
+  "          ]",
+  "        }",
+  "      }",
+  "    }",
+  "    Separator {",
+  "      Translation { translation 1 1 1 }",
+  "      Scale { scaleFactor 1 16 2 }",
+  "      USE UnitCube",
+  "    }",
+  "    Separator {",
+  "      Translation { translation 34 1 1 }",
+  "      Scale { scaleFactor 1 16 2 }",
+  "      USE UnitCube",
+  "    }",
+  "    Separator {",
+  "      BaseColor { rgb 1 1 0 }",
+  "      Translation { translation 18 15.5 2 }",
+  "      RotationXYZ {",
+  "        axis Z",
+  "        angle 1.5707",
+  "      }",
+  "      Scale { scaleFactor 0.2 17.1 0.2 }",
+  "      Cylinder {}",
+  "      Translation { translation -12 0 0 }",
+  "      Cylinder {}",
+  "      Translation { translation -12 0 0 }",
+  "      Cylinder {}",
+  "      Translation { translation -12 0 0 }",
+  "      Cylinder {}",
+  "      Translation { translation -12 0 0 }",
+  "      Cylinder {}",
+  "      Translation { translation -12 0 0 }",
+  "      Cylinder {}",
+  "    }",
+  "    Separator {",
+  "      Translation { translation 3 15.5 2 }",
+  "      Separator {"
+  "        BaseColor { rgb 1 0 0 }",
+  "        Scale { scaleFactor 1.03 1.03 1.03 }",
+  "        DEF r0t0 Translation { translation 0 0 0 }",
+  "        DEF r0s0 Sphere {}",
+  "        DEF r0t1 Translation { translation 1.93 0 0 }",
+  "        DEF r0s1 Sphere {}",
+  "        DEF r0t2 Translation { translation 1.93 0 0 }",
+  "        DEF r0s2 Sphere {}",
+  "        DEF r0t3 Translation { translation 1.93 0 0 }",
+  "        DEF r0s3 Sphere {}",
+  "        DEF r0t4 Translation { translation 1.93 0 0 }",
+  "        DEF r0s4 Sphere {}",
+  "        DEF r0t5 Translation { translation 1.93 0 0 }",
+  "        DEF r0s5 Sphere {}",
+  "        DEF r0t6 Translation { translation 1.93 0 0 }",
+  "        DEF r0s6 Sphere {}",
+  "        DEF r0t7 Translation { translation 1.93 0 0 }",
+  "        DEF r0s7 Sphere {}",
+  "        DEF r0t8 Translation { translation 1.93 0 0 }",
+  "        DEF r0s8 Sphere {}",
+  "        DEF r0t9 Translation { translation 1.93 0 0 }",
+  "        DEF r0s9 Sphere {}",
+  "      }",
+  "      Translation { translation 0 -2.4 0 }",
+  "      Separator {"
+  "        BaseColor { rgb 0 0 1 }",
+  "        Scale { scaleFactor 1.03 1.03 1.03 }",
+  "        DEF r1t0 Translation { translation 0 0 0 }",
+  "        DEF r1s0 Sphere {}",
+  "        DEF r1t1 Translation { translation 1.93 0 0 }",
+  "        DEF r1s1 Sphere {}",
+  "        DEF r1t2 Translation { translation 1.93 0 0 }",
+  "        DEF r1s2 Sphere {}",
+  "        DEF r1t3 Translation { translation 1.93 0 0 }",
+  "        DEF r1s3 Sphere {}",
+  "        DEF r1t4 Translation { translation 1.93 0 0 }",
+  "        DEF r1s4 Sphere {}",
+  "        DEF r1t5 Translation { translation 1.93 0 0 }",
+  "        DEF r1s5 Sphere {}",
+  "        DEF r1t6 Translation { translation 1.93 0 0 }",
+  "        DEF r1s6 Sphere {}",
+  "        DEF r1t7 Translation { translation 1.93 0 0 }",
+  "        DEF r1s7 Sphere {}",
+  "        DEF r1t8 Translation { translation 1.93 0 0 }",
+  "        DEF r1s8 Sphere {}",
+  "        DEF r1t9 Translation { translation 1.93 0 0 }",
+  "        DEF r1s9 Sphere {}",
+  "      }",
+  "      Translation { translation 0 -2.4 0 }",
+  "      Separator {"
+  "        BaseColor { rgb 0 1 0 }",
+  "        Scale { scaleFactor 1.03 1.03 1.03 }",
+  "        DEF r2t0 Translation { translation 0 0 0 }",
+  "        DEF r2s0 Sphere {}",
+  "        DEF r2t1 Translation { translation 1.93 0 0 }",
+  "        DEF r2s1 Sphere {}",
+  "        DEF r2t2 Translation { translation 1.93 0 0 }",
+  "        DEF r2s2 Sphere {}",
+  "        DEF r2t3 Translation { translation 1.93 0 0 }",
+  "        DEF r2s3 Sphere {}",
+  "        DEF r2t4 Translation { translation 1.93 0 0 }",
+  "        DEF r2s4 Sphere {}",
+  "        DEF r2t5 Translation { translation 1.93 0 0 }",
+  "        DEF r2s5 Sphere {}",
+  "        DEF r2t6 Translation { translation 1.93 0 0 }",
+  "        DEF r2s6 Sphere {}",
+  "        DEF r2t7 Translation { translation 1.93 0 0 }",
+  "        DEF r2s7 Sphere {}",
+  "        DEF r2t8 Translation { translation 1.93 0 0 }",
+  "        DEF r2s8 Sphere {}",
+  "        DEF r2t9 Translation { translation 1.93 0 0 }",
+  "        DEF r2s9 Sphere {}",
+  "      }",
+  "      Translation { translation 0 -2.4 0 }",
+  "      Separator {"
+  "        BaseColor { rgb 0 1 1 }",
+  "        Scale { scaleFactor 1.03 1.03 1.03 }",
+  "        DEF r3t0 Translation { translation 0 0 0 }",
+  "        DEF r3s0 Sphere {}",
+  "        DEF r3t1 Translation { translation 1.93 0 0 }",
+  "        DEF r3s1 Sphere {}",
+  "        DEF r3t2 Translation { translation 1.93 0 0 }",
+  "        DEF r3s2 Sphere {}",
+  "        DEF r3t3 Translation { translation 1.93 0 0 }",
+  "        DEF r3s3 Sphere {}",
+  "        DEF r3t4 Translation { translation 1.93 0 0 }",
+  "        DEF r3s4 Sphere {}",
+  "        DEF r3t5 Translation { translation 1.93 0 0 }",
+  "        DEF r3s5 Sphere {}",
+  "        DEF r3t6 Translation { translation 1.93 0 0 }",
+  "        DEF r3s6 Sphere {}",
+  "        DEF r3t7 Translation { translation 1.93 0 0 }",
+  "        DEF r3s7 Sphere {}",
+  "        DEF r3t8 Translation { translation 1.93 0 0 }",
+  "        DEF r3s8 Sphere {}",
+  "        DEF r3t9 Translation { translation 1.93 0 0 }",
+  "        DEF r3s9 Sphere {}",
+  "      }",
+  "      Translation { translation 0 -2.4 0 }",
+  "      Separator {"
+  "        BaseColor { rgb 1 1 0 }",
+  "        Scale { scaleFactor 1.03 1.03 1.03 }",
+  "        DEF r4t0 Translation { translation 0 0 0 }",
+  "        DEF r4s0 Sphere {}",
+  "        DEF r4t1 Translation { translation 1.93 0 0 }",
+  "        DEF r4s1 Sphere {}",
+  "        DEF r4t2 Translation { translation 1.93 0 0 }",
+  "        DEF r4s2 Sphere {}",
+  "        DEF r4t3 Translation { translation 1.93 0 0 }",
+  "        DEF r4s3 Sphere {}",
+  "        DEF r4t4 Translation { translation 1.93 0 0 }",
+  "        DEF r4s4 Sphere {}",
+  "        DEF r4t5 Translation { translation 1.93 0 0 }",
+  "        DEF r4s5 Sphere {}",
+  "        DEF r4t6 Translation { translation 1.93 0 0 }",
+  "        DEF r4s6 Sphere {}",
+  "        DEF r4t7 Translation { translation 1.93 0 0 }",
+  "        DEF r4s7 Sphere {}",
+  "        DEF r4t8 Translation { translation 1.93 0 0 }",
+  "        DEF r4s8 Sphere {}",
+  "        DEF r4t9 Translation { translation 1.93 0 0 }",
+  "        DEF r4s9 Sphere {}",
+  "      }",
+  "      Translation { translation 0 -2.4 0 }",
+  "      Separator {"
+  "        BaseColor { rgb 0.8 0.8 0.8 }",
+  "        Scale { scaleFactor 1.03 1.03 1.03 }",
+  "        DEF r5t0 Translation { translation 0 0 0 }",
+  "        DEF r5s0 Sphere {}",
+  "        DEF r5t1 Translation { translation 3.107 0 0 }",
+  "        DEF r5s1 Sphere {}",
+  "        DEF r5t2 Translation { translation 3.107 0 0 }",
+  "        DEF r5s2 Sphere {}",
+  "        DEF r5t3 Translation { translation 3.107 0 0 }",
+  "        DEF r5s3 Sphere {}",
+  "        DEF r5t4 Translation { translation 3.107 0 0 }",
+  "        DEF r5s4 Sphere {}",
+  "        DEF r5t5 Translation { translation 3.107 0 0 }",
+  "        DEF r5s5 Sphere {}",
+  "        DEF r5t6 Translation { translation 3.107 0 0 }",
+  "        DEF r5s6 Sphere {}",
+  "        DEF r5t7 Translation { translation 3.107 0 0 }",
+  "        DEF r5s7 Sphere {}",
+  "        DEF r5t8 Translation { translation 3.107 0 0 }",
+  "        DEF r5s8 Sphere {}",
+  "        DEF r5t9 Translation { translation 3.107 0 0 }",
+  "        DEF r5s9 Sphere {}",
+  "      }",
+  "    }",
+  "  }",
+  "  DEF info Separator {",
+  "    OrthographicCamera {",
+  "      height 1",
+  "    }",
+  "    DEF infoposition Translation {}",
+  "    DEF infoscale Scale {}",
+  "    Separator {",
+  "      BaseColor { rgb 1 1 0 }",
+  "      Translation { translation 0.02 -0.04 0 }",
+  "      Text2 { string \"You do the math.  ['Esc', then 'q' to quit.]\" }",
+  "    }",
+  "  }",
+  "}",
+  NULL
+};
+
+/* ********************************************************************** */
+
+char *
+strconcat(const char * array[], unsigned int &total)
+{
+  int i;
+  for (i = total = 0; array[i]; i++ )
+    total += strlen(array[i]) + 1;
+  char * buf = new char [total + 1];
+  for (i = total = 0; array[i]; i++ ) {
+    strcpy(buf+total, array[i]);
+    total += strlen(array[i]);
+    buf[total] = '\n';
+    total++;
+  }
+  return buf;
+}
+
+/* ********************************************************************** */
+
+SoNode *
+getNodeByName(SoNode * root, const char * name)
+{
+  static SoSearchAction * action;
+  if ( !action ) action = new SoSearchAction;
+  action->reset();
+  action->setFind(SoSearchAction::NODE);
+  action->setInterest(SoSearchAction::FIRST);
+  action->setName(SbName(name));
+  action->apply(root);
+  if ( !action->isFound() ) return NULL;
+  return action->getPath()->getTail();
+}
+
+/* ********************************************************************** */
+
+#define ROWS 6
+float spherepositions[10][ROWS];
+
+void adjust_row(SoNode * scene, int row)
+{
+  const float mintrans = 1.93f;
+  const float maxtrans = 13.7f;
+  scene->enableNotify(FALSE);
+  for ( int i = 0; i < 10; i++ ) {
+    char name[5];
+    sprintf(name, "r%ct%c", '0' + row, '0' + i);
+    SoTranslation * translation = (SoTranslation *) getNodeByName(scene, name);
+    assert(translation != NULL);
+    float delta = 0.0f;
+    if ( i > 0 )
+      delta = spherepositions[i][row] - spherepositions[i-1][row];
+    if ( i == 0 )
+      delta = (13.7-1.93) * delta;
+    else
+      delta = 1.93 + (13.7-1.93) * delta;
+    // fprintf(stderr, "delta for %s = %g\n", name, delta);
+    translation->translation.setValue(delta, 0.0f, 0.0f);
+  }
+  scene->enableNotify(TRUE);
+  scene->touch();
+}
+
+/* ********************************************************************** */
+
+static SbVec2s lastviewport = SbVec2s(-1,-1);
+
+void
+event_cb(void * closure, SoAction * action)
+{
+  So@Gui@ExaminerViewer * viewer = (So@Gui@ExaminerViewer *) closure;
+  if ( action->isOfType(SoGLRenderAction::getClassTypeId()) ) {
+    SoGLRenderAction * raaction = (SoGLRenderAction *) action;
+    SoNode * scene = action->getNodeAppliedTo();
+    SbVec2s viewport = raaction->getViewportRegion().getWindowSize();
+    if ( viewport != lastviewport ) {
+      lastviewport = viewport;
+      SoTranslation * translation = (SoTranslation *) getNodeByName(scene, "infoposition");
+      assert(translation != NULL);
+      float aspect = float(viewport[0]) / float(viewport[1]);
+      float factor = float(100)/float(viewport[1]) * 6.0f;
+      if ( aspect > 1.0f ) {
+        translation->translation.setValue(SbVec3f(-0.5f * aspect, 0.5f, 0.0f));
+      } else {
+        translation->translation.setValue(SbVec3f(-0.5f, 0.5f / aspect, 0.0f));
+        factor /= aspect;
+      }
+      SoScale * scale = (SoScale *) getNodeByName(scene, "infoscale");
+      assert(scale != NULL);
+      scale->scaleFactor.setValue( SbVec3f(factor,factor,1.0f) );
+    }
+    return;
+  }
+  static SoRayPickAction * rpaction = NULL;
+  static SbBool attached = FALSE;
+  static int row = 0;
+  static int sphere = 0;
+  static SbPlane * plane = NULL;
+  static SbVec3f * lastpoint = NULL;
+  static float lastval = 0.0f;
+  if ( action->isOfType(SoHandleEventAction::getClassTypeId()) ) {
+    SoHandleEventAction * heaction = (SoHandleEventAction *) action;
+    if ( !rpaction )
+      rpaction = new SoRayPickAction(heaction->getViewportRegion());
+    else {
+      // fprintf(stderr, "viewport: ");
+      // heaction->getViewportRegion().print(stderr);
+      // fprintf(stderr, "\n");
+      rpaction->setViewportRegion(heaction->getViewportRegion());
+    }
+    const SoEvent * event = heaction->getEvent();
+    if ( event->isOfType(SoMouseButtonEvent::getClassTypeId()) ) {
+      const SoMouseButtonEvent * mbevent = (const SoMouseButtonEvent *) event;
+      if ( mbevent->getState() == SoMouseButtonEvent::DOWN ) {
+        rpaction->setPoint(mbevent->getPosition());
+        rpaction->apply(heaction->getNodeAppliedTo());
+        SoPickedPoint * point = rpaction->getPickedPoint();
+        if ( point == NULL ) return;
+        SoPath * path = point->getPath();
+        if ( path == NULL ) return;
+        SoNode * node = path->getTail();
+        if ( node == NULL ) return;
+        if ( !node->isOfType(SoSphere::getClassTypeId()) ) return;
+        const char * name = node->getName().getString();
+        attached = TRUE;
+        row = name[1] - '0';
+        sphere = name[3] - '0';
+        if ( !plane )
+          plane = new SbPlane(SbVec3f(0,0,0), SbVec3f(0,1,0), SbVec3f(1,0,0));
+        rpaction->setPoint(mbevent->getPosition());
+        SbLine ray(rpaction->getLine());
+        SbVec3f thispoint;
+        if ( !plane->intersect(ray, thispoint) ) return;
+        lastpoint = new SbVec3f(thispoint);
+        lastval = spherepositions[sphere][row];
+      } else if ( mbevent->getState() == SoMouseButtonEvent::UP ) {
+        attached = FALSE;
+        if ( lastpoint != NULL ) {
+          delete lastpoint;
+          lastpoint = NULL;
+        }
+      }
+    } else if ( attached && event->isOfType(SoLocation2Event::getClassTypeId()) ) {
+      const SoLocation2Event * l2event = (const SoLocation2Event *) event;
+      assert( rpaction != NULL );
+      rpaction->setPoint(l2event->getPosition());
+      rpaction->apply(heaction->getNodeAppliedTo());
+      SbLine ray(rpaction->getLine());
+      SbVec3f thispoint;
+      if ( !plane->intersect(ray, thispoint) ) return;
+      // fprintf(stderr, "it's a drag (sphere %dx%d)  = delta %g\n", row, sphere,
+      float delta = thispoint[0] - (*lastpoint)[0];
+      float pos = lastval;
+      pos = pos + delta / (13.7-1.93);
+      if ( pos < 0.0f ) pos = 0.0f;
+      if ( pos > 1.0f ) pos = 1.0f;
+      spherepositions[sphere][row] = pos;
+      int j = 0;
+      if ( pos < lastval ) {
+        for ( j = sphere - 1; j >= 0; j-- ) {
+          if ( spherepositions[j][row] > spherepositions[j+1][row] )
+            spherepositions[j][row] = spherepositions[j+1][row];
+        }
+      } else {
+        for ( j = sphere + 1; j < 10; j++ ) {
+          if ( spherepositions[j][row] < spherepositions[j-1][row] )
+            spherepositions[j][row] = spherepositions[j-1][row];
+        }
+      }
+      adjust_row(heaction->getNodeAppliedTo(), row);
+    }
+    return;
+  }
+}
+
+/* ********************************************************************** */
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  setbuf(stderr, NULL);
+  setbuf(stdout, NULL);
+  @WIDGET@ window = So@Gui@::init(argc, argv, "Styx");
+
+  srand(SbTime::getTimeOfDay().getMsecValue());
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setTransparencyType(SoGLRenderAction::DELAYED_BLEND);
+  viewer->setViewing(FALSE);
+  viewer->setDecoration(FALSE);
+
+  SoInput * in = new SoInput;
+  unsigned int len;
+  char * buffer = strconcat(scenegraph, len);
+  in->setBuffer(buffer, len);
+  SoNode * scene;
+  if ( ! SoDB::read(in, scene) ) {
+    delete [] buffer;
+    delete in;
+    delete viewer;
+    fprintf(stderr, "%s: error in scene - exiting.\n", argv[0]);
+    exit(-1);
+  }
+  delete [] buffer;
+  delete in;
+  scene->ref();
+
+  SoCallback * hook = (SoCallback *) getNodeByName(scene, "hook");
+  if ( ! hook ) {
+    fprintf(stderr, "hook not installed.\n");
+  } else {
+    hook->setCallback(event_cb, viewer);
+  }
+
+  scene->unrefNoDelete();
+  viewer->setSceneGraph(scene);
+
+  for ( int row = 0; row < ROWS; row++ ) {
+    for ( int sphere = 0; sphere < 10; sphere++ )
+      spherepositions[sphere][row] = 0.0f;
+    adjust_row(scene, row);
+  }
+
+  // viewer->goFullScreen(TRUE); // might be too slow?
+  viewer->show();
+  viewer->viewAll();
+  viewer->setTitle("Calculator");
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+  viewer->hide();
+  delete viewer;
+  return 0;
+}
+
+/* EOF ****************************************************************** */
