@@ -286,7 +286,13 @@ subdir = components
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = SoGuiSnapshotViewer.cpp SoGuiSnapshotViewer.h \
+	backgroundimg.cpp computils.cpp computils.h examinerviewer.cpp \
+	flyviewer.cpp grapheditor.cpp lightsliderset.cpp \
+	materiallist.cpp materiallist2.cpp materialsliderset.cpp \
+	materialsliderset2.cpp overlay.cpp planeviewer.cpp \
+	renderarea.cpp roster.cpp snapshotviewer.cpp spaceballdemo.cpp \
+	transformsliderset.cpp
 @HAVE_DIRECTIONALLIGHTEDITOR_FALSE@@HAVE_MATERIALEDITOR_FALSE@@HAVE_MATERIALLIST_FALSE@@HAVE_PRINTDIALOG_FALSE@@HAVE_SLIDERSETS_TRUE@noinst_PROGRAMS = \
 @HAVE_DIRECTIONALLIGHTEDITOR_FALSE@@HAVE_MATERIALEDITOR_FALSE@@HAVE_MATERIALLIST_FALSE@@HAVE_PRINTDIALOG_FALSE@@HAVE_SLIDERSETS_TRUE@	renderarea$(EXEEXT) \
 @HAVE_DIRECTIONALLIGHTEDITOR_FALSE@@HAVE_MATERIALEDITOR_FALSE@@HAVE_MATERIALLIST_FALSE@@HAVE_PRINTDIALOG_FALSE@@HAVE_SLIDERSETS_TRUE@	backgroundimg$(EXEEXT) \
@@ -847,7 +853,14 @@ DIST_SOURCES = $(backgroundimg_SOURCES) \
 	$(planeviewer_SOURCES) $(printdialog_SOURCES) \
 	$(renderarea_SOURCES) $(snapshotviewer_SOURCES) \
 	$(spaceballdemo_SOURCES) $(transformsliderset_SOURCES)
-DIST_COMMON = README Makefile.am Makefile.in
+DIST_COMMON = README Makefile.am Makefile.in SoGuiSnapshotViewer.cpp.in \
+	SoGuiSnapshotViewer.h.in backgroundimg.cpp.in computils.cpp.in \
+	computils.h.in examinerviewer.cpp.in flyviewer.cpp.in \
+	grapheditor.cpp.in lightsliderset.cpp.in materiallist.cpp.in \
+	materiallist2.cpp.in materialsliderset.cpp.in \
+	materialsliderset2.cpp.in overlay.cpp.in planeviewer.cpp.in \
+	renderarea.cpp.in roster.cpp.in snapshotviewer.cpp.in \
+	spaceballdemo.cpp.in transformsliderset.cpp.in
 SOURCES = $(backgroundimg_SOURCES) $(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) $(flyviewer_SOURCES) $(lightsliderset_SOURCES) $(materialeditor_SOURCES) $(materiallist_SOURCES) $(materiallist2_SOURCES) $(materialsliderset_SOURCES) $(materialsliderset2_SOURCES) $(overlay_SOURCES) $(planeviewer_SOURCES) $(printdialog_SOURCES) $(renderarea_SOURCES) $(snapshotviewer_SOURCES) $(spaceballdemo_SOURCES) $(transformsliderset_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -860,6 +873,46 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configu
 	  $(AUTOMAKE) --gnu  components/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
+SoGuiSnapshotViewer.cpp: $(top_builddir)/config.status SoGuiSnapshotViewer.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+SoGuiSnapshotViewer.h: $(top_builddir)/config.status SoGuiSnapshotViewer.h.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+backgroundimg.cpp: $(top_builddir)/config.status backgroundimg.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+computils.cpp: $(top_builddir)/config.status computils.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+computils.h: $(top_builddir)/config.status computils.h.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+examinerviewer.cpp: $(top_builddir)/config.status examinerviewer.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+flyviewer.cpp: $(top_builddir)/config.status flyviewer.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+grapheditor.cpp: $(top_builddir)/config.status grapheditor.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+lightsliderset.cpp: $(top_builddir)/config.status lightsliderset.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+materiallist.cpp: $(top_builddir)/config.status materiallist.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+materiallist2.cpp: $(top_builddir)/config.status materiallist2.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+materialsliderset.cpp: $(top_builddir)/config.status materialsliderset.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+materialsliderset2.cpp: $(top_builddir)/config.status materialsliderset2.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+overlay.cpp: $(top_builddir)/config.status overlay.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+planeviewer.cpp: $(top_builddir)/config.status planeviewer.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+renderarea.cpp: $(top_builddir)/config.status renderarea.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+roster.cpp: $(top_builddir)/config.status roster.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+snapshotviewer.cpp: $(top_builddir)/config.status snapshotviewer.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+spaceballdemo.cpp: $(top_builddir)/config.status spaceballdemo.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+transformsliderset.cpp: $(top_builddir)/config.status transformsliderset.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -1140,90 +1193,6 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
-
-############################################################################
-
-# FIXME: from what I can gather from some other module, it looks like
-# .cpp.in -> .cpp conversion by config.status is handled automatically
-# by Automake now -- so this can probably be removed. Test. 20030820 mortene.
-
-computils.cpp: $(srcdir)/computils.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/computils.cpp )
-
-computils.h: $(srcdir)/computils.h.in
-	@( cd $(top_builddir); ./config.status --file=components/computils.h )
-
-renderarea.cpp: $(srcdir)/renderarea.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/renderarea.cpp )
-
-backgroundimg.cpp: $(srcdir)/backgroundimg.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/backgroundimg.cpp )
-
-examinerviewer.cpp: $(srcdir)/examinerviewer.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/examinerviewer.cpp )
-
-planeviewer.cpp: $(srcdir)/planeviewer.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/planeviewer.cpp )
-
-flyviewer.cpp: $(srcdir)/flyviewer.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/flyviewer.cpp )
-
-overlay.cpp: $(srcdir)/overlay.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/overlay.cpp )
-
-lightsliderset.cpp: $(srcdir)/lightsliderset.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/lightsliderset.cpp )
-
-materialsliderset.cpp: $(srcdir)/materialsliderset.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/materialsliderset.cpp )
-
-materialsliderset2.cpp: $(srcdir)/materialsliderset2.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/materialsliderset2.cpp )
-
-transformsliderset.cpp: $(srcdir)/transformsliderset.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/transformsliderset.cpp )
-
-materiallist.cpp: $(srcdir)/materiallist.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/materiallist.cpp )
-
-materiallist2.cpp: $(srcdir)/materiallist2.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/materiallist2.cpp )
-
-grapheditor.cpp: $(srcdir)/grapheditor.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/grapheditor.cpp )
-
-roster.cpp: $(srcdir)/roster.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/roster.cpp )
-
-directionallighteditor.cpp: $(srcdir)/directionallighteditor.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/directionallighteditor.cpp )
-
-materialeditor.cpp: $(srcdir)/materialeditor.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/materialeditor.cpp )
-
-printdialog.cpp: $(srcdir)/printdialog.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/printdialog.cpp )
-
-spaceballdemo.cpp: $(srcdir)/spaceballdemo.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/spaceballdemo.cpp )
-
-snapshotviewer.cpp: $(srcdir)/snapshotviewer.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/snapshotviewer.cpp )
-
-SoGuiSnapshotViewer.h: $(srcdir)/SoGuiSnapshotViewer.h.in
-	@( cd $(top_builddir); ./config.status --file=components/SoGuiSnapshotViewer.h )
-
-SoGuiSnapshotViewer.cpp: $(srcdir)/SoGuiSnapshotViewer.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/SoGuiSnapshotViewer.cpp )
-
-#cutterviewer.cpp: $(srcdir)/cutterviewer.cpp.in
-#	@( cd $(top_builddir); ./config.status --file=components/cutterviewer.cpp )
-
-#SoGuiCutterViewer.h: $(srcdir)/SoGuiCutterViewer.h.in
-#	@( cd $(top_builddir); ./config.status --file=components/SoGuiCutterViewer.h )
-
-#SoGuiCutterViewer.cpp: $(srcdir)/SoGuiCutterViewer.cpp.in
-#	@( cd $(top_builddir); ./config.status --file=components/SoGuiCutterViewer.cpp )
 
 ############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

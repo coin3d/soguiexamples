@@ -8,6 +8,3 @@ BUILT_SOURCES = blocks.cpp
 
 
 ############################################################################
-
-blocks.cpp: $(srcdir)/blocks.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20020118/blocks.cpp )

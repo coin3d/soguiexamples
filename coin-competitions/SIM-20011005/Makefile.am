@@ -15,17 +15,3 @@ BUILT_SOURCES = \
 	lorenz.cpp \
 	nurbscurve.cpp \
 	cubes.cpp
-
-
-############################################################################
-
-lorenz.cpp: $(srcdir)/lorenz.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20011005/lorenz.cpp )
-
-nurbscurve.cpp: $(srcdir)/nurbscurve.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20011005/nurbscurve.cpp )
-
-cubes.cpp: $(srcdir)/cubes.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20011005/cubes.cpp )
-
-############################################################################

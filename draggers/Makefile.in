@@ -14,8 +14,6 @@
 
 @SET_MAKE@
 
-############################################################################
-
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -153,7 +151,6 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
-
 BUILT_SOURCES = \
 	translate1.cpp \
 	translate2.cpp \
@@ -169,7 +166,7 @@ subdir = draggers
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = translate1.cpp translate2.cpp dragpoint.cpp
 noinst_PROGRAMS = translate1$(EXEEXT) translate2$(EXEEXT) \
 	dragpoint$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
@@ -202,7 +199,8 @@ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 DIST_SOURCES = $(dragpoint_SOURCES) $(translate1_SOURCES) \
 	$(translate2_SOURCES)
-DIST_COMMON = Makefile.am Makefile.in
+DIST_COMMON = Makefile.am Makefile.in dragpoint.cpp.in \
+	translate1.cpp.in translate2.cpp.in
 SOURCES = $(dragpoint_SOURCES) $(translate1_SOURCES) $(translate2_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -215,6 +213,12 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configu
 	  $(AUTOMAKE) --gnu  draggers/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
+translate1.cpp: $(top_builddir)/config.status translate1.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+translate2.cpp: $(top_builddir)/config.status translate2.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+dragpoint.cpp: $(top_builddir)/config.status dragpoint.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -437,19 +441,6 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
-
-############################################################################
-
-translate1.cpp: $(srcdir)/translate1.cpp.in
-	@( cd $(top_builddir); ./config.status --file=draggers/translate1.cpp )
-
-translate2.cpp: $(srcdir)/translate2.cpp.in
-	@( cd $(top_builddir); ./config.status --file=draggers/translate2.cpp )
-
-dragpoint.cpp: $(srcdir)/dragpoint.cpp.in
-	@( cd $(top_builddir); ./config.status --file=draggers/dragpoint.cpp )
-
-############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -151,7 +151,6 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
-
 noinst_PROGRAMS = \
 	moirepatterns \
 	juliaanim \
@@ -183,7 +182,8 @@ subdir = eyecandy
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = moirepatterns.cpp juliaanim.cpp mandelzoom.cpp \
+	blob.cpp simbuoy.cpp
 noinst_PROGRAMS = moirepatterns$(EXEEXT) juliaanim$(EXEEXT) \
 	mandelzoom$(EXEEXT) blob$(EXEEXT) simbuoy$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
@@ -233,7 +233,9 @@ DIST_SOURCES = $(blob_SOURCES) $(juliaanim_SOURCES) \
 	$(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) \
 	$(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES) \
 	$(simbuoy_SOURCES)
-DIST_COMMON = README Makefile.am Makefile.in
+DIST_COMMON = README Makefile.am Makefile.in blob.cpp.in \
+	juliaanim.cpp.in mandelzoom.cpp.in moirepatterns.cpp.in \
+	simbuoy.cpp.in
 SOURCES = $(blob_SOURCES) $(juliaanim_SOURCES) $(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) $(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES) $(simbuoy_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -246,6 +248,16 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configu
 	  $(AUTOMAKE) --gnu  eyecandy/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
+moirepatterns.cpp: $(top_builddir)/config.status moirepatterns.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+juliaanim.cpp: $(top_builddir)/config.status juliaanim.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+mandelzoom.cpp: $(top_builddir)/config.status mandelzoom.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+blob.cpp: $(top_builddir)/config.status blob.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+simbuoy.cpp: $(top_builddir)/config.status simbuoy.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -476,25 +488,6 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
-
-############################################################################
-
-moirepatterns.cpp: $(srcdir)/moirepatterns.cpp.in
-	@( cd $(top_builddir); ./config.status --file=eyecandy/moirepatterns.cpp)
-
-juliaanim.cpp: $(srcdir)/juliaanim.cpp.in
-	@( cd $(top_builddir); ./config.status --file=eyecandy/juliaanim.cpp)
-
-mandelzoom.cpp: $(srcdir)/mandelzoom.cpp.in
-	@( cd $(top_builddir); ./config.status --file=eyecandy/mandelzoom.cpp)
-
-blob.cpp: $(srcdir)/blob.cpp.in
-	@( cd $(top_builddir); ./config.status --file=eyecandy/blob.cpp)
-
-simbuoy.cpp: $(srcdir)/simbuoy.cpp.in
-	@( cd $(top_builddir); ./config.status --file=eyecandy/simbuoy.cpp)
-
-############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -164,7 +164,7 @@ subdir = coin-competitions/SIM-20020503
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = ballinthehoop.cpp flow.cpp typeomatic.cpp
 noinst_PROGRAMS = ballinthehoop$(EXEEXT) flow$(EXEEXT) \
 	typeomatic$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
@@ -197,7 +197,8 @@ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 DIST_SOURCES = $(ballinthehoop_SOURCES) $(flow_SOURCES) \
 	$(typeomatic_SOURCES)
-DIST_COMMON = Makefile.am Makefile.in
+DIST_COMMON = Makefile.am Makefile.in ballinthehoop.cpp.in flow.cpp.in \
+	typeomatic.cpp.in
 SOURCES = $(ballinthehoop_SOURCES) $(flow_SOURCES) $(typeomatic_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -210,6 +211,12 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configu
 	  $(AUTOMAKE) --gnu  coin-competitions/SIM-20020503/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
+ballinthehoop.cpp: $(top_builddir)/config.status ballinthehoop.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+flow.cpp: $(top_builddir)/config.status flow.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+typeomatic.cpp: $(top_builddir)/config.status typeomatic.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -455,17 +462,6 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
-
-############################################################################
-
-ballinthehoop.cpp: $(srcdir)/ballinthehoop.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20020503/ballinthehoop.cpp )
-
-flow.cpp: $(srcdir)/flow.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20020503/flow.cpp )
-
-typeomatic.cpp: $(srcdir)/typeomatic.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20020503/typeomatic.cpp )
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

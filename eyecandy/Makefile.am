@@ -1,5 +1,3 @@
-## SoGuiExamples/eyecandy/Makefile.am
-
 noinst_PROGRAMS = \
 	moirepatterns \
 	juliaanim \
@@ -26,22 +24,3 @@ BUILT_SOURCES = \
 	mandelzoom.cpp \
 	blob.cpp \
 	simbuoy.cpp
-
-############################################################################
-
-moirepatterns.cpp: $(srcdir)/moirepatterns.cpp.in
-	@( cd $(top_builddir); ./config.status --file=eyecandy/moirepatterns.cpp)
-
-juliaanim.cpp: $(srcdir)/juliaanim.cpp.in
-	@( cd $(top_builddir); ./config.status --file=eyecandy/juliaanim.cpp)
-
-mandelzoom.cpp: $(srcdir)/mandelzoom.cpp.in
-	@( cd $(top_builddir); ./config.status --file=eyecandy/mandelzoom.cpp)
-
-blob.cpp: $(srcdir)/blob.cpp.in
-	@( cd $(top_builddir); ./config.status --file=eyecandy/blob.cpp)
-
-simbuoy.cpp: $(srcdir)/simbuoy.cpp.in
-	@( cd $(top_builddir); ./config.status --file=eyecandy/simbuoy.cpp)
-
-############################################################################

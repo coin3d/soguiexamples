@@ -177,7 +177,7 @@ subdir = coin-competitions/SIM-20010824
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = smiley.cpp plasmaball.cpp styx.cpp stars2.cpp
 noinst_PROGRAMS = smiley$(EXEEXT) plasmaball$(EXEEXT) styx$(EXEEXT) \
 	stars2$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
@@ -219,7 +219,8 @@ CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(plasmaball_SOURCES) $(smiley_SOURCES) $(stars2_SOURCES) \
 	$(EXTRA_stars2_SOURCES) $(styx_SOURCES)
-DIST_COMMON = Makefile.am Makefile.in
+DIST_COMMON = Makefile.am Makefile.in plasmaball.cpp.in smiley.cpp.in \
+	stars2.cpp.in styx.cpp.in
 SOURCES = $(plasmaball_SOURCES) $(smiley_SOURCES) $(stars2_SOURCES) $(EXTRA_stars2_SOURCES) $(styx_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -232,6 +233,14 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configu
 	  $(AUTOMAKE) --gnu  coin-competitions/SIM-20010824/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
+smiley.cpp: $(top_builddir)/config.status smiley.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+plasmaball.cpp: $(top_builddir)/config.status plasmaball.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+styx.cpp: $(top_builddir)/config.status styx.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+stars2.cpp: $(top_builddir)/config.status stars2.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -458,22 +467,6 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
-
-############################################################################
-
-smiley.cpp: $(srcdir)/smiley.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010824/smiley.cpp )
-
-plasmaball.cpp: $(srcdir)/plasmaball.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010824/plasmaball.cpp )
-
-styx.cpp: $(srcdir)/styx.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010824/styx.cpp )
-
-stars2.cpp: $(srcdir)/stars2.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010824/stars2.cpp )
-
-############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -354,7 +354,7 @@ distcleancheck_listfiles = find . -type f -print
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkinstalldirs) $(distdir)/cfg
+	$(mkinstalldirs) $(distdir)/actions $(distdir)/annex $(distdir)/cfg $(distdir)/coin-competitions/SIM-20010803 $(distdir)/coin-competitions/SIM-20010824 $(distdir)/coin-competitions/SIM-20010914 $(distdir)/coin-competitions/SIM-20011005 $(distdir)/coin-competitions/SIM-20011116 $(distdir)/coin-competitions/SIM-20020118 $(distdir)/coin-competitions/SIM-20020503 $(distdir)/components $(distdir)/draggers $(distdir)/engines $(distdir)/eyecandy $(distdir)/manipulators $(distdir)/nodekits $(distdir)/nodes $(distdir)/sensors
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

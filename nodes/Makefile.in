@@ -14,8 +14,6 @@
 
 @SET_MAKE@
 
-############################################################################
-
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -153,7 +151,6 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
-
 BUILT_SOURCES = \
 	drawstyle.cpp \
 	material.cpp \
@@ -243,7 +240,15 @@ subdir = nodes
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = drawstyle.cpp material.cpp selection.cpp \
+	slideshow.cpp sphere.cpp spherecolor.cpp rotation.cpp scale.cpp \
+	translation.cpp transform.cpp rotor.cpp directionallight.cpp \
+	pointlight.cpp spotlight.cpp lights.cpp faceset.cpp \
+	facesetindexed.cpp quadmesh.cpp trianglestripset.cpp camera.cpp \
+	blinker.cpp texture.cpp texture3.cpp environment.cpp \
+	atmospheric.cpp shuttle.cpp complexity.cpp text2.cpp text3.cpp \
+	clipplane.cpp levelofdetail.cpp extselection.cpp pointset.cpp \
+	markerset.cpp image.cpp bigimage.cpp
 noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	selection$(EXEEXT) slideshow$(EXEEXT) sphere$(EXEEXT) \
 	spherecolor$(EXEEXT) rotation$(EXEEXT) scale$(EXEEXT) \
@@ -482,7 +487,18 @@ DIST_SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) \
 	$(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) \
 	$(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) \
 	$(translation_SOURCES) $(trianglestripset_SOURCES)
-DIST_COMMON = Makefile.am Makefile.in
+DIST_COMMON = Makefile.am Makefile.in atmospheric.cpp.in \
+	bigimage.cpp.in blinker.cpp.in camera.cpp.in clipplane.cpp.in \
+	complexity.cpp.in directionallight.cpp.in drawstyle.cpp.in \
+	environment.cpp.in extselection.cpp.in faceset.cpp.in \
+	facesetindexed.cpp.in image.cpp.in levelofdetail.cpp.in \
+	lights.cpp.in markerset.cpp.in material.cpp.in \
+	pointlight.cpp.in pointset.cpp.in quadmesh.cpp.in \
+	rotation.cpp.in rotor.cpp.in scale.cpp.in selection.cpp.in \
+	shuttle.cpp.in slideshow.cpp.in sphere.cpp.in \
+	spherecolor.cpp.in spotlight.cpp.in text2.cpp.in text3.cpp.in \
+	texture.cpp.in texture3.cpp.in transform.cpp.in \
+	translation.cpp.in trianglestripset.cpp.in
 SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) $(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -495,6 +511,78 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configu
 	  $(AUTOMAKE) --gnu  nodes/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
+drawstyle.cpp: $(top_builddir)/config.status drawstyle.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+material.cpp: $(top_builddir)/config.status material.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+selection.cpp: $(top_builddir)/config.status selection.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+slideshow.cpp: $(top_builddir)/config.status slideshow.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+sphere.cpp: $(top_builddir)/config.status sphere.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+spherecolor.cpp: $(top_builddir)/config.status spherecolor.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+rotation.cpp: $(top_builddir)/config.status rotation.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+scale.cpp: $(top_builddir)/config.status scale.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+translation.cpp: $(top_builddir)/config.status translation.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+transform.cpp: $(top_builddir)/config.status transform.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+rotor.cpp: $(top_builddir)/config.status rotor.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+directionallight.cpp: $(top_builddir)/config.status directionallight.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+pointlight.cpp: $(top_builddir)/config.status pointlight.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+spotlight.cpp: $(top_builddir)/config.status spotlight.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+lights.cpp: $(top_builddir)/config.status lights.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+faceset.cpp: $(top_builddir)/config.status faceset.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+facesetindexed.cpp: $(top_builddir)/config.status facesetindexed.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+quadmesh.cpp: $(top_builddir)/config.status quadmesh.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+trianglestripset.cpp: $(top_builddir)/config.status trianglestripset.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+camera.cpp: $(top_builddir)/config.status camera.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+blinker.cpp: $(top_builddir)/config.status blinker.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+texture.cpp: $(top_builddir)/config.status texture.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+texture3.cpp: $(top_builddir)/config.status texture3.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+environment.cpp: $(top_builddir)/config.status environment.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+atmospheric.cpp: $(top_builddir)/config.status atmospheric.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+shuttle.cpp: $(top_builddir)/config.status shuttle.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+complexity.cpp: $(top_builddir)/config.status complexity.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+text2.cpp: $(top_builddir)/config.status text2.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+text3.cpp: $(top_builddir)/config.status text3.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+clipplane.cpp: $(top_builddir)/config.status clipplane.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+levelofdetail.cpp: $(top_builddir)/config.status levelofdetail.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+extselection.cpp: $(top_builddir)/config.status extselection.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+pointset.cpp: $(top_builddir)/config.status pointset.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+markerset.cpp: $(top_builddir)/config.status markerset.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+image.cpp: $(top_builddir)/config.status image.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+bigimage.cpp: $(top_builddir)/config.status bigimage.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -849,118 +937,6 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
-
-############################################################################
-
-texture3.cpp: $(srcdir)/texture3.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/texture3.cpp )
-
-drawstyle.cpp: $(srcdir)/drawstyle.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/drawstyle.cpp)
-
-material.cpp: $(srcdir)/material.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/material.cpp)
-
-selection.cpp: $(srcdir)/selection.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/selection.cpp)
-
-slideshow.cpp: $(srcdir)/slideshow.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/slideshow.cpp)
-
-sphere.cpp: $(srcdir)/sphere.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/sphere.cpp)
-
-spherecolor.cpp: $(srcdir)/spherecolor.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/spherecolor.cpp)
-
-rotation.cpp: $(srcdir)/rotation.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/rotation.cpp)
-
-scale.cpp: $(srcdir)/scale.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/scale.cpp)
-
-translation.cpp: $(srcdir)/translation.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/translation.cpp)
-
-transform.cpp: $(srcdir)/transform.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/transform.cpp)
-
-rotor.cpp: $(srcdir)/rotor.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/rotor.cpp)
-
-directionallight.cpp: $(srcdir)/directionallight.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/directionallight.cpp)
-
-pointlight.cpp: $(srcdir)/pointlight.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/pointlight.cpp)
-
-spotlight.cpp: $(srcdir)/spotlight.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/spotlight.cpp)
-
-lights.cpp: $(srcdir)/lights.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/lights.cpp)
-
-faceset.cpp: $(srcdir)/faceset.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/faceset.cpp)
-
-facesetindexed.cpp: $(srcdir)/facesetindexed.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/facesetindexed.cpp)
-
-quadmesh.cpp: $(srcdir)/quadmesh.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/quadmesh.cpp)
-
-trianglestripset.cpp: $(srcdir)/trianglestripset.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/trianglestripset.cpp)
-
-camera.cpp: $(srcdir)/camera.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/camera.cpp)
-
-blinker.cpp: $(srcdir)/blinker.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/blinker.cpp)
-
-texture.cpp: $(srcdir)/texture.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/texture.cpp)
-
-environment.cpp: $(srcdir)/environment.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/environment.cpp)
-
-atmospheric.cpp: $(srcdir)/atmospheric.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/atmospheric.cpp)
-
-shuttle.cpp: $(srcdir)/shuttle.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/shuttle.cpp)
-
-complexity.cpp: $(srcdir)/complexity.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/complexity.cpp)
-
-text2.cpp: $(srcdir)/text2.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/text2.cpp)
-
-text3.cpp: $(srcdir)/text3.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/text3.cpp)
-
-clipplane.cpp: $(srcdir)/clipplane.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/clipplane.cpp)
-
-levelofdetail.cpp: $(srcdir)/levelofdetail.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/levelofdetail.cpp)
-
-extselection.cpp: $(srcdir)/extselection.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/extselection.cpp)
-
-pointset.cpp: $(srcdir)/pointset.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/pointset.cpp)
-
-markerset.cpp: $(srcdir)/markerset.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/markerset.cpp)
-
-image.cpp: $(srcdir)/image.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/image.cpp)
-
-bigimage.cpp: $(srcdir)/bigimage.cpp.in
-	@( cd $(top_builddir); ./config.status --file=nodes/bigimage.cpp)
-
-############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

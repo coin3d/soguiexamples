@@ -185,7 +185,8 @@ subdir = coin-competitions/SIM-20010914
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = Moolah.cpp calculator.cpp coinhistory.cpp kaos.cpp \
+	rec.cpp
 noinst_PROGRAMS = moolah$(EXEEXT) calculator$(EXEEXT) \
 	coinhistory$(EXEEXT) kaos$(EXEEXT) rec$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
@@ -239,7 +240,8 @@ CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(calculator_SOURCES) $(coinhistory_SOURCES) \
 	$(kaos_SOURCES) $(moolah_SOURCES) $(rec_SOURCES)
-DIST_COMMON = Makefile.am Makefile.in
+DIST_COMMON = Makefile.am Makefile.in Moolah.cpp.in calculator.cpp.in \
+	coinhistory.cpp.in kaos.cpp.in rec.cpp.in
 SOURCES = $(calculator_SOURCES) $(coinhistory_SOURCES) $(kaos_SOURCES) $(moolah_SOURCES) $(rec_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -252,6 +254,16 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configu
 	  $(AUTOMAKE) --gnu  coin-competitions/SIM-20010914/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
+Moolah.cpp: $(top_builddir)/config.status Moolah.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+calculator.cpp: $(top_builddir)/config.status calculator.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+coinhistory.cpp: $(top_builddir)/config.status coinhistory.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+kaos.cpp: $(top_builddir)/config.status kaos.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+rec.cpp: $(top_builddir)/config.status rec.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -487,25 +499,6 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
-
-############################################################################
-
-Moolah.cpp: $(srcdir)/Moolah.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010914/Moolah.cpp )
-
-calculator.cpp: $(srcdir)/calculator.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010914/calculator.cpp )
-
-coinhistory.cpp: $(srcdir)/coinhistory.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010914/coinhistory.cpp )
-
-kaos.cpp: $(srcdir)/kaos.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010914/kaos.cpp )
-
-rec.cpp: $(srcdir)/rec.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010914/rec.cpp )
-
-############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

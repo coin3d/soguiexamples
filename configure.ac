@@ -296,24 +296,139 @@ SIM_AC_UNIQIFY_LIST(LIBS, $LIBS)
 
 AC_OUTPUT([
 	Makefile
+
 	components/Makefile
-	coin-competitions/Makefile
-	coin-competitions/SIM-20020503/Makefile
-	coin-competitions/SIM-20020118/Makefile
-	coin-competitions/SIM-20011116/Makefile
-	coin-competitions/SIM-20011005/Makefile
-	coin-competitions/SIM-20010914/Makefile
-	coin-competitions/SIM-20010824/Makefile
-	coin-competitions/SIM-20010803/Makefile
-	eyecandy/Makefile
+	components/SoGuiSnapshotViewer.cpp
+	components/SoGuiSnapshotViewer.h
+	components/backgroundimg.cpp
+	components/computils.cpp
+	components/computils.h
+	components/examinerviewer.cpp
+	components/flyviewer.cpp
+	components/grapheditor.cpp
+	components/lightsliderset.cpp
+	components/materiallist.cpp
+	components/materiallist2.cpp
+	components/materialsliderset.cpp
+	components/materialsliderset2.cpp
+	components/overlay.cpp
+	components/planeviewer.cpp
+	components/renderarea.cpp
+	components/roster.cpp
+	components/snapshotviewer.cpp
+	components/spaceballdemo.cpp 
+	components/transformsliderset.cpp
+
 	actions/Makefile
-	draggers/Makefile
-	engines/Makefile
-	manipulators/Makefile
-	nodes/Makefile
-	sensors/Makefile
-	nodekits/Makefile
+	actions/search.cpp
+	actions/raypick.cpp
+	actions/intersection.cpp
+
 	annex/Makefile
+        annex/hardcopy.cpp
+
+	draggers/Makefile
+	draggers/translate1.cpp
+	draggers/translate2.cpp
+	draggers/dragpoint.cpp
+
+	engines/Makefile
+	engines/computebbox.cpp
+	engines/computexfbbox.cpp.in
+
+	eyecandy/Makefile
+	eyecandy/moirepatterns.cpp
+	eyecandy/juliaanim.cpp
+	eyecandy/mandelzoom.cpp
+	eyecandy/blob.cpp
+	eyecandy/simbuoy.cpp
+
+	manipulators/Makefile
+	manipulators/pointlightmanip.cpp
+	manipulators/tabboxmanip.cpp
+
+	nodekits/Makefile
+	nodekits/scalemarker.cpp
+	nodekits/wavekitdemo.cpp
+
+	nodes/Makefile
+	nodes/drawstyle.cpp
+	nodes/material.cpp
+	nodes/selection.cpp
+	nodes/slideshow.cpp
+	nodes/sphere.cpp
+	nodes/spherecolor.cpp
+	nodes/rotation.cpp
+	nodes/scale.cpp
+	nodes/translation.cpp
+	nodes/transform.cpp
+	nodes/rotor.cpp
+	nodes/directionallight.cpp
+	nodes/pointlight.cpp
+	nodes/spotlight.cpp
+	nodes/lights.cpp
+	nodes/faceset.cpp
+	nodes/facesetindexed.cpp
+	nodes/quadmesh.cpp
+	nodes/trianglestripset.cpp
+	nodes/camera.cpp
+	nodes/blinker.cpp
+	nodes/texture.cpp
+	nodes/texture3.cpp
+	nodes/environment.cpp
+	nodes/atmospheric.cpp
+	nodes/shuttle.cpp
+	nodes/complexity.cpp
+	nodes/text2.cpp
+	nodes/text3.cpp
+	nodes/clipplane.cpp
+	nodes/levelofdetail.cpp
+	nodes/extselection.cpp
+	nodes/pointset.cpp
+	nodes/markerset.cpp
+	nodes/image.cpp
+	nodes/bigimage.cpp
+
+	sensors/Makefile
+	sensors/timesensor.cpp
+
+	coin-competitions/Makefile
+
+	coin-competitions/SIM-20010803/Makefile
+	coin-competitions/SIM-20010803/chart.cpp
+	coin-competitions/SIM-20010803/plasmafun.cpp
+	coin-competitions/SIM-20010803/stars.cpp
+
+	coin-competitions/SIM-20010824/Makefile
+	coin-competitions/SIM-20010824/smiley.cpp
+	coin-competitions/SIM-20010824/plasmaball.cpp
+	coin-competitions/SIM-20010824/styx.cpp
+	coin-competitions/SIM-20010824/stars2.cpp
+
+	coin-competitions/SIM-20010914/Makefile
+	coin-competitions/SIM-20010914/Moolah.cpp
+	coin-competitions/SIM-20010914/calculator.cpp
+	coin-competitions/SIM-20010914/coinhistory.cpp
+	coin-competitions/SIM-20010914/kaos.cpp
+	coin-competitions/SIM-20010914/rec.cpp
+
+	coin-competitions/SIM-20011005/Makefile
+	coin-competitions/SIM-20011005/lorenz.cpp
+	coin-competitions/SIM-20011005/nurbscurve.cpp
+	coin-competitions/SIM-20011005/cubes.cpp
+
+	coin-competitions/SIM-20011116/Makefile
+	coin-competitions/SIM-20011116/25bc5bb.cpp
+	coin-competitions/SIM-20011116/foo.cpp
+	coin-competitions/SIM-20011116/shaker.cpp
+
+	coin-competitions/SIM-20020118/Makefile
+	coin-competitions/SIM-20020118/blocks.cpp
+
+	coin-competitions/SIM-20020503/Makefile
+	coin-competitions/SIM-20020503/ballinthehoop.cpp
+	coin-competitions/SIM-20020503/flow.cpp
+	coin-competitions/SIM-20020503/typeomatic.cpp
 ])
 
 SIM_AC_CONFIGURATION_SUMMARY

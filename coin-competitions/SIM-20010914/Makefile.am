@@ -26,23 +26,3 @@ BUILT_SOURCES = \
 	coinhistory.cpp \
 	kaos.cpp \
 	rec.cpp
-
-
-############################################################################
-
-Moolah.cpp: $(srcdir)/Moolah.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010914/Moolah.cpp )
-
-calculator.cpp: $(srcdir)/calculator.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010914/calculator.cpp )
-
-coinhistory.cpp: $(srcdir)/coinhistory.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010914/coinhistory.cpp )
-
-kaos.cpp: $(srcdir)/kaos.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010914/kaos.cpp )
-
-rec.cpp: $(srcdir)/rec.cpp.in
-	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010914/rec.cpp )
-
-############################################################################

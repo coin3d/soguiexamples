@@ -14,8 +14,6 @@
 
 @SET_MAKE@
 
-############################################################################
-
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -153,7 +151,6 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
-
 BUILT_SOURCES = search.cpp raypick.cpp intersection.cpp
 
 noinst_PROGRAMS = search raypick tesselate matrixtransform intersection ivcopy
@@ -168,7 +165,7 @@ subdir = actions
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = search.cpp raypick.cpp intersection.cpp
 noinst_PROGRAMS = search$(EXEEXT) raypick$(EXEEXT) tesselate$(EXEEXT) \
 	matrixtransform$(EXEEXT) intersection$(EXEEXT) ivcopy$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
@@ -220,7 +217,8 @@ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 DIST_SOURCES = $(intersection_SOURCES) $(ivcopy_SOURCES) \
 	$(matrixtransform_SOURCES) $(raypick_SOURCES) $(search_SOURCES) \
 	$(tesselate_SOURCES)
-DIST_COMMON = Makefile.am Makefile.in
+DIST_COMMON = Makefile.am Makefile.in intersection.cpp.in \
+	raypick.cpp.in search.cpp.in
 SOURCES = $(intersection_SOURCES) $(ivcopy_SOURCES) $(matrixtransform_SOURCES) $(raypick_SOURCES) $(search_SOURCES) $(tesselate_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -233,6 +231,12 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configu
 	  $(AUTOMAKE) --gnu  actions/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
+search.cpp: $(top_builddir)/config.status search.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+raypick.cpp: $(top_builddir)/config.status raypick.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+intersection.cpp: $(top_builddir)/config.status intersection.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -467,19 +471,6 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
-
-############################################################################
-
-search.cpp: $(srcdir)/search.cpp.in
-	@( cd $(top_builddir); ./config.status --file=actions/search.cpp)
-
-raypick.cpp: $(srcdir)/raypick.cpp.in
-	@( cd $(top_builddir); ./config.status --file=actions/raypick.cpp)
-
-intersection.cpp: $(srcdir)/intersection.cpp.in
-	@( cd $(top_builddir); ./config.status --file=actions/intersection.cpp)
-
-############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
