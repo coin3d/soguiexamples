@@ -2,6 +2,8 @@
 AC_INIT(actions/search.cpp.in)
 AC_CONFIG_AUX_DIR(cfg)
 
+SIM_AC_SETUP_MKS
+
 SIM_AC_MSVC_DSPEX_ENABLE_OPTION
 
 # **************************************************************************
@@ -9,6 +11,26 @@ SIM_AC_MSVC_DSPEX_ENABLE_OPTION
 # compiling with it.
 
 SIM_AC_SETUP_MSVCPP_IFELSE
+
+# **************************************************************************
+
+# cross_compiling: On MKS, configure will open a window when trying to run
+# the executable a.out in the cross-compilation test because it is not
+# named *.exe, halting the configure script until it has been closed, even
+# resulting in a faulty conclusion for the test (cross_compiling=yes).
+# By setting the $cross_compiling variable to yes in advance, this test is
+# skipped.  We are of course not cross-compiling, so we correct the variable
+# afterwards.  2003-06-25 larsa
+
+case $build in
+*-mks ) cross_compiling=yes ;;
+esac
+
+AC_PROG_CC
+
+case $build in
+*-mks ) cross_compiling=yes ;;
+esac
 
 # **************************************************************************
 
@@ -420,157 +442,157 @@ fi
 # All files configure must automatically generate.
 
 AC_OUTPUT([
-	Makefile
+        Makefile
 
-	components/Makefile
-	components/SoGuiSnapshotViewer.cpp
-	components/SoGuiSnapshotViewer.h
-	components/backgroundimg.cpp
-	components/computils.cpp
-	components/computils.h
-	components/examinerviewer.cpp
-	components/flyviewer.cpp
-	components/grapheditor.cpp
-	components/lightsliderset.cpp
-	components/materiallist.cpp
-	components/materiallist2.cpp
-	components/materialsliderset.cpp
-	components/materialsliderset2.cpp
-	components/multifileviewer.cpp
-	components/overlay.cpp
-	components/planeviewer.cpp
-	components/renderarea.cpp
-	components/roster.cpp
-	components/snapshotviewer.cpp
-	components/spaceballdemo.cpp 
-	components/transformsliderset.cpp
+        components/Makefile
+        components/SoGuiSnapshotViewer.cpp
+        components/SoGuiSnapshotViewer.h
+        components/backgroundimg.cpp
+        components/computils.cpp
+        components/computils.h
+        components/examinerviewer.cpp
+        components/flyviewer.cpp
+        components/grapheditor.cpp
+        components/lightsliderset.cpp
+        components/materiallist.cpp
+        components/materiallist2.cpp
+        components/materialsliderset.cpp
+        components/materialsliderset2.cpp
+        components/multifileviewer.cpp
+        components/overlay.cpp
+        components/planeviewer.cpp
+        components/renderarea.cpp
+        components/roster.cpp
+        components/snapshotviewer.cpp
+        components/spaceballdemo.cpp 
+        components/transformsliderset.cpp
 
-	actions/Makefile
-	actions/search.cpp
-	actions/raypick.cpp
-	actions/intersection.cpp
+        actions/Makefile
+        actions/search.cpp
+        actions/raypick.cpp
+        actions/intersection.cpp
 
-	annex/Makefile
+        annex/Makefile
         annex/hardcopy.cpp
 
-	draggers/Makefile
-	draggers/translate1.cpp
-	draggers/translate2.cpp
-	draggers/dragpoint.cpp
+        draggers/Makefile
+        draggers/translate1.cpp
+        draggers/translate2.cpp
+        draggers/dragpoint.cpp
 
-	engines/Makefile
-	engines/computebbox.cpp
-	engines/computexfbbox.cpp
+        engines/Makefile
+        engines/computebbox.cpp
+        engines/computexfbbox.cpp
 
-	eyecandy/Makefile
-	eyecandy/moirepatterns.cpp
-	eyecandy/juliaanim.cpp
-	eyecandy/mandelzoom.cpp
-	eyecandy/blob.cpp
-	eyecandy/simbuoy.cpp
+        eyecandy/Makefile
+        eyecandy/moirepatterns.cpp
+        eyecandy/juliaanim.cpp
+        eyecandy/mandelzoom.cpp
+        eyecandy/blob.cpp
+        eyecandy/simbuoy.cpp
 
-	manipulators/Makefile
-	manipulators/pointlightmanip.cpp
-	manipulators/tabboxmanip.cpp
+        manipulators/Makefile
+        manipulators/pointlightmanip.cpp
+        manipulators/tabboxmanip.cpp
 
-	nodekits/Makefile
-	nodekits/scalemarker.cpp
-	nodekits/wavekitdemo.cpp
+        nodekits/Makefile
+        nodekits/scalemarker.cpp
+        nodekits/wavekitdemo.cpp
 
-	nodes/Makefile
-	nodes/drawstyle.cpp
-	nodes/material.cpp
-	nodes/selection.cpp
-	nodes/slideshow.cpp
-	nodes/sphere.cpp
-	nodes/spherecolor.cpp
-	nodes/rotation.cpp
-	nodes/scale.cpp
-	nodes/translation.cpp
-	nodes/transform.cpp
-	nodes/rotor.cpp
-	nodes/directionallight.cpp
-	nodes/pointlight.cpp
-	nodes/spotlight.cpp
-	nodes/lights.cpp
-	nodes/faceset.cpp
-	nodes/facesetindexed.cpp
-	nodes/quadmesh.cpp
-	nodes/trianglestripset.cpp
-	nodes/camera.cpp
-	nodes/blinker.cpp
-	nodes/texture.cpp
-	nodes/texture3.cpp
-	nodes/environment.cpp
-	nodes/atmospheric.cpp
-	nodes/shuttle.cpp
-	nodes/complexity.cpp
-	nodes/text2.cpp
-	nodes/text3.cpp
-	nodes/clipplane.cpp
-	nodes/levelofdetail.cpp
-	nodes/extselection.cpp
-	nodes/pointset.cpp
-	nodes/markerset.cpp
-	nodes/image.cpp
-	nodes/bigimage.cpp
-	nodes/textureunit.cpp
-	nodes/bumpmap.cpp
-	nodes/scenetexture.cpp
+        nodes/Makefile
+        nodes/drawstyle.cpp
+        nodes/material.cpp
+        nodes/selection.cpp
+        nodes/slideshow.cpp
+        nodes/sphere.cpp
+        nodes/spherecolor.cpp
+        nodes/rotation.cpp
+        nodes/scale.cpp
+        nodes/translation.cpp
+        nodes/transform.cpp
+        nodes/rotor.cpp
+        nodes/directionallight.cpp
+        nodes/pointlight.cpp
+        nodes/spotlight.cpp
+        nodes/lights.cpp
+        nodes/faceset.cpp
+        nodes/facesetindexed.cpp
+        nodes/quadmesh.cpp
+        nodes/trianglestripset.cpp
+        nodes/camera.cpp
+        nodes/blinker.cpp
+        nodes/texture.cpp
+        nodes/texture3.cpp
+        nodes/environment.cpp
+        nodes/atmospheric.cpp
+        nodes/shuttle.cpp
+        nodes/complexity.cpp
+        nodes/text2.cpp
+        nodes/text3.cpp
+        nodes/clipplane.cpp
+        nodes/levelofdetail.cpp
+        nodes/extselection.cpp
+        nodes/pointset.cpp
+        nodes/markerset.cpp
+        nodes/image.cpp
+        nodes/bigimage.cpp
+        nodes/textureunit.cpp
+        nodes/bumpmap.cpp
+        nodes/scenetexture.cpp
 
-	sensors/Makefile
-	sensors/timersensor.cpp
+        sensors/Makefile
+        sensors/timersensor.cpp
 
-	sound/Makefile
-	sound/audiocallback.cpp
-	sound/manysources.cpp
+        sound/Makefile
+        sound/audiocallback.cpp
+        sound/manysources.cpp
 
-	volumerendering/Makefile
-	volumerendering/readvol.cpp
-	volumerendering/changingdataset.cpp
-	volumerendering/examine.cpp
-	volumerendering/orthoslicer.cpp
-	volumerendering/raypick.cpp
-	volumerendering/rgbload.cpp
-	volumerendering/simple8bit.cpp
+        volumerendering/Makefile
+        volumerendering/readvol.cpp
+        volumerendering/changingdataset.cpp
+        volumerendering/examine.cpp
+        volumerendering/orthoslicer.cpp
+        volumerendering/raypick.cpp
+        volumerendering/rgbload.cpp
+        volumerendering/simple8bit.cpp
 
-	coin-competitions/Makefile
+        coin-competitions/Makefile
 
-	coin-competitions/SIM-20010803/Makefile
-	coin-competitions/SIM-20010803/chart.cpp
-	coin-competitions/SIM-20010803/plasmafun.cpp
-	coin-competitions/SIM-20010803/stars.cpp
+        coin-competitions/SIM-20010803/Makefile
+        coin-competitions/SIM-20010803/chart.cpp
+        coin-competitions/SIM-20010803/plasmafun.cpp
+        coin-competitions/SIM-20010803/stars.cpp
 
-	coin-competitions/SIM-20010824/Makefile
-	coin-competitions/SIM-20010824/smiley.cpp
-	coin-competitions/SIM-20010824/plasmaball.cpp
-	coin-competitions/SIM-20010824/styx.cpp
-	coin-competitions/SIM-20010824/stars2.cpp
+        coin-competitions/SIM-20010824/Makefile
+        coin-competitions/SIM-20010824/smiley.cpp
+        coin-competitions/SIM-20010824/plasmaball.cpp
+        coin-competitions/SIM-20010824/styx.cpp
+        coin-competitions/SIM-20010824/stars2.cpp
 
-	coin-competitions/SIM-20010914/Makefile
-	coin-competitions/SIM-20010914/Moolah.cpp
-	coin-competitions/SIM-20010914/calculator.cpp
-	coin-competitions/SIM-20010914/coinhistory.cpp
-	coin-competitions/SIM-20010914/kaos.cpp
-	coin-competitions/SIM-20010914/rec.cpp
+        coin-competitions/SIM-20010914/Makefile
+        coin-competitions/SIM-20010914/Moolah.cpp
+        coin-competitions/SIM-20010914/calculator.cpp
+        coin-competitions/SIM-20010914/coinhistory.cpp
+        coin-competitions/SIM-20010914/kaos.cpp
+        coin-competitions/SIM-20010914/rec.cpp
 
-	coin-competitions/SIM-20011005/Makefile
-	coin-competitions/SIM-20011005/lorenz.cpp
-	coin-competitions/SIM-20011005/nurbscurve.cpp
-	coin-competitions/SIM-20011005/cubes.cpp
+        coin-competitions/SIM-20011005/Makefile
+        coin-competitions/SIM-20011005/lorenz.cpp
+        coin-competitions/SIM-20011005/nurbscurve.cpp
+        coin-competitions/SIM-20011005/cubes.cpp
 
-	coin-competitions/SIM-20011116/Makefile
-	coin-competitions/SIM-20011116/25bc5bb.cpp
-	coin-competitions/SIM-20011116/foo.cpp
-	coin-competitions/SIM-20011116/shaker.cpp
+        coin-competitions/SIM-20011116/Makefile
+        coin-competitions/SIM-20011116/25bc5bb.cpp
+        coin-competitions/SIM-20011116/foo.cpp
+        coin-competitions/SIM-20011116/shaker.cpp
 
-	coin-competitions/SIM-20020118/Makefile
-	coin-competitions/SIM-20020118/blocks.cpp
+        coin-competitions/SIM-20020118/Makefile
+        coin-competitions/SIM-20020118/blocks.cpp
 
-	coin-competitions/SIM-20020503/Makefile
-	coin-competitions/SIM-20020503/ballinthehoop.cpp
-	coin-competitions/SIM-20020503/flow.cpp
-	coin-competitions/SIM-20020503/typeomatic.cpp
+        coin-competitions/SIM-20020503/Makefile
+        coin-competitions/SIM-20020503/ballinthehoop.cpp
+        coin-competitions/SIM-20020503/flow.cpp
+        coin-competitions/SIM-20020503/typeomatic.cpp
 ])
 
 SIM_AC_CONFIGURATION_SUMMARY
