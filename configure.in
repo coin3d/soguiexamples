@@ -226,12 +226,21 @@ AC_SUBST(COMPONENTHEADER)
 ## 20010919 mortene.
 AC_LANG(C)
 AC_LANG(C++)
+
+SIM_AC_HAVE_INVENTOR_FEATURE(
+  [for So${Gui}Component::setFullScreen()],
+  [#include <Inventor/${Gui}/viewers/So${Gui}ExaminerViewer.h>], [
+   So${Gui}ExaminerViewer * viewer = (So${Gui}ExaminerViewer *) 0;
+   viewer->setFullScreen(FALSE);],
+  [HAVE_SOCOMPONENT_SETFULLSCREEN])
+
 SIM_AC_HAVE_INVENTOR_FEATURE(
   [for So${Gui}Viewer::setStereoViewing()],
   [#include <Inventor/${Gui}/viewers/So${Gui}ExaminerViewer.h>], [
    So${Gui}ExaminerViewer * viewer = (So${Gui}ExaminerViewer *) 0;
    viewer->setStereoViewing(FALSE);],
   [HAVE_VIEWER_STEREO_VIEWING])
+
 SIM_AC_HAVE_INVENTOR_FEATURE(
   [for So${Gui}Viewer::setQuadBufferStereo()],
   [#include <Inventor/${Gui}/viewers/So${Gui}ExaminerViewer.h>], [

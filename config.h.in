@@ -16,6 +16,9 @@
 #undef HAVE_OPENGL_GL_H
 
 /* Define to enable use of Inventor feature */
+#undef HAVE_SOCOMPONENT_SETFULLSCREEN
+
+/* Define to enable use of Inventor feature */
 #undef HAVE_VIEWER_QUADBUFFER_STEREO
 
 /* Define to enable use of Inventor feature */
