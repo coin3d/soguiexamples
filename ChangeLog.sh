@@ -1,15 +1,16 @@
-#!/bin/sh
+#! /bin/sh
 ############################################################################
 
-moduledir=${0%/[^/]*}
-module=${moduledir##*/}
+moduledir=`echo $0 | sed 's,/[^/]*$,,'`
+module=`echo $moduledir | sed 's,^.*/,,g'`
+module=`echo $module | sed 's,-\(CVS\|HEAD\)$,,'`
 cvs2cl=$HOME/code/cvs/src/cvs2cl/cvs2cl.pl
 headerfile=/tmp/$module.header
 
 cd $moduledir
 
 ############################################################################
-cat > $headerfile <<ENDOFHEADER
+cat >$headerfile <<ENDOFHEADER
 ChangeLog
 =========
 
