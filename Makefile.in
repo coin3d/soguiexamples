@@ -694,19 +694,13 @@ eyecandy/simbuoy.cpp: $(srcdir)/eyecandy/simbuoy.cpp.in
 
 ############################################################################
 
-coin-competitions/SIM-20010803/moirepatterns.cpp: $(srcdir)/coin-competitions/SIM-20010803/moirepatterns.cpp.in
+coin-competitions/SIM-20010803/chart.cpp: $(srcdir)/coin-competitions/SIM-20010803/chart.cpp.in
 	@./config.status --file=$@
 
-coin-competitions/SIM-20010803/juliaanim.cpp: $(srcdir)/coin-competitions/SIM-20010803/juliaanim.cpp.in
+coin-competitions/SIM-20010803/plasmafun.cpp: $(srcdir)/coin-competitions/SIM-20010803/plasmafun.cpp.in
 	@./config.status --file=$@
 
-coin-competitions/SIM-20010803/mandelzoom.cpp: $(srcdir)/coin-competitions/SIM-20010803/mandelzoom.cpp.in
-	@./config.status --file=$@
-
-coin-competitions/SIM-20010803/blob.cpp: $(srcdir)/coin-competitions/SIM-20010803/blob.cpp.in
-	@./config.status --file=$@
-
-coin-competitions/SIM-20010803/simbuoy.cpp: $(srcdir)/coin-competitions/SIM-20010803/simbuoy.cpp.in
+coin-competitions/SIM-20010803/stars.cpp: $(srcdir)/coin-competitions/SIM-20010803/stars.cpp.in
 	@./config.status --file=$@
 
 ############################################################################
