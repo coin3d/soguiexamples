@@ -1,0 +1,104 @@
+// Programming by Tor-Helge Skei <skei@sim.no>
+
+#include <Inventor/SoDB.h>
+#include <Inventor/nodes/SoBaseColor.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoDrawStyle.h>
+#include <Inventor/nodes/SoFaceSet.h>
+#include <Inventor/nodes/SoLightModel.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoMaterialBinding.h>
+#include <Inventor/nodes/SoNormalBinding.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoPointSet.h>
+#include <Inventor/nodes/SoSeparator.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#define SIZEX 32
+#define SIZEY 32
+#define SIZEZ 32
+#define SIZE  (SIZEX*SIZEY*SIZEZ)
+
+// *************************************************************************
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  @WINWIDGET@ window = So@Gui@::init( argv[0] );
+  if ( ! window )
+    exit( 1 );
+
+  SoSeparator * root = new SoSeparator;
+  
+  // create point cube coordinates
+  int x, y, z, num;
+  float cube_vertices[SIZE][3];
+  float cl[SIZE][3];
+  
+  num = 0;
+  for ( x = 0; x < SIZEX; x++ ) {
+    for ( y = 0; y < SIZEY; y++ ) {
+      for ( z = 0; z < SIZEZ; z++ ) {
+        cube_vertices[num][0] = (SIZEX/2)-x;
+        cube_vertices[num][1] = (SIZEY/2)-y;
+        cube_vertices[num][2] = (SIZEZ/2)-z;
+        cl[num][0] = (float) x / (float) SIZEX;
+        cl[num][1] = (float) y / (float) SIZEY;
+        cl[num][2] = (float) z / (float) SIZEZ;
+        num++;
+      }
+    }
+  }
+
+  fprintf( stdout, "PointSet contains a total of %d points.\n", num );
+  fprintf( stdout, "Spin the pointset to see the moiré patterns change.\n" );
+  
+  // draw style
+  SoDrawStyle * dstyle = new SoDrawStyle;
+  dstyle->style.setValue( SoDrawStyle::POINTS );
+  dstyle->pointSize.setValue( 1 );
+  root->addChild( dstyle );
+  
+  // light model
+  SoLightModel * lmodel = new SoLightModel;
+  lmodel->model.setValue( SoLightModel::BASE_COLOR );
+  root->addChild( lmodel );
+  
+  // color
+  SoBaseColor * cube_col = new SoBaseColor;
+  cube_col->rgb.setValues( 0, SIZE, cl );
+  root->addChild( cube_col );
+  
+  // material binding
+  SoMaterialBinding * matbind = new SoMaterialBinding;
+  matbind->value.setValue( SoMaterialBinding::PER_VERTEX );
+  root->addChild( matbind );
+  
+  // create cube coordset
+  SoCoordinate3 * cube_coords = new SoCoordinate3;
+  cube_coords->point.setValues( 0, SIZE, cube_vertices );
+  root->addChild( cube_coords );
+  
+  // cube pointset
+  SoPointSet * pointset = new SoPointSet;
+  root->addChild( pointset );
+  
+  // set up viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
+  viewer->setSceneGraph( root );
+  viewer->setTitle( "Moiré Patterns" );
+  viewer->show();
+  
+  So@Gui@::show( window );
+  So@Gui@::mainLoop();
+  
+  delete viewer;
+  return 0;
+} // main()
+
+// *************************************************************************
