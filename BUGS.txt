@@ -224,3 +224,26 @@
     20040919 mortene.
 
 =====================================================================
+
+012 SoText2Set (or SmAxisKit) generates a bogus bounding box.
+
+    To reproduce, load this into a SmallChange-enabled examinerviewer:
+
+----8<------ [snip] ----------8<------ [snip] ------
+#Inventor V2.1 ascii
+
+SmAxisKit { }
+Translation { translation 0 -1.5 0 }
+Cube { width 30 }
+----8<------ [snip] ----------8<------ [snip] ------
+
+    Upon "view all", the cube and axis should be prominent in the
+    view, but the camera zooms way out due to the too big bbox.
+
+    This renders the SmAxisKit nodekit close to unusable.
+
+    The bug is most likely in the SoText2Set.
+
+    20041010 mortene.
+
+=====================================================================
