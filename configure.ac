@@ -88,19 +88,38 @@ if test x"$with_inventor" = x; then sim_ac_guiexamples_use_inventor=false; fi
 if test x"$with_inventor" = xno; then sim_ac_guiexamples_use_inventor=false; fi
 
 if $sim_ac_guiexamples_use_inventor; then
-  # If we want to compile and link against InventorXt and Inventor, we
-  # need to check for a shitload of libraries.
+  # If we want to compile and link against Inventor, we
+  # need to check for these libraries.
 
   SIM_AC_CHECK_MATHLIB
   SIM_AC_CHECK_DL
-  SIM_AC_CHECK_X11
-  
-  if test x"$sim_ac_x11_avail" = xyes; then
+
+  # Either InventorXt or InventorQt, not both
+  if $sim_ac_want_inventorqt; then
+    sim_ac_want_inventorxt=false
+  else # ..nor neither
+    if $sim_ac_want_inventorxt; then :; else
+      AC_MSG_ERROR(Either InventorXt or InventorQt must be used along with SGI/TGS Inventor.)
+    fi
+  fi
+
+  # InventorXt (SGI or TGS) needs a heap of libs
+  if $sim_ac_want_inventorxt; then
+    SIM_AC_CHECK_X11
+    if test x"$sim_ac_x11_avail" = xno; then
+      AC_MSG_ERROR(Could not compile or link against X11 libraries.)
+    fi
     SIM_AC_CHECK_X11SHMEM
     SIM_AC_CHECK_X11MU
     SIM_AC_CHECK_X11XID
     SIM_AC_CHECK_X11_XP
     SIM_AC_CHECK_X_INTRINSIC
+  fi
+
+  # InventorXt (SGI or TGS) needs a heap of libs
+  if $sim_ac_want_inventorqt; then
+    SIM_AC_CHECK_QT(, [ SIM_AC_ERROR([no-qt]) ])
+    SIM_AC_CHECK_QGL(, [ SIM_AC_ERROR([no-qgl]) ])
   fi
   
   SIM_AC_CHECK_OPENGL([ ], [SIM_AC_ERROR([no-opengl])])
@@ -111,35 +130,6 @@ if $sim_ac_guiexamples_use_inventor; then
      LDFLAGS="$sim_ac_inventor_ldflags $LDFLAGS"
      LIBS="$sim_ac_inventor_libs $LIBS"],
     AC_MSG_ERROR(couldn't compile and link against Open Inventor))
-  SIM_CHECK_MOTIF( , AC_MSG_ERROR(couldn't compile and link with Motif))
-  SIM_CHECK_MOTIF_GLWIDGET
-  
-  SIM_CHECK_XMEDRAWSHADOWS
-  
-  # If XmeDrawShadows() isn't provided by the installed Motif library,
-  # we make our own stub. InventorXt uses this function of Motif, but
-  # it wasn't provided in earlier versions of Lesstif (because it's a
-  # Motif 2.0 function?).
-  
-  if test x"$sim_ac_xmedrawshadows_avail" = xno; then
-    cat > xmedrawshadows.cpp <<EOF
-      extern "C" {
-      #include <Xm/Xm.h>
-      void XmeDrawShadows(Display *, Drawable, GC, GC, Position, Position, Dimension, Dimension, Dimension, unsigned int) { }
-      }
-EOF
-    $CXX -c $CXXFLAGS $CPPFLAGS xmedrawshadows.cpp
-    LIBS="$LIBS `pwd`/xmedrawshadows.o"
-  fi
-  
-  SIM_CHECK_OIV_XT( , AC_MSG_ERROR(couldn't compile and link against the InventorXt library))
-
-  GUI=XT
-  Gui=Xt
-  gui=xt
-  WIDGET=Widget
-  EVENT="XAnyEvent *"
-  COMPONENTHEADER=
 
   AM_CONDITIONAL(HAVE_SLIDERSETS, true)
   AM_CONDITIONAL(HAVE_MATERIALEDITOR, true)
@@ -147,7 +137,52 @@ EOF
   AM_CONDITIONAL(HAVE_MATERIALLIST, true)
   AM_CONDITIONAL(HAVE_PRINTDIALOG, true)
 
-  SIM_AC_CONFIGURATION_SETTING([GUI toolkit], [SGI InventorXt])
+  if $sim_ac_want_inventorxt; then
+    SIM_CHECK_MOTIF( , AC_MSG_ERROR(couldn't compile and link with Motif))
+    SIM_CHECK_MOTIF_GLWIDGET
+  
+    SIM_CHECK_XMEDRAWSHADOWS
+  
+    # If XmeDrawShadows() isn't provided by the installed Motif library,
+    # we make our own stub. InventorXt uses this function of Motif, but
+    # it wasn't provided in earlier versions of Lesstif (because it's a
+    # Motif 2.0 function?).
+  
+    if test x"$sim_ac_xmedrawshadows_avail" = xno; then
+      cat > xmedrawshadows.cpp <<EOF
+        extern "C" {
+        #include <Xm/Xm.h>
+        void XmeDrawShadows(Display *, Drawable, GC, GC, Position, Position, Dimension, Dimension, Dimension, unsigned int) { }
+        }
+EOF
+      $CXX -c $CXXFLAGS $CPPFLAGS xmedrawshadows.cpp
+      LIBS="$LIBS `pwd`/xmedrawshadows.o"
+    fi
+  
+    SIM_CHECK_OIV_XT( , AC_MSG_ERROR(couldn't compile and link against the InventorXt library))
+
+    GUI=XT
+    Gui=Xt
+    gui=xt
+    WIDGET=Widget
+    EVENT="XAnyEvent *"
+    COMPONENTHEADER=
+
+    SIM_AC_CONFIGURATION_SETTING([GUI toolkit], [InventorXt])
+  fi
+
+  if $sim_ac_want_inventorqt; then
+    SIM_CHECK_OIV_QT( , AC_MSG_ERROR(couldn't compile and link against the InventorQt library))
+
+    GUI=QT
+    Gui=Qt
+    gui=qt
+    WIDGET="QWidget *"
+    EVENT="QEvent *"
+    COMPONENTHEADER="Q_OBJECT"
+
+    SIM_AC_CONFIGURATION_SETTING([GUI toolkit], [InventorQt])
+  fi
 
 else
   sim_ac_gui_default=soxt
