@@ -109,6 +109,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <assert.h>
 
 So@Gui@RenderArea *viewer;
 //  So@Gui@ExaminerViewer *viewer;

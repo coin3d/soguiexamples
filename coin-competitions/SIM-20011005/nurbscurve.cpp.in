@@ -16,6 +16,8 @@
 #include <Inventor/nodes/SoTranslation.h>
 #include <Inventor/nodes/SoBaseColor.h>
 
+#include <assert.h>
+
 // *************************************************************************
 
 static
