@@ -215,46 +215,66 @@ main (int, char ** argv)
   SoMaterial * mat = new SoMaterial;
   mat->diffuseColor = SbColor(1,1,1);
 
-  root->addChild(mat);
-  root->addChild(hints);
-
-  // add unit 0 texture
-  root->addChild(texnode);
-
+  // in this example both unit0 and unit1 will use the same texture
+  // coordinate node. It is possible to have different nodes, of
+  // course.
   SoTextureCoordinate2 * tc = new SoTextureCoordinate2;
   const float tcoords[][2] = {{0.0f,0.0f},{1.0f,0.0f},{1.0f,1.0f},{0.0f, 1.0f}};
   tc->point.setValues(0, 4, tcoords); 
-  root->addChild(tc);
+
+  root->addChild(mat);
+  root->addChild(hints);
+
+  SoGroup * unit0 = new SoGroup;
+  {
+    // the default unit is 0, so we don't have to insert an
+    // SoTextureUnit node here
+
+    // add unit 0 texture
+    unit0->addChild(texnode);
+    // add unit 0 texture coordinates
+    unit0->addChild(tc);
+  }
+  root->addChild(unit0); // add texture unit 0 group
+
+  SoTexture2Transform * ttransform = NULL;
 
   SoGroup * unit1 = new SoGroup;
-  SoTextureUnit * tu = new SoTextureUnit;
-  tu->unit = 1;
-  unit1->addChild(tu);
-  unit1->addChild(tc);
+  {
+    SoTextureUnit * tu = new SoTextureUnit;
+    tu->unit = 1; // set texture unit to 1
+    unit1->addChild(tu);
+    unit1->addChild(tc); // add texture coordinates for unit 1
+    
+    // just disable all filtering on the texture
+    SoComplexity * cmplx = new SoComplexity;
+    cmplx->textureQuality = 0.01f;
+    unit1->addChild(cmplx);
+    
+    // create a simple checkerboard texture to modulate the Julia texture
+    SoTexture2 * tex1 = new SoTexture2;
+    const unsigned char data[] = {0xff, 0x88, 0x88, 0xff};
+    tex1->image.setValue(SbVec2s(2,2), 1, data);
+    unit1->addChild(tex1);
 
-  SoComplexity * cmplx = new SoComplexity;
-  cmplx->textureQuality = 0.01f;
-  unit1->addChild(cmplx);
-
-  SoTexture2 * tex1 = new SoTexture2;
-  const unsigned char data[] = {0xff, 0x88, 0x88, 0xff};
-  tex1->image.setValue(SbVec2s(2,2), 1, data);
-  unit1->addChild(tex1);
-
-  SoTexture2Transform * ttransform = new SoTexture2Transform;
-  ttransform->center = SbVec2f(0.5f, 0.5f);
-  unit1->addChild(ttransform);
+    // insert a texture transform node so that we can create some
+    // animations with the unit 1 texture
+    ttransform = new SoTexture2Transform;
+    ttransform->center = SbVec2f(0.5f, 0.5f);
+    unit1->addChild(ttransform);
+  }
   
-  root->addChild(unit1);
+  root->addChild(unit1); // add unit 1 texture data
 
+  // create a simple shape that we render the textures onto
   SoCoordinate3 * c3 = new SoCoordinate3;
-  c3->point.setNum(4);
-  SbVec3f * p = c3->point.startEditing();
-  p[0] = SbVec3f(0.0f, 0.0, 0.0f);
-  p[1] = SbVec3f(1.0f, 0.0, 0.0f);
-  p[2] = SbVec3f(1.0f, 1.0, 0.0f);
-  p[3] = SbVec3f(0.0f, 1.0, 0.0f);
-  c3->point.finishEditing();
+  const float coords[][3] = {
+    {0.0f, 0.0f, 0.0f},
+    {1.0f, 0.0f, 0.0f},
+    {1.0f, 1.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f}
+  };
+  c3->point.setValues(0, 4, coords);
   root->addChild(c3);
 
   SoFaceSet * fs = new SoFaceSet;
@@ -276,6 +296,7 @@ main (int, char ** argv)
   sensor->schedule();
 
   So@Gui@::mainLoop();   // main Coin event loop
+  delete sensor;
   delete viewer;
   root->unref();
 
