@@ -20,6 +20,12 @@
  *
 \**************************************************************************/
 
+// This example outputs a vector version of the input iv-file, exactly
+// as it renders in a renderarea viewer -- i.e. with the camera(s) and
+// light source(s) from the file.
+//
+// mortene.
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif // HAVE_CONFIG_H
