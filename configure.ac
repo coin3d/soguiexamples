@@ -350,6 +350,29 @@ SIM_AC_HAVE_SMALLCHANGE_IFELSE([
 AM_CONDITIONAL(HAVE_SMALLCHANGE, $sim_ac_smallchange_avail)
 
 # **************************************************************************
+# Use libcoinscenery if available.
+
+sim_ac_coinscenery_desired=false
+
+SIM_AC_HAVE_COINSCENERY_IFELSE([
+  CPPFLAGS="$CPPFLAGS `$sim_ac_coinscenery_configcmd $alternate_option --cppflags`"
+  CXXFLAGS="$CXXFLAGS `$sim_ac_coinscenery_configcmd $alternate_option --cxxflags`"
+  CFLAGS="$CFLAGS `$sim_ac_coinscenery_configcmd $alternate_option --cflags`"
+  LDFLAGS="$LDFLAGS `$sim_ac_coinscenery_configcmd $alternate_option --ldflags`"
+  LIBS="`$sim_ac_coinscenery_configcmd $alternate_option --libs` $LIBS"
+  AC_DEFINE(HAVE_COINSCENERY_LIBRARY, 1, [Define to enable use of libcoinscenery binding nodes])
+  SIM_AC_CONFIGURATION_SETTING([libcoinscenery], [is being used])
+], [
+  if $sim_ac_coinscenery_desired; then
+    AC_MSG_ERROR([Couldn't link with libcoinscenery.])
+  else
+    SIM_AC_CONFIGURATION_SETTING([libcoinscenery], [not used (enable with --with-coinscenery)])
+  fi
+])
+
+AM_CONDITIONAL(HAVE_COINSCENERY, $sim_ac_coinscenery_avail)
+
+# **************************************************************************
 # If we're using SoQt, check to see if SIM Voleon is also available.
 # Those are the two dependencies of the examples under the
 # volumerendering/ directory.

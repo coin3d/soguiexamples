@@ -52,6 +52,10 @@
 #include <SmallChange/misc/Init.h>
 #endif // HAVE_SMALLCHANGE_LIBRARY
 
+#ifdef HAVE_COINSCENERY_LIBRARY
+#include <sim/coinscenery/SmScenery.h>
+#endif // HAVE_COINSCENERY_LIBRARY
+
 // *************************************************************************
 
 void
@@ -69,6 +73,11 @@ init_extra_libraries(void)
   // SmallChange above.
   SoVolumeRendering::init();
 #endif // HAVE_SIMVOLEON_LIBRARY
+
+#ifdef HAVE_COINSCENERY_LIBRARY
+  // Inits the Coin nodes binding to SIM Scenery.
+  SmScenery::initClasses();
+#endif // HAVE_COINSCENERY_LIBRARY
 }
 
 // *************************************************************************
