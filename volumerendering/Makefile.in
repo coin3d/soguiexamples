@@ -96,6 +96,7 @@ MAINT = @MAINT@
 MAINTAINER_MODE_FALSE = @MAINTAINER_MODE_FALSE@
 MAINTAINER_MODE_TRUE = @MAINTAINER_MODE_TRUE@
 MAKEINFO = @MAKEINFO@
+MOC = @MOC@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -107,6 +108,7 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+UIC = @UIC@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
 X_CFLAGS = @X_CFLAGS@
@@ -149,6 +151,7 @@ prefix = @prefix@
 program_transform_name = @program_transform_name@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
+sim_ac_qt_cygpath = @sim_ac_qt_cygpath@
 sim_ac_simvoleon_configcmd = @sim_ac_simvoleon_configcmd@
 sim_ac_smallchange_configcmd = @sim_ac_smallchange_configcmd@
 soguiconfig = @soguiconfig@
@@ -176,7 +179,9 @@ readvol_SOURCES = readvol.cpp \
 BUILT_SOURCES = \
 	readvol.cpp \
 	SoTransferFunction_ctrl.cpp SoTransferFunction_ctrl.h moc_SoTransferFunction_ctrl.cpp \
-	moc_TransferFunctionHandler.cpp
+	moc_TransferFunctionHandler.cpp \
+	SoVolumeRender_ctrl.cpp SoVolumeRender_ctrl.h moc_SoVolumeRender_ctrl.cpp \
+	moc_VolumeRenderHandler.cpp
 
 subdir = volumerendering
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -460,30 +465,30 @@ uninstall-am: uninstall-info-am
 ############################################################################
 
 SoTransferFunction_ctrl.h: $(srcdir)/SoTransferFunction_ctrl.ui
-	uic `$(CYGPATH_W) $<` -o $@
+	$(UIC) `$(CYGPATH_W) $<` -o $@
 
 SoTransferFunction_ctrl.cpp: $(srcdir)/SoTransferFunction_ctrl.ui SoTransferFunction_ctrl.h
-	uic -impl $*.h `$(CYGPATH_W) $<` -o $@
+	$(UIC) -impl $*.h `$(CYGPATH_W) $<` -o $@
 
 moc_SoTransferFunction_ctrl.cpp: SoTransferFunction_ctrl.h
-	moc -o $@ `$(CYGPATH_W) $<`
+	$(MOC) -o $@ `$(CYGPATH_W) $<`
 
 moc_TransferFunctionHandler.cpp: $(srcdir)/TransferFunctionHandler.h
-	moc -o $@ `$(CYGPATH_W) $<`
+	$(MOC) -o $@ `$(CYGPATH_W) $<`
 
 ############################################################################
 
 SoVolumeRender_ctrl.h: $(srcdir)/SoVolumeRender_ctrl.ui
-	uic `$(CYGPATH_W) $<` -o $@
+	$(UIC) `$(CYGPATH_W) $<` -o $@
 
 SoVolumeRender_ctrl.cpp: $(srcdir)/SoVolumeRender_ctrl.ui SoVolumeRender_ctrl.h
-	uic -impl $*.h `$(CYGPATH_W) $<` -o $@
+	$(UIC) -impl $*.h `$(CYGPATH_W) $<` -o $@
 
 moc_SoVolumeRender_ctrl.cpp: SoVolumeRender_ctrl.h
-	moc -o $@ $<
+	$(MOC) -o $@ `$(CYGPATH_W) $<`
 
 moc_VolumeRenderHandler.cpp: $(srcdir)/VolumeRenderHandler.h
-	moc -o $@ `$(CYGPATH_W) $<`
+	$(MOC) -o $@ `$(CYGPATH_W) $<`
 
 ############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

@@ -308,7 +308,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS BUILD_WITH_MSVC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS BUILD_WITH_MSVC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd sim_ac_qt_cygpath MOC UIC sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -902,6 +902,9 @@ Optional Packages:
                           select GUI toolkit to use (default=SoXt)
   --with-smallchange      enable use of SmallChange [default=no]
   --with-smallchange=DIR  give prefix location of SmallChange
+  --with-qt=true|false|DIR
+                          specify if Qt should be used, and optionally the
+                          location of the Qt library default=true
   --with-simvoleon        enable use of SimVoleon [default=yes]
   --with-simvoleon=DIR    give prefix location of SimVoleon
 
@@ -10201,6 +10204,273 @@ sim_ac_simvoleon_desired=false
 if test x"$sim_ac_gui_toolkit" = x"soqt"; then
 
 
+sim_ac_qtdir=
+
+# Check whether --with-qt or --without-qt was given.
+if test "${with_qt+set}" = set; then
+  withval="$with_qt"
+  case $withval in
+  no | false ) sim_ac_with_qt=false ;;
+  yes | true ) sim_ac_with_qt=true ;;
+  *)
+    sim_ac_with_qt=true
+    sim_ac_qtdir=$withval
+    ;;
+  esac
+else
+  sim_ac_with_qt=true
+fi;
+
+if $sim_ac_with_qt; then
+  if test -z "$sim_ac_qtdir"; then
+    # The Cygwin environment needs to invoke moc with a POSIX-style path.
+    # Extract the first word of "cygpath", so it can be a program name with args.
+set dummy cygpath; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_sim_ac_qt_cygpath+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $sim_ac_qt_cygpath in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_sim_ac_qt_cygpath="$sim_ac_qt_cygpath" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_sim_ac_qt_cygpath="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_sim_ac_qt_cygpath" && ac_cv_path_sim_ac_qt_cygpath="false"
+  ;;
+esac
+fi
+sim_ac_qt_cygpath=$ac_cv_path_sim_ac_qt_cygpath
+
+if test -n "$sim_ac_qt_cygpath"; then
+  echo "$as_me:$LINENO: result: $sim_ac_qt_cygpath" >&5
+echo "${ECHO_T}$sim_ac_qt_cygpath" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+    if test $sim_ac_qt_cygpath = "false"; then
+      sim_ac_qtdir=$QTDIR
+    else
+      # Quote $QTDIR in case it's empty.
+      sim_ac_qtdir=`$sim_ac_qt_cygpath -u "$QTDIR"`
+    fi
+
+    echo "$as_me:$LINENO: checking value of the QTDIR environment variable" >&5
+echo $ECHO_N "checking value of the QTDIR environment variable... $ECHO_C" >&6
+    if test x"$sim_ac_qtdir" = x""; then
+      echo "$as_me:$LINENO: result: empty" >&5
+echo "${ECHO_T}empty" >&6
+      { echo "$as_me:$LINENO: WARNING: QTDIR environment variable not set -- this might be an indication of a problem" >&5
+echo "$as_me: WARNING: QTDIR environment variable not set -- this might be an indication of a problem" >&2;}
+    else
+      echo "$as_me:$LINENO: result: $sim_ac_qtdir" >&5
+echo "${ECHO_T}$sim_ac_qtdir" >&6
+
+      # list contents of what's in the qt dev environment into config.log
+      for i in "" bin lib; do
+        echo "Listing contents of $sim_ac_qtdir/$i:" >&5
+        ls -l $sim_ac_qtdir/$i >&5 2>&1
+      done
+    fi
+  fi
+fi
+
+
+
+
+if $sim_ac_with_qt; then
+
+  sim_ac_path=$PATH
+  if test -n "$sim_ac_qtdir"; then
+    sim_ac_path=$sim_ac_qtdir/bin:$PATH
+  fi
+
+  # Extract the first word of "moc", so it can be a program name with args.
+set dummy moc; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_MOC+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $MOC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_MOC="$MOC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $sim_ac_path
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_MOC="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_MOC" && ac_cv_path_MOC="false"
+  ;;
+esac
+fi
+MOC=$ac_cv_path_MOC
+
+if test -n "$MOC"; then
+  echo "$as_me:$LINENO: result: $MOC" >&5
+echo "${ECHO_T}$MOC" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  if test x"$MOC" = x"false"; then
+    { echo "$as_me:$LINENO: WARNING: the \`\`moc'' Qt pre-processor tool not found" >&5
+echo "$as_me: WARNING: the \`\`moc'' Qt pre-processor tool not found" >&2;}
+  fi
+else
+  MOC=false
+
+fi
+
+  if test x"$MOC" = x"false"; then
+
+echo >&2 ""
+
+
+: ${sim_ac_message_file=$ac_aux_dir/errors.txt}
+if test -f $sim_ac_message_file; then
+  sim_ac_message="`sed -n -e '/^!no-moc$/,/^!/ { /^!/ d; p; }' <$sim_ac_message_file`"
+  if test x"$sim_ac_message" = x""; then
+    { { echo "$as_me:$LINENO: error: no message named 'no-moc' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: no message named 'no-moc' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&2;}
+   { (exit 1); exit 1; }; }
+  else
+    eval "echo >&2 \"$sim_ac_message\""
+  fi
+else
+  { { echo "$as_me:$LINENO: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+
+echo >&2 ""
+{ { echo "$as_me:$LINENO: error: aborting" >&5
+echo "$as_me: error: aborting" >&2;}
+   { (exit 1); exit 1; }; }
+
+  fi
+
+
+
+
+if $sim_ac_with_qt; then
+
+  sim_ac_path=$PATH
+  if test -n "$sim_ac_qtdir"; then
+    sim_ac_path=$sim_ac_qtdir/bin:$PATH
+  fi
+
+  # Extract the first word of "uic", so it can be a program name with args.
+set dummy uic; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_UIC+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $UIC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_UIC="$UIC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $sim_ac_path
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_UIC="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_UIC" && ac_cv_path_UIC="false"
+  ;;
+esac
+fi
+UIC=$ac_cv_path_UIC
+
+if test -n "$UIC"; then
+  echo "$as_me:$LINENO: result: $UIC" >&5
+echo "${ECHO_T}$UIC" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  if test x"$UIC" = x"false"; then
+    { echo "$as_me:$LINENO: WARNING: the \`\`uic'' Qt pre-processor tool not found" >&5
+echo "$as_me: WARNING: the \`\`uic'' Qt pre-processor tool not found" >&2;}
+  fi
+else
+  UIC=false
+
+fi
+
+  if test x"$UIC" = x"false"; then
+
+echo >&2 ""
+
+
+: ${sim_ac_message_file=$ac_aux_dir/errors.txt}
+if test -f $sim_ac_message_file; then
+  sim_ac_message="`sed -n -e '/^!no-uic$/,/^!/ { /^!/ d; p; }' <$sim_ac_message_file`"
+  if test x"$sim_ac_message" = x""; then
+    { { echo "$as_me:$LINENO: error: no message named 'no-uic' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: no message named 'no-uic' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&2;}
+   { (exit 1); exit 1; }; }
+  else
+    eval "echo >&2 \"$sim_ac_message\""
+  fi
+else
+  { { echo "$as_me:$LINENO: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+
+echo >&2 ""
+{ { echo "$as_me:$LINENO: error: aborting" >&5
+echo "$as_me: error: aborting" >&2;}
+   { (exit 1); exit 1; }; }
+
+  fi
+
+
+
 
 # official variables
 sim_ac_simvoleon_avail=false
@@ -11561,6 +11831,9 @@ s,@EVENT@,$EVENT,;t t
 s,@WIDGET@,$WIDGET,;t t
 s,@COMPONENTHEADER@,$COMPONENTHEADER,;t t
 s,@sim_ac_smallchange_configcmd@,$sim_ac_smallchange_configcmd,;t t
+s,@sim_ac_qt_cygpath@,$sim_ac_qt_cygpath,;t t
+s,@MOC@,$MOC,;t t
+s,@UIC@,$UIC,;t t
 s,@sim_ac_simvoleon_configcmd@,$sim_ac_simvoleon_configcmd,;t t
 s,@HAVE_SIMVOLEON_TRUE@,$HAVE_SIMVOLEON_TRUE,;t t
 s,@HAVE_SIMVOLEON_FALSE@,$HAVE_SIMVOLEON_FALSE,;t t
