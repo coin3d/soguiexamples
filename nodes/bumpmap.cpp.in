@@ -436,7 +436,7 @@ event_cb(void * userdata, SoEventCallback * node)
     rotor->on = !rotor->on.getValue();
   }
   if (SO_KEY_PRESS_EVENT(event, S)) {
-    SbColor col = bumpmaterial->specularColor.getValue();
+    SbColor col = bumpmaterial->specularColor[0];
     if (col[0] > 0.9f) {
       col = SbColor(0.0f, 0.0f, 0.0f);
     }
