@@ -17,7 +17,7 @@
 //***********************************************************************
 // Globals
 static SbBool motion3oncamera = FALSE;
-static const enum { SCENE, CAMERA, SPOTLIGHT };
+enum { SCENE, CAMERA, SPOTLIGHT };
 static int OBJECT = SPOTLIGHT;
 static SoSearchAction * searchaction = NULL;
 //***********************************************************************
