@@ -322,12 +322,14 @@ void adjust_row(SoNode * scene, int row)
   scene->enableNotify(FALSE);
   for ( int i = 0; i < 10; i++ ) {
     char name[5];
-    sprintf(name, "r%ct%c", '0' + row, '0' + i);
+    sprintf(name, "r%dt%d", row, i);
     SoTranslation * translation = (SoTranslation *) getNodeByName(scene, name);
     assert(translation != NULL);
     float delta = 0.0f;
     if ( i > 0 )
       delta = spherepositions[i][row] - spherepositions[i-1][row];
+    else
+      delta = spherepositions[0][row];
     if ( i == 0 )
       delta = (13.7-1.93) * delta;
     else
@@ -401,8 +403,14 @@ event_cb(void * closure, SoAction * action)
         if ( !node->isOfType(SoSphere::getClassTypeId()) ) return;
         const char * name = node->getName().getString();
         attached = TRUE;
-        row = name[1] - '0';
-        sphere = name[3] - '0';
+        switch ( name[1] ) {
+        case '0': row = 0; break;
+        default: row = (name[1] - '1') + 1; break;
+        }
+        switch ( name[3] ) {
+        case '0': sphere = 0; break;
+        default: sphere = (name[3] - '1') + 1; break;
+        }
         if ( !plane )
           plane = new SbPlane(SbVec3f(0,0,0), SbVec3f(0,1,0), SbVec3f(1,0,0));
         rpaction->setPoint(mbevent->getPosition());
