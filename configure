@@ -8468,9 +8468,33 @@ fi
     EVENT=`$soguiconfig $alternate_option --ac-subst EVENT`
     COMPONENTHEADER=`$soguiconfig $alternate_option --ac-subst COMPONENTHEADER`
   else
-    { { echo "$as_me:$LINENO: error: cannot find required '$sim_ac_gui_configcmd' utility" >&5
-echo "$as_me: error: cannot find required '$sim_ac_gui_configcmd' utility" >&2;}
+
+echo >&2 ""
+
+
+: ${sim_ac_message_file=$ac_aux_dir/m4/errors.txt}
+if test -f $sim_ac_message_file; then
+  sim_ac_message="`sed -n -e '/^!unable-to-run-soxx-config$/,/^!/ { /^!/ d; p; }' <$sim_ac_message_file`"
+  if test x"$sim_ac_message" = x""; then
+    { { echo "$as_me:$LINENO: error: no message named 'unable-to-run-soxx-config' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: no message named 'unable-to-run-soxx-config' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&2;}
    { (exit 1); exit 1; }; }
+  else
+    eval "echo >&2 \"$sim_ac_message\""
+  fi
+else
+  { { echo "$as_me:$LINENO: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+
+echo >&2 ""
+{ { echo "$as_me:$LINENO: error: aborting" >&5
+echo "$as_me: error: aborting" >&2;}
+   { (exit 1); exit 1; }; }
+
   fi
 
   # Which component examples to build.
@@ -8522,7 +8546,6 @@ else
 fi
 
   CPPFLAGS="$CPPFLAGS `$soguiconfig $alternate_option --cppflags`"
-  # CFLAGS="$CFLAGS `$soguiconfig $alternate_option --cflags`"
   CXXFLAGS="$CXXFLAGS `$soguiconfig $alternate_option --cxxflags`"
   LDFLAGS="$LDFLAGS `$soguiconfig $alternate_option --ldflags`"
   LIBS="`$soguiconfig $alternate_option --libs` $LIBS"
