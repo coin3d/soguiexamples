@@ -191,7 +191,7 @@ lineCB(void * userdata,
   mm.multVecMatrix(v1->getPoint(),vec1);
   mm.multVecMatrix(v2->getPoint(),vec2);
 
-  myidxlist.append(mybsptree.addPoint(vec1)); // Ugly hack. A 'point' must have 3 points...
+  myidxlist.append(mybsptree.addPoint(vec1)); // Ugly hack. A 'line' must have 3 points...
   myidxlist.append(mybsptree.addPoint(vec2));
   myidxlist.append(mybsptree.addPoint(vec1));
  
@@ -211,12 +211,13 @@ pointCB(void * userdata,
 
   SbVec3f vec1 = v1->getPoint();
   SbVec3f vec2 = v1->getPoint();
-  vec2[0] += .1;
-  vec2[1] += .1;
-  vec2[2] += .1;
 
   mm.multVecMatrix(v1->getPoint(),vec1);
   mm.multVecMatrix(v1->getPoint(),vec2);
+
+  vec2[0] += .1;
+  vec2[1] += .1;
+  vec2[2] += .1;
 
   myidxlist.append(mybsptree.addPoint(vec1)); // Ugly hack. A 'point' must have 3 points...
   myidxlist.append(mybsptree.addPoint(vec2));
