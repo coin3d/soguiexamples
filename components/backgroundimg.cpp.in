@@ -1,0 +1,125 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2002 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoImage.h>
+#include <Inventor/nodes/SoOrthographicCamera.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTranslation.h>
+
+// *************************************************************************
+
+class MyExaminerViewer : public So@Gui@ExaminerViewer {
+
+public:
+  MyExaminerViewer(@WIDGET@ parent, const char * filename);
+  ~MyExaminerViewer();
+
+protected:
+  virtual void actualRedraw(void);
+
+private:
+  SoSeparator * bckgroundroot;
+};
+
+MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
+  : So@Gui@ExaminerViewer(parent)
+{
+  // Coin should not clear the pixel-buffer, so the background image
+  // is not removed.
+  this->setClearBeforeRender(FALSE, TRUE);
+
+
+  // Set up scenegraph with image in it.
+
+  this->bckgroundroot = new SoSeparator;
+  this->bckgroundroot->ref();
+
+  SoOrthographicCamera * cam = new SoOrthographicCamera;
+  cam->height = 1;
+  cam->nearDistance = 0;
+  cam->farDistance = 1;
+
+  SoImage * img = new SoImage;
+  img->vertAlignment = SoImage::HALF;
+  img->horAlignment = SoImage::CENTER;
+  img->filename = filename;
+
+  this->bckgroundroot->addChild(cam);
+  this->bckgroundroot->addChild(img);
+}
+
+MyExaminerViewer::~MyExaminerViewer()
+{
+  this->bckgroundroot->unref();
+}
+
+void
+MyExaminerViewer::actualRedraw(void)
+{
+  // Must set up the OpenGL viewport manually, as upon resize
+  // operations, Coin won't set it up until the SoGLRenderAction is
+  // applied again. And since we need to do glClear() before applying
+  // the action..
+  const SbViewportRegion vp = this->getViewportRegion();
+  SbVec2s origin = vp.getViewportOriginPixels();
+  SbVec2s size = vp.getViewportSizePixels();
+  glViewport(origin[0], origin[1], size[0], size[1]);
+
+  const SbColor col = this->getBackgroundColor();
+  glClearColor(col[0], col[1], col[2], 0.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // Render our scenegraph with the image.
+  SoGLRenderAction * glra = this->getGLRenderAction();
+  glra->apply(this->bckgroundroot);
+
+  So@Gui@ExaminerViewer::actualRedraw();
+}
+
+// *************************************************************************
+
+int
+main(int argc, char ** argv)
+{
+  if (argc != 2) {
+    (void)fprintf(stderr, "\n\n\tUsage: %s <image-filename>\n\n", argv[0]);
+    exit(1);
+  }
+
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+
+  MyExaminerViewer * viewer = new MyExaminerViewer(window, argv[1]);
+
+  viewer->setSceneGraph(new SoCone);
+  viewer->show();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  return 0;
+}
+
+// *************************************************************************
