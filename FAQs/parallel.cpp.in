@@ -1,0 +1,78 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of demo programs for the Coin library.
+ *  Copyright (C) 2000-2001 by Systems in Motion. All rights reserved.
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, Prof Brochs gate 6, 7030 Trondheim, NORWAY
+ *  http://www.sim.no support@sim.no Voice: +47 22114160 Fax: +47 22207097
+ *
+\**************************************************************************/
+
+// This example code demonstrates how to rotate geometry into a
+// particular direction.  Our particular case is a cylinder that is
+// rotated from it's default up-right orientation to point along the
+// <1, 1, -1> vector.
+
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoSeparator.h>
+
+// *************************************************************************
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+
+  // Set up scenegraph:
+  //
+  //            Separator {
+  //                Rotation
+  //                Cylinder
+  //            }
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  SoRotation * rotator = new SoRotation;
+  root->addChild(rotator);
+  root->addChild(new SoCylinder);
+
+
+  // Set the rotation field of the SoRotation node so that a vector
+  // pointing in the <0, 1, 0> will be rotated in the scene to point
+  // in the <1, 1, -1> direction.  (The <0, 1, 0> is of course
+  // coincident with the "up-right" orientation of a SoCylinder.
+
+  rotator->rotation = SbRotation(SbVec3f(0, 1, 0), SbVec3f(1, 1, -1));
+
+
+  // Set up and realize the viewer component.
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->show();
+  So@Gui@::show(window);
+
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+  return 0;
+} // main()
+
+// *************************************************************************
