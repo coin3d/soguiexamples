@@ -10831,6 +10831,7 @@ fi
 fi
 
 else
+  sim_ac_simvoleon_avail=false
 
 if test x"${sim_ac_configuration_settings+set}" = x"set"; then
   sim_ac_configuration_settings="$sim_ac_configuration_settings|SimVoleon:not used (examples only works with SoQt)"
