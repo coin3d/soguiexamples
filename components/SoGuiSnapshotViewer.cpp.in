@@ -212,7 +212,7 @@ So@Gui@SnapshotViewer::showInfo(float seconds)
   THIS->infotext->string.set1Value(2, string);
   string.sprintf("[t]ransparency    : %s", this->isTransparencyEnabled() ? "on" : "off");
   THIS->infotext->string.set1Value(3, string);
-  string.sprintf("auto[c]ropping    : %s", this->isAutoCroppingEnabled() ? "on (unsupported)" : "off");
+  string.sprintf("auto[c]ropping    : %s", this->isAutoCroppingEnabled() ? "on" : "off");
   THIS->infotext->string.set1Value(4, string);
   string.sprintf("crop border [b/B] : %d pixels", this->getCropBorderSize());
   THIS->infotext->string.set1Value(5, string);
@@ -244,9 +244,10 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
   SoOffscreenRenderer * renderer = new SoOffscreenRenderer(this->getGLSize());
 
   if ( THIS->transparency ) {
-    // FIXME: why has transparency stopped working?
-    // FIXME: transparency - maybe always set white background?
+    // FIXME: why does transparency work at home, and not at work?
     renderer->setComponents(SoOffscreenRenderer::RGB_TRANSPARENCY);
+    // FIXME: when using transparency - maybe set white background?  this is
+    // only an issue if it affects the antialiasing along the object edges...
   } else {
     renderer->setComponents(SoOffscreenRenderer::RGB);
     renderer->setBackgroundColor(this->getSceneManager()->getBackgroundColor());
@@ -258,61 +259,61 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
 
   renderer->render(THIS->realroot);
 
+  int left = 0;
+  int right = THIS->viewport[0] - 1;
+  int top = 0;
+  int bottom = THIS->viewport[1] - 1;
   if ( THIS->autocropping ) {
     const int components = renderer->getComponents();
     unsigned char * buffer = renderer->getBuffer();
     SbColor background = renderer->getBackgroundColor();
     SbVec4f bg = SbVec4f(background[0], background[1], background[2], 255);
-    if ( THIS->transparency ) bg[3] = 255;
+    if ( THIS->transparency ) bg[3] = 0;
     SbBool loop = TRUE;
-    int left = 0;
+    // note that the border indices come out off-by-one when breaking the loop
     for ( ; loop && (left < THIS->viewport[0]); left++ )
       for ( int i = 0; loop && (i < THIS->viewport[1]); i++ )
 	for ( int c = 0; loop && (c < components); c++ )
 	  if ( buffer[(i*components*THIS->viewport[0])+(left*components)+c] != bg[c] )
 	    loop = FALSE;
     loop = TRUE;
-    int right = THIS->viewport[0]-1;
     for ( ; loop && (right >= left); right-- )
       for ( int i = 0; loop && (i < THIS->viewport[1]); i++ )
 	for ( int c = 0; loop && (c < components); c++ )
 	  if ( buffer[(i*components*THIS->viewport[0])+(right*components)+c] != bg[c] )
 	    loop = FALSE;
     loop = TRUE;
-    int top = 0;
     for ( ; loop && (top < THIS->viewport[1]); top++ )
       for ( int i = 0; loop && (i < THIS->viewport[0]); i++ )
 	for ( int c = 0; loop && (c < components); c++ )
 	  if ( buffer[(top*components*THIS->viewport[0])+(i*components)+c] != bg[c] )
 	    loop = FALSE;
     loop = TRUE;
-    int bottom = THIS->viewport[1]-1;
     for ( ; loop && (bottom >= top); bottom-- )
       for ( int i = 0; loop && (i < THIS->viewport[0]); i++ )
 	for ( int c = 0; loop && (c < components); c++ )
 	  if ( buffer[(bottom*components*THIS->viewport[0])+(i*components)+c] != bg[c] )
 	    loop = FALSE;
-    // FIXME: figure out if this is off-by-one, given the for-loop-breaking technique:
-    left -= THIS->cropborder;
-    right += THIS->cropborder;
-    top -= THIS->cropborder;
-    bottom += THIS->cropborder;
+    left -= THIS->cropborder + 1;
+    right += THIS->cropborder + 1;
+    top -= THIS->cropborder + 1;
+    bottom += THIS->cropborder + 1;
 
-    // we must hack cropping support
+    // cropping support is a hack, but it works
     SoOffscreenRenderer * cropped = new SoOffscreenRenderer(SbViewportRegion(right-left+1, bottom-top+1));
     if ( !THIS->transparency ) {
       cropped->setComponents(SoOffscreenRenderer::RGB);
     } else {
       cropped->setComponents(SoOffscreenRenderer::RGB_TRANSPARENCY);
     }
-    // FIXME: figure out how to fix background when crop-border extends image
+    // FIXME: figure out what to do with the background when crop-border extends image size
     // cropped->setBackgroundColor(SbColor(bg[0], bg[1], bg[2]));
-    {
+    do {
       SoSeparator * empty = new SoSeparator();
       empty->ref();
       cropped->render(empty);
       empty->unref();
-    }
+    } while ( FALSE );
     unsigned char * newbuf = cropped->getBuffer();
     for ( int y = top; y <= bottom; y++ ) {
       if ( (y >= 0) && (y < THIS->viewport[1]) ) {
@@ -343,7 +344,9 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
                        "error writing snapshot with format %s\n", format);
     THIS->infotext->string.set1Value(STATUS_LINE, "SAVE ERROR");
   } else {
-    THIS->infotext->string.set1Value(STATUS_LINE, "SAVE OK");
+    SbString status;
+    status.sprintf("SAVE OK (%dx%d%+d%+d)", right - left + 1, bottom - top + 1, left, top);
+    THIS->infotext->string.set1Value(STATUS_LINE, status);
   }
   delete renderer;
   this->showInfo(INFO_TIME);
