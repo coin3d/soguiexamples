@@ -28,7 +28,6 @@ dspex:
           --with-toolkit=SoWin \
           --enable-msvcdspex; \
 	$(MAKE) clean && $(MAKE); \
-	echo "" > SoWinExamples.dsw; \
 	echo "Microsoft Developer Studio Workspace File, Format Version 6.00" >> SoWinExamples.dsw; \
 	echo "# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!" >> SoWinExamples.dsw; \
 	echo "" >> SoWinExamples.dsw; \
