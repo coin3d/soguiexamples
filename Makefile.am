@@ -3,10 +3,7 @@
 # configure process.
 
 if HAVE_SIMVOLEON
-# FIXME: tmp disabled, as the SoQtGradientColor editor has been taken out of
-# SoQt, so some sources doesn't compile. (This class should be moved to a
-# new "SIM-wide" repository with Qt-extensions.) 20040903 mortene.
-VOLUMERENDERINGDIR = #volumerendering
+VOLUMERENDERINGDIR = volumerendering
 else
 VOLUMERENDERINGDIR = 
 endif

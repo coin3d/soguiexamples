@@ -11,6 +11,7 @@ SIM_AC_MSVC_DSPEX_ENABLE_OPTION
 # compiling with it.
 
 SIM_AC_SETUP_MSVCPP_IFELSE
+AM_CONDITIONAL(BUILD_WITH_MSVC, $BUILD_WITH_MSVC)
 
 # **************************************************************************
 
@@ -52,6 +53,9 @@ AM_CONFIG_HEADER(config.h)
 
 # Turn off default maintainer make-rules -- use ./bootstrap instead.
 AM_MAINTAINER_MODE
+
+# volumerendering/Cute/Cute.a needs this:
+AC_PROG_RANLIB
 
 # **************************************************************************
 # Compiler control.
@@ -346,7 +350,7 @@ SIM_AC_HAVE_SMALLCHANGE_IFELSE([
 AM_CONDITIONAL(HAVE_SMALLCHANGE, $sim_ac_smallchange_avail)
 
 # **************************************************************************
-# If we're using SoQt, check to see if SimVoleon is also available.
+# If we're using SoQt, check to see if SIM Voleon is also available.
 # Those are the two dependencies of the examples under the
 # volumerendering/ directory.
 
@@ -375,6 +379,13 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
 
     SIM_AC_CONFIGURATION_SETTING([SimVoleon], [is being used])
     AC_DEFINE(HAVE_SIMVOLEON_LIBRARY, 1, [Define to enable use of SimVoleon library])
+
+    # SIM Qt extension widgets needed for volumerendering examples.
+    if test -d $srcdir/volumerendering/Cute; then
+      :
+    else
+      AC_MSG_ERROR([Detected old CVS checkout of SoGuiExamples, exiting. To fix, 'cd' to the SoGuiExamples/volumerendering/ directory, do a 'cvs co Cute' and re-run configure.])
+    fi
   ], [
     if $sim_ac_simvoleon_desired; then
       SIM_AC_ERROR([simvoleon-unavailable])
@@ -441,7 +452,7 @@ fi
 # **************************************************************************
 # All files configure must automatically generate.
 
-AC_CONFIG_FILES([
+AC_CONFIG_FILES(
         Makefile
 
         components/Makefile
@@ -549,6 +560,7 @@ AC_CONFIG_FILES([
         sound/manysources.cpp
 
         volumerendering/Makefile
+        volumerendering/Cute/Makefile
         volumerendering/readvol.cpp
         volumerendering/changingdataset.cpp
         volumerendering/examine.cpp
@@ -594,7 +606,7 @@ AC_CONFIG_FILES([
         coin-competitions/SIM-20020503/ballinthehoop.cpp
         coin-competitions/SIM-20020503/flow.cpp
         coin-competitions/SIM-20020503/typeomatic.cpp
-])
+)
 
 # MKS will have "\c" as $ECHO_C, but that string in the config.status
 # substitution command will cause config.status to hang because it is

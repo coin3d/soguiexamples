@@ -1,3 +1,5 @@
+SUBDIRS = Cute .
+
 ############################################################################
 # Conditional build.
 
@@ -14,6 +16,18 @@ noinst_PROGRAMS = \
 	readvol changingdataset examine orthoslicer \
 	raypick simple8bit $(SIMAGE_DEPENDENTS) \
 	opaquechair
+
+############################################################################
+# Executables using the Qt extensions in the "Cute/" subdir.
+
+if BUILD_WITH_MSVC
+CUTEARCHIVE = Cute/Cute.lst
+else
+CUTEARCHIVE = Cute/Cute.a
+endif
+
+readvol_LDADD = $(CUTEARCHIVE)
+orthoslicer_LDADD = $(CUTEARCHIVE)
 
 ############################################################################
 # Common sources.
