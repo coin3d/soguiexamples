@@ -93,18 +93,25 @@ soguiconfig = @soguiconfig@
 
 BUILT_SOURCES = search.cpp raypick.cpp
 
-noinst_PROGRAMS = search raypick tesselate
+noinst_PROGRAMS = search raypick tesselate matrixtransform
 
 search_SOURCES = search.cpp
 raypick_SOURCES = raypick.cpp
 tesselate_SOURCES = tesselate.cpp
+matrixtransform_SOURCES = matrixtransform.cpp
 subdir = actions
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-noinst_PROGRAMS = search$(EXEEXT) raypick$(EXEEXT) tesselate$(EXEEXT)
+noinst_PROGRAMS = search$(EXEEXT) raypick$(EXEEXT) tesselate$(EXEEXT) \
+	matrixtransform$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
+am_matrixtransform_OBJECTS = matrixtransform.$(OBJEXT)
+matrixtransform_OBJECTS = $(am_matrixtransform_OBJECTS)
+matrixtransform_LDADD = $(LDADD)
+matrixtransform_DEPENDENCIES =
+matrixtransform_LDFLAGS =
 am_raypick_OBJECTS = raypick.$(OBJEXT)
 raypick_OBJECTS = $(am_raypick_OBJECTS)
 raypick_LDADD = $(LDADD)
@@ -127,7 +134,8 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/raypick.Po $(DEPDIR)/search.Po \
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/matrixtransform.Po \
+@AMDEP_TRUE@	$(DEPDIR)/raypick.Po $(DEPDIR)/search.Po \
 @AMDEP_TRUE@	$(DEPDIR)/tesselate.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -135,9 +143,10 @@ CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 CXXFLAGS = @CXXFLAGS@
-DIST_SOURCES = $(raypick_SOURCES) $(search_SOURCES) $(tesselate_SOURCES)
+DIST_SOURCES = $(matrixtransform_SOURCES) $(raypick_SOURCES) \
+	$(search_SOURCES) $(tesselate_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(raypick_SOURCES) $(search_SOURCES) $(tesselate_SOURCES)
+SOURCES = $(matrixtransform_SOURCES) $(raypick_SOURCES) $(search_SOURCES) $(tesselate_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -154,6 +163,9 @@ Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.s
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
+matrixtransform$(EXEEXT): $(matrixtransform_OBJECTS) $(matrixtransform_DEPENDENCIES) 
+	@rm -f matrixtransform$(EXEEXT)
+	$(CXXLINK) $(matrixtransform_LDFLAGS) $(matrixtransform_OBJECTS) $(matrixtransform_LDADD) $(LIBS)
 raypick$(EXEEXT): $(raypick_OBJECTS) $(raypick_DEPENDENCIES) 
 	@rm -f raypick$(EXEEXT)
 	$(CXXLINK) $(raypick_LDFLAGS) $(raypick_OBJECTS) $(raypick_LDADD) $(LIBS)
@@ -170,6 +182,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/matrixtransform.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/raypick.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/search.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tesselate.Po@am__quote@

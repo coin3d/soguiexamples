@@ -7250,8 +7250,9 @@ echo "${ECHO_T}$sim_cv_lib_gl_pthread" >&6
   esac
 
 
-  # MacOS will have empty sim_ac_ogl_libs, so don't check if it is empty...
-  if test x"$sim_cv_gl_libs" != x"UNRESOLVED"; then
+  # MacOS will have empty sim_ac_ogl_libs, so we check on the cache values
+  # instead of seeing if that variable is empty.
+  if test x"$sim_cv_lib_gl" != x"UNRESOLVED" && test x"$sim_cv_lib_gl_pthread" != x"UNRESOLVED"; then
     LIBS="$sim_ac_ogl_libs $sim_ac_save_libs"
 
   else
