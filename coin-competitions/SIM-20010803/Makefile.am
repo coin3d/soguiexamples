@@ -18,11 +18,11 @@ BUILT_SOURCES = \
 ############################################################################
 
 chart.cpp: $(srcdir)/chart.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ../..; $(MAKE) built-sources )
 
 plasmafun.cpp: $(srcdir)/plasmafun.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ../..; $(MAKE) built-sources )
 
 stars.cpp: $(srcdir)/stars.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ../..; $(MAKE) built-sources )
 
