@@ -119,11 +119,12 @@ main(int argc, char ** argv)
 
   SoDB::init();
 
-  SoInput input;
-  if (!input.openFile(argv[1])) { return 1; } // err msg from SoInput::openFile()
+  SoInput * input = new SoInput;
+  if (!input->openFile(argv[1])) { return 1; } // err msg from SoInput::openFile()
 
-  SoSeparator * root = SoDB::readAll(&input); 
+  SoSeparator * root = SoDB::readAll(input); 
   if (root == NULL) { return 1; } // err msg from SoDB::readAll()
+  delete input;
 
   root->ref();
 
@@ -135,9 +136,10 @@ main(int argc, char ** argv)
   ifs = new SoIndexedFaceSet;
   ifs->coordIndex.setNum(0);
 
-  SoCallbackAction ca;
-  ca.addTriangleCallback(SoShape::getClassTypeId(), triangle_cb, NULL);
-  ca.apply(root);
+  SoCallbackAction * ca = new SoCallbackAction;
+  ca->addTriangleCallback(SoShape::getClassTypeId(), triangle_cb, NULL);
+  ca->apply(root);
+  delete ca;
 
   root->unref();
 
@@ -146,13 +148,15 @@ main(int argc, char ** argv)
   triroot->addChild(coord3);
   triroot->addChild(ifs);
 
-  SoWriteAction wa;
-  wa.apply(triroot);
+  SoWriteAction * wa = new SoWriteAction;
+  wa->apply(triroot);
+  delete wa;
 
   triroot->unref();
 
 #ifdef __COIN__
   delete bsptree;
+  SoDB::cleanup();
 #endif // __COIN__
 
   return 0;
