@@ -22,21 +22,31 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include <Inventor/@Gui@/viewers/So@Gui@Viewer.h>
 #include <Inventor/SoDB.h>
 #include <Inventor/SoInput.h>
 #include <Inventor/nodes/SoBaseColor.h>
 #include <Inventor/nodes/SoCone.h>
 #include <Inventor/nodes/SoCube.h>
 #include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoShapeHints.h>
 #include <Inventor/nodes/SoSphere.h>
-#include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoText3.h>
-#include <Inventor/@Gui@/viewers/So@Gui@Viewer.h>
 
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
+
+// *************************************************************************
+
+// Returns random value between 0.0f and 1.0f.
+static float
+normalized_rand(void)
+{
+  return float(rand())/float(RAND_MAX);
+}
 
 // *************************************************************************
 
@@ -63,10 +73,17 @@ shape_to_scene_graph(
   hints->creaseAngle = 0.91f;
   root->addChild( hints );
   SoBaseColor * basecol = new SoBaseColor;
-  basecol->rgb.setValue( cu_min(1.0f, 0.3f + float(rand())/float(RAND_MAX)),
-                         cu_min(1.0f, 0.3f + float(rand())/float(RAND_MAX)),
-                         cu_min(1.0f, 0.3f + float(rand())/float(RAND_MAX)) );
+  basecol->rgb.setValue( cu_min(1.0f, 0.3f + normalized_rand()),
+                         cu_min(1.0f, 0.3f + normalized_rand()),
+                         cu_min(1.0f, 0.3f + normalized_rand()) );
   root->addChild( basecol );
+
+  SoScale * nonuniformscale = new SoScale;
+  nonuniformscale->scaleFactor.setValue( normalized_rand() * 5.0f + 1.0f,
+                                         normalized_rand() * 5.0f + 1.0f,
+                                         normalized_rand() * 5.0f + 1.0f );
+  root->addChild( nonuniformscale );
+
   root->addChild( shape );
   return (SoNode *) root;
 } // shape_to_scene_graph()
