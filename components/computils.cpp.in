@@ -23,6 +23,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
+#include <errno.h>
 
 #include <Inventor/@Gui@/viewers/So@Gui@Viewer.h>
 #include <Inventor/SoDB.h>
@@ -204,6 +205,33 @@ config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
     else if (!strcmp(argv[i], "--noautoclip")) {
       viewer->setAutoClipping(FALSE);
       i++;
+    }
+    else if (!strcmp(argv[i], "--background")) {
+      SbBool err = FALSE;
+      if (argc < i+4) { err = TRUE; }
+      SbColor col;
+      if (!err) {
+        char * chk;
+        errno = 0;
+        for (int j=0; (j < 3) && !err; j++) {
+          const char * nptr = argv[i+1+j];
+          col[j] = strtod(nptr, &chk);
+          if (((col[j] == 0.0f) && (chk == nptr)) || (errno!=0) ||
+              (col[j] < 0.0f) || (col[j] > 1.0f)) {
+            err = TRUE;
+          }
+        }
+      }
+
+      if (err) {
+        (void)fprintf(stderr,
+                      "Error: \"--background\" option must be given with "
+                      "3 \"R G B\" color values in the range [0.0, 1.0].\n");
+        exit(1);
+      }
+
+      viewer->setBackgroundColor(col);
+      i += 4;
     }
     else i++;
   }
