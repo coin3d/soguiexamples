@@ -43,6 +43,7 @@
 #include <Inventor/events/SoMouseButtonEvent.h>
 #include <Inventor/events/SoLocation2Event.h>
 #include <Inventor/SoPickedPoint.h>
+#include <Inventor/errors/SoDebugError.h>
 
 #include <assert.h>
 #include <stdio.h>
@@ -128,6 +129,7 @@ const char * scenegraph[] = {
   "      Cylinder {}",
   "    }",
   "    Separator {",
+  "      DEF raysnoop Callback {}",
   "      Translation { translation 3 15.5 2 }",
   "      Separator {"
   "        BaseColor { rgb 1 0 0 }",
@@ -326,7 +328,7 @@ getNodeByName(SoNode * root, const char * name)
   action->setName(SbName(name));
   action->setInterest(SoSearchAction::FIRST);
   action->apply(root);
-  if ( !action->isFound() ) return NULL;
+  if ( !action->getPath() ) return NULL;
   return action->getPath()->getTail();
 }
 
@@ -364,6 +366,7 @@ void adjust_row(SoNode * scene, int row)
 /* ********************************************************************** */
 
 static SbVec2s lastviewport = SbVec2s(-1,-1);
+static SbLine ray(SbVec3f(0,0,0), SbVec3f(1,0,0));
 
 void
 event_cb(void * closure, SoAction * action)
@@ -399,6 +402,7 @@ event_cb(void * closure, SoAction * action)
   static SbVec3f * lastpoint = NULL;
   static float lastval = 0.0f;
   if ( action->isOfType(SoHandleEventAction::getClassTypeId()) ) {
+    // SoDebugError::postInfo("event", "handle event");
     SoHandleEventAction * heaction = (SoHandleEventAction *) action;
     if ( !rpaction )
       rpaction = new SoRayPickAction(heaction->getViewportRegion());
@@ -433,8 +437,6 @@ event_cb(void * closure, SoAction * action)
         }
         if ( !plane )
           plane = new SbPlane(SbVec3f(0,0,0), SbVec3f(0,1,0), SbVec3f(1,0,0));
-        rpaction->setPoint(mbevent->getPosition());
-        SbLine ray(rpaction->getLine());
         SbVec3f thispoint;
         if ( !plane->intersect(ray, thispoint) ) return;
         lastpoint = new SbVec3f(thispoint);
@@ -451,7 +453,7 @@ event_cb(void * closure, SoAction * action)
       assert( rpaction != NULL );
       rpaction->setPoint(l2event->getPosition());
       rpaction->apply(heaction->getNodeAppliedTo());
-      SbLine ray(rpaction->getLine());
+      // SbLine ray(rpaction->getLine());
       SbVec3f thispoint;
       if ( !plane->intersect(ray, thispoint) ) return;
       // fprintf(stderr, "it's a drag (sphere %dx%d)  = delta %g\n", row, sphere,
@@ -477,6 +479,17 @@ event_cb(void * closure, SoAction * action)
     }
     return;
   }
+}
+
+void
+rpevent_cb(
+  void * closure,
+  SoAction * action )
+{
+  if ( !action->isOfType(SoRayPickAction::getClassTypeId()) ) return;
+  SoRayPickAction * rpaction = (SoRayPickAction *) action;
+  rpaction->setObjectSpace();
+  ray = rpaction->getLine();
 }
 
 /* ********************************************************************** */
@@ -518,6 +531,12 @@ main(
     fprintf(stderr, "hook not installed.\n");
   } else {
     hook->setCallback(event_cb, viewer);
+  }
+  SoCallback * snoop = (SoCallback *) getNodeByName(scene, "raysnoop");
+  if ( ! hook ) {
+    fprintf(stderr, "raypick hook not installed.\n");
+  } else {
+    snoop->setCallback(rpevent_cb, viewer);
   }
 
   scene->unrefNoDelete();
