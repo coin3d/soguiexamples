@@ -197,14 +197,14 @@ AC_ARG_WITH([msvcrt],
     sim_ac_msvcrt=singlethread-static-debug
     sim_ac_msvcrt_CFLAGS="/MLd"
     sim_ac_msvcrt_CXXFLAGS="/MLd"
-    sim_ac_msvcrt_LIBLDFLAGS="/NODEFAULTLIB:libc"
+    sim_ac_msvcrt_LIBLDFLAGS="/LINK /NODEFAULTLIB:libc"
     sim_ac_msvcrt_LIBLIBS="-llibcd"
     ;;
   multithread-static | mt | /mt | libcmt | libcmt\.lib )
     sim_ac_msvcrt=multithread-static
     sim_ac_msvcrt_CFLAGS="/MT"
     sim_ac_msvcrt_CXXFLAGS="/MT"
-    sim_ac_msvcrt_LIBLDFLAGS="/NODEFAULTLIB:libc"
+    sim_ac_msvcrt_LIBLDFLAGS="/LINK /NODEFAULTLIB:libc"
     sim_ac_msvcrt_LIBLIBS="-llibcmt"
     ;;
   multithread-static-debug | mtd | /mtd | libcmtd | libcmtd\.lib )
@@ -218,14 +218,14 @@ AC_ARG_WITH([msvcrt],
     sim_ac_msvcrt=multithread-dynamic
     sim_ac_msvcrt_CFLAGS=""
     sim_ac_msvcrt_CXXFLAGS=""
-    sim_ac_msvcrt_LIBLDFLAGS="/NODEFAULTLIB:libc"
+    sim_ac_msvcrt_LIBLDFLAGS="/LINK /NODEFAULTLIB:libc"
     sim_ac_msvcrt_LIBLIBS="-lmsvcrt"
     ;;
   multithread-dynamic-debug | mdd | /mdd | msvcrtd | msvcrtd\.lib )
     sim_ac_msvcrt=multithread-dynamic-debug
     sim_ac_msvcrt_CFLAGS="/MDd"
     sim_ac_msvcrt_CXXFLAGS="/MDd"
-    sim_ac_msvcrt_LIBLDFLAGS="/NODEFAULTLIB:libc"
+    sim_ac_msvcrt_LIBLDFLAGS="/LINK /NODEFAULTLIB:libc"
     sim_ac_msvcrt_LIBLIBS="-lmsvcrtd"
     ;;
   *)
@@ -1319,12 +1319,12 @@ if test x"$with_opengl" != x"no"; then
   SIM_AC_CHECK_HEADER_SILENT([GL/gl.h], [
     sim_ac_gl_header_avail=true
     sim_ac_gl_header=GL/gl.h
-    AC_DEFINE([HAVE_GL_GL_H], , [define if the GL header should be included as GL/gl.h])
+    AC_DEFINE([HAVE_GL_GL_H], 1, [define if the GL header should be included as GL/gl.h])
   ], [
     SIM_AC_CHECK_HEADER_SILENT([OpenGL/gl.h], [
       sim_ac_gl_header_avail=true
       sim_ac_gl_header=OpenGL/gl.h
-      AC_DEFINE([HAVE_OPENGL_GL_H], , [define if the GL header should be included as OpenGL/gl.h])
+      AC_DEFINE([HAVE_OPENGL_GL_H], 1, [define if the GL header should be included as OpenGL/gl.h])
     ])
   ])
   sim_ac_gl_hpux=/opt/graphics/OpenGL
@@ -1334,12 +1334,12 @@ if test x"$with_opengl" != x"no"; then
     SIM_AC_CHECK_HEADER_SILENT([GL/gl.h], [
       sim_ac_gl_header_avail=true
       sim_ac_gl_header=GL/gl.h
-      AC_DEFINE([HAVE_GL_GL_H], , [define if the GL header should be included as GL/gl.h])
+      AC_DEFINE([HAVE_GL_GL_H], 1, [define if the GL header should be included as GL/gl.h])
     ], [
       SIM_AC_CHECK_HEADER_SILENT([OpenGL/gl.h], [
         sim_ac_gl_header_avail=true
         sim_ac_gl_header=OpenGL/gl.h
-        AC_DEFINE([HAVE_OPENGL_GL_H], , [define if the GL header should be included as OpenGL/gl.h])
+        AC_DEFINE([HAVE_OPENGL_GL_H], 1, [define if the GL header should be included as OpenGL/gl.h])
       ])
     ])
   fi
@@ -1380,12 +1380,12 @@ if test x"$with_opengl" != x"no"; then
   SIM_AC_CHECK_HEADER_SILENT([GL/glu.h], [
     sim_ac_glu_header_avail=true
     sim_ac_glu_header=GL/glu.h
-    AC_DEFINE([HAVE_GL_GLU_H], , [define if the GLU header should be included as GL/glu.h])
+    AC_DEFINE([HAVE_GL_GLU_H], 1, [define if the GLU header should be included as GL/glu.h])
   ], [
     SIM_AC_CHECK_HEADER_SILENT([OpenGL/gl.h], [
       sim_ac_glu_header_avail=true
       sim_ac_glu_header=OpenGL/glu.h
-      AC_DEFINE([HAVE_OPENGL_GLU_H], , [define if the GLU header should be included as OpenGL/glu.h])
+      AC_DEFINE([HAVE_OPENGL_GLU_H], 1, [define if the GLU header should be included as OpenGL/glu.h])
     ])
   ])
   sim_ac_gl_hpux=/opt/graphics/OpenGL
@@ -1395,12 +1395,12 @@ if test x"$with_opengl" != x"no"; then
     SIM_AC_CHECK_HEADER_SILENT([GL/glu.h], [
       sim_ac_glu_header_avail=true
       sim_ac_glu_header=GL/glu.h
-      AC_DEFINE([HAVE_GL_GLU_H], , [define if the GLU header should be included as GL/glu.h])
+      AC_DEFINE([HAVE_GL_GLU_H], 1, [define if the GLU header should be included as GL/glu.h])
     ], [
       SIM_AC_CHECK_HEADER_SILENT([OpenGL/glu.h], [
         sim_ac_glu_header_avail=true
         sim_ac_glu_header=OpenGL/glu.h
-        AC_DEFINE([HAVE_OPENGL_GLU_H], , [define if the GLU header should be included as OpenGL/glu.h])
+        AC_DEFINE([HAVE_OPENGL_GLU_H], 1, [define if the GLU header should be included as OpenGL/glu.h])
       ])
     ])
   fi
@@ -1955,14 +1955,14 @@ if test x"$with_pthread" != xno; then
   LIBS="$sim_ac_pthread_libs $LIBS"
 
   AC_CACHE_CHECK(
-    [whether the pthread development system is available],
+    [for POSIX threads],
     sim_cv_lib_pthread_avail,
     [AC_TRY_LINK([#include <pthread.h>],
                  [(void)pthread_create(0L, 0L, 0L, 0L);],
-                 [sim_cv_lib_pthread_avail=yes],
-                 [sim_cv_lib_pthread_avail=no])])
+                 [sim_cv_lib_pthread_avail=true],
+                 [sim_cv_lib_pthread_avail=false])])
 
-  if test x"$sim_cv_lib_pthread_avail" = xyes; then
+  if $sim_cv_lib_pthread_avail; then
     sim_ac_pthread_avail=yes
     $1
   else

@@ -248,9 +248,10 @@ AC_SUBST(COMPONENTHEADER)
 AC_LANG(C)
 AC_LANG(C++)
 
-# Check for the availability of this node (it is used in the hidden
-# line rendering), which is not part of older Inventor implementations.
+# Check for the availability of these nodes, which is not part
+# of older Inventor implementations.
 SIM_AC_HAVE_INVENTOR_NODE(SoPolygonOffset)
+SIM_AC_HAVE_INVENTOR_NODE(SoMarkerSet)
 
 SIM_AC_HAVE_INVENTOR_FEATURE(
   [for SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND],
