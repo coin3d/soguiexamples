@@ -1,0 +1,69 @@
+#include <math.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#include <Inventor/SoDb.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/VRMLnodes/SoVRMLAudioClip.h>
+#include <Inventor/VRMLnodes/SoVRMLSound.h>
+
+static void * 
+fill_buffer_callback(int frameoffset, void *buffer, 
+                    int numframes, int &channels, 
+                    void * userdataptr)
+{
+  static int counter = 0;
+  short int *ibuffer = (short int *)buffer;
+  double a = 880.0 * 2.0 * 3.14159265 / 44100.0;
+
+  for (int i=0; i< numframes; i++) {
+    // ibuffer[i] = counter+i;
+    ibuffer[i] = 32000.0 * sin( (float)(counter + i) * a );
+  }
+  counter += numframes;
+
+  channels = 1;
+  return buffer;
+}
+
+
+int 
+main(int argc, char *argv[]) 
+{
+  @WIDGET@ win = So@Gui@::init(argc, argv, argv[0]);
+
+  SoSeparator *root = new SoSeparator;
+  root->ref();
+
+  root->addChild(new SoSphere);
+
+  SoVRMLAudioClip *clip;
+  SoVRMLSound *sound;
+
+  root->addChild(clip = new SoVRMLAudioClip);
+  root->addChild(sound = new SoVRMLSound);
+
+  clip->stopTime = SbTime::getTimeOfDay();
+  clip->startTime = SbTime::getTimeOfDay();
+  clip->setFillBufferCallback(fill_buffer_callback, 0);
+  // clip->url = "clips/ticktack.wav";
+  clip->loop = TRUE;
+
+  sound->source = clip;
+
+  So@Gui@ExaminerViewer *viewer = new So@Gui@ExaminerViewer(win);
+  viewer->setSceneGraph(root);
+  viewer->show();
+  
+  So@Gui@::show(win);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+  return 1;
+}
+
+
+
