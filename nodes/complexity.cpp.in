@@ -44,6 +44,9 @@ SoSeparator *
 complexity(int type, SbVec3f col1, SbVec3f col2)
 {
   SoSeparator * sep = new SoSeparator;
+  // FIXME: using an SoAnnotation is _not_ the correct strategy for
+  // overlaying the wireframe on top of the filled graphics.  Should
+  // use an SoPolygonOffset node instead. 20010910 mortene.
   SoAnnotation * annotation = new SoAnnotation; // disable the z-buffer
   SoComplexity * complexity = new SoComplexity;
   SoDrawStyle * dstyle = new SoDrawStyle;
