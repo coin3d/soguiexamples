@@ -19,77 +19,91 @@
  *
 \**************************************************************************/
 
-#include <Inventor/nodes/SoSeparator.h>
-#include <Inventor/nodes/SoPerspectiveCamera.h>
-#include <Inventor/nodes/SoOrthographicCamera.h>
-#include <Inventor/nodes/SoColorIndex.h>
-#include <Inventor/nodes/SoLightModel.h>
-#include <Inventor/nodes/SoCoordinate3.h>
-#include <Inventor/nodes/SoLineSet.h>
-#include <Inventor/actions/SoGLRenderAction.h>
+// A simple example that shows how to set up a scenegraph in the
+// overlay planes.
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
-
-#include "computils.h"
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/nodes/SoColorIndex.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoLightModel.h>
+#include <Inventor/nodes/SoLineSet.h>
+#include <Inventor/nodes/SoOrthographicCamera.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoAsciiText.h>
 
 // *************************************************************************
 
 int
-main(
-  int argc,
-  char ** argv )
+main(int argc, char ** argv)
 {
-  @WIDGET@ window = So@Gui@::init( argv[0] );
+  @WIDGET@ window = So@Gui@::init(argv[0]);
 
-  SoNode * root = get_scene_graph( argc, argv );
-  if ( ! root )
-    return -1;
+  // Set up scenegraph for normal OpenGL planes.
+  SoSeparator * normalroot = new SoSeparator;
+  SoAsciiText * text = new SoAsciiText;
+  const char * strings[] = {
+    "If overlay planes are available you should now",
+    "see a lineset rectangle over the 3D text.",
+    "If not, overlay planes are not supported."
+  };
+  text->string.setValues(0, sizeof(strings) / sizeof(char *), strings);
+  text->justification = SoAsciiText::CENTER;
+  normalroot->addChild(text);
 
-  SoSeparator * overlayRoot = new SoSeparator;
+  SoSeparator * overlayroot = new SoSeparator;
 
   // set up camera of overlay scene
   SoOrthographicCamera * overlayCamera = new SoOrthographicCamera;
   overlayCamera->position.setValue(0, 0, 5);
   overlayCamera->nearDistance.setValue(1);
   overlayCamera->farDistance.setValue(10);
-  overlayRoot->addChild(overlayCamera);
+  overlayroot->addChild(overlayCamera);
 
   // we only have to render in BaseColor
   SoLightModel * overlayLightModel = new SoLightModel;
   overlayLightModel->model = SoLightModel::BASE_COLOR;
-  overlayRoot->addChild(overlayLightModel);
+  overlayroot->addChild(overlayLightModel);
 
   // use the first entry in the overlay color map as
   // Base Color
   SoColorIndex * overlayColorIndex = new SoColorIndex;
   overlayColorIndex->index = 1;
-  overlayRoot->addChild(overlayColorIndex);
+  overlayroot->addChild(overlayColorIndex);
 
   // here is the stuff to be rendered
+  SoSeparator * overlaygeometry = new SoSeparator;
+  overlayroot->addChild(overlaygeometry);
+
   SoSeparator * lineSep = new SoSeparator;
-  overlayRoot->addChild( lineSep );
+  overlaygeometry->addChild(lineSep);
 
   SoCoordinate3 * lineCoords = new SoCoordinate3;
   SoLineSet * lineSet = new SoLineSet;
 
-  lineSep->addChild( lineCoords );
-  lineSep->addChild( lineSet );
+  lineSep->addChild(lineCoords);
+  lineSep->addChild(lineSet);
 
-  lineCoords->point.set1Value( 0,-0.5f,-0.5f, 0.0f );
-  lineCoords->point.set1Value( 1,-0.5f, 0.5f, 0.0f );
-  lineCoords->point.set1Value( 2, 0.5f, 0.5f, 0.0f );
-  lineCoords->point.set1Value( 3, 0.5f,-0.5f, 0.0f );
-  lineCoords->point.set1Value( 4,-0.5f,-0.5f, 0.0f );
+  lineCoords->point.set1Value(0,-0.5f,-0.5f, 0.0f);
+  lineCoords->point.set1Value(1,-0.5f, 0.5f, 0.0f);
+  lineCoords->point.set1Value(2, 0.5f, 0.5f, 0.0f);
+  lineCoords->point.set1Value(3, 0.5f,-0.5f, 0.0f);
+  lineCoords->point.set1Value(4,-0.5f,-0.5f, 0.0f);
 
-  lineSet->numVertices.setValue( 5 );
+  lineSet->numVertices.setValue(5);
 
-  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
-  viewer->setSceneGraph( root );
-  viewer->setOverlaySceneGraph( overlayRoot );
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setBackgroundColor(SbColor(0.0f, 0.2f, 0.3f));
+  viewer->setSceneGraph(normalroot);
+  viewer->setOverlaySceneGraph(overlayroot);
+
+  overlayCamera->viewAll(overlaygeometry, viewer->getViewportRegion());
 
   viewer->show();
-  So@Gui@::show( window );
+  So@Gui@::show(window);
 
   So@Gui@::mainLoop();
 
