@@ -1,7 +1,8 @@
 ############################################################################
 ## Process this file with automake to generate Makefile.in.
 
-SUBDIRS = . components actions draggers engines manipulators nodes sensors
+SUBDIRS = \
+  . components actions draggers engines manipulators nodes sensors eyecandy
 
 ############################################################################
 
@@ -58,7 +59,8 @@ BUILT_SOURCES = \
 	nodes/transform.cpp \
 	nodes/translation.cpp \
 	nodes/trianglestripset.cpp \
-	sensors/timersensor.cpp
+	sensors/timersensor.cpp \
+	eyecandy/moirepatterns.cpp
 
 noinst_DATA = $(BUILT_SOURCES)
 
@@ -248,6 +250,21 @@ nodes/trianglestripset.cpp: $(srcdir)/nodes/trianglestripset.cpp.in
 ## sources in sensors/
 
 sensors/timersensor.cpp: $(srcdir)/sensors/timersensor.cpp.in
+	@./config.status --file=$@
+
+############################################################################
+## sources in eyecandy/
+
+eyecandy/moirepatterns.cpp: $(srcdir)/eyecandy/moirepatterns.cpp.in
+	@./config.status --file=$@
+
+eyecandy/mandelzoom.cpp: $(srcdir)/eyecandy/mandelzoom.cpp.in
+	@./config.status --file=$@
+
+eyecandy/juliaanim.cpp: $(srcdir)/eyecandy/juliaanim.cpp.in
+	@./config.status --file=$@
+
+eyecandy/simbuoy.cpp: $(srcdir)/eyecandy/simbuoy.cpp.in
 	@./config.status --file=$@
 
 ############################################################################

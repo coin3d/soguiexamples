@@ -123,6 +123,7 @@ AC_OUTPUT([
 	manipulators/Makefile
 	nodes/Makefile
 	sensors/Makefile
+	eyecandy/Makefile
 ])
 
 # **************************************************************************

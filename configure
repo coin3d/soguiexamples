@@ -3174,6 +3174,7 @@ ac_config_files="$ac_config_files
 	manipulators/Makefile
 	nodes/Makefile
 	sensors/Makefile
+	eyecandy/Makefile
 "
 trap '' 1 2 15
 cat >confcache <<\EOF
@@ -3395,6 +3396,7 @@ Try \`$me --help' for more information."; exit 1 ;;
   'manipulators/Makefile' ) CONFIG_FILES="$CONFIG_FILES manipulators/Makefile" ;;
   'nodes/Makefile' ) CONFIG_FILES="$CONFIG_FILES nodes/Makefile" ;;
   'sensors/Makefile' ) CONFIG_FILES="$CONFIG_FILES sensors/Makefile" ;;
+  'eyecandy/Makefile' ) CONFIG_FILES="$CONFIG_FILES eyecandy/Makefile" ;;
   'default-1' ) CONFIG_COMMANDS="$CONFIG_COMMANDS default-1" ;;
   'default-2' ) CONFIG_COMMANDS="$CONFIG_COMMANDS default-2" ;;
   'config.h' ) CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;

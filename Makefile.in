@@ -94,7 +94,9 @@ soguiconfig = @soguiconfig@
 ############################################################################
 
 
-SUBDIRS = . components actions draggers engines manipulators nodes sensors
+SUBDIRS = \
+  . components actions draggers engines manipulators nodes sensors eyecandy
+
 
 ############################################################################
 
@@ -151,8 +153,11 @@ BUILT_SOURCES = \
 	nodes/transform.cpp \
 	nodes/translation.cpp \
 	nodes/trianglestripset.cpp \
-	sensors/timersensor.cpp
+	sensors/timersensor.cpp \
+	eyecandy/moirepatterns.cpp
 
+#	eyecandy/juliaanim.cpp \
+#	eyecandy/simbuoy.cpp
 
 noinst_DATA = $(BUILT_SOURCES)
 subdir = .
@@ -642,6 +647,20 @@ nodes/trianglestripset.cpp: $(srcdir)/nodes/trianglestripset.cpp.in
 ############################################################################
 
 sensors/timersensor.cpp: $(srcdir)/sensors/timersensor.cpp.in
+	@./config.status --file=$@
+
+############################################################################
+
+eyecandy/moirepatterns.cpp: $(srcdir)/eyecandy/moirepatterns.cpp.in
+	@./config.status --file=$@
+
+eyecandy/mandelzoom.cpp: $(srcdir)/eyecandy/mandelzoom.cpp.in
+	@./config.status --file=$@
+
+eyecandy/juliaanim.cpp: $(srcdir)/eyecandy/juliaanim.cpp.in
+	@./config.status --file=$@
+
+eyecandy/simbuoy.cpp: $(srcdir)/eyecandy/simbuoy.cpp.in
 	@./config.status --file=$@
 
 ############################################################################
