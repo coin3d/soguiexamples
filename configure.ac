@@ -321,10 +321,6 @@ SIM_AC_HAVE_SMALLCHANGE_IFELSE([
 # Those are the two dependencies of the examples under the
 # volumerendering/ directory.
 
-# Default to not look for SimVoleon, as we'll get lots of warnings
-# from configure in the common case that it is _not_ available.
-sim_ac_simvoleon_desired=false
-
 if test x"$sim_ac_gui_toolkit" = x"soqt"; then
 
   SIM_AC_QT_PROG(MOC, moc)
@@ -337,6 +333,10 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
     SIM_AC_ERROR([no-uic])
   fi
 
+  # Default to not look for SimVoleon, as we'll get lots of warnings
+  # from configure in the common case that it is _not_ available.
+  sim_ac_simvoleon_desired=false
+
   SIM_AC_HAVE_SIMVOLEON_IFELSE([
     CPPFLAGS="$sim_ac_simvoleon_cppflags $CPPFLAGS"
     CFLAGS="$sim_ac_simvoleon_cflags $CFLAGS"
@@ -347,11 +347,11 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
     SIM_AC_CONFIGURATION_SETTING([SimVoleon], [is being used])
     AC_DEFINE(HAVE_SIMVOLEON_LIBRARY, 1, [Define to enable use of SimVoleon library])
   ], [
-  if $sim_ac_simvoleon_desired; then
-    SIM_AC_ERROR([simvoleon-unavailable])
-  else
-    SIM_AC_CONFIGURATION_SETTING([SimVoleon], [not used (enable with --with-simvoleon)])
-  fi
+    if $sim_ac_simvoleon_desired; then
+      SIM_AC_ERROR([simvoleon-unavailable])
+    else
+      SIM_AC_CONFIGURATION_SETTING([SimVoleon], [not used (enable with --with-simvoleon)])
+    fi
   ])
 else
   SIM_AC_CONFIGURATION_SETTING([SimVoleon], [not used (examples only works with SoQt)])
@@ -374,7 +374,7 @@ SIM_AC_HAVE_SIMAGE_IFELSE([
   SIM_AC_CONFIGURATION_SETTING([simage], [not found (some example programs will not be built)])
 ])
 
-AM_CONDITIONAL(HAVE_SIMAGE, $sim_ac_simvoleon_avail)
+AM_CONDITIONAL(HAVE_SIMAGE, $sim_ac_simage_avail)
 
 # **************************************************************************
 # Remove redundant options from certain option lists, to clean up the
