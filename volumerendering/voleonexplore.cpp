@@ -184,6 +184,10 @@ main(int argc, char ** argv)
   colortableedit->setMode(SoQtColorTableEditor::RGBA);
   colors = new uint8_t[256*colortableedit->getMode()];
 
+  colortableedit->getColors(colors, 256);
+  for (unsigned int i=0; i < 256; i++) { colors[i*4+3] = i; }
+  colortableedit->setColors(colors, 256);
+
   // Create a root separator and a separator for the volume-render
   // nodes.
   SoSeparator * root = new SoSeparator;
