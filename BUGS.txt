@@ -58,3 +58,13 @@
     but probably not very consistently.
 
 =====================================================================
+
+003 Need something like SGI ivPerf.
+
+    To make it simpler to evaluate performance optimizations. Could
+    probably include SGI's original ivPerf in the distribution, as I
+    would guess it's under the GNU LGPL.
+
+    2003019 mortene.
+
+=====================================================================
