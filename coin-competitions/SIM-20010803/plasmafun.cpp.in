@@ -59,11 +59,13 @@
 #endif // HAVE_WINDOWS_H
 #include <GL/gl.h>
 
-#ifndef GL_VERSION_1_2
-#define GL_VERSION_1_2 1
+// These are from OpenGL version >= 1.2  (which is checked runtime).
+#ifndef GL_LIGHT_MODEL_COLOR_CONTROL
 #define GL_LIGHT_MODEL_COLOR_CONTROL            0x81F8
+#endif // !GL_LIGHT_MODEL_COLOR_CONTROL
+#ifndef GL_SEPARATE_SPECULAR_COLOR
 #define GL_SEPARATE_SPECULAR_COLOR              0x81FA
-#endif
+#endif // !GL_SEPARATE_SPECULAR_COLOR
 
 #include <math.h>
 #include <stdio.h>
@@ -460,15 +462,14 @@ pre_render(void * userdata, class SoGLRenderAction * action)
   static int first = 1;
   if (first) {
     first = 0;
-#if GL_VERSION_1_2
     int major, minor;
     SoGLCacheContextElement::getOpenGLVersion(action->getState(),
                                               major, minor);
     if (major > 1 || (major == 1 && minor >= 2)) {
+//        (void)printf("OpenGL v1.2 detected, using separate specular color\n");
       glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, 
                     GL_SEPARATE_SPECULAR_COLOR);
     }
-#endif
   }
 }
 #endif
