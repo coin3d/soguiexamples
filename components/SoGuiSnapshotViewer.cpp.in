@@ -272,6 +272,7 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
     // FIXME: when using transparency - maybe set white background?  this is
     // only an issue if it affects the antialiasing along the object edges,
     // and/or if the background color stains transparent surfaces...
+    renderer->setBackgroundColor(this->getSceneManager()->getBackgroundColor());
   } else {
     renderer->setComponents(SoOffscreenRenderer::RGB);
     renderer->setBackgroundColor(this->getSceneManager()->getBackgroundColor());
@@ -331,7 +332,7 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
       cropped->setComponents(SoOffscreenRenderer::RGB_TRANSPARENCY);
     }
     // FIXME: figure out what to do with the background when crop-border extends image size
-    // cropped->setBackgroundColor(SbColor(bg[0], bg[1], bg[2]));
+     cropped->setBackgroundColor(SbColor(bg[0], bg[1], bg[2]));
     do {
       SoSeparator * empty = new SoSeparator();
       empty->ref();
@@ -404,7 +405,7 @@ So@Gui@SnapshotViewer::getSceneGraph(void)
 SbBool
 So@Gui@SnapshotViewer::processSoEvent(const SoEvent * const event)
 {
-  if ( this->isViewing() &&
+  if ( // this->isViewing() &&
        event->getTypeId() == SoKeyboardEvent::getClassTypeId() ) {
     SoKeyboardEvent * kbevent = (SoKeyboardEvent *) event;
     switch ( kbevent->getKey() ) {
