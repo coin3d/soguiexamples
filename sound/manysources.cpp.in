@@ -59,21 +59,21 @@ selectionCB(void *, SoPath *path)
   SoNode *parent = path->getNodeFromTail(1);
   if (parent && (parent->isOfType(SoSeparator::getClassTypeId()))) {
     SoSeparator *sep = (SoSeparator *)parent;
-	node = sep->getChild(1);
-	assert(node->isOfType(SoMaterial::getClassTypeId()));
+    node = sep->getChild(1);
+    assert(node->isOfType(SoMaterial::getClassTypeId()));
     SoMaterial *mat = (SoMaterial *)node;
-	SoVRMLAudioClip *clip = (SoVRMLAudioClip *)sep->getChild(3);
-	SoVRMLSound *sound = (SoVRMLSound *)sep->getChild(4);
-	const char *name = sep->getName().getString();
+    SoVRMLAudioClip *clip = (SoVRMLAudioClip *)sep->getChild(3);
+    SoVRMLSound *sound = (SoVRMLSound *)sep->getChild(4);
+    const char *name = sep->getName().getString();
     int num = atoi(name+1);
     sources[num].on = !sources[num].on;
     if (sources[num].on) {
       mat->diffuseColor = sources[num].color;
-	  clip->stopTime = SbTime::getTimeOfDay();
-	  clip->startTime = SbTime::getTimeOfDay();
+      clip->stopTime = SbTime::getTimeOfDay();
+      clip->startTime = SbTime::getTimeOfDay();
     } else {
       mat->diffuseColor = color_grey;
-	  clip->stopTime = SbTime::getTimeOfDay();
+      clip->stopTime = SbTime::getTimeOfDay();
     }
   }
   root->deselect(path);
@@ -139,8 +139,8 @@ main(int argc, char *argv[])
     xf->translation = SbVec3f((float)i * 2.0f, 0.0f, 0.0f);
     sources[i].on = FALSE;
     sources[i].color = SbColor(1.0f - ((float)i / (float)num_sources), 
-                                ((float)i / (float)num_sources), 
-                                0.25f + ((float)i / (float)num_sources) * 0.5f);
+                               ((float)i / (float)num_sources), 
+                               0.25f + ((float)i / (float)num_sources) * 0.5f);
     mat->diffuseColor = color_grey;
     sphere->radius = 0.5f;
     sprintf(str, "N%d", i);
