@@ -26,9 +26,38 @@
 #include <Inventor/actions/SoRayPickAction.h>
 #include <Inventor/events/SoMouseButtonEvent.h>
 #include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoCube.h>
 #include <Inventor/nodes/SoEventCallback.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoSeparator.h>
+
+// *************************************************************************
+
+// Calculates azimuth angle for the "directionvec" input argument. An
+// azimuth angle is the angle of a vector versus the direction of
+// compass north, where 0° means the input vector points straight
+// north, 90° is east, 180° south and 270° is west.
+static float
+azimuth(SbVec3f north, SbVec3f east, SbVec3f directionvec)
+{
+  // Make compass plane.
+  SbPlane compassplane(SbVec3f(0, 0, 0), north, east);
+
+  // Project input vector into the compass plane.
+  float d = compassplane.getDistance(directionvec);
+  directionvec = directionvec - (compassplane.getNormal() * d);
+
+  // Find absolute angle in the [0, PI] range versus the north vector.
+  directionvec.normalize();
+  north.normalize();
+  float angle = acos(north.dot(directionvec));
+
+  // Check if the input argument vector is pointing to the "west side"
+  // of the north-south axis, and if so, correct the absolute angle.
+  if (directionvec.dot(east) < 0.0f) { angle = M_PI + (M_PI - angle); }
+
+  return angle;
+}
 
 // *************************************************************************
 
@@ -41,61 +70,101 @@ event_cb(void * ud, SoEventCallback * n)
       mbe->getState() == SoButtonEvent::DOWN) {
     So@Gui@ExaminerViewer * viewer = (So@Gui@ExaminerViewer *)ud;
 
-    SoRayPickAction rp( viewer->getViewportRegion() );
+    SoRayPickAction rp(viewer->getViewportRegion());
     rp.setPoint(mbe->getPosition());
-    rp.apply(viewer->getSceneGraph());
+    rp.apply(viewer->getSceneManager()->getSceneGraph());
 
     SoPickedPoint * point = rp.getPickedPoint();
     if (point == NULL) {
-      (void)fprintf(stderr, "miss!\n");
+      (void)fprintf(stderr, "\n** miss! **\n\n");
       return;
     }
+
+    n->setHandled();
 
     SbVec3f v = point->getPoint();
     SbVec3f nv = point->getNormal();
     (void)fprintf(stdout, "point=<%f, %f, %f>, normvec=<%f, %f, %f>\n",
                   v[0], v[1], v[2], nv[0], nv[1], nv[2]);
 
-    n->setHandled();
+    const SoCamera * camera = viewer->getCamera();
+    SbVec3f camerapos = viewer->getCamera()->position.getValue();
+    SbVec3f hitvec = v - camerapos;
+    (void)fprintf(stdout, "hitvec=<%f, %f, %f>\n", hitvec[0], hitvec[1], hitvec[2]);
+
+    // Find and print the azimuth angle of the vector from the camera
+    // position to the point that was picked.
+    float azimuthangle = azimuth(SbVec3f(0, 0, -1), SbVec3f(1, 0, 0), hitvec);
+    (void)fprintf(stdout, "Azimuth angle: %f\n", azimuthangle * 180.0f / M_PI);
   }
 }
 
 // *************************************************************************
 
-int
-main(
-  int argc,
-  char ** argv )
+static const char * scene_iv =
 {
-  @WIDGET@ window = So@Gui@::init( argv[0] );
+  "#Inventor V2.1 ascii\n\n"
+  ""
+  "Separator {"
+  "  Cone { }"
+  "  Separator {"
+  "    Translation { translation -1.5 0 0 }"
+  "    Rotation { rotation 1 0 0  -1.2 }"
+  "    Scale { scaleFactor 0.05 0.05 0.05 }"
+  "    Text3 { string \"W\"  parts ALL }"
+  "  }"
+  "  Separator {"
+  "    Translation { translation 1.5 0 0 }"
+  "    Rotation { rotation 1 0 0  -1.2 }"
+  "    Scale { scaleFactor 0.05 0.05 0.05 }"
+  "    Text3 { string \"E\"  parts ALL }"
+  "  }"
+  "  Separator {"
+  "    Translation { translation 0 0 -1.5 }"
+  "    Rotation { rotation 1 0 0  -1.2 }"
+  "    Scale { scaleFactor 0.05 0.05 0.05 }"
+  "    Text3 { string \"N\"  parts ALL }"
+  "  }"
+  "  Separator {"
+  "    Translation { translation 0 0 1.5 }"
+  "    Rotation { rotation 1 0 0  -1.2 }"
+  "    Scale { scaleFactor 0.05 0.05 0.05 }"
+  "    Text3 { string \"S\"  parts ALL }"
+  "  }"
+  "}"
+};
 
-  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
+// *************************************************************************
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
 
   SoSeparator * sep = new SoSeparator;
   sep->ref();
-
-  // Need to set up our own camera in the "user" scenegraph, or else
-  // the raypick action will fail because the camera is "hidden" in
-  // the viewer-specific root of the scenegraph.
-  SoPerspectiveCamera * pcam = new SoPerspectiveCamera;
-  sep->addChild(pcam);
 
   SoEventCallback * ecb = new SoEventCallback;
   ecb->addEventCallback(SoMouseButtonEvent::getClassTypeId(), event_cb, viewer);
   sep->addChild(ecb);
 
-  sep->addChild(new SoCone);
+  SoInput in;
+  in.setBuffer((void *)scene_iv, strlen(scene_iv));
+  SoSeparator * r = SoDB::readAll(&in);
+  assert(r);
+  sep->addChild(r);
 
-  viewer->setSceneGraph( sep );
-  pcam->viewAll( sep, viewer->getViewportRegion() );
+  viewer->setSceneGraph(sep);
   viewer->show();
-  So@Gui@::show( window );
+  So@Gui@::show(window);
 
   So@Gui@::mainLoop();
 
   delete viewer;
   sep->unref();
   return 0;
-} // main()
+}
 
 // *************************************************************************
