@@ -351,6 +351,12 @@ echo >&2 ""
 AC_MSG_ERROR([aborting])
 ]) # SIM_AC_ERROR
 
+AC_DEFUN([SIM_AC_WARN], [
+echo >&2 ""
+_SIM_AC_ERROR($@)
+echo >&2 ""
+]) # SIM_AC_WARN
+
 AC_DEFUN([SIM_AC_WITH_ERROR], [
 AC_MSG_ERROR([invalid value "${withval}" for "$1" configure argument])
 ]) # SIM_AC_WITH_ERROR
