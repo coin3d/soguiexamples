@@ -190,6 +190,7 @@ nodechangeCB(void * closure, SoSensor * s)
   ida.addIntersectionCallback(intersectionCB, NULL);
   ida.setManipsEnabled(FALSE);
   ida.setDraggersEnabled(FALSE);
+  ida.setIntersectionEpsilon(0.5);
   ida.apply(root);
   sensor->attach(root);
 }
@@ -204,6 +205,7 @@ selectCB(void * closure, SoPath * p)
   path->truncate(path->getLength()-1);
   SoSeparator * group = (SoSeparator *) path->getTail();
   SoTransform * transform = (SoTransform *) group->getChild(0);
+  if ( !transform->isOfType(SoTransform::getClassTypeId()) ) return;
   path->append(transform);
   SoTransformBoxManip * manip = new SoTransformBoxManip;
   manip->replaceNode(path);
@@ -218,6 +220,7 @@ deselectCB(void * closure, SoPath * p)
   path->truncate(path->getLength()-1);
   SoSeparator * group = (SoSeparator *) path->getTail();
   SoTransformBoxManip * manip = (SoTransformBoxManip *) group->getChild(0);
+  if ( !manip->isOfType(SoTransformBoxManip::getClassTypeId()) ) return;
   path->append(manip);
   manip->replaceManip(path, new SoTransform);
   path->unref();
