@@ -148,6 +148,9 @@ AC_DEFUN([SIM_AC_MSVC_SUPPORT], [
 BUILD_WITH_MSVC=false
 sim_ac_msvccc=`cd $srcdir; pwd`/cfg/m4/msvccc
 if test -z "$CC" && test -z "$CXX" && $sim_ac_msvccc >/dev/null 2>&1; then
+  m4_ifdef([SIM_AC_MSVC_SUPPORT_VISITED],
+    [AC_FATAL([Macro SIM_AC_MSVC_SUPPORT invoked multiple times])])
+  m4_define([SIM_AC_MSVC_SUPPORT_VISITED], 1)
   CC=$sim_ac_msvccc
   CXX=$sim_ac_msvccc
   export CC CXX
@@ -541,10 +544,6 @@ fi])
 #   Morten Eriksen, <mortene@sim.no>
 #   Lars J. Aas, <larsa@sim.no>
 #
-# TODO:
-# * [larsa:20000220] Set up ATTRIBUTE-LIST for developer-configurable
-#   default-value.
-#
 
 AC_DEFUN([SIM_AC_COMPILE_DEBUG], [
 AC_ARG_ENABLE(
@@ -559,12 +558,16 @@ AC_ARG_ENABLE(
   [enable_debug=true])
 
 if $enable_debug; then
+  DSUFFIX=d
   ifelse([$1], , :, [$1])
 else
+  DSUFFIX=
   CPPFLAGS="$CPPFLAGS -DNDEBUG"
-  $2
+  ifelse([$2], , :, [$2])
 fi
+AC_SUBST(DSUFFIX)
 ])
+
 
 # Usage:
 #   SIM_AC_DEBUGSYMBOLS
@@ -994,8 +997,9 @@ fi
 AC_DEFUN([SIM_AC_CHECK_DL], [
 AC_ARG_WITH(
   [dl],
-  AC_HELP_STRING([--with-dl=DIR],
-                 [include support for the dynamic link loader library [[default=yes]]]),
+  [AC_HELP_STRING(
+    [--with-dl=DIR],
+    [include support for the dynamic link loader library [default=yes]])],
   [],
   [with_dl=yes])
 
@@ -1018,7 +1022,7 @@ if test x"$with_dl" != xno; then
 
   # Use SIM_AC_CHECK_HEADERS instead of .._HEADER to get the
   # HAVE_DLFCN_H symbol set up in config.h automatically.
-  SIM_AC_CHECK_HEADERS(dlfcn.h)
+  SIM_AC_CHECK_HEADERS([dlfcn.h])
 
   AC_CACHE_CHECK([whether the dynamic link loader library is available],
     sim_cv_lib_dl_avail,
@@ -1033,15 +1037,16 @@ if test x"$with_dl" != xno; then
 
   if test x"$sim_cv_lib_dl_avail" = xyes; then
     sim_ac_dl_avail=yes
-    $1
+    ifelse([$1], , :, [$1])
   else
     CPPFLAGS=$sim_ac_save_cppflags
     LDFLAGS=$sim_ac_save_ldflags
     LIBS=$sim_ac_save_libs
-    $2
+    ifelse([$2], , :, [$2])
   fi
 fi
 ])
+
 
 # SIM_AC_CHECK_HEADER(HEADER-FILE, [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
 # --------------------------------------------------------------------------
@@ -1057,13 +1062,14 @@ AC_CACHE_CHECK(
   [for $1],
   ac_Header,
   [AC_TRY_COMPILE([#include <$1>],
-  [],
-  [AC_VAR_SET(ac_Header, yes)],
-  [AC_VAR_SET(ac_Header, no)])])
-AS_IFELSE(
-  [test AC_VAR_GET(ac_Header) = yes],
-  [$2],
-  [$3])
+    [],
+    [AC_VAR_SET([ac_Header], yes)],
+    [AC_VAR_SET([ac_Header], no)])])
+if test AC_VAR_GET(ac_Header) = yes; then
+  ifelse([$2], , :, [$2])
+else
+  ifelse([$3], , :, [$3])
+fi
 AC_VAR_POPDEF([ac_Header])
 ])# SIM_AC_CHECK_HEADER
 
@@ -1080,6 +1086,7 @@ SIM_AC_CHECK_HEADER(
   [$3])
 done
 ])# SIM_AC_CHECK_HEADERS
+
 
 # Usage:
 #  SIM_AC_CHECK_X11([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
