@@ -130,6 +130,21 @@
     press a mouse button while the ball is in play.
     ----8<------ [snip] ----------8<------ [snip] ------
 
+    Additional information from the reported about the
+    wglMakeCurrent() problem and the GL errors:
+
+    ----8<------ [snip] ----------8<------ [snip] ------
+
+    I get this error once every time I start, right after I press 'S'
+    to start.  Right now I get a bunch of GL_INVALID_OPERATOR in
+    SoSeparator::GlRenderBelowPath(), in nodetype: Cube, translation,
+    switch, text3, font ++++ , some of these comes several times. All
+    of these comes before the first frame, except the last SoSeparator
+    error. The application seems to run correctly though..
+
+    ----8<------ [snip] ----------8<------ [snip] ------
+
+
     20040624 mortene, reported by Sigurd T. Seteklev.
 
 =====================================================================
