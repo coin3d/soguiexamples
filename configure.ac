@@ -401,10 +401,7 @@ AC_SUBST([soguiexamples_build_dir])
 if $sim_ac_make_dspex; then
   soguiexamples_subst="\\\$\$\\(COIN3DDIR\\)=`cygpath -u $COIN3DDIR`"
   SIM_AC_MSVC_DSPEX_SETUP([So${Gui}Examples], [$soguiexamples_src_dir], 
-                          [vc6], [$soguiexamples_subst])
-  # Yes, this is totally bogus stuff, but don't worry about it.  As long
-  # as gendspex.sh recognizes it...  20031125 thammer
-  LDFLAGS="$LDFLAGS -DHAVE_CONFIG_H"
+                          [vc6], [$soguiexamples_subst], [-DHAVE_CONFIG_H])
   SIM_AC_MSVC_DSPEX_PREPARE([$soguiexamples_src_dir], 
                             [$soguiexamples_build_dir])
 fi
