@@ -19,6 +19,7 @@
  *
 \**************************************************************************/
 
+#include <stdlib.h> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/So@Gui@RenderArea.h>
 #include <Inventor/SbBasic.h>

@@ -21,6 +21,8 @@
 
 // Written by Tor-Helge Skei <skei@sim.no>.
 
+#include <stdlib.h> // exit()
+
 #include <Inventor/SoDB.h>
 #include <Inventor/nodes/SoBaseColor.h>
 #include <Inventor/nodes/SoCoordinate3.h>

@@ -25,7 +25,7 @@
 
 #include <assert.h>
 #include <string.h>
-#include <stdlib.h> // rand()
+#include <stdlib.h> // rand(), exit()
 
 #include <Inventor/SoDB.h>
 #include <Inventor/nodes/SoComplexity.h>

@@ -19,6 +19,7 @@
  *
 \**************************************************************************/
 
+#include <stdlib.h> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoShapeHints.h>

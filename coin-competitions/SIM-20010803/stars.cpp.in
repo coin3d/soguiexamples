@@ -27,6 +27,8 @@
  * Additional copyright (C) 2001, Marius Bugge Monsen.
  * ********************************************************************** */
 
+#include <stdlib.h> // exit()
+
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>

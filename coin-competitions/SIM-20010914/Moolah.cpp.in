@@ -27,7 +27,7 @@
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
-#include <stdlib.h> // atof()
+#include <stdlib.h> // atof(), exit()
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>

@@ -27,7 +27,7 @@
 
 #include <assert.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> // exit()
 #include <math.h>
 
 #include <Inventor/SbLinear.h>

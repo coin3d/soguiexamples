@@ -39,7 +39,7 @@
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoCallback.h>
 
-#include <stdlib.h>  // srand(), rand()
+#include <stdlib.h>  // srand(), rand(), exit()
 #include <stdio.h>
 #include <string.h>
 

@@ -30,6 +30,8 @@
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
+#include <stdlib.h> // exit()
+
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoPointSet.h>
 #include <Inventor/nodes/SoDrawStyle.h>
