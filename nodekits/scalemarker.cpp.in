@@ -1,3 +1,8 @@
+// FIXME: this doesn't seem to work at all for me??? 20031016 mortene.
+
+// FIXME: should not use the local ShapeScale, but rather the one from
+// the SmallChange library. 20031016 mortene.
+
 /**************************************************************************\
  *
  *  This file is part of a set of example programs for the Coin library.
