@@ -22,6 +22,7 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <Inventor/SoDB.h>
 #include <Inventor/SoInput.h>
