@@ -91,7 +91,8 @@ noinst_PROGRAMS = \
 	moirepatterns \
 	juliaanim \
 	mandelzoom \
-	blob
+	blob \
+	simbuoy
 
 
 moirepatterns_SOURCES = moirepatterns.cpp
@@ -104,11 +105,14 @@ EXTRA_mandelzoom_SOURCES = stone42a.h stone42b.h sky10a.h sky10b.h
 
 blob_SOURCES = blob.cpp
 
+simbuoy_SOURCES = simbuoy.cpp
+
 BUILT_SOURCES = \
 	moirepatterns.cpp \
 	juliaanim.cpp \
 	mandelzoom.cpp \
-	blob.cpp
+	blob.cpp \
+	simbuoy.cpp
 
 subdir = eyecandy
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
@@ -141,6 +145,11 @@ moirepatterns_OBJECTS =  $(am_moirepatterns_OBJECTS)
 moirepatterns_LDADD = $(LDADD)
 moirepatterns_DEPENDENCIES = 
 moirepatterns_LDFLAGS = 
+am_simbuoy_OBJECTS =  simbuoy.o
+simbuoy_OBJECTS =  $(am_simbuoy_OBJECTS)
+simbuoy_LDADD = $(LDADD)
+simbuoy_DEPENDENCIES = 
+simbuoy_LDFLAGS = 
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXFLAGS = @CXXFLAGS@
 CXXLD = $(CXX)
@@ -151,18 +160,18 @@ CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES =  $(blob_SOURCES) $(juliaanim_SOURCES) \
 $(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) \
-$(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES)
+$(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES) $(simbuoy_SOURCES)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/blob.Po $(DEPDIR)/juliaanim.Po \
-$(DEPDIR)/mandelzoom.Po $(DEPDIR)/moirepatterns.Po
+$(DEPDIR)/mandelzoom.Po $(DEPDIR)/moirepatterns.Po $(DEPDIR)/simbuoy.Po
 DIST_COMMON =  README Makefile.am Makefile.in
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
-SOURCES = $(blob_SOURCES) $(juliaanim_SOURCES) $(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) $(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES)
-OBJECTS = $(am_blob_OBJECTS) $(am_juliaanim_OBJECTS) $(am_mandelzoom_OBJECTS) $(am_moirepatterns_OBJECTS)
+SOURCES = $(blob_SOURCES) $(juliaanim_SOURCES) $(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) $(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES) $(simbuoy_SOURCES)
+OBJECTS = $(am_blob_OBJECTS) $(am_juliaanim_OBJECTS) $(am_mandelzoom_OBJECTS) $(am_moirepatterns_OBJECTS) $(am_simbuoy_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -210,6 +219,10 @@ moirepatterns: $(moirepatterns_OBJECTS) $(moirepatterns_DEPENDENCIES)
 	@rm -f moirepatterns
 	$(CXXLINK) $(moirepatterns_LDFLAGS) $(moirepatterns_OBJECTS) $(moirepatterns_LDADD) $(LIBS)
 
+simbuoy: $(simbuoy_OBJECTS) $(simbuoy_DEPENDENCIES)
+	@rm -f simbuoy
+	$(CXXLINK) $(simbuoy_LDFLAGS) $(simbuoy_OBJECTS) $(simbuoy_LDADD) $(LIBS)
+
 tags: TAGS
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
@@ -247,6 +260,7 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/juliaanim.Po
 @AMDEP@include $(DEPDIR)/mandelzoom.Po
 @AMDEP@include $(DEPDIR)/moirepatterns.Po
+@AMDEP@include $(DEPDIR)/simbuoy.Po
 
 mostlyclean-depend:
 

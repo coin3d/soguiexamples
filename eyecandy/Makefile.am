@@ -4,7 +4,9 @@ noinst_PROGRAMS = \
 	moirepatterns \
 	juliaanim \
 	mandelzoom \
-	blob
+	blob \
+	simbuoy
+
 
 moirepatterns_SOURCES = moirepatterns.cpp
 
@@ -16,9 +18,12 @@ EXTRA_mandelzoom_SOURCES = stone42a.h stone42b.h sky10a.h sky10b.h
 
 blob_SOURCES = blob.cpp
 
+simbuoy_SOURCES = simbuoy.cpp
+
 BUILT_SOURCES = \
 	moirepatterns.cpp \
 	juliaanim.cpp \
 	mandelzoom.cpp \
-	blob.cpp
+	blob.cpp \
+	simbuoy.cpp
 
