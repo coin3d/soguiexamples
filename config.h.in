@@ -30,6 +30,12 @@
 /* Define to enable use of Inventor feature */
 #undef HAVE_SOCOMPONENT_SETFULLSCREEN
 
+/* Define to enable use of the Open Inventor SoExtSelection node */
+#undef HAVE_SOEXTSELECTION
+
+/* Define to enable use of Inventor feature */
+#undef HAVE_SOEXTSELECTION_LASSOMODE
+
 /* Define to enable use of Inventor feature */
 #undef HAVE_SOGLRENDERACTION_SORTED_OBJECT_SORTED_TRIANGLE_BLEND
 

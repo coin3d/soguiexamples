@@ -8839,6 +8839,127 @@ fi
 
 
 
+echo "$as_me:$LINENO: checking if the Open Inventor SoExtSelection node is available" >&5
+echo $ECHO_N "checking if the Open Inventor SoExtSelection node is available... $ECHO_C" >&6
+if test "${sim_cv_have_oiv_soextselection_node+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+#include "confdefs.h"
+#include <Inventor/nodes/SoExtSelection.h>
+#ifdef F77_DUMMY_MAIN
+#  ifdef __cplusplus
+     extern "C"
+#  endif
+   int F77_DUMMY_MAIN() { return 1; }
+#endif
+int
+main ()
+{
+SoExtSelection * p = new SoExtSelection;
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  sim_cv_have_oiv_soextselection_node=true
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+sim_cv_have_oiv_soextselection_node=false
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+fi
+echo "$as_me:$LINENO: result: $sim_cv_have_oiv_soextselection_node" >&5
+echo "${ECHO_T}$sim_cv_have_oiv_soextselection_node" >&6
+
+if $sim_cv_have_oiv_soextselection_node; then
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_SOEXTSELECTION 1
+_ACEOF
+
+
+
+echo "$as_me:$LINENO: checking for SoExtSelection::lassoMode" >&5
+echo $ECHO_N "checking for SoExtSelection::lassoMode... $ECHO_C" >&6
+if test "${sim_cv_have_oiv_have_soextselection_lassomode+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+#include "confdefs.h"
+#include <Inventor/nodes/SoExtSelection.h>
+#ifdef F77_DUMMY_MAIN
+#  ifdef __cplusplus
+     extern "C"
+#  endif
+   int F77_DUMMY_MAIN() { return 1; }
+#endif
+int
+main ()
+{
+
+     SoExtSelection * sel = new SoExtSelection;
+     sel->lassoMode = SoExtSelection::VISIBLE_SHAPES;
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  sim_cv_have_oiv_have_soextselection_lassomode=true
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+sim_cv_have_oiv_have_soextselection_lassomode=false
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+fi
+echo "$as_me:$LINENO: result: $sim_cv_have_oiv_have_soextselection_lassomode" >&5
+echo "${ECHO_T}$sim_cv_have_oiv_have_soextselection_lassomode" >&6
+
+if $sim_cv_have_oiv_have_soextselection_lassomode; then
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_SOEXTSELECTION_LASSOMODE 1
+_ACEOF
+
+
+else
+  :
+fi
+
+
+
+else
+  :
+fi
+
+
+
 
 echo "$as_me:$LINENO: checking for SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND" >&5
 echo $ECHO_N "checking for SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND... $ECHO_C" >&6
