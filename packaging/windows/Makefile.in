@@ -18,6 +18,7 @@ executables : dspex
 	cd dspex; \
 	for filename in `find . -name '*.dsp' | sed -e 's%^\./%%'`; do \
 	  projectname=`echo $$filename | sed -e 's%.*/%%' -e 's%\.dsp$$%%'`; \
+	  MAKEFLAGS=""; \
 	  cmd /C msdev $$filename /USEENV /MAKE "$$projectname - Win32 Debug" /REBUILD; \
 	  exename=`echo $$filename | sed -e 's%/[^/]*$$%%'`; \
 	  exename="$$exename/Debug/$$projectname.exe"; \
