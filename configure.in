@@ -228,6 +228,12 @@ AC_LANG(C)
 AC_LANG(C++)
 
 SIM_AC_HAVE_INVENTOR_FEATURE(
+  [for SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND],
+  [#include <Inventor/actions/SoGLRenderAction.h>], [
+   int i = SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND;],
+  [HAVE_SOGLRENDERACTION_SORTED_OBJECT_SORTED_TRIANGLE_BLEND])
+
+SIM_AC_HAVE_INVENTOR_FEATURE(
   [for So${Gui}Component::setFullScreen()],
   [#include <Inventor/${Gui}/viewers/So${Gui}ExaminerViewer.h>], [
    So${Gui}ExaminerViewer * viewer = (So${Gui}ExaminerViewer *) 0;

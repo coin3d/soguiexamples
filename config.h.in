@@ -19,6 +19,9 @@
 #undef HAVE_SOCOMPONENT_SETFULLSCREEN
 
 /* Define to enable use of Inventor feature */
+#undef HAVE_SOGLRENDERACTION_SORTED_OBJECT_SORTED_TRIANGLE_BLEND
+
+/* Define to enable use of Inventor feature */
 #undef HAVE_VIEWER_QUADBUFFER_STEREO
 
 /* Define to enable use of Inventor feature */
