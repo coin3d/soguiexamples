@@ -19,8 +19,6 @@
  *
 \**************************************************************************/
 
-// FIXME: not working yet!  20010916 mortene.
-
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SoPickedPoint.h>
@@ -28,6 +26,7 @@
 #include <Inventor/events/SoMouseButtonEvent.h>
 #include <Inventor/nodes/SoCone.h>
 #include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoSeparator.h>
 
 // *************************************************************************
@@ -74,6 +73,12 @@ main(
   SoSeparator * sep = new SoSeparator;
   sep->ref();
 
+  // Need to set up our own camera in the "user" scenegraph, or else
+  // the raypick action will fail because the camera is "hidden" in
+  // the viewer-specific root of the scenegraph.
+  SoPerspectiveCamera * pcam = new SoPerspectiveCamera;
+  sep->addChild(pcam);
+
   SoEventCallback * ecb = new SoEventCallback;
   ecb->addEventCallback(SoMouseButtonEvent::getClassTypeId(), event_cb, viewer);
   sep->addChild(ecb);
@@ -81,6 +86,7 @@ main(
   sep->addChild(new SoCone);
 
   viewer->setSceneGraph( sep );
+  pcam->viewAll( sep, viewer->getViewportRegion() );
   viewer->show();
   So@Gui@::show( window );
 
