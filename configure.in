@@ -285,6 +285,13 @@ SIM_AC_HAVE_INVENTOR_FEATURE(
    viewer->setQuadBufferStereo(0);],
   [HAVE_VIEWER_QUADBUFFER_STEREO])
 
+SIM_AC_HAVE_INVENTOR_FEATURE(
+  [for SoIntersectionDetectionAction class],
+  [#include <Inventor/actions/SoIntersectionDetectionAction.h>], [
+   SoIntersectionDetectionAction ida;
+   ida.setDraggersEnabled(FALSE);],
+  [HAVE_SOINTERSECTIONDETECTIONACTION])
+
 # **************************************************************************
 # Remove redundant options from certain option lists, to clean up the
 # compiler and linker invocations.
