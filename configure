@@ -308,7 +308,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS sim_ac_mks_make BUILD_WITH_MSVC BUILD_WITH_MSVC_TRUE BUILD_WITH_MSVC_FALSE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT RANLIB ac_ct_RANLIB DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS sim_ac_qt_cygpath HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd HAVE_SMALLCHANGE_TRUE HAVE_SMALLCHANGE_FALSE sim_ac_coinscenery_configcmd HAVE_COINSCENERY_TRUE HAVE_COINSCENERY_FALSE MOC UIC sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE sim_ac_simage_configcmd HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE soguiexamples_src_dir soguiexamples_build_dir LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS sim_ac_mks_make BUILD_WITH_MSVC BUILD_WITH_MSVC_TRUE BUILD_WITH_MSVC_FALSE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT RANLIB ac_ct_RANLIB DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS sim_ac_qt_cygpath HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd HAVE_SMALLCHANGE_TRUE HAVE_SMALLCHANGE_FALSE sim_ac_coinscenery_configcmd HAVE_COINSCENERY_TRUE HAVE_COINSCENERY_FALSE MOC UIC sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE HAVE_VOLUMEVIZ_TRUE HAVE_VOLUMEVIZ_FALSE sim_ac_simage_configcmd HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE soguiexamples_src_dir soguiexamples_build_dir LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -10342,6 +10342,7 @@ else
   sim_ac_configuration_settings="GUI toolkit:InventorQt"
 fi
 
+    sim_ac_gui_toolkit=inventorqt
   fi
 
 else
@@ -12335,7 +12336,7 @@ echo "$as_me: error: aborting" >&2;}
 
   fi
 
-  # Default to not look for SimVoleon, as we'll get lots of warnings
+  # Default to not look for SIM Voleon, as we'll get lots of warnings
   # from configure in the common case that it is _not_ available.
   sim_ac_simvoleon_desired=false
 
@@ -12558,9 +12559,9 @@ if $sim_ac_simvoleon_avail; then
 
 
 if test x"${sim_ac_configuration_settings+set}" = x"set"; then
-  sim_ac_configuration_settings="$sim_ac_configuration_settings|SimVoleon:is being used"
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|SIM Voleon:is being used"
 else
-  sim_ac_configuration_settings="SimVoleon:is being used"
+  sim_ac_configuration_settings="SIM Voleon:is being used"
 fi
 
 
@@ -12611,9 +12612,9 @@ echo "$as_me: error: aborting" >&2;}
     else
 
 if test x"${sim_ac_configuration_settings+set}" = x"set"; then
-  sim_ac_configuration_settings="$sim_ac_configuration_settings|SimVoleon:not used (enable with --with-simvoleon)"
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|SIM Voleon:not used (enable with --with-simvoleon)"
 else
-  sim_ac_configuration_settings="SimVoleon:not used (enable with --with-simvoleon)"
+  sim_ac_configuration_settings="SIM Voleon:not used (enable with --with-simvoleon)"
 fi
 
     fi
@@ -12622,13 +12623,17 @@ fi
 
 else
   sim_ac_simvoleon_avail=false
+  if $sim_ac_guiexamples_use_inventor; then
+    :  # don't warn if we're using SGI or TGS Inventor, as SIM Voleon is an obvious no-go then
+  else
 
 if test x"${sim_ac_configuration_settings+set}" = x"set"; then
-  sim_ac_configuration_settings="$sim_ac_configuration_settings|SimVoleon:not used (examples only works with SoQt)"
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|SIM Voleon:not used (examples only works with SoQt)"
 else
-  sim_ac_configuration_settings="SimVoleon:not used (examples only works with SoQt)"
+  sim_ac_configuration_settings="SIM Voleon:not used (examples only works with SoQt)"
 fi
 
+  fi
 fi
 
 
@@ -12643,7 +12648,301 @@ fi
 
 
 # **************************************************************************
-# At least one of the SimVoleon examples needs simage. Will just do a
+# If we're using Inventor and InventorQt, check to see if VolumeViz is
+# also available. Those are the two alternate dependencies of the examples
+# under the volumerendering/ directory.
+
+sim_ac_volumeviz_avail=false
+if test x"$sim_ac_gui_toolkit" = x"inventorqt"; then
+
+
+
+
+if $sim_ac_with_qt; then
+
+  sim_ac_path=$PATH
+  if test -n "$sim_ac_qtdir"; then
+    sim_ac_path=$sim_ac_qtdir/bin:$PATH
+  fi
+
+  # Extract the first word of "moc", so it can be a program name with args.
+set dummy moc; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_MOC+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $MOC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_MOC="$MOC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $sim_ac_path
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_MOC="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_MOC" && ac_cv_path_MOC="false"
+  ;;
+esac
+fi
+MOC=$ac_cv_path_MOC
+
+if test -n "$MOC"; then
+  echo "$as_me:$LINENO: result: $MOC" >&5
+echo "${ECHO_T}$MOC" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  if test x"$MOC" = x"false"; then
+    if test -z "$QTDIR"; then
+      { echo "$as_me:$LINENO: WARNING: QTDIR environment variable not set -- this might be an indication of a problem" >&5
+echo "$as_me: WARNING: QTDIR environment variable not set -- this might be an indication of a problem" >&2;}
+    fi
+    { echo "$as_me:$LINENO: WARNING: the \`\`moc'' Qt pre-processor tool not found" >&5
+echo "$as_me: WARNING: the \`\`moc'' Qt pre-processor tool not found" >&2;}
+  fi
+else
+  MOC=false
+
+fi
+
+  if test x"$MOC" = x"false"; then
+
+echo >&2 ""
+
+
+: ${sim_ac_message_file=$ac_aux_dir/errors.txt}
+if test -f $sim_ac_message_file; then
+  sim_ac_message="`sed -n -e '/^!no-moc$/,/^!/ { /^!/ d; p; }' <$sim_ac_message_file`"
+  if test x"$sim_ac_message" = x""; then
+    { { echo "$as_me:$LINENO: error: no message named 'no-moc' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: no message named 'no-moc' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&2;}
+   { (exit 1); exit 1; }; }
+  else
+    eval "echo >&2 \"$sim_ac_message\""
+  fi
+else
+  { { echo "$as_me:$LINENO: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+
+echo >&2 ""
+{ { echo "$as_me:$LINENO: error: aborting" >&5
+echo "$as_me: error: aborting" >&2;}
+   { (exit 1); exit 1; }; }
+
+  fi
+
+
+
+
+if $sim_ac_with_qt; then
+
+  sim_ac_path=$PATH
+  if test -n "$sim_ac_qtdir"; then
+    sim_ac_path=$sim_ac_qtdir/bin:$PATH
+  fi
+
+  # Extract the first word of "uic", so it can be a program name with args.
+set dummy uic; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_UIC+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $UIC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_UIC="$UIC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $sim_ac_path
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_UIC="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_UIC" && ac_cv_path_UIC="false"
+  ;;
+esac
+fi
+UIC=$ac_cv_path_UIC
+
+if test -n "$UIC"; then
+  echo "$as_me:$LINENO: result: $UIC" >&5
+echo "${ECHO_T}$UIC" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  if test x"$UIC" = x"false"; then
+    if test -z "$QTDIR"; then
+      { echo "$as_me:$LINENO: WARNING: QTDIR environment variable not set -- this might be an indication of a problem" >&5
+echo "$as_me: WARNING: QTDIR environment variable not set -- this might be an indication of a problem" >&2;}
+    fi
+    { echo "$as_me:$LINENO: WARNING: the \`\`uic'' Qt pre-processor tool not found" >&5
+echo "$as_me: WARNING: the \`\`uic'' Qt pre-processor tool not found" >&2;}
+  fi
+else
+  UIC=false
+
+fi
+
+  if test x"$UIC" = x"false"; then
+
+echo >&2 ""
+
+
+: ${sim_ac_message_file=$ac_aux_dir/errors.txt}
+if test -f $sim_ac_message_file; then
+  sim_ac_message="`sed -n -e '/^!no-uic$/,/^!/ { /^!/ d; p; }' <$sim_ac_message_file`"
+  if test x"$sim_ac_message" = x""; then
+    { { echo "$as_me:$LINENO: error: no message named 'no-uic' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: no message named 'no-uic' in '$sim_ac_message_file' - notify the $PACKAGE_NAME maintainer(s)" >&2;}
+   { (exit 1); exit 1; }; }
+  else
+    eval "echo >&2 \"$sim_ac_message\""
+  fi
+else
+  { { echo "$as_me:$LINENO: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&5
+echo "$as_me: error: file '$sim_ac_message_file' not found - notify the $PACKAGE_NAME maintainer(s)" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+
+echo >&2 ""
+{ { echo "$as_me:$LINENO: error: aborting" >&5
+echo "$as_me: error: aborting" >&2;}
+   { (exit 1); exit 1; }; }
+
+  fi
+
+  sim_ac_save_libs=$LIBS
+  LIBS="-lInventorVR $LIBS"
+  echo "$as_me:$LINENO: checking for TGS VolumeViz" >&5
+echo $ECHO_N "checking for TGS VolumeViz... $ECHO_C" >&6
+  ac_ext=cc
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+  cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <VolumeViz/nodes/SoVolumeRendering.h>
+int
+main ()
+{
+SoVolumeRendering::init();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  sim_ac_volumeviz_avail=true
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+sim_ac_volumeviz_avail=false
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+  ac_ext=cc
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+  echo "$as_me:$LINENO: result: $sim_ac_volumeviz_avail" >&5
+echo "${ECHO_T}$sim_ac_volumeviz_avail" >&6
+
+  if $sim_ac_volumeviz_avail; then
+
+if test x"${sim_ac_configuration_settings+set}" = x"set"; then
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|TGS VolumeViz:is being used"
+else
+  sim_ac_configuration_settings="TGS VolumeViz:is being used"
+fi
+
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_VOLUMEVIZ_LIBRARY 1
+_ACEOF
+
+  else
+
+if test x"${sim_ac_configuration_settings+set}" = x"set"; then
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|TGS VolumeViz:is not being used -- failed to build"
+else
+  sim_ac_configuration_settings="TGS VolumeViz:is not being used -- failed to build"
+fi
+
+    LIBS=$sim_ac_save_libs
+  fi
+
+  # SIM Qt extension widgets needed for volumerendering examples.
+  if test -d $srcdir/volumerendering/Cute; then
+    :
+  else
+    { { echo "$as_me:$LINENO: error: Detected old CVS checkout of SoGuiExamples, exiting. To fix, 'cd' to the SoGuiExamples/volumerendering/ directory, do a 'cvs co Cute' and re-run configure." >&5
+echo "$as_me: error: Detected old CVS checkout of SoGuiExamples, exiting. To fix, 'cd' to the SoGuiExamples/volumerendering/ directory, do a 'cvs co Cute' and re-run configure." >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+fi
+
+
+
+if $sim_ac_volumeviz_avail; then
+  HAVE_VOLUMEVIZ_TRUE=
+  HAVE_VOLUMEVIZ_FALSE='#'
+else
+  HAVE_VOLUMEVIZ_TRUE='#'
+  HAVE_VOLUMEVIZ_FALSE=
+fi
+
+
+# **************************************************************************
+# At least one of the SIM Voleon examples needs simage. Will just do a
 # general check for it, in case other examples pops up which uses it.
 
 
@@ -13283,6 +13582,13 @@ if test -z "${HAVE_SIMVOLEON_TRUE}" && test -z "${HAVE_SIMVOLEON_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"HAVE_SIMVOLEON\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"HAVE_SIMVOLEON\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${HAVE_VOLUMEVIZ_TRUE}" && test -z "${HAVE_VOLUMEVIZ_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"HAVE_VOLUMEVIZ\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"HAVE_VOLUMEVIZ\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -14055,6 +14361,8 @@ s,@UIC@,$UIC,;t t
 s,@sim_ac_simvoleon_configcmd@,$sim_ac_simvoleon_configcmd,;t t
 s,@HAVE_SIMVOLEON_TRUE@,$HAVE_SIMVOLEON_TRUE,;t t
 s,@HAVE_SIMVOLEON_FALSE@,$HAVE_SIMVOLEON_FALSE,;t t
+s,@HAVE_VOLUMEVIZ_TRUE@,$HAVE_VOLUMEVIZ_TRUE,;t t
+s,@HAVE_VOLUMEVIZ_FALSE@,$HAVE_VOLUMEVIZ_FALSE,;t t
 s,@sim_ac_simage_configcmd@,$sim_ac_simage_configcmd,;t t
 s,@HAVE_SIMAGE_TRUE@,$HAVE_SIMAGE_TRUE,;t t
 s,@HAVE_SIMAGE_FALSE@,$HAVE_SIMAGE_FALSE,;t t

@@ -39,7 +39,7 @@
 /* Define to enable explicit use of simage library */
 #undef HAVE_SIMAGE_LIBRARY
 
-/* Define to enable use of SimVoleon library */
+/* Define to enable use of SIM Voleon library */
 #undef HAVE_SIMVOLEON_LIBRARY
 
 /* Define to enable use of SmallChange library */
@@ -113,6 +113,9 @@
 
 /* Define to enable use of Inventor feature */
 #undef HAVE_VIEWER_STEREO_VIEWING
+
+/* Define to enable use of TGS VolumeViz library */
+#undef HAVE_VOLUMEVIZ_LIBRARY
 
 /* Define to 1 if you have the <windows.h> header file. */
 #undef HAVE_WINDOWS_H
