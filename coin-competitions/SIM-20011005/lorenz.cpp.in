@@ -43,6 +43,7 @@ static float vertices[18][3] =
 {
   { -0.5, 0.5, 0 }, { 0.5, 0.5, 0 }, { 0.5, -0.5, 0 },
   { -0.5, 0.5, 0 }, { -0.5, -0.5, 0 }, { 0.5, -0.5, 0 },
+
   { -0.5, 0, 0.5 }, { 0.5, 0, 0.5 }, { 0.5, 0, -0.5 },
   { -0.5, 0, 0.5 }, { -0.5, 0, -0.5 }, { 0.5, 0, -0.5 },
 
@@ -50,34 +51,10 @@ static float vertices[18][3] =
   { 0, -0.5, 0.5 }, { 0, -0.5, -0.5 }, { 0, 0.5, -0.5 }
 };
 
-static int numVertices[3] =
-{
-	6, 6, 6
-};
-
-SoTexture2 *
-create_texture(int width, int height, int bpp, unsigned char * raw, bool blend)
-{
-  SoTexture2 * texture = new SoTexture2;
-  texture->image.setValue(SbVec2s(width, height), bpp, raw);
-  texture->model = (blend?SoTexture2::BLEND:SoTexture2::DECAL);
-  texture->blendColor.setValue(1.0, 0.0, 0.0);
-  return texture;
-}
-
-SoSeparator * create_star(SoTexture2 * texture, SbVec3f pos)
+SoSeparator * create_star(SbVec3f pos)
 {
   SoSeparator * sep = new SoSeparator;
   sep->ref();
-
-  SoMaterial * mat = new SoMaterial;
-  mat->specularColor.setValue( 1.0f, 1.0f, 1.0f );
-  mat->emissiveColor.setValue( 1.0f, 1.0f, 1.0f );
-  mat->shininess = 0.0f;
-  mat->transparency = 0.7f;
-  sep->addChild(mat);
-
-  sep->addChild(texture);
 
   SoTranslation * trans = new SoTranslation;
   trans->translation.setValue(pos);
@@ -88,7 +65,7 @@ SoSeparator * create_star(SoTexture2 * texture, SbVec3f pos)
   sep->addChild(coords);
 
   SoTriangleStripSet * strip = new SoTriangleStripSet;
-  strip->numVertices.setValues(0, 1, (int *)numVertices);
+  strip->numVertices.setValue(6);
   sep->addChild(strip);
 
   coords = new SoCoordinate3;
@@ -96,7 +73,7 @@ SoSeparator * create_star(SoTexture2 * texture, SbVec3f pos)
   sep->addChild(coords);
 
   strip = new SoTriangleStripSet;
-  strip->numVertices.setValues(0, 1, (int *)&numVertices[1]);
+  strip->numVertices.setValue(6);
   sep->addChild(strip);
 
   coords = new SoCoordinate3;
@@ -104,7 +81,7 @@ SoSeparator * create_star(SoTexture2 * texture, SbVec3f pos)
   sep->addChild(coords);
 
   strip = new SoTriangleStripSet;
-  strip->numVertices.setValues(0, 1, (int *)&numVertices[2]);
+  strip->numVertices.setValue(6);
   sep->addChild(strip);
 
   sep->unrefNoDelete();
@@ -149,6 +126,20 @@ main (int argc, char ** argv)
 
   SoSeparator * stars = new SoSeparator;
 
+
+  SoMaterial * mat = new SoMaterial;
+  mat->specularColor.setValue( 1.0f, 1.0f, 1.0f );
+  mat->emissiveColor.setValue( 1.0f, 1.0f, 1.0f );
+  mat->shininess = 0.0f;
+  mat->transparency = 0.7f;
+  stars->addChild(mat);
+
+  SoTexture2 * texture = new SoTexture2;
+  texture->image.setValue(SbVec2s(64, 64), 4, (unsigned char *)star_raw);
+  texture->model = SoTexture2::DECAL;
+  texture->blendColor.setValue(1.0, 0.0, 0.0);
+  stars->addChild(texture);
+
   printf("Computing...\n");
 
   x0 = 0.1;
@@ -161,12 +152,7 @@ main (int argc, char ** argv)
     x0 = x1;
     y0 = y1;
     z0 = z1;
-    if (i > 100) {
-	  //printf("#");
-      stars->addChild(
-        create_star(create_texture(64, 64, 4, (unsigned char*)star_raw, false),
-        SbVec3f(x0, y0, z0)));
-	}
+    if (i > 100) { stars->addChild(create_star(SbVec3f(x0, y0, z0))); }
   }
 
   printf("\nOk, done!\n\n");
