@@ -45,8 +45,8 @@
 #include <Inventor/nodes/SoMaterial.h>
 #include <Inventor/nodes/SoShuttle.h>
 
-#include "envq_raw"
-#include "star_raw"
+#include "envq_raw.h"
+#include "star_raw.h"
 
 static float vertices[18][3] =
 {
