@@ -14,8 +14,7 @@ top_srcdir = @soguiexamples_src_dir@
 
 # **************************************************************************
 
-# all: dspex executables
-all: executables
+all: dspex executables
 
 # **************************************************************************
 
