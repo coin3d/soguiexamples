@@ -129,7 +129,7 @@ BUILT_SOURCES = \
 # 	SoGuiCutterViewer.cpp
 
 noinst_PROGRAMS = renderarea backgroundimg examinerviewer overlay \
-	planeviewer flyviewer snapshotviewer cutterviewer \
+	planeviewer flyviewer snapshotviewer \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
 	$(MATERIALLIST) $(PRINTDIALOG)
 
@@ -201,13 +201,13 @@ SoGuiSnapshotViewer.h: $(srcdir)/SoGuiSnapshotViewer.h.in
 SoGuiSnapshotViewer.cpp: $(srcdir)/SoGuiSnapshotViewer.cpp.in
 	@( cd $(top_builddir); ./config.status --file=components/SoGuiSnapshotViewer.cpp )
 
-cutterviewer.cpp: $(srcdir)/cutterviewer.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/cutterviewer.cpp )
+#cutterviewer.cpp: $(srcdir)/cutterviewer.cpp.in
+#	@( cd $(top_builddir); ./config.status --file=components/cutterviewer.cpp )
 
-SoGuiCutterViewer.h: $(srcdir)/SoGuiCutterViewer.h.in
-	@( cd $(top_builddir); ./config.status --file=components/SoGuiCutterViewer.h )
+#SoGuiCutterViewer.h: $(srcdir)/SoGuiCutterViewer.h.in
+#	@( cd $(top_builddir); ./config.status --file=components/SoGuiCutterViewer.h )
 
-SoGuiCutterViewer.cpp: $(srcdir)/SoGuiCutterViewer.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/SoGuiCutterViewer.cpp )
+#SoGuiCutterViewer.cpp: $(srcdir)/SoGuiCutterViewer.cpp.in
+#	@( cd $(top_builddir); ./config.status --file=components/SoGuiCutterViewer.cpp )
 
 ############################################################################
