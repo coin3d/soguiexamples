@@ -20,21 +20,46 @@
  *
 \**************************************************************************/
 
-#include <Inventor/SoDB.h>
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
 
 // This example uses SoExtSelection, SoPolygonOffset and
 // SbBSPTree. All of these are missing from SGI Inventor. TGS Inventor
 // has the first two, but is missing SbBSPTree.
 #ifndef __COIN__
 
+#include <Inventor/nodes/SoText3.h>
 #include <stdio.h>
-int main(void) { (void)fprintf(stderr, "This example only works with Coin.\n"); return 1; }
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  SoText3 * msg = new SoText3;
+  msg->string = "This example only works with Coin.";
+  root->addChild(msg);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->show();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+
+  return 1;
+}
 
 #else // __COIN__
 
-#include <Inventor/@Gui@/So@Gui@.h>
-#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
-#include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoTranslation.h>
 #include <Inventor/nodes/SoExtSelection.h>
 #include <Inventor/nodes/SoCamera.h>
@@ -42,7 +67,6 @@ int main(void) { (void)fprintf(stderr, "This example only works with Coin.\n"); 
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoLightModel.h>
 #include <Inventor/nodes/SoBaseColor.h>
-#include <Inventor/actions/SoGetBoundingBoxAction.h>
 #include <Inventor/actions/SoSearchAction.h>
 #include <Inventor/SoInput.h>
 #include <Inventor/nodes/SoEventCallback.h>

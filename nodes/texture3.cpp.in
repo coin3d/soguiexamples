@@ -20,12 +20,52 @@
  *
 \**************************************************************************/
 
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+
+// This example uses SbClip, SoTexture3, SoTextureCoordinate3 and
+// SbVec3s. All of these are missing from SGI Inventor. TGS Inventor
+// has SoTexture3 support, so we could probably make the example work
+// with it with a little bit of effort.
+#ifndef __COIN__
+
+#include <Inventor/nodes/SoText3.h>
+#include <stdio.h>
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  SoText3 * msg = new SoText3;
+  msg->string = "This example only works with Coin.";
+  root->addChild(msg);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->show();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+
+  return 1;
+}
+
+#else // __COIN__
+
 // FIXME: there are many bugs in this example.. just play around with
 // the dragger a bit, and you should be able to get your hands
 // full. :-/ 20020219 mortene.
 
 #include <Inventor/SbClip.h>
-#include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoComplexity.h>
 #include <Inventor/nodes/SoMaterial.h>
@@ -35,9 +75,6 @@
 #include <Inventor/nodes/SoLineSet.h>
 #include <Inventor/nodes/SoBaseColor.h>
 #include <Inventor/draggers/SoTransformerDragger.h>
-
-#include <Inventor/@Gui@/So@Gui@.h>
-#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 
 #include <values.h>
 
@@ -54,7 +91,7 @@ unsigned char * generateTexture(int w, int h, int d)
       y = (j-h/2)/2;
       for (int i = 0;i<w;i++) {
         x = (i-w/2)/2;
-        val = x*x + y*y*sin(2*x*M_PI/w + z*M_PI/180);
+        val = int(x*x + y*y*sin(2*x*M_PI/w + z*M_PI/180));
         val = abs(val%512);
         if (val >= 256) val = 511-val;
         bitmap[k*w*h + j*h + i] = val;
@@ -261,3 +298,5 @@ int main(int argc, char * argv[])
 
   return 0;
 }
+
+#endif // __COIN__
