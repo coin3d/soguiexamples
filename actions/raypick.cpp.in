@@ -227,7 +227,13 @@ main(int argc, char ** argv)
   root->addChild(ecb);
 
   SoInput in;
-  in.setBuffer((void *)scene_iv, strlen(scene_iv));
+  if (argc == 2) {
+    SbBool ok = in.openFile(argv[1]);
+    assert(ok);
+  }
+  else {
+    in.setBuffer((void *)scene_iv, strlen(scene_iv));
+  }
   SoSeparator * r = SoDB::readAll(&in);
   assert(r);
   root->addChild(r);
