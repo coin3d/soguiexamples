@@ -20,6 +20,7 @@
 \**************************************************************************/
 
 #include <assert.h>
+#include <float.h>
 
 #include <Inventor/SbBasic.h>
 #include <Inventor/actions/SoGLRenderAction.h>
@@ -104,6 +105,8 @@ public:
 
   Landscape * landscape;
 
+private:
+  float previousx, previousy, previousz;
 }; // FractalViewer
 
 // *************************************************************************
@@ -421,13 +424,15 @@ FractalViewer::FractalViewer(
   this->setBottomWheelString( "Move Center X" );
   this->setRightWheelString( "Zoom" );
   this->landscape = NULL;
+  this->previousx = this->previousy = this->previousz = FLT_MAX;
 }
 
 void
 FractalViewer::leftWheelMotion(
   float val )
 {
-  float old = this->getLeftWheelValue();
+  float old = this->previousy == FLT_MAX ? val : this->previousy;
+  this->previousy = val;
   So@Gui@FullViewer::leftWheelMotion( val );
   if ( this->landscape )
     this->landscape->recalcY( val - old );
@@ -437,7 +442,8 @@ void
 FractalViewer::bottomWheelMotion(
   float val )
 {
-  float old = this->getBottomWheelValue();
+  float old = this->previousx == FLT_MAX ? val : this->previousx;
+  this->previousx = val;
   So@Gui@FullViewer::bottomWheelMotion( val );
   if ( this->landscape )
     this->landscape->recalcX( val - old );
@@ -447,7 +453,8 @@ void
 FractalViewer::rightWheelMotion(
   float val )
 {
-  float old = this->getRightWheelValue();
+  float old = this->previousz == FLT_MAX ? val : this->previousz;
+  this->previousz = val;
   So@Gui@FullViewer::rightWheelMotion( val );
   if ( this->landscape )
     this->landscape->recalcZ( val - old );
