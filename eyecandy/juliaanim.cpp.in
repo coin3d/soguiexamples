@@ -326,7 +326,7 @@ main(
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
   viewer->setTransparencyType( SoGLRenderAction::BLEND );
   viewer->setSceneGraph( root );
-  viewer->setTitle( "Factal Landscape Demo" );
+  viewer->setTitle( "Fractal Landscape Demo" );
   viewer->viewAll();
   viewer->show();
   So@Gui@::show( window );
