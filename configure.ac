@@ -500,6 +500,7 @@ AC_OUTPUT([
 	nodes/markerset.cpp
 	nodes/image.cpp
 	nodes/bigimage.cpp
+	nodes/textureunit.cpp
 
 	sensors/Makefile
 	sensors/timersensor.cpp

@@ -1,0 +1,8 @@
+#include <stdio.h>
+
+int main(int argc, char ** argv)
+{
+  fprintf(stderr,"example coming soon\n");
+  return 0;
+}
+

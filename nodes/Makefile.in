@@ -199,7 +199,8 @@ BUILT_SOURCES = \
 	pointset.cpp \
 	markerset.cpp \
 	image.cpp \
-	bigimage.cpp
+	bigimage.cpp \
+	textureunit.cpp
 
 
 noinst_PROGRAMS = \
@@ -209,7 +210,7 @@ noinst_PROGRAMS = \
         faceset facesetindexed quadmesh trianglestripset \
         camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
-        pointset markerset image bigimage
+        pointset markerset image bigimage textureunit
 
 
 drawstyle_SOURCES = drawstyle.cpp
@@ -248,6 +249,7 @@ pointset_SOURCES = pointset.cpp
 markerset_SOURCES = markerset.cpp
 image_SOURCES = image.cpp
 bigimage_SOURCES = bigimage.cpp
+textureunit_SOURCS = textureunit.cpp
 subdir = nodes
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
@@ -260,7 +262,7 @@ CONFIG_CLEAN_FILES = drawstyle.cpp material.cpp selection.cpp \
 	blinker.cpp texture.cpp texture3.cpp environment.cpp \
 	atmospheric.cpp shuttle.cpp complexity.cpp text2.cpp text3.cpp \
 	clipplane.cpp levelofdetail.cpp extselection.cpp pointset.cpp \
-	markerset.cpp image.cpp bigimage.cpp
+	markerset.cpp image.cpp bigimage.cpp textureunit.cpp
 noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	selection$(EXEEXT) slideshow$(EXEEXT) sphere$(EXEEXT) \
 	spherecolor$(EXEEXT) rotation$(EXEEXT) scale$(EXEEXT) \
@@ -273,7 +275,8 @@ noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	atmospheric$(EXEEXT) shuttle$(EXEEXT) complexity$(EXEEXT) \
 	text2$(EXEEXT) text3$(EXEEXT) clipplane$(EXEEXT) \
 	levelofdetail$(EXEEXT) extselection$(EXEEXT) pointset$(EXEEXT) \
-	markerset$(EXEEXT) image$(EXEEXT) bigimage$(EXEEXT)
+	markerset$(EXEEXT) image$(EXEEXT) bigimage$(EXEEXT) \
+	textureunit$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_atmospheric_OBJECTS = atmospheric.$(OBJEXT)
@@ -441,6 +444,11 @@ texture3_OBJECTS = $(am_texture3_OBJECTS)
 texture3_LDADD = $(LDADD)
 texture3_DEPENDENCIES =
 texture3_LDFLAGS =
+textureunit_SOURCES = textureunit.c
+textureunit_OBJECTS = textureunit.$(OBJEXT)
+textureunit_LDADD = $(LDADD)
+textureunit_DEPENDENCIES =
+textureunit_LDFLAGS =
 am_transform_OBJECTS = transform.$(OBJEXT)
 transform_OBJECTS = $(am_transform_OBJECTS)
 transform_LDADD = $(LDADD)
@@ -478,8 +486,13 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/spherecolor.Po ./$(DEPDIR)/spotlight.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/text2.Po ./$(DEPDIR)/text3.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/texture.Po ./$(DEPDIR)/texture3.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/transform.Po ./$(DEPDIR)/translation.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/textureunit.Po ./$(DEPDIR)/transform.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/translation.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/trianglestripset.Po
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -497,8 +510,9 @@ DIST_SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) \
 	$(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) \
 	$(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) \
 	$(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) \
-	$(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) \
-	$(translation_SOURCES) $(trianglestripset_SOURCES)
+	$(texture_SOURCES) $(texture3_SOURCES) textureunit.c \
+	$(transform_SOURCES) $(translation_SOURCES) \
+	$(trianglestripset_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in atmospheric.cpp.in \
 	bigimage.cpp.in blinker.cpp.in camera.cpp.in clipplane.cpp.in \
 	complexity.cpp.in directionallight.cpp.in drawstyle.cpp.in \
@@ -509,15 +523,15 @@ DIST_COMMON = Makefile.am Makefile.in atmospheric.cpp.in \
 	rotation.cpp.in rotor.cpp.in scale.cpp.in selection.cpp.in \
 	shuttle.cpp.in slideshow.cpp.in sphere.cpp.in \
 	spherecolor.cpp.in spotlight.cpp.in text2.cpp.in text3.cpp.in \
-	texture.cpp.in texture3.cpp.in transform.cpp.in \
-	translation.cpp.in trianglestripset.cpp.in
-SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) $(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
+	texture.cpp.in texture3.cpp.in textureunit.cpp.in \
+	transform.cpp.in translation.cpp.in trianglestripset.cpp.in
+SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) $(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) textureunit.c $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .cpp .o .obj
+.SUFFIXES: .c .cpp .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  nodes/Makefile
@@ -594,6 +608,8 @@ markerset.cpp: $(top_builddir)/config.status markerset.cpp.in
 image.cpp: $(top_builddir)/config.status image.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 bigimage.cpp: $(top_builddir)/config.status bigimage.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+textureunit.cpp: $(top_builddir)/config.status textureunit.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
@@ -697,6 +713,9 @@ texture$(EXEEXT): $(texture_OBJECTS) $(texture_DEPENDENCIES)
 texture3$(EXEEXT): $(texture3_OBJECTS) $(texture3_DEPENDENCIES) 
 	@rm -f texture3$(EXEEXT)
 	$(CXXLINK) $(texture3_LDFLAGS) $(texture3_OBJECTS) $(texture3_LDADD) $(LIBS)
+textureunit$(EXEEXT): $(textureunit_OBJECTS) $(textureunit_DEPENDENCIES) 
+	@rm -f textureunit$(EXEEXT)
+	$(LINK) $(textureunit_LDFLAGS) $(textureunit_OBJECTS) $(textureunit_LDADD) $(LIBS)
 transform$(EXEEXT): $(transform_OBJECTS) $(transform_DEPENDENCIES) 
 	@rm -f transform$(EXEEXT)
 	$(CXXLINK) $(transform_LDFLAGS) $(transform_OBJECTS) $(transform_LDADD) $(LIBS)
@@ -746,12 +765,35 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/text3.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/texture.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/texture3.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/textureunit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transform.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/translation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trianglestripset.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)
+
+.c.o:
+@am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
+@am__fastdepCC_TRUE@	  -c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; \
+@am__fastdepCC_TRUE@	else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; \
+@am__fastdepCC_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(COMPILE) -c `test -f '$<' || echo '$(srcdir)/'`$<
+
+.c.obj:
+@am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
+@am__fastdepCC_TRUE@	  -c -o $@ `if test -f '$<'; then $(CYGPATH_W) '$<'; else $(CYGPATH_W) '$(srcdir)/$<'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; \
+@am__fastdepCC_TRUE@	else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; \
+@am__fastdepCC_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(COMPILE) -c `if test -f '$<'; then $(CYGPATH_W) '$<'; else $(CYGPATH_W) '$(srcdir)/$<'; fi`
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
