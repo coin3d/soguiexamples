@@ -176,7 +176,7 @@ LIBS="`$soguiconfig --libs` $LIBS"
 # **************************************************************************
 # Compiler control.
 
-SIM_COMPILE_DEBUG
+SIM_AC_COMPILE_DEBUG
 
 SIM_AC_DEBUGSYMBOLS
 SIM_AC_RTTI_SUPPORT
