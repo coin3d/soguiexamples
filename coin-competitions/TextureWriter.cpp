@@ -157,7 +157,7 @@ void TextureWriter::render( char c, unsigned int line, unsigned int column )
 
   char_pos_y = line * this->fontYSize;
   char_pos_x = column * this->fontXSize;
-  bitmap = font[c];
+  bitmap = SOGUIEXAMPLES_FONT[c];
 
   // FIXME: rendering is sloooow!
   for (bit_pos_y=0;bit_pos_y<this->fontYSize;bit_pos_y++) {
