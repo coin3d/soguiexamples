@@ -1,0 +1,197 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2003 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoTextureCoordinateEnvironment.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/events/SoEvent.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoOrthographicCamera.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoBaseColor.h>
+#include <Inventor/nodes/SoText2.h>
+#include <Inventor/C/tidbits.h>
+#include "WaveSurfaceKit.h"
+
+static WaveSurfaceKit * waveKit;
+
+static SoSeparator * 
+newCube(float x, float y, float z, float zrot, float length)
+{
+  SoSeparator* sep = new SoSeparator();
+  // make a scaled cube to place under the surface
+  // to show that the surface is transparent.
+  SoScale* scale = new SoScale();
+  scale->scaleFactor.setValue(0.1f,length,0.1f);
+
+  SoTransform* transform = new SoTransform();
+  transform->translation.setValue(x,y,z);
+
+  SoRotation* rot = new SoRotation();
+  rot->rotation.setValue(SbVec3f(0.0f,0.0f,1.0f),zrot);
+  SoTexture2* texture2 = new SoTexture2();
+  texture2->filename.setValue("textures/wood2.jpg");
+
+  sep->addChild(texture2);
+  sep->addChild(transform);
+  sep->addChild(rot);
+  sep->addChild(scale);
+  sep->addChild(new SoCube());
+
+  return sep;
+}
+
+static SoSeparator* 
+bottom(float xscale, float yscale, float zscale)
+{
+  SoSeparator* sep = new SoSeparator();
+  // make a scaled cube to place under the surface
+  // to show that the surface is transparent.
+  SoScale* scale = new SoScale();
+  scale->scaleFactor.setValue(xscale,yscale,zscale);
+
+  SoTransform* transform = new SoTransform();
+  transform->translation.setValue(0.0f,0.0f,-0.1f);
+
+  SoTexture2* texture2 = new SoTexture2();
+  texture2->filename.setValue("textures/stone2.jpg");
+
+  sep->addChild(texture2);
+  sep->addChild(transform);
+  sep->addChild(scale);
+  sep->addChild(new SoCube());
+
+  return sep;
+}
+
+// *************************************************************************
+// handle keyboard events
+static void
+event_cb(void * ud, SoEventCallback * eventCB)
+{
+  const SoEvent * event = eventCB->getEvent();
+  if (SO_KEY_PRESS_EVENT(event, R)) {
+    waveKit->reset();
+    eventCB->setHandled();
+  }
+}
+
+//*************************************************************************************
+
+int
+main(int argc, char ** argv)
+{
+  // Initializes So@Gui@ library (and implicitly also the Coin
+  // library). Returns a top-level / shell window to use.
+  @WIDGET@ mainwin = So@Gui@::init(argc, argv, argv[0]);
+
+  // initialize the WaveSurfaceKit
+  WaveSurfaceKit::initClass();
+
+  SoSeparator* root = new SoSeparator();
+  root->ref();
+
+  SoTexture2 * texture1 = new SoTexture2();
+  texture1->filename.setValue("textures/stone2.jpg");
+
+  waveKit = new WaveSurfaceKit;
+  waveKit->startAnimation();
+
+  root->addChild(newCube(-1.1f,0,0,0,1.2f));
+  root->addChild(newCube(1.1f,0,0,0,1.2f));
+  root->addChild(newCube(0,1.1f,0,M_PI/2,1.0f));
+  root->addChild(newCube(0,-1.1f,0,M_PI/2,1.0f));
+  root->addChild(bottom(1.2f, 1.2f, 0.01f));
+
+  root->addChild(texture1);
+  root->addChild(waveKit);
+	
+  coin_setenv("COIN_SHOW_FPS_COUNTER", "1", TRUE);
+
+  // Use one of the convenient So@Gui@ viewer classes.
+  So@Gui@ExaminerViewer * eviewer = new So@Gui@ExaminerViewer(mainwin);
+  eviewer->setSceneGraph(root);
+
+  SoEventCallback * ecb = new SoEventCallback;
+  ecb->addEventCallback(SoEvent::getClassTypeId(), event_cb, eviewer);
+  root->addChild(ecb);
+
+  //  eviewer->setFullScreen(TRUE);
+  //eviewer->setDecoration(FALSE);
+  eviewer->show();
+
+  // instructions... cut and paste from another demo program ;-)
+  SoSeparator * instructsep = new SoSeparator;
+  root->addChild(instructsep);
+  
+  SoOrthographicCamera * ocam = new SoOrthographicCamera;
+  //  SoPerspectiveCamera * ocam = new SoPerspectiveCamera;
+
+  instructsep->addChild(ocam);
+
+  SoTranslation * instructtrans = new SoTranslation;
+  //    instructtrans->translation = SbVec3f();
+  instructsep->addChild(instructtrans);
+
+  SoBaseColor * col = new SoBaseColor;
+  col->rgb.setValue(1, 1, 0);
+  instructsep->addChild(col);
+
+  SoText2 * instructions = new SoText2;
+  const char * str[] = {
+    "This example demonstrates a finite difference approximation to the 2D wave equation",
+    "", "",
+    "Use 'Esc' to toggle between examine mode and interact mode.",
+    "",
+    "When in examine mode, click and drag with left mouse button to rotate scene.",
+    "Use middle mouse button to translate scene and left+middle to zoom.",
+    "",
+    "When in interact mode, drag the mouse over the surface to create waves.",
+    "",
+    "Press 'r' to reset the simulation."
+  };
+  instructions->string.setValues(0, sizeof(str) / sizeof(char *), str);
+  instructions->justification = SoText2::LEFT;
+  instructsep->addChild(instructions);
+
+  SbViewVolume vv = ocam->getViewVolume();
+  SbVec3f pt = vv.getPlanePoint(0.0f, SbVec2f(0.0f, 0.95f));
+  instructtrans->translation.setValue(pt[0], pt[1], 0);
+
+  // Pop up the main window.
+  So@Gui@::show(mainwin);
+  // Loop until exit.
+  So@Gui@::mainLoop();
+  
+  // Clean up resources.
+  delete eviewer;
+  root->unref();
+
+  return 0;
+}
