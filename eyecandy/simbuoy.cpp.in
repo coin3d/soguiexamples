@@ -35,8 +35,9 @@
 
 // *************************************************************************
 
-#define SIZE           64      // number of polygons in water-mesh
+#define SIZE           32      // number of polygons in water-mesh
 #define GRID          (SIZE+1) // number of vertices in water-mesh
+#define GRIDSCALE      2.0     // value for uniform scale of the water-mesh
 #define CUBESIZE       6       // size of cube
 #define SINHEIGHT      2       // 'height of sine' (in sine-table)
 #define WAVESIZE      -10.0f   // size of 'rain'
@@ -613,8 +614,8 @@ makeGridObject(
   int x, y;
   for ( x = 0; x < GRID; x++ ) {
     for ( y = 0; y < GRID; y++ ) {
-      vertices[ y*GRID + x ][0] = -(GRID/2)+x;
-      vertices[ y*GRID + x ][1] = -(GRID/2)+y;
+      vertices[ y*GRID + x ][0] = (-(GRID/2)+x) * GRIDSCALE;
+      vertices[ y*GRID + x ][1] = (-(GRID/2)+y) * GRIDSCALE;
       vertices[ y*GRID + x ][2] = 0;
     }
   }
