@@ -21,6 +21,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include <Inventor/@Gui@/viewers/So@Gui@Viewer.h>
 #include <Inventor/SoDB.h>
@@ -37,7 +38,7 @@
 
 #if HAVE_CONFIG_H
 #include <config.h>
-#endif
+#endif // HAVE_CONFIG_H
 
 // *************************************************************************
 
@@ -142,20 +143,42 @@ get_scene_graph(
   }
 } // get_scene_graph()
 
+static inline void
+setStereoViewing(So@Gui@Viewer * v, SbBool f)
+{
+#ifdef HAVE_VIEWER_STEREO_VIEWING
+  v->setStereoViewing(f);
+#else // !HAVE_VIEWER_STEREO_VIEWING
+  SoDebugError::postWarning("computils:config_viewer",
+                            "So@Gui@Viewer::setStereoViewing() not available");
+#endif // !HAVE_VIEWER_STEREO_VIEWING
+}
+
+static inline void
+setQuadBufferStereo(So@Gui@Viewer * v, SbBool f)
+{
+#ifdef HAVE_VIEWER_QUADBUFFER_STEREO
+  v->setQuadBufferStereo(f);
+#else // !HAVE_VIEWER_QUADBUFFER_STEREO
+  SoDebugError::postWarning("computils:config_viewer",
+                            "So@Gui@Viewer::setQuadBufferStereo() not available");
+#endif // !HAVE_VIEWER_QUADBUFFER_STEREO
+}
+
+
 void 
 config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
 {
   int i = 1;
   while (i < argc) {
-#ifdef HAVE_VIEWER_STEREO_VIEWING
     if (!strcmp(argv[i], "--stereo")) {
-      viewer->setQuadBufferStereo(TRUE);
-      viewer->setStereoViewing(TRUE);
+      setQuadBufferStereo(viewer, TRUE);
+      setStereoViewing(viewer, TRUE);
       i++;
     }
     else if (!strcmp(argv[i], "--anaglyph")) {
-      viewer->setQuadBufferStereo(FALSE);
-      viewer->setStereoViewing(TRUE);
+      setQuadBufferStereo(viewer, FALSE);
+      setStereoViewing(viewer, TRUE);
       i++;
     }
     else if (!strcmp(argv[i], "--stereooffset") && (i < argc - 1)) {
@@ -163,7 +186,7 @@ config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
       i += 2;
     }
     else
-#endif
+
     if (!strcmp(argv[i], "--title" ) && (i < argc - 1)) {
       viewer->setTitle(argv[i+1]);
       i += 2;
