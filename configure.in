@@ -250,6 +250,14 @@ AC_LANG(C++)
 SIM_AC_HAVE_INVENTOR_NODE(SoPolygonOffset)
 SIM_AC_HAVE_INVENTOR_NODE(SoMarkerSet)
 SIM_AC_HAVE_INVENTOR_NODE(SoImage)
+SIM_AC_HAVE_INVENTOR_NODE(SoExtSelection, [
+  SIM_AC_HAVE_INVENTOR_FEATURE(
+    [for SoExtSelection::lassoMode],
+    [#include <Inventor/nodes/SoExtSelection.h>], [
+     SoExtSelection * sel = new SoExtSelection;
+     sel->lassoMode = SoExtSelection::VISIBLE_SHAPES; ],
+    [HAVE_SOEXTSELECTION_LASSOMODE])
+  ])
 
 SIM_AC_HAVE_INVENTOR_FEATURE(
   [for SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND],
