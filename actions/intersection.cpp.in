@@ -26,6 +26,67 @@
 
 #include <assert.h>
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+// *************************************************************************
+
+#ifndef HAVE_SOINTERSECTIONDETECTIONACTION
+
+// *************************************************************************
+// "substitute" example
+
+#include <stdio.h>
+
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoText3.h>
+
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/@Gui@/So@Gui@.h>
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  const char * info[] = {
+    "This example depends on Coin-specific",
+    "extensions. This is just an informational",
+    "message and not the real functionality",
+    "of the example."
+  };
+
+  SoText3 * msg = new SoText3;
+  msg->justification = SoText3::CENTER;
+  msg->string.setValues(0, sizeof(info) / sizeof(const char *), info);
+  root->addChild(msg);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->show();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+
+  return 1;
+}
+
+// *************************************************************************
+
+#else // HAVE_SOINTERSECTIONDETECTIONACTION
+
+// *************************************************************************
+
+#include <Inventor/errors/SoDebugError.h>
+
 #include <Inventor/nodes/SoSelection.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoTransform.h>
@@ -42,7 +103,9 @@
 #include <Inventor/nodes/SoIndexedFaceSet.h>
 #include <Inventor/nodes/SoIndexedLineSet.h>
 #include <Inventor/nodes/SoShapeHints.h>
+#ifdef HAVE_POLYGONOFFSET
 #include <Inventor/nodes/SoPolygonOffset.h>
+#endif
 #include <Inventor/draggers/SoTranslate2Dragger.h>
 #include <Inventor/actions/SoIntersectionDetectionAction.h>
 
@@ -120,7 +183,6 @@ nodechangeCB(void * closure, SoSensor * s)
     SoMaterial * material = (SoMaterial *) group->getChild(1);
     material->diffuseColor.setValue(1.0f, 1.0f, 0.0f);
   }
-  facesset = FALSE;
   coords->point.setNum(0);
   faces->coordIndex.setNum(0);
   SoIntersectionDetectionAction ida;
@@ -189,12 +251,16 @@ main(int argc, char ** argv)
   root->addChild(makeShapeGroup( 3,-3, 0, new SoSphere));
   root->addChild(makeShapeGroup( 3, 3, 0, new SoCylinder));
   // root->addChild(makeShapeGroup( 0, 0, 0, new SoTranslate2Dragger));
+#ifdef HAVE_POLYGONOFFSET
   SoPolygonOffset * offset = new SoPolygonOffset;
   offset->styles.setValue(SoPolygonOffset::FILLED);
   offset->factor.setValue(-1);
   offset->units.setValue(1);
   offset->on.setValue(TRUE);
   root->addChild(offset);
+#else // !HAVE_POLYGONOFFSET
+  SoDebugError::post(argv[0], "You lack the SoPolygonOffset node - the visualization will be garbled");
+#endif // !HAVE_POLYGONOFFSET
   SoShapeHints * hints = new SoShapeHints;
   hints->vertexOrdering.setValue(SoShapeHints::COUNTERCLOCKWISE);
   hints->shapeType.setValue(SoShapeHints::UNKNOWN_SHAPE_TYPE);
@@ -223,4 +289,4 @@ main(int argc, char ** argv)
   return 0;
 }
 
-// *************************************************************************
+#endif // HAVE_SOINTERSECTIONDETECTIONACTION
