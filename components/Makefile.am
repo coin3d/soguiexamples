@@ -29,6 +29,13 @@ flyviewer_SOURCES = \
 	computils.cpp \
 	computils.h
 
+snapshotviewer_SOURCES = \
+	snapshotviewer.cpp \
+	SoGuiSnapshotViewer.h \
+	SoGuiSnapshotViewer.cpp \
+	computils.cpp \
+	computils.h
+
 backgroundimg_SOURCES = backgroundimg.cpp
 
 ## So@Gui@LightSliderSet component
@@ -104,10 +111,13 @@ BUILT_SOURCES = \
 	transformsliderset.cpp \
 	materiallist.cpp \
 	materiallist2.cpp \
-	grapheditor.cpp
+	grapheditor.cpp \
+	snapshotviewer.cpp \
+	SoGuiSnapshotViewer.h \
+	SoGuiSnapshotViewer.cpp
 
 noinst_PROGRAMS = renderarea backgroundimg examinerviewer overlay \
-	planeviewer flyviewer \
+	planeviewer flyviewer snapshotviewer \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
 	$(MATERIALLIST) $(PRINTDIALOG)
 
@@ -169,5 +179,14 @@ materialeditor.cpp: $(srcdir)/materialeditor.cpp.in
 
 printdialog.cpp: $(srcdir)/printdialog.cpp.in
 	@( cd $(top_builddir); ./config.status --file=components/printdialog.cpp )
+
+snapshotviewer.cpp: $(srcdir)/snapshotviewer.cpp.in
+	@( cd $(top_builddir); ./config.status --file=components/snapshotviewer.cpp )
+
+SoGuiSnapshotViewer.h: $(srcdir)/SoGuiSnapshotViewer.h.in
+	@( cd $(top_builddir); ./config.status --file=components/SoGuiSnapshotViewer.h )
+
+SoGuiSnapshotViewer.cpp: $(srcdir)/SoGuiSnapshotViewer.cpp.in
+	@( cd $(top_builddir); ./config.status --file=components/SoGuiSnapshotViewer.cpp )
 
 ############################################################################
