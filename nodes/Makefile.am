@@ -117,4 +117,7 @@ markerset_SOURCES = markerset.cpp
 markerset.cpp: $(srcdir)/markerset.cpp.in
 	@( cd ..; $(MAKE) nodes/markerset.cpp )
 
+pointset.cpp: $(srcdir)/pointset.cpp.in
+	@( cd ..; $(MAKE) nodes/pointset.cpp )
+
 ############################################################################

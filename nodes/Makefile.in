@@ -742,6 +742,9 @@ uninstall-am: uninstall-info-am
 markerset.cpp: $(srcdir)/markerset.cpp.in
 	@( cd ..; $(MAKE) nodes/markerset.cpp )
 
+pointset.cpp: $(srcdir)/pointset.cpp.in
+	@( cd ..; $(MAKE) nodes/pointset.cpp )
+
 ############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
