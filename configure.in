@@ -287,7 +287,7 @@ SIM_AC_HAVE_INVENTOR_FEATURE(
 
 SIM_AC_HAVE_INVENTOR_FEATURE(
   [for SoIntersectionDetectionAction class],
-  [#include <Inventor/actions/SoIntersectionDetectionAction.h>], [
+  [#include <Inventor/collision/SoIntersectionDetectionAction.h>], [
    SoIntersectionDetectionAction ida;
    ida.setDraggersEnabled(FALSE);],
   [HAVE_SOINTERSECTIONDETECTIONACTION])

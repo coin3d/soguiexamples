@@ -107,7 +107,7 @@ main(int argc, char ** argv)
 #include <Inventor/nodes/SoPolygonOffset.h>
 #endif
 #include <Inventor/draggers/SoTranslate2Dragger.h>
-#include <Inventor/actions/SoIntersectionDetectionAction.h>
+#include <Inventor/collision/SoIntersectionDetectionAction.h>
 
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/@Gui@/So@Gui@.h>
