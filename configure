@@ -11289,7 +11289,7 @@ fi
   LDFLAGS="-Dsourcedir=$soguiexamples_src_dir -Dtemplatesuffix=vc6 -Dsubstitutes=$soguiexamples_subst $LDFLAGS $CPPFLAGS \$(DEFAULT_INCLUDES)"
 fi
 
-
+  LDFLAGS="$LDFLAGS -DHAVE_CONFIG_H"
 
 
 if $sim_ac_make_dspex; then
