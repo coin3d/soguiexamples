@@ -1,0 +1,311 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of demo programs for the Coin library.
+ *  Copyright (C) 2000-2002 by Systems in Motion. All rights reserved.
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, Prof Brochs gate 6, 7030 Trondheim, NORWAY
+ *  http://www.sim.no support@sim.no Voice: +47 22114160 Fax: +47 22207097
+ *
+\**************************************************************************/
+/* ********************************************************************** *
+ * flow
+ *
+ * Demo application for showcasing Coin.
+ *
+ * Written by John Kenneth Grytten <johnkeg@idi.ntnu.no>.
+ * Some code borrowed from earlier Coin competition entries.
+ *
+ * ********************************************************************** */
+
+
+// fixme: should be obvious... 
+#define HAVE_SOCOMPONENT_SETFULLSCREEN
+//  #if HAVE_CONFIG_H
+//  #include <config.h>
+//  #endif // HAVE_CONFIG_H
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#include <Inventor/SbLinear.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoBaseColor.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoText2.h>
+#include <Inventor/nodes/SoText3.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoRotation.h> 
+#include <Inventor/nodes/SoFont.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+
+#include <Inventor/fields/SoSFImage.h>
+#include <Inventor/fields/SoMFString.h>
+#include <Inventor/sensors/SoFieldSensor.h>
+#include <Inventor/errors/SoDebugError.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoShape.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoTextureCoordinateEnvironment.h>
+#include <Inventor/nodes/SoTransformation.h>
+#include <Inventor/nodes/SoOrthographicCamera.h>
+
+#include <Inventor/elements/SoCoordinateElement.h>
+#include <Inventor/elements/SoModelMatrixElement.h>
+
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/actions/SoGetBoundingBoxAction.h>
+
+
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/actions/SoSearchAction.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoCallback.h>
+
+
+#include <Inventor/SoOffscreenRenderer.h>
+
+#include <stdlib.h>  // srand(), rand()
+#include <stdio.h>
+#include <string.h>
+
+
+
+SoOffscreenRenderer * renderer;
+SoPerspectiveCamera * camera;
+SoSeparator * root;
+
+
+
+SoTexture2*
+textTexture(const char* text) //,int texturewidth,int texturewidth)
+{
+  int width=1280/4;
+  int height=1024/4;
+
+  root = new SoSeparator;
+  root->ref();
+  root->addChild( camera = new SoPerspectiveCamera );
+  root->addChild( new SoDirectionalLight );
+
+
+  SoSeparator* scene;
+  scene = new SoSeparator;
+  scene->ref();
+  SoMaterial* ma = new SoMaterial;
+//    float r=1.0*rand()/RAND_MAX;
+//    float g=1.0*rand()/RAND_MAX;
+//    float b=1.0*rand()/RAND_MAX;
+  ma->ambientColor.setValue(0.33,0.22,0.27);
+  ma->diffuseColor.setValue(0,0,0);
+  ma->specularColor.setValue(0.99,0.94,0.81);
+  ma->shininess = 0.28;
+  scene->addChild(ma);
+  SoTransform* xf = new SoTransform;
+  xf->rotation.setValue(SbVec3f(1,0,0),-3.14/4);
+  scene->addChild(xf);
+  SoText3* ttext = new SoText3;
+  ttext->string.setValue(text);
+  scene->addChild(ttext);
+  root->addChild(scene);
+  SbViewportRegion vp;
+  vp.setWindowSize(SbVec2s(width, height));
+
+  
+  renderer = new SoOffscreenRenderer( vp );
+  renderer->setBackgroundColor( SbColor( 0.78f, 0.57f, 0.11f )  );
+
+  camera->viewAll( root, renderer->getViewportRegion() );
+  renderer->render(root);
+
+  SoTexture2* texture = new SoTexture2;
+
+  texture->image.setValue(SbVec2s(width,height),3,renderer->getBuffer());
+  return texture;
+
+}
+
+
+const int COINS=8;
+SoSeparator* global_coin[COINS];
+SoTransform* global_xf[COINS];
+SoCylinder* global_cyl[COINS];
+int global_coin_counter=0;
+SoSeparator*
+makeCoin(const char* text)
+{
+  int c=global_coin_counter++;
+  SoSeparator* coin = new SoSeparator;
+  global_cyl[c] = new SoCylinder;
+  SoTexture2* texture = textTexture(text);
+
+  global_xf[c] = new SoTransform;
+  global_xf[c]->rotation.setValue(SbVec3f(1,0,0),-3.14/4);
+  coin->addChild(global_xf[c]);
+  coin->addChild(texture);
+  coin->addChild(global_cyl[c]);
+
+  global_coin[c]=coin;
+  return coin;
+}
+
+
+
+// Timer callback function will rotate the scene according to the
+// current time.
+So@Gui@ExaminerViewer * viewer;
+int framecounter=0;
+int coincounter=0;
+int coincounter2=0;
+float g_z[COINS];
+
+const int MAXZ=2.0;
+
+bool flagg=true;
+float f=0, f2=0;
+float r[COINS];
+float rx[COINS];
+float ry[COINS];
+float rz[COINS];
+static void
+timer_callback(void * data, SoSensor * sensor)
+{
+  static SbTime t = SbTime::getTimeOfDay().getValue();
+  SbTime timediff = SbTime::getTimeOfDay() - t;
+
+  framecounter++;
+  if (framecounter>360) {
+    framecounter=0;
+  }
+
+    
+  coincounter2++;
+  if (coincounter2>100 && flagg) {
+    coincounter++;
+    if (coincounter==COINS) {
+      flagg=false;  
+      for (int i=0; i<COINS; i++) {
+	rx[i]=1.0*rand()/RAND_MAX;
+	ry[i]=1.0*rand()/RAND_MAX;
+	rz[i]=1.0*rand()/RAND_MAX;
+	r[i]=0.5*rand()/RAND_MAX;
+      }
+    }
+    coincounter2=0;
+    f2=0;
+  }
+
+  f-=0.01;
+  f2-=0.02;
+
+  float step=2*3.14159/8;
+
+  for (int i=0; i<COINS; i++) {
+    if (i==coincounter) { 
+      float z=18;
+      r[i]-=0.2;
+      if (r[i]<0) r[i]=0;
+      global_xf[i]->translation.setValue(r[i]*cos(step*i+f),
+					 r[i]*sin(step*i+f),z);
+      global_xf[i]->rotation.setValue(SbVec3f(1,0,0),f2);
+    } else {
+      r[i]+=0.1;
+      if (r[i]>4) r[i]=4;
+      float z=0;
+      if (!flagg)
+	z=6*r[i]*sin(step*i+f);
+      global_xf[i]->translation.setValue(r[i]*cos(step*i+f),
+					 r[i]*sin(step*i+f),z);
+      if (!flagg) {
+	global_xf[i]->rotation.setValue(SbVec3f(rx[i],ry[i],rz[i]),f2);
+	
+
+      }
+
+    }
+    
+  } 
+    
+
+
+}
+
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  setbuf(stderr, NULL);
+  setbuf(stdout, NULL);
+
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+
+  srand(SbTime::getTimeOfDay().getMsecValue());
+
+  viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setTransparencyType(SoGLRenderAction::DELAYED_BLEND);
+  viewer->setDecoration(FALSE);
+
+
+
+//create graph
+
+
+	
+  SoSeparator* scene;
+  scene = new SoSeparator;
+  scene->ref();
+
+  scene->addChild( makeCoin("Do you like") );
+  scene->addChild( makeCoin("cashflow?") );
+  scene->addChild( makeCoin("Do you like") );
+  scene->addChild( makeCoin("3D?") );
+  scene->addChild( makeCoin("You") );
+  scene->addChild( makeCoin("Will") );
+  scene->addChild( makeCoin("Love") );
+  scene->addChild( makeCoin("Coin3D!") );
+
+  float step=2*3.14159/8;
+  float r=4.0;
+  for (int i=0; i<COINS; i++) {    
+    global_xf[i]->translation.setValue(r*cos(step*i),r*sin(step*i),0);
+    global_cyl[i]->height.setValue(0.1);
+  }
+
+
+
+  viewer->setSceneGraph(scene);
+
+#ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
+  viewer->setFullScreen(TRUE); // might be too slow?
+#endif // HAVE_SOCOMPONENT_SETFULLSCREEN
+  viewer->show();
+  viewer->viewAll();
+  viewer->setTitle("Flow");
+  SoTimerSensor ts(timer_callback, root);
+  ts.setInterval(0.02f); // max 50 fps
+  ts.schedule();
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+  viewer->hide();
+  delete viewer;
+  return 0;
+}

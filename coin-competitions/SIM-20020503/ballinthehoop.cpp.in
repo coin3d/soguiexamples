@@ -1,0 +1,648 @@
+#define HAVE_SOCOMPONENT_SETFULLSCREEN
+
+#include <Inventor/Qt/So@Gui@RenderArea.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoSwitch.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoPointLight.h>
+#include <Inventor/nodes/SoSpotLight.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoRotationXYZ.h>
+#include <Inventor/nodes/SoVertexProperty.h>
+#include <Inventor/nodes/SoMaterialBinding.h>
+#include <Inventor/nodes/SoIndexedFaceSet.h>
+#include <Inventor/nodes/SoFont.h>
+#include <Inventor/nodes/SoText3.h>
+#include <Inventor/nodes/SoText2.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/fields/SoMFColor.h>
+#include <Inventor/fields/SoSFString.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/events/SoMouseButtonEvent.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+#include <Inventor/sensors/SoAlarmSensor.h>
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <math.h>
+
+SoSwitch * sw;
+SoMaterial * ballmaterial;
+SoMFColor * fargefelt1, * fargefelt2;
+SoTranslation * balltrans;
+So@Gui@RenderArea * viewer;
+SbVec3f startspeed;
+SbVec2s pos;
+
+int elasticityvalue = 1;
+int colorindex = 0;
+int score = 0;
+int live = 3;
+int scorefactor = 0;
+
+SbString tmpstring;
+SoSFString * scorestring;
+SoSFString * livesstring;
+float powervalue = 0.5;
+SoTimerSensor * powersensor;
+SoTimerSensor * shootsensor;
+SoAlarmSensor * goalsensor;
+
+SoMaterial * elastics[30];
+SoMaterial * strength[30];
+SoMaterial * walls[5];
+SoIndexedFaceSet * fs;
+
+int indices[25] = {
+  0, 1, 2, 3, SO_END_FACE_INDEX,
+  0, 3, 4, 5, SO_END_FACE_INDEX,
+  3, 2, 6, 4, SO_END_FACE_INDEX,
+  1, 2, 6, 7, SO_END_FACE_INDEX,
+  5, 7, 6, 4, SO_END_FACE_INDEX
+};
+
+
+void
+start_ball()
+{
+  scorefactor = 0;
+  balltrans->translation.setValue(10,10,0);
+
+  elasticityvalue = rand() % 29 + 1;
+  
+  int i;
+  for(i = 0; i < 30; i++){
+    if(i < elasticityvalue)
+      elastics[i]->transparency.setValue(0.0);
+    else
+      elastics[i]->transparency.setValue(0.8);
+  }
+
+  powervalue = 0.5;
+  for(i = 0; i < 30; i++)
+    strength[i]->transparency.setValue(0.8);
+    
+  fargefelt1 = &elastics[elasticityvalue-1]->diffuseColor;
+  ballmaterial->diffuseColor.connectFrom(fargefelt1);
+  fargefelt2 = &elastics[elasticityvalue-1]->specularColor;
+  ballmaterial->specularColor.connectFrom(fargefelt2);
+  if (shootsensor->isScheduled()) shootsensor->unschedule();
+}
+
+void
+shoot_ball()
+{
+  SbVec2s winsize = viewer->getViewportRegion().getWindowSize();
+  float velhor;
+  float velver;
+  float velfor;
+  int halfwinsize = winsize[0]/2;
+
+  if(pos[0] > halfwinsize)
+    velhor = ((float)(pos[0]-halfwinsize))/((float)halfwinsize)*powervalue*2;
+  else
+    velhor = -((float)(halfwinsize-pos[0]))/((float)halfwinsize)*powervalue*2;
+  halfwinsize = winsize[1]/2;
+  if(pos[1] > halfwinsize)
+    velver = ((float)(pos[1]-halfwinsize))/((float)halfwinsize)*powervalue*2;
+  else
+    velver = -((float)(halfwinsize-pos[1]))/((float)halfwinsize)*powervalue*2;
+  velfor = -(sqrt(powervalue*2*powervalue*2-velhor*velhor)+
+            sqrt(powervalue*2*powervalue*2-velver*velver))/2;
+  startspeed[0] = velhor*4/3;
+  startspeed[1] = velver;
+  startspeed[2] = velfor;
+
+  shootsensor->schedule();
+}
+
+
+void
+start_game()
+{
+  score = 0;
+  tmpstring = SbString(score);
+  scorestring->setValue(tmpstring.getString());
+  live = 3;
+  tmpstring = SbString(live);
+  livesstring->setValue(tmpstring.getString());
+  start_ball();
+  sw->whichChild = 1;
+}
+
+void
+end_ball()
+{
+  shootsensor->unschedule();
+  start_ball();
+}
+
+
+
+void
+event_cb(void *userdata, SoEventCallback *node)
+{
+
+  const SoEvent *event = node->getEvent();
+
+  if(SO_MOUSE_PRESS_EVENT(event, BUTTON1)){
+
+    pos = event->getPosition();
+    powersensor->schedule();
+  }
+  else if(SO_MOUSE_RELEASE_EVENT(event, BUTTON1)){
+    powersensor->unschedule();
+    shoot_ball();
+  }
+
+  else if (SO_KEY_PRESS_EVENT(event, S)) {
+    start_game();
+  }
+
+  else if (SO_KEY_PRESS_EVENT(event, X)) {
+    exit(1);
+  }
+
+}
+
+void
+power_cb(void *userdata, SoSensor *)
+{
+  powervalue += 0.2;
+  if(powervalue > 30)
+    powervalue = 30;
+  for(int i = 0; i < 30; i++){
+    if(i < powervalue)
+      strength[i]->transparency.setValue(0.0);
+    else
+      strength[i]->transparency.setValue(0.8);
+  }
+}
+
+void
+goal()
+{
+  shootsensor->unschedule();
+  sw->whichChild = 2;
+  goalsensor->setTimeFromNow(3);
+  goalsensor->schedule();
+}
+
+void
+shoot_cb(void *userdata, SoSensor *)
+{
+  SbVec3f tmp= balltrans->translation.getValue();
+  tmp[0]+=startspeed[0]*0.04;
+  tmp[1]+=startspeed[1]*0.04;
+  tmp[2]+=startspeed[2]*0.04;
+  if(tmp[0] < 1){
+    tmp[0] = 1;
+    startspeed[0] = -startspeed[0]*elasticityvalue/31;
+    startspeed[1] = startspeed[1]*25/31;
+    startspeed[2] = startspeed[2]*25/31;
+    colorindex = (colorindex+1)%5;
+    fs->materialIndex.set1Value(1, colorindex);
+    scorefactor++;
+  }
+  if(tmp[0] > 19){
+    tmp[0] = 19;
+    startspeed[0] = -startspeed[0]*elasticityvalue/31;
+    startspeed[1] = startspeed[1]*25/31;
+    startspeed[2] = startspeed[2]*25/31;
+    colorindex = (colorindex+1)%5;
+    fs->materialIndex.set1Value(3, colorindex);
+    scorefactor++;
+  }
+  if(tmp[1] < 1){
+    tmp[1] = 1;
+    startspeed[1] = -startspeed[1]*elasticityvalue/31;
+    startspeed[0] = startspeed[0]*25/31;
+    startspeed[2] = startspeed[2]*25/31;
+    colorindex = (colorindex+1)%5;
+    fs->materialIndex.set1Value(0, colorindex);
+    scorefactor++;
+  }
+  if(tmp[1] > 19){
+    tmp[1] = 19;
+    startspeed[1] = -startspeed[1]*elasticityvalue/31;
+    startspeed[0] = startspeed[0]*25/31;
+    startspeed[2] = startspeed[2]*25/31;
+    colorindex = (colorindex+1)%5;
+    fs->materialIndex.set1Value(4, colorindex);
+    scorefactor++;
+  }
+  if(tmp[2] > -1){
+    tmp[2] = -1;
+    startspeed[2] = -startspeed[2]*elasticityvalue/31;
+    startspeed[1] = startspeed[1]*25/31;
+    startspeed[0] = startspeed[0]*25/31;
+    scorefactor++;
+  }
+  if(tmp[2] < -19){
+    if(tmp[1] < 16.5 && tmp[1] > 13.5 && tmp[0] > 3.5 && tmp[0] < 6.5){
+       score += scorefactor*(elasticityvalue*powervalue)/20*3;
+       tmpstring = SbString(score);
+       scorestring->setValue(tmpstring.getString());
+       goal();
+       return;
+    }
+    if(tmp[1] < 11.5 && tmp[1] > 8.5 && tmp[0] > 8.5 && tmp[0] < 11.5){
+       score += scorefactor*(elasticityvalue*powervalue)/20*2;
+       tmpstring = SbString(score);
+       scorestring->setValue(tmpstring.getString());
+       goal();
+       return;
+    }
+    if(tmp[1] < 6.5 && tmp[1] > 3.5 && tmp[0] > 13.5 && tmp[0] < 16.5){
+       score += scorefactor*(elasticityvalue*powervalue)/20;
+       tmpstring = SbString(score);
+       scorestring->setValue(tmpstring.getString());
+       goal();
+       return;
+    }
+    scorefactor++;
+   
+    tmp[2] = -19;
+    startspeed[2] = -startspeed[2]*elasticityvalue/31;
+    startspeed[1] = startspeed[1]*25/31;
+    startspeed[0] = startspeed[0]*25/31;
+  }
+  balltrans->translation.setValue(tmp[0],tmp[1],tmp[2]);
+  if(startspeed.length() < 0.15 || 
+     sqrt(startspeed[0]*startspeed[0] + startspeed[2]*startspeed[2]) < 0.1){ 
+    live--;
+    tmpstring = SbString(live);
+    livesstring->setValue(tmpstring.getString());
+    if(live < 0) start_game();
+    else  end_ball();
+  }
+  startspeed[1]-=9.1*0.04;
+}
+
+void
+goal_cb(void *userdata, SoSensor *)
+{
+  sw->whichChild = 1;
+  start_ball();
+}
+
+int
+main(int argc, char **argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  
+  SoSeparator * root = new SoSeparator;
+  SoTranslation * tr = new SoTranslation;
+  tr->translation.setValue(2,18,-18);
+  root->addChild(tr);
+  SoPointLight * l = new SoPointLight;
+  l->intensity.setValue(0.5);
+  root->addChild(l);
+  tr = new SoTranslation;
+  tr->translation.setValue(16,0,0);
+  root->addChild(tr);
+  l = new SoPointLight;
+  root->addChild(l);
+  tr = new SoTranslation;
+  tr->translation.setValue(-1,-18,18);
+  root->addChild(tr);
+  sw = new SoSwitch;
+  root->ref();
+  root->addChild(sw);
+  //instructions
+  SoSeparator * instrroot = new SoSeparator;
+  sw->addChild(instrroot);
+  SoPerspectiveCamera * instrcam = new SoPerspectiveCamera;
+  instrroot->addChild(instrcam);
+  SoText2 * instr = new SoText2;
+  const char * str[] = {
+    "","This is a game",
+    "It is called 'Ball in the hoop' (tm)", "",
+    "You, as the player, stands in a cubic room with goals on the opposing wall,","(the black rectangles)", 
+    "Your purpose is to throw the ball at the surrounding walls. If the ball hits a","goal, you score points.",
+    "If you misses, you lose a life. If you score without hitting any walls, you","don't lose a life, but you don't get any points either.",
+    "The number of walls you hit, the elasticity (E) of the ball, and the power (P)","you throw the ball with, affects your score",
+    "",
+    "To start/restart game, press 'S'","Good Luck",
+    "","PS Be aware that you suck at aiming the ball ;)"
+  };
+  instr->string.setValues(0, sizeof(str) / sizeof(char *), str);
+  instr->justification = SoText2::CENTER;
+  instrroot->addChild(instr);
+  tr = new SoTranslation;
+  tr->translation.setValue(6,0,0);
+  instrroot->addChild(tr);
+  l = new SoPointLight;
+  instrroot->addChild(l);
+
+  sw->whichChild = 0;
+
+  SoSeparator * goalroot = new SoSeparator;
+  SoPerspectiveCamera * goalcam = new SoPerspectiveCamera;
+  goalroot->addChild(goalcam);
+  SoMaterial * goalcammat = new SoMaterial;
+  SoDirectionalLight * lys = new SoDirectionalLight;
+  goalroot->addChild(lys);
+  goalcammat->diffuseColor.setValue(1.0,1.0,1.0);
+  goalcammat->specularColor.setValue(1.0,1.0,1.0);
+  goalroot->addChild(goalcammat);
+  SoFont * font = new SoFont;
+  font->size.setValue(4);
+  goalroot->addChild(font);
+
+  SoText3 * goaltext = new SoText3;
+  goaltext->string.setValue("GOAL!");
+  goalroot->addChild(goaltext);
+
+  //game
+  SoSeparator * gameroot = new SoSeparator;
+  sw->addChild(gameroot);
+   sw->addChild(goalroot);
+ 
+  SoPerspectiveCamera * gamecam = new SoPerspectiveCamera;
+  gamecam->focalDistance = 10;
+  gamecam->position.setValue(10,10,25);
+ 
+  gameroot->addChild(gamecam);
+  
+  SoDirectionalLight * light = new SoDirectionalLight;
+  light->direction.setValue(1,-1,-10);
+  light->intensity.setValue(0.5);
+  gameroot->addChild(light);
+  font = new SoFont;
+  font->size.setValue(1.5);
+  gameroot->addChild(font);
+  
+  //ball
+  SoSeparator * ballroot = new SoSeparator;
+  gameroot->addChild(ballroot);
+  ballmaterial = new SoMaterial;
+  ballroot->addChild(ballmaterial);
+  balltrans = new SoTranslation;
+  balltrans->translation.setValue(10,10,0);
+  ballroot->addChild(balltrans);
+  SoSphere * ball = new SoSphere;
+  ballroot->addChild(ball);
+  //elasticity
+  SoSeparator * elasticsroot = new SoSeparator;
+  tr = new SoTranslation;
+  tr->translation.setValue(-0.7,8.5,0);
+  elasticsroot->addChild(tr);
+  SoText3 * elastictext = new SoText3;
+  elastictext->string.setValue("E");
+  elastictext->justification = SoText3::LEFT;
+  elasticsroot->addChild(elastictext);
+  tr = new SoTranslation;
+  tr->translation.setValue(0.7,-8.5,0);
+  elasticsroot->addChild(tr);
+  SoRotationXYZ * rot = new SoRotationXYZ;
+  rot->axis = SoRotationXYZ::Y;
+  rot->angle = -3.14/8;
+  elasticsroot->addChild(rot);
+  SoSeparator * tmp = NULL;
+  SoCube * cube = NULL;
+  int i;
+  for(i = 0; i < 30; i++){
+    tmp = new SoSeparator;
+    elastics[i] = new SoMaterial;
+    if(i < 10){
+      elastics[i]->diffuseColor.setValue(1.0, 1.0-0.1*i, 1.0-0.1*i);
+      elastics[i]->specularColor.setValue(1.0, 1.0-0.1*i, 1.0-0.1*i);
+    }
+    else if(i < 20){
+      elastics[i]->diffuseColor.setValue(1, 0.0, 0.1*(i-9));
+      elastics[i]->specularColor.setValue(1, 0.0, 0.1*(i-9));
+    }
+    else{
+      elastics[i]->diffuseColor.setValue(1-0.1*(i-19), 0, 1);
+      elastics[i]->specularColor.setValue(1-0.1*(i-19), 0, 1);
+    }
+    tmp->addChild(elastics[i]);
+    tr = new SoTranslation;
+    tr->translation.setValue(0,0.25,0);
+    elasticsroot->addChild(tr);
+    cube = new SoCube;
+    cube->width.setValue(1.0);
+    cube->depth.setValue(1.0);
+    cube->height.setValue(0.2);
+    tmp->addChild(cube);
+    elasticsroot->addChild(tmp);
+  }
+  tr = new SoTranslation;
+  tr->translation.setValue(-2,0,0);
+  gameroot->addChild(tr);
+  gameroot->addChild(elasticsroot);
+  //strength
+  SoSeparator * strengthroot = new SoSeparator;
+  tr = new SoTranslation;
+  tr->translation.setValue(-0.5,8.5,0);
+  strengthroot->addChild(tr);
+  SoText3 * strengthtext = new SoText3;
+  strengthtext->string.setValue("P");
+  strengthtext->justification = SoText3::LEFT;
+  strengthroot->addChild(strengthtext);
+  tr = new SoTranslation;
+  tr->translation.setValue(0.5,-8.5,0);
+  strengthroot->addChild(tr);
+  rot = new SoRotationXYZ;
+  rot->axis = SoRotationXYZ::Y;
+  rot->angle = 3.14/8;
+  strengthroot->addChild(rot);
+  for(i = 0; i < 30; i++){
+    tmp = new SoSeparator;
+    strength[i] = new SoMaterial;
+    if(i < 10){
+      strength[i]->diffuseColor.setValue(1.0, 1.0-0.1*i, 1.0-0.1*i);
+      strength[i]->specularColor.setValue(1.0, 1.0-0.1*i, 1.0-0.1*i);
+    }
+    else if(i < 20){
+      strength[i]->diffuseColor.setValue(1, 0.1*(i-9),0);
+      strength[i]->specularColor.setValue(1, 0.1*(i-9),0);
+    }
+    else{
+      strength[i]->diffuseColor.setValue(1-0.1*(i-19), 1, 0);
+      strength[i]->specularColor.setValue(1-0.1*(i-19), 1, 0);
+    }
+    tmp->addChild(strength[i]);
+    tr = new SoTranslation;
+    tr->translation.setValue(0,0.25,0);
+    strengthroot->addChild(tr);
+    cube = new SoCube;
+    cube->width.setValue(1.0);
+    cube->depth.setValue(1.0);
+    cube->height.setValue(0.2);
+    tmp->addChild(cube);
+    strengthroot->addChild(tmp);
+  }
+  tr = new SoTranslation;
+  tr->translation.setValue(24,0,0);
+  gameroot->addChild(tr);
+  gameroot->addChild(strengthroot);
+  //room
+  SoSeparator * roomroot = new SoSeparator;
+  
+  for(i = 0; i < 1; i++){
+    walls[i] = new SoMaterial;
+    roomroot->addChild(walls[i]);
+  }
+  walls[0]->diffuseColor.set1Value(0, 0.9, 0.0, 0.0);
+  walls[0]->specularColor.set1Value(0,0.9, 0.0, 0.0);
+  walls[0]->diffuseColor.set1Value(1,0.0, 0.9, 0.0);
+  walls[0]->specularColor.set1Value(1,0.0, 0.9, 0.0);
+  walls[0]->diffuseColor.set1Value(2,0.0, 0.0, 0.9);
+  walls[0]->specularColor.set1Value(2,0.0, 0.0, 0.9);
+  walls[0]->diffuseColor.set1Value(3,0.9, 0.0, 0.9);
+  walls[0]->specularColor.set1Value(3,0.9, 0.0, 0.9);
+  walls[0]->diffuseColor.set1Value(4,0.9, 0.9, 0.0);
+  walls[0]->specularColor.set1Value(4,0.9, 0.9, 0.0);
+
+
+  SoVertexProperty * vp = new SoVertexProperty;
+  //vp->materialBinding = SoMaterialBinding::PER_FACE_INDEXED;
+  vp->vertex.set1Value(0, 0, 0, 0);
+  vp->vertex.set1Value(1, 20, 0, 0);
+  vp->vertex.set1Value(2, 20, 0, -20);
+  vp->vertex.set1Value(3, 0, 0, -20);
+  vp->vertex.set1Value(4, 0, 20, -20);
+  vp->vertex.set1Value(5, 0, 20, 0);
+  vp->vertex.set1Value(6, 20, 20, -20);
+  vp->vertex.set1Value(7, 20, 20, 0);
+
+  roomroot->addChild(vp);
+
+  SoMaterialBinding * mb = new SoMaterialBinding;
+  mb->value = SoMaterialBinding::PER_FACE_INDEXED;
+  roomroot->addChild(mb);
+  fs = new SoIndexedFaceSet;
+  fs->coordIndex.setValues(0, 25, indices);
+  fs->materialIndex.set1Value(0, 0);
+  fs->materialIndex.set1Value(1, 1);
+  fs->materialIndex.set1Value(2, 4);
+  fs->materialIndex.set1Value(3, 3);
+  fs->materialIndex.set1Value(4, 2);
+
+  roomroot->addChild(fs);
+  
+  SoMaterial * goalmat = new SoMaterial;
+  goalmat->diffuseColor.setValue(0.0,0.0,0.0);
+  goalmat->specularColor.setValue(0.0,0.0,0.0);
+  roomroot->addChild(goalmat);
+
+  tr = new SoTranslation;
+  tr->translation.setValue(5,15,-20.5);
+  roomroot->addChild(tr);
+
+  SoCube * goal = new SoCube;
+  goal->height.setValue(3);
+  goal->width.setValue(3);
+  roomroot->addChild(goal);
+
+  tr = new SoTranslation;
+  tr->translation.setValue(5,-5,0);
+  roomroot->addChild(tr);
+  roomroot->addChild(goal);
+
+  tr = new SoTranslation;
+  tr->translation.setValue(5,-5,0);
+  roomroot->addChild(tr);
+  roomroot->addChild(goal);
+
+  SoMaterial * scoremat = new SoMaterial;
+  scoremat->diffuseColor.setValue(1.0,1.0,1.0);
+  scoremat->specularColor.setValue(1.0,1.0,1.0);
+  roomroot->addChild(scoremat);
+
+  font = new SoFont;
+  font->size.setValue(0.7);
+  roomroot->addChild(font);
+
+  tr = new SoTranslation;
+  tr->translation.setValue(6, 15, 20);
+  roomroot->addChild(tr);
+
+  SoText3 * scoretext = new SoText3;
+  scoretext->string.setValue("Score");
+  scoretext->justification = SoText3::LEFT;
+  roomroot->addChild(scoretext);
+
+  tr = new SoTranslation;
+  tr->translation.setValue(0, -2, 0);
+  roomroot->addChild(tr);
+
+  SoText3 * score = new SoText3;
+  scorestring = new SoSFString;
+  score->string.connectFrom(scorestring);
+  score->justification = SoText3::LEFT;
+  roomroot->addChild(score);
+
+  tr = new SoTranslation;
+  tr->translation.setValue(-24, 2, 0);
+  roomroot->addChild(tr);
+
+  SoText3 * lifetext = new SoText3;
+  lifetext->string.setValue("Lives");
+  lifetext->justification = SoText3::LEFT;
+  roomroot->addChild(lifetext);
+
+  tr = new SoTranslation;
+  tr->translation.setValue(0, -2, 0);
+  roomroot->addChild(tr);
+
+  SoText3 * lives = new SoText3;
+  livesstring = new SoSFString;
+  lives->string.connectFrom(livesstring);
+  lives->justification = SoText3::LEFT;
+  roomroot->addChild(lives);
+ 
+
+  tr = new SoTranslation;
+  tr->translation.setValue(-22,0,0);
+  gameroot->addChild(tr);
+  tr = NULL;
+  gameroot->addChild(roomroot);
+  
+  SoEventCallback *cb = new SoEventCallback;
+  cb->addEventCallback(SoKeyboardEvent::getClassTypeId(), event_cb, NULL);
+  cb->addEventCallback(SoMouseButtonEvent::getClassTypeId(), event_cb, NULL);
+  root->addChild(cb);
+
+  powersensor = new SoTimerSensor(power_cb, NULL);
+  shootsensor = new SoTimerSensor(shoot_cb, NULL);
+  goalsensor = new SoAlarmSensor(goal_cb, NULL);
+  
+  viewer = new So@Gui@RenderArea(window);
+  instrcam->viewAll(instrroot, viewer->getViewportRegion());
+  goalcam->viewAll(goalroot, viewer->getViewportRegion());
+
+  gamecam->position.setValue(10,10,26);
+  gamecam->farDistance.setValue(1000.0f);
+  gamecam->nearDistance.setValue(0.1f);
+  gamecam->focalDistance.setValue(15);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Ball in the hoop");
+  
+  powersensor->setInterval(0.02);
+  shootsensor->setInterval(0.04);
+  
+  viewer->show();
+  
+  #ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
+  viewer->setFullScreen(TRUE);
+  viewer->setTransparencyType(SoGLRenderAction::BLEND);
+  #endif // HAVE_SOCOMPONENT_SETFULLSCREEN
+
+  So@Gui@::show(window);
+
+  So@Gui@::mainLoop();
+  
+  delete viewer;
+  delete scorestring;
+  delete livesstring;
+  root->unref();
+  return 0;
+
+}
