@@ -160,33 +160,6 @@ lineCB(void * userdata,
 
   SbVec3f vec1 = v1->getPoint();
   SbVec3f vec2 = v2->getPoint();
-  SbVec3f vec3 = v1->getPoint();
-  vec3[0] += 0.01;
-  vec3[1] += 0.01;
-  vec3[2] += 0.01;
-  
-  // FIXME: there's a bug here. Use the following scenegraph to
-  // reproduce it:
-  //
-  // ------8<--- [snip] ---------8<--- [snip] ---------8<--- [snip] ---
-  // #Inventor V2.1 ascii
-  //
-  // Separator {
-  //   PerspectiveCamera { position 0 0 5 }
-  //   LightModel { model BASE_COLOR }
-  //   Coordinate3 { point [ -1 1 1, -1 -1 1 ] }
-  //   IndexedLineSet { coordIndex [ 0, 1, -1 ] }
-  // }
-  // ------8<--- [snip] ---------8<--- [snip] ---------8<--- [snip] ---
-  //
-  // SoExtSelection seems to behave correctly and send us the correct
-  // primitive as selected, but our rendering seems to fail.
-  //
-  // Remove the PerspectiveCamera node in the case above, and it will
-  // again work as expected (a red "selected" indicator line will be
-  // drawn a top of the scenegraph line).
-  //
-  // 20020805 mortene (found and reported by handegar).
   
   mm.multVecMatrix(v1->getPoint(),vec1);
   mm.multVecMatrix(v2->getPoint(),vec2);
@@ -268,7 +241,7 @@ triangleCB(void * userdata,
   return FALSE;
 }
 
-static SoNode * 
+static SoSeparator * 
 make_line_sg(void)
 {
   SoSeparator * sep = new SoSeparator;
@@ -441,12 +414,33 @@ main(int argc, char ** argv)
   SoSeparator * newroot = new SoSeparator;
   newroot->ref();
   newroot->addChild(selection);
-  newroot->addChild(make_line_sg());
+  SoSeparator * overlaylines = make_line_sg();
+  newroot->addChild(overlaylines);
 
   ex1->setSceneGraph(newroot);
   ex1->setTransparencyType(SoGLRenderAction::SORTED_OBJECT_BLEND);
   ex1->setGLRenderAction(new SoBoxHighlightRenderAction(SbViewportRegion()));
   ex1->setViewing(FALSE);
+
+  // Just check if we can draw a sensible set of overlay lines --
+  // multiple cameras makes this very hard, so it's not supported in
+  // this example program.
+  SoSearchAction search;
+  search.setType(SoCamera::getClassTypeId());
+  search.setFind(SoSearchAction::TYPE);
+  search.setInterest(SoSearchAction::ALL);
+  search.apply(root);
+  SoPathList & pathlist = search.getPaths();
+  if (pathlist.getLength() > 1) {
+    (void) fprintf(stderr,
+                   "WARNING: there is more than 1 camera in the loaded\n"
+                   "scenegraph -- overlay lines for selection might come\n"
+                   "out wrong!\n");
+  }
+
+  // Make sure the overlay lines we render are within the same camera
+  // scope as the actual geometry from the input file.
+  overlaylines->insertChild(ex1->getCamera(), 0);
   
   ex1->show();
   So@Gui@::show( window );
