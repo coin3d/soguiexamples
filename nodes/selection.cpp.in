@@ -135,10 +135,11 @@ main(int argc, char ** argv)
   selection->addSelectionCallback(made_selection, (void *)1L);
   selection->addDeselectionCallback(made_selection, (void *)0L);
 
+  SoBoxHighlightRenderAction * renderaction = new SoBoxHighlightRenderAction;
 
   So@Gui@ExaminerViewer * examinerviewer = new So@Gui@ExaminerViewer(window);
   examinerviewer->setSceneGraph(selection);
-  examinerviewer->setGLRenderAction(new SoBoxHighlightRenderAction);
+  examinerviewer->setGLRenderAction(renderaction);
   examinerviewer->setViewing(FALSE);
   examinerviewer->show();
 
@@ -146,6 +147,7 @@ main(int argc, char ** argv)
   So@Gui@::mainLoop();
 
   delete examinerviewer;
+  delete renderaction;
   selection->unref();
 
   return 0;
