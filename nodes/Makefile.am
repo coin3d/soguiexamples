@@ -23,6 +23,7 @@ BUILT_SOURCES = \
 	camera.cpp \
 	blinker.cpp \
 	texture.cpp \
+	texture3.cpp \
 	environment.cpp \
 	atmospheric.cpp \
 	shuttle.cpp \
@@ -42,7 +43,7 @@ noinst_PROGRAMS = \
         rotation scale translation transform rotor \
         directionallight pointlight spotlight lights \
         faceset facesetindexed quadmesh trianglestripset \
-        camera blinker texture environment atmospheric shuttle \
+        camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
         pointset markerset
 
@@ -89,6 +90,8 @@ camera_SOURCES = camera.cpp
 blinker_SOURCES = blinker.cpp
 
 texture_SOURCES = texture.cpp
+
+texture3_SOURCES = texture3.cpp
 
 environment_SOURCES = environment.cpp
 

@@ -68,6 +68,7 @@ BUILT_SOURCES = \
 	nodes/text2.cpp \
 	nodes/text3.cpp \
 	nodes/texture.cpp \
+	nodes/texture3.cpp \
 	nodes/transform.cpp \
 	nodes/translation.cpp \
 	nodes/trianglestripset.cpp \
@@ -290,6 +291,9 @@ nodes/text3.cpp: $(srcdir)/nodes/text3.cpp.in config.status
 	@./config.status --file=$@
 
 nodes/texture.cpp: $(srcdir)/nodes/texture.cpp.in config.status
+	@./config.status --file=$@
+
+nodes/texture3.cpp: $(srcdir)/nodes/texture3.cpp.in config.status
 	@./config.status --file=$@
 
 nodes/transform.cpp: $(srcdir)/nodes/transform.cpp.in config.status

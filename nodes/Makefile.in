@@ -114,6 +114,7 @@ BUILT_SOURCES = \
 	camera.cpp \
 	blinker.cpp \
 	texture.cpp \
+	texture3.cpp \
 	environment.cpp \
 	atmospheric.cpp \
 	shuttle.cpp \
@@ -132,7 +133,7 @@ noinst_PROGRAMS = \
         rotation scale translation transform rotor \
         directionallight pointlight spotlight lights \
         faceset facesetindexed quadmesh trianglestripset \
-        camera blinker texture environment atmospheric shuttle \
+        camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
         pointset markerset
 
@@ -181,6 +182,8 @@ blinker_SOURCES = blinker.cpp
 
 texture_SOURCES = texture.cpp
 
+texture3_SOURCES = texture3.cpp
+
 environment_SOURCES = environment.cpp
 
 atmospheric_SOURCES = atmospheric.cpp
@@ -214,10 +217,11 @@ noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	spotlight$(EXEEXT) lights$(EXEEXT) faceset$(EXEEXT) \
 	facesetindexed$(EXEEXT) quadmesh$(EXEEXT) \
 	trianglestripset$(EXEEXT) camera$(EXEEXT) blinker$(EXEEXT) \
-	texture$(EXEEXT) environment$(EXEEXT) atmospheric$(EXEEXT) \
-	shuttle$(EXEEXT) complexity$(EXEEXT) text2$(EXEEXT) \
-	text3$(EXEEXT) clipplane$(EXEEXT) levelofdetail$(EXEEXT) \
-	extselection$(EXEEXT) pointset$(EXEEXT) markerset$(EXEEXT)
+	texture$(EXEEXT) texture3$(EXEEXT) environment$(EXEEXT) \
+	atmospheric$(EXEEXT) shuttle$(EXEEXT) complexity$(EXEEXT) \
+	text2$(EXEEXT) text3$(EXEEXT) clipplane$(EXEEXT) \
+	levelofdetail$(EXEEXT) extselection$(EXEEXT) pointset$(EXEEXT) \
+	markerset$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_atmospheric_OBJECTS = atmospheric.$(OBJEXT)
@@ -370,6 +374,11 @@ texture_OBJECTS = $(am_texture_OBJECTS)
 texture_LDADD = $(LDADD)
 texture_DEPENDENCIES =
 texture_LDFLAGS =
+am_texture3_OBJECTS = texture3.$(OBJEXT)
+texture3_OBJECTS = $(am_texture3_OBJECTS)
+texture3_LDADD = $(LDADD)
+texture3_DEPENDENCIES =
+texture3_LDFLAGS =
 am_transform_OBJECTS = transform.$(OBJEXT)
 transform_OBJECTS = $(am_transform_OBJECTS)
 transform_LDADD = $(LDADD)
@@ -408,8 +417,8 @@ depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 @AMDEP_TRUE@	$(DEPDIR)/slideshow.Po $(DEPDIR)/sphere.Po \
 @AMDEP_TRUE@	$(DEPDIR)/spherecolor.Po $(DEPDIR)/spotlight.Po \
 @AMDEP_TRUE@	$(DEPDIR)/text2.Po $(DEPDIR)/text3.Po \
-@AMDEP_TRUE@	$(DEPDIR)/texture.Po $(DEPDIR)/transform.Po \
-@AMDEP_TRUE@	$(DEPDIR)/translation.Po \
+@AMDEP_TRUE@	$(DEPDIR)/texture.Po $(DEPDIR)/texture3.Po \
+@AMDEP_TRUE@	$(DEPDIR)/transform.Po $(DEPDIR)/translation.Po \
 @AMDEP_TRUE@	$(DEPDIR)/trianglestripset.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -428,10 +437,10 @@ DIST_SOURCES = $(atmospheric_SOURCES) $(blinker_SOURCES) \
 	$(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) \
 	$(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) \
 	$(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) \
-	$(texture_SOURCES) $(transform_SOURCES) $(translation_SOURCES) \
-	$(trianglestripset_SOURCES)
+	$(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) \
+	$(translation_SOURCES) $(trianglestripset_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(atmospheric_SOURCES) $(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
+SOURCES = $(atmospheric_SOURCES) $(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -538,6 +547,9 @@ text3$(EXEEXT): $(text3_OBJECTS) $(text3_DEPENDENCIES)
 texture$(EXEEXT): $(texture_OBJECTS) $(texture_DEPENDENCIES) 
 	@rm -f texture$(EXEEXT)
 	$(CXXLINK) $(texture_LDFLAGS) $(texture_OBJECTS) $(texture_LDADD) $(LIBS)
+texture3$(EXEEXT): $(texture3_OBJECTS) $(texture3_DEPENDENCIES) 
+	@rm -f texture3$(EXEEXT)
+	$(CXXLINK) $(texture3_LDFLAGS) $(texture3_OBJECTS) $(texture3_LDADD) $(LIBS)
 transform$(EXEEXT): $(transform_OBJECTS) $(transform_DEPENDENCIES) 
 	@rm -f transform$(EXEEXT)
 	$(CXXLINK) $(transform_LDFLAGS) $(transform_OBJECTS) $(transform_LDADD) $(LIBS)
@@ -584,6 +596,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/text2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/text3.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/texture.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/texture3.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/transform.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/translation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/trianglestripset.Po@am__quote@

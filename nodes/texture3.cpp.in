@@ -1,0 +1,237 @@
+#include <Inventor/SbClip.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoComplexity.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoTexture3.h>
+#include <Inventor/nodes/SoTextureCoordinate3.h>
+#include <Inventor/nodes/SoFaceSet.h>
+#include <Inventor/nodes/SoLineSet.h>
+#include <Inventor/nodes/SoBaseColor.h>
+#include <Inventor/draggers/SoTransformerDragger.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#include <values.h>
+
+unsigned char * generateTexture(int w, int h, int d)
+{
+  int val;
+  float x,y,z;
+  unsigned char pixval;
+  unsigned char * bitmap = new unsigned char[w*h*d];
+
+  for (int k = 0;k<d;k++) {
+    z = k*360/d;
+    for (int j = 0;j<h;j++) {
+      y = (j-h/2)/2;
+      for (int i = 0;i<w;i++) {
+        x = (i-w/2)/2;
+        val = x*x + y*y*sin(2*x*M_PI/w + z*M_PI/180);
+        val = abs(val%512);
+        if (val >= 256) val = 511-val;
+        bitmap[k*w*h + j*h + i] = val;
+      }
+    }
+  }
+  
+  return bitmap;
+}
+
+void doClipping(SbVec3f trans, SbRotation rot)
+{
+  SbMatrix mat;
+  SbVec3f normal;
+
+  mat.setTransform(trans, rot, SbVec3f(1,1,1));
+  mat.multDirMatrix(SbVec3f(0, -1, 0), normal);
+  SbPlane plane(normal, trans);
+
+  const float coords[][3] = {
+    {-5,-5,-5},
+    {5,-5,-5},
+    {5,5,-5},
+    {-5,5,-5},
+    {-5,-5,5},
+    {5,-5,5},
+    {5,5,5},
+    {-5,5,5}
+  };
+  const int indices[] = {
+    0,3,2,1,-1,
+    0,1,5,4,-1,
+    2,6,5,1,-1,
+    3,7,6,2,-1,
+    3,0,4,7,-1,
+    7,4,5,6,-1
+  };
+
+  // Clip box against plane
+
+  SbClip clip;
+  SoMFVec3f * globalVerts = 
+    (SoMFVec3f *)SoDB::getGlobalField(SbName("globalVerts"));
+  SoMFVec3f * globalTVerts = 
+    (SoMFVec3f *)SoDB::getGlobalField(SbName("globalTVerts"));
+  SoMFInt32 * globalnv = 
+    (SoMFInt32 *)SoDB::getGlobalField(SbName("globalnv"));
+  globalVerts->startEditing();
+  globalVerts->setNum(0);
+  globalTVerts->startEditing();
+  globalTVerts->setNum(0);
+  globalnv->startEditing();
+  globalnv->setNum(0);
+  for (int i = 0;i<6*5;i++) {
+    if (indices[i] == -1) {
+      clip.clip(plane);
+      int numVerts = clip.getNumVertices();
+      if (numVerts > 0) {
+        for (int i = 0;i<numVerts;i++) {
+          SbVec3f v;
+          clip.getVertex(i, v);
+          globalVerts->set1Value(globalVerts->getNum(), v);
+          v += SbVec3f(5, 5, 5);
+          v /= 10.0;
+          globalTVerts->set1Value(globalTVerts->getNum(), v);
+        }
+        globalnv->set1Value(globalnv->getNum(), numVerts);
+      }
+      clip.reset();
+    }
+    else clip.addVertex(coords[indices[i]]);
+  }
+  globalVerts->finishEditing();
+  globalTVerts->finishEditing();
+  globalnv->finishEditing();
+
+  // Close hole in clipped box by clipping against all 6 planes
+  
+  const SbVec3f planecoords[] = {
+    SbVec3f(-10,0,-10),
+    SbVec3f(10,0,-10),
+    SbVec3f(10,0,10),
+    SbVec3f(-10,0,10)
+  };
+
+  
+  clip.reset();
+  for (int i = 0;i<4;i++) {
+    SbVec3f v;
+    mat.multVecMatrix(planecoords[i], v);
+    clip.addVertex(v);
+  }
+  for (int i = 0;i<6*5;i+=5) {
+    SbPlane p(coords[indices[i+2]],
+              coords[indices[i+1]],
+              coords[indices[i]]);
+    clip.clip(p);
+  }
+  int numVerts = clip.getNumVertices();
+  SoMFVec3f * planeVerts = 
+    (SoMFVec3f *)SoDB::getGlobalField(SbName("planeVerts"));
+  SoMFVec3f * planeTVerts = 
+    (SoMFVec3f *)SoDB::getGlobalField(SbName("planeTVerts"));
+  planeVerts->startEditing();
+  planeVerts->setNum(0);
+  planeTVerts->startEditing();
+  planeTVerts->setNum(0);
+  for (int i = 0;i<numVerts;i++) {
+    SbVec3f v;
+    clip.getVertex(i, v);
+    planeVerts->set1Value(planeVerts->getNum(), v);
+    v += SbVec3f(5, 5, 5);
+    v /= 10.0;
+    planeTVerts->set1Value(planeTVerts->getNum(), v);
+  }
+  planeVerts->finishEditing();
+  planeTVerts->finishEditing();
+}
+
+void draggerCB(void * data, SoDragger * dragger)
+{
+  SoTransformerDragger * drag = (SoTransformerDragger *)dragger;
+  doClipping(drag->translation.getValue(), drag->rotation.getValue());
+}
+
+int main(int argc, char * argv[])
+{
+  QWidget * window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoDB::createGlobalField("globalVerts", SoMFVec3f::getClassTypeId());
+  SoDB::createGlobalField("globalTVerts", SoMFVec3f::getClassTypeId());
+  SoDB::createGlobalField("globalnv", SoMFInt32::getClassTypeId());
+  SoDB::createGlobalField("planeVerts", SoMFVec3f::getClassTypeId());
+  SoDB::createGlobalField("planeTVerts", SoMFVec3f::getClassTypeId());
+
+  doClipping(SbVec3f(0,0,0), SbRotation());
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  SoComplexity * comp = new SoComplexity;
+  comp->textureQuality.setValue(0.9);
+  root->addChild(comp);
+
+  SoTexture3 * texture = new SoTexture3;
+  texture->wrapR.setValue(SoTexture3::CLAMP);
+  texture->wrapS.setValue(SoTexture3::CLAMP);
+  texture->wrapT.setValue(SoTexture3::CLAMP);
+//    SbString filenames[64];
+//    for (int i=0;i<64;i++)
+//      filenames[i].sprintf("../../../data/pgmvol/slice%02d.raw.pgm",i);
+//    texture->filenames.setValues(0,64,filenames);
+  unsigned char * img = generateTexture(256,256,256);
+  texture->images.setValue(SbVec3s(256,256,256), 1, img);
+  root->addChild(texture);
+
+  SoMaterial * mat = new SoMaterial;
+  mat->emissiveColor.setValue(1,1,1);
+  root->addChild(mat);
+    
+  SoTransformerDragger * dragger = new SoTransformerDragger;
+  dragger->scaleFactor.setValue(5,5,5);
+  dragger->addValueChangedCallback(draggerCB, NULL);
+  root->addChild(dragger);
+
+  SoCoordinate3 * clippedCoords = new SoCoordinate3;
+  clippedCoords->point.connectFrom((SoMFVec3f *)
+                                   SoDB::getGlobalField("globalVerts"));
+  root->addChild(clippedCoords);
+  SoTextureCoordinate3 * clippedTCoords = new SoTextureCoordinate3;
+  clippedTCoords->point.connectFrom((SoMFVec3f *)
+                                    SoDB::getGlobalField("globalTVerts"));
+  root->addChild(clippedTCoords);
+  SoFaceSet * clippedFS = new SoFaceSet;
+  clippedFS->numVertices.connectFrom((SoMFInt32 *)
+                                     SoDB::getGlobalField("globalnv"));
+  root->addChild(clippedFS);
+
+  SoCoordinate3 * planeCoords = new SoCoordinate3;
+  planeCoords->point.connectFrom((SoMFVec3f *)
+                                 SoDB::getGlobalField("planeVerts"));
+  root->addChild(planeCoords);
+  SoTextureCoordinate3 * planeTCoords = new SoTextureCoordinate3;
+  planeTCoords->point.connectFrom((SoMFVec3f *)
+                                  SoDB::getGlobalField("planeTVerts"));
+  root->addChild(planeTCoords);
+  SoFaceSet * planeFS = new SoFaceSet;
+  root->addChild(planeFS);
+
+  So@Gui@ExaminerViewer * renderarea = new So@Gui@ExaminerViewer( window );
+  renderarea->setSceneGraph( root );
+  renderarea->setBackgroundColor( SbColor( 0.0f, 0.2f, 0.3f )  );
+  renderarea->setTitle(argv[0]);
+  renderarea->setIconTitle(argv[0]);
+  renderarea->viewAll();
+  renderarea->show();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete renderarea;
+  root->unref();
+
+  return 0;
+}
