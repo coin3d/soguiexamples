@@ -153,7 +153,7 @@ main(int argc, char ** argv)
 
 #ifdef __COIN__
   delete bsptree;
-#endif __ COIN__
+#endif // __COIN__
 
   return 0;
 }
