@@ -102,12 +102,22 @@ ShapeScale::~ShapeScale()
 void
 ShapeScale::initClass(void)
 {
-  static int first = 1;
-  if (first) {
-    first = 0;
-    SO_KIT_INIT_CLASS(ShapeScale, SoBaseKit, "BaseKit");
-  }
+  SO_KIT_INIT_CLASS(ShapeScale, SoBaseKit, "BaseKit");
 }
+
+// FIXME: when using this nodekit in the
+// SoGuiExamples/nodekits/scalemarker example, it looks like it
+// sometimes doesn't stop sending notifications to the scenegraph --
+// causing it to continually trigger redraws.
+//
+// This is not entirely straightforward to reproduce, but try starting
+// and stopping spin animations while having set the envvar
+// COIN_SHOW_FPS_COUNTER=1, and you'll sooner or later see that it
+// won't stop redrawing even though the scene camera's position and
+// orientation is frozen.
+//
+// 20020630 mortene.
+
 
 static void 
 update_scale(SoScale * scale, const SbVec3f & v)
@@ -118,9 +128,7 @@ update_scale(SoScale * scale, const SbVec3f & v)
   }
 }
 
-/*!
-  Overloaded to (re)initialize scaling before renderingf marker.
-*/
+// Overridden to (re)initialize scaling before rendering marker.
 void 
 ShapeScale::GLRender(SoGLRenderAction * action)
 {
@@ -141,10 +149,3 @@ ShapeScale::GLRender(SoGLRenderAction * action)
   }
   inherited::GLRender(action);
 }
-
-
-
-
-
-
-
