@@ -35,6 +35,7 @@
 #include <Inventor/nodes/SoShapeHints.h>
 #include <Inventor/nodes/SoSphere.h>
 #include <Inventor/nodes/SoText3.h>
+#include <Inventor/errors/SoDebugError.h>
 
 #if HAVE_CONFIG_H
 #include <config.h>
