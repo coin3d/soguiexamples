@@ -10,3 +10,12 @@ Q1.1: I have a vector v=(x,y,z). I want to instantiate some geometry,
       v.  What's the "by the book" procedure for this?
 
 A:    See the parallel.cpp.in code example.
+
+Q1.2: I want to rotate N degrees around the v=(x,y,z)-axis, but it doesn't
+      seem to work.
+
+A:    It's a common mistake to mistakenly use the wrong SbRotation
+      constructor.  The one that takes (SbVec3f, float) is the one to use,
+      the one that takes (float, float, float, float) is for setting up
+      the rotation from a quaternion.
+
