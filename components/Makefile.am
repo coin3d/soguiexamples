@@ -47,6 +47,8 @@ snapshotviewer_SOURCES = \
 
 backgroundimg_SOURCES = backgroundimg.cpp
 
+spaceballdemo_SOURCES = spaceballdemo.cpp
+
 ## So@Gui@LightSliderSet component
 if HAVE_SLIDERSETS
 SLIDERSETS = lightsliderset materialsliderset materialsliderset2 transformsliderset
@@ -123,13 +125,14 @@ BUILT_SOURCES = \
 	grapheditor.cpp \
 	snapshotviewer.cpp \
 	SoGuiSnapshotViewer.h \
-	SoGuiSnapshotViewer.cpp
+	SoGuiSnapshotViewer.cpp \
+	spaceballdemo.cpp 
 # 	cutterviewer.cpp \
 # 	SoGuiCutterViewer.h \
 # 	SoGuiCutterViewer.cpp
 
 noinst_PROGRAMS = renderarea backgroundimg examinerviewer overlay \
-	planeviewer flyviewer snapshotviewer \
+	planeviewer flyviewer snapshotviewer spaceballdemo \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
 	$(MATERIALLIST) $(PRINTDIALOG)
 
@@ -195,6 +198,9 @@ materialeditor.cpp: $(srcdir)/materialeditor.cpp.in
 
 printdialog.cpp: $(srcdir)/printdialog.cpp.in
 	@( cd $(top_builddir); ./config.status --file=components/printdialog.cpp )
+
+spaceballdemo.cpp: $(srcdir)/spaceballdemo.cpp.in
+	@( cd $(top_builddir); ./config.status --file=components/spaceballdemo.cpp )
 
 snapshotviewer.cpp: $(srcdir)/snapshotviewer.cpp.in
 	@( cd $(top_builddir); ./config.status --file=components/snapshotviewer.cpp )
