@@ -103,7 +103,7 @@ main(int argc, char ** argv)
 #include <Inventor/nodes/SoIndexedFaceSet.h>
 #include <Inventor/nodes/SoIndexedLineSet.h>
 #include <Inventor/nodes/SoShapeHints.h>
-#ifdef HAVE_POLYGONOFFSET
+#ifdef HAVE_SOPOLYGONOFFSET
 #include <Inventor/nodes/SoPolygonOffset.h>
 #endif
 #include <Inventor/draggers/SoTranslate2Dragger.h>
@@ -251,16 +251,16 @@ main(int argc, char ** argv)
   root->addChild(makeShapeGroup( 3,-3, 0, new SoSphere));
   root->addChild(makeShapeGroup( 3, 3, 0, new SoCylinder));
   // root->addChild(makeShapeGroup( 0, 0, 0, new SoTranslate2Dragger));
-#ifdef HAVE_POLYGONOFFSET
+#ifdef HAVE_SOPOLYGONOFFSET
   SoPolygonOffset * offset = new SoPolygonOffset;
   offset->styles.setValue(SoPolygonOffset::FILLED);
   offset->factor.setValue(-1);
   offset->units.setValue(1);
   offset->on.setValue(TRUE);
   root->addChild(offset);
-#else // !HAVE_POLYGONOFFSET
+#else // !HAVE_SOPOLYGONOFFSET
   SoDebugError::post(argv[0], "You lack the SoPolygonOffset node - the visualization will be garbled");
-#endif // !HAVE_POLYGONOFFSET
+#endif // !HAVE_SOPOLYGONOFFSET
   SoShapeHints * hints = new SoShapeHints;
   hints->vertexOrdering.setValue(SoShapeHints::COUNTERCLOCKWISE);
   hints->shapeType.setValue(SoShapeHints::UNKNOWN_SHAPE_TYPE);
