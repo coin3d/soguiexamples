@@ -1,0 +1,357 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of demo programs for the Coin library.
+ *  Copyright (C) 2000-2001 by Systems in Motion. All rights reserved.
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, Prof Brochs gate 6, 7030 Trondheim, NORWAY
+ *  http://www.sim.no support@sim.no Voice: +47 22114160 Fax: +47 22207097
+ *
+\**************************************************************************/
+
+
+/* ********************************************************************** *
+ * 25bc5bb
+ *
+ * Author: Thomas Hammer <thammer@sim.no>
+ * ********************************************************************** */
+
+#include <math.h>
+#include <stdlib.h>
+
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#include <Inventor/SoDB.h>
+#include <Inventor/SoInput.h>
+#include <Inventor/SbRotation.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoDrawStyle.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoBaseColor.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoText3.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoFont.h>
+#include <Inventor/@Gui@/viewers/So@Gui@Viewer.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+
+#include <Inventor/fields/SoMFString.h>
+#include <Inventor/sensors/SoFieldSensor.h>
+#include <Inventor/errors/SoDebugError.h>
+
+#include <Inventor/nodes/SoShape.h>
+#include <Inventor/elements/SoCoordinateElement.h>
+#include <Inventor/elements/SoModelMatrixElement.h>
+
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/actions/SoWriteAction.h>
+
+#include "coinlogo.h"
+
+struct particleinfo
+{
+  float x;
+  float y;
+  float z;
+  float sx;
+  float sy;
+  float sz;
+  float ax;
+  float ay;
+  float az;
+  float rotx;
+  float srotx;
+  float m;
+  float delay;
+  SoSeparator *p;
+  SoRotation *rot;
+  SoTransform *xf;
+  particleinfo()
+  {
+    x=y=z=sx=sy=sz=ax=ay=az=m=delay=rotx=srotx=0.0f;
+    p=NULL; xf=NULL;
+  };
+};
+
+int num_particles = 30;
+particleinfo *particles;
+
+SoSeparator * root;
+SoPerspectiveCamera * camera;
+
+SoShapeHints * hints;
+
+SoMaterial *cubematerial;
+
+
+SbTime lasttime;
+SbTime starttime;
+
+float speedjitter = 0.5;
+
+double flexrand(double lower, double upper)
+{
+  return lower + ((double)rand()/(double)RAND_MAX)*(upper-lower);
+};
+
+static void timerSensorCallback(void *data, SoSensor *)
+{
+  int i;
+  SbTime now = SbTime::getTimeOfDay();
+  SbTime timediff = now-lasttime;
+  lasttime = now;
+  double diff = timediff.getValue(); // time in seconds
+  SbTime stimediff = now-starttime;
+  double sdiff = stimediff.getValue();
+  int leader = 0;
+
+  double avgx=0;
+  double avgy=0;
+  double avgz=0;
+
+  for (i=0; i<num_particles; i++)
+  {
+    if (sdiff-particles[i].delay<0)
+      continue;
+    particles[i].x+=diff*particles[i].sx;
+    particles[i].y+=diff*particles[i].sy;
+    particles[i].z+=diff*particles[i].sz;
+
+    particles[i].sx+=diff*particles[i].ax;
+    particles[i].sy+=diff*particles[i].ay;
+    particles[i].sz+=diff*particles[i].az;
+
+    particles[i].rotx+=diff*particles[i].srotx;
+
+    float bound = 7.0;
+    float absorb = 1.0;
+
+    if (particles[i].y<-bound)
+    {
+      particles[i].sy=1.0*fabs(particles[i].sy)*absorb;
+      particles[i].sx += speedjitter*(rand()%100)/100.0;
+      particles[i].sy += speedjitter*(rand()%100)/100.0;
+    }
+
+    if (particles[i].y>bound)
+      particles[i].sy=-1.0*fabs(particles[i].sy)*absorb;
+
+    if (particles[i].x<-bound)      particles[i].sx=1.0*fabs(particles[i].sx)*absorb;
+
+    if (particles[i].x>bound)
+      particles[i].sx=-1.0*fabs(particles[i].sx)*absorb;
+
+    if (particles[i].z<-bound)
+      particles[i].sz=1.0*fabs(particles[i].sz)*absorb;
+
+    if (particles[i].z>bound)
+      particles[i].sz=-1.0*fabs(particles[i].sz)*absorb;
+
+
+    float sbound = 50;
+    
+    if (particles[i].sx>sbound)
+      particles[i].sx = sbound;
+    if (particles[i].sx<-sbound)
+      particles[i].sx = -sbound;
+
+    if (particles[i].sy>sbound)
+      particles[i].sy = sbound;
+    if (particles[i].sy<-sbound)
+      particles[i].sy = -sbound;
+
+    if (particles[i].sz>sbound)
+      particles[i].sz = sbound;
+    if (particles[i].sz<-sbound)
+      particles[i].sz = -sbound;
+
+    avgx += particles[i].x;
+    avgy += particles[i].y;
+    avgz += particles[i].z;
+
+    particles[i].xf->translation.setValue(particles[i].x, particles[i].y, particles[i].z);
+
+    // spin
+    particles[i].rot->rotation.setValue(SbVec3f(0.0f, 1.0f, 0.0f), particles[i].rotx);
+  }
+  avgx /= num_particles;
+  avgy /= num_particles;
+  avgz /= num_particles;
+
+  float x,y,z;
+  SbVec3f cpos;
+  cpos = camera->position.getValue();
+  cpos.getValue(x, y, z);
+  x = 20.0*sin(now.getValue()*2*3.14*0.065);
+  y = 5.0+3.0*cos(now.getValue()*2*3.14*0.125);
+  z = 20.0*cos(now.getValue()*2*3.14*0.065);
+  camera->position.setValue(x,y,z);
+  camera->pointAt(SbVec3f(avgx, avgy, avgz),
+    SbVec3f(0.0f, 1.0f, 0.0f));
+
+}
+
+
+void
+main(
+  int argc,
+  char ** argv )
+{
+
+  @WIDGET@ window = So@Gui@::init( argv[0] );
+
+  root = new SoSeparator;
+  root->addChild( camera = new SoPerspectiveCamera );
+  root->addChild( new SoDirectionalLight );
+
+  hints = new SoShapeHints;
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+  hints->creaseAngle = 0.91f;
+  root->addChild( hints );
+
+  particles = new particleinfo[num_particles];
+
+	SoSphere *ball;
+  SoSeparator *sep = new SoSeparator;
+
+  int i;
+  srand( (unsigned)time( NULL ) );
+  int line=0;
+  int spos=0;
+  
+  for (i=0; i<num_particles; i++)
+  {
+    particles[i].x=flexrand(-5.0, 5.0);
+    particles[i].y=flexrand(-3.0, 3.0);
+    particles[i].z=flexrand(-3.0, 3.0);
+
+    particles[i].sx=flexrand(-1.0, 1.0);
+    particles[i].sy=flexrand(-3.0, 3.0);
+    particles[i].sz=flexrand(-3.0, 3.0);
+  
+    particles[i].srotx=flexrand(0.5f, 5.0f);
+
+    particles[i].ax=0.0;
+    particles[i].ay=-9.8;
+    particles[i].az=0.0;
+
+    root->addChild(particles[i].p = new SoSeparator);
+    particles[i].p->addChild(particles[i].xf = new SoTransform);
+    particles[i].xf->translation.setValue(particles[i].x, particles[i].y, particles[i].z);
+    particles[i].p->addChild(particles[i].rot = new SoRotation);
+
+    if (i%6==0)
+    {
+      SoDrawStyle *style;
+      particles[i].p->addChild(style = new SoDrawStyle);
+      style->style = SoDrawStyle::LINES;
+      particles[i].p->addChild(ball = new SoSphere);
+      ball->radius = 0.3f;
+
+      particles[i].sx=flexrand(3.0, 5.0);
+      particles[i].sz=flexrand(3.0, 5.0);
+    } 
+    else 
+    {
+
+      SoMaterial *mat = new SoMaterial;
+      mat->specularColor.setValue( 0.0f, 0.0f, 0.2f );
+      mat->emissiveColor.setValue( 0.4f, 0.0f, 0.0f );
+      mat->diffuseColor.setValue( flexrand(0.0, 0.8), flexrand(0.1, 0.8), flexrand(0.0, 0.8));
+      mat->ambientColor.setValue( 0.0f, 0.0f, 1.0f );
+      mat->shininess = 0.8f;
+      particles[i].p->addChild(mat);
+      SoScale *scale;
+      particles[i].p->addChild(scale = new SoScale);
+      scale->scaleFactor = SbVec3f(0.2, 0.2, 0.2);
+      SoInput in;
+      in.setBuffer((void *)COIN_LOGO,strlen(COIN_LOGO));
+      SoNode *logo;
+      SoDB::read(&in,logo);
+      particles[i].p->addChild(logo);
+    };
+
+  };
+
+  root->addChild(cubematerial = new SoMaterial);
+  cubematerial->transparency.setValue(0.3);
+  cubematerial->ambientColor=SbVec3f(1.0, 0.0, 0.0);
+
+  SoTransform *xf;
+  root->addChild(xf = new SoTransform);
+  xf->translation = SbVec3f(0.0f, -8.0f, 0.0f);
+
+  SoCube *cube;
+	root->addChild(cube = new SoCube);
+  cube->width = 25.0;
+  cube->height = 0.3;
+  cube->depth = 25.0;
+
+	SbViewportRegion vp;
+	vp.setWindowSize(SbVec2s(400, 400));
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
+
+  viewer->setSceneGraph( root );
+
+	viewer->setViewportRegion(vp);
+  camera->viewAll(root, vp);
+  float x,y,z;
+  SbVec3f cpos;
+  cpos = camera->position.getValue();
+  cpos.getValue(x, y, z);
+  camera->position.setValue(0.0f, -5.0f, 20.0f);
+  camera->nearDistance = 1.0;
+  camera->farDistance = 100.0;
+
+  SoTimerSensor *timerSensor;
+	timerSensor = new SoTimerSensor(timerSensorCallback, NULL);
+  timerSensor->setInterval(SbTime(0, 1000*10));
+	timerSensor->schedule();
+
+  lasttime = SbTime::getTimeOfDay();
+  starttime = lasttime;
+
+  camera->viewAll(root, vp);
+
+#ifdef HAVE_SOGLRENDERACTION_SORTED_OBJECT_SORTED_TRIANGLE_BLEND
+  viewer->setTransparencyType( SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND );
+#else // !HAVE_SOGLRENDERACTION_SORTED_OBJECT_SORTED_TRIANGLE_BLEND
+  viewer->setTransparencyType( SoGLRenderAction::SORTED_OBJECT_BLEND );
+#endif // !HAVE_SOGLRENDERACTION_SORTED_OBJECT_SORTED_TRIANGLE_BLEND
+
+  viewer->setDecoration(FALSE);
+
+  viewer->show();
+  So@Gui@::show( window );
+
+  // Must do this _after_ show() to avoid the "Start"-bar being
+  // visible with SoWin. (Bug!)
+  (void)viewer->setFullScreen(TRUE);
+
+  So@Gui@::mainLoop();
+
+  delete [] particles;
+
+} // main()
