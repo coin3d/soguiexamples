@@ -93,19 +93,20 @@ soguiconfig = @soguiconfig@
 
 BUILT_SOURCES = search.cpp raypick.cpp intersection.cpp
 
-noinst_PROGRAMS = search raypick tesselate matrixtransform intersection
+noinst_PROGRAMS = search raypick tesselate matrixtransform intersection ivcopy
 
 search_SOURCES = search.cpp
 raypick_SOURCES = raypick.cpp
 tesselate_SOURCES = tesselate.cpp
 matrixtransform_SOURCES = matrixtransform.cpp
 intersection_SOURCES = intersection.cpp
+ivcopy_SOURCES = ivcopy.cpp
 subdir = actions
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 noinst_PROGRAMS = search$(EXEEXT) raypick$(EXEEXT) tesselate$(EXEEXT) \
-	matrixtransform$(EXEEXT) intersection$(EXEEXT)
+	matrixtransform$(EXEEXT) intersection$(EXEEXT) ivcopy$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_intersection_OBJECTS = intersection.$(OBJEXT)
@@ -113,6 +114,11 @@ intersection_OBJECTS = $(am_intersection_OBJECTS)
 intersection_LDADD = $(LDADD)
 intersection_DEPENDENCIES =
 intersection_LDFLAGS =
+am_ivcopy_OBJECTS = ivcopy.$(OBJEXT)
+ivcopy_OBJECTS = $(am_ivcopy_OBJECTS)
+ivcopy_LDADD = $(LDADD)
+ivcopy_DEPENDENCIES =
+ivcopy_LDFLAGS =
 am_matrixtransform_OBJECTS = matrixtransform.$(OBJEXT)
 matrixtransform_OBJECTS = $(am_matrixtransform_OBJECTS)
 matrixtransform_LDADD = $(LDADD)
@@ -140,7 +146,7 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/intersection.Po \
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/intersection.Po $(DEPDIR)/ivcopy.Po \
 @AMDEP_TRUE@	$(DEPDIR)/matrixtransform.Po $(DEPDIR)/raypick.Po \
 @AMDEP_TRUE@	$(DEPDIR)/search.Po $(DEPDIR)/tesselate.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -149,10 +155,11 @@ CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 CXXFLAGS = @CXXFLAGS@
-DIST_SOURCES = $(intersection_SOURCES) $(matrixtransform_SOURCES) \
-	$(raypick_SOURCES) $(search_SOURCES) $(tesselate_SOURCES)
+DIST_SOURCES = $(intersection_SOURCES) $(ivcopy_SOURCES) \
+	$(matrixtransform_SOURCES) $(raypick_SOURCES) $(search_SOURCES) \
+	$(tesselate_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(intersection_SOURCES) $(matrixtransform_SOURCES) $(raypick_SOURCES) $(search_SOURCES) $(tesselate_SOURCES)
+SOURCES = $(intersection_SOURCES) $(ivcopy_SOURCES) $(matrixtransform_SOURCES) $(raypick_SOURCES) $(search_SOURCES) $(tesselate_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -172,6 +179,9 @@ clean-noinstPROGRAMS:
 intersection$(EXEEXT): $(intersection_OBJECTS) $(intersection_DEPENDENCIES) 
 	@rm -f intersection$(EXEEXT)
 	$(CXXLINK) $(intersection_LDFLAGS) $(intersection_OBJECTS) $(intersection_LDADD) $(LIBS)
+ivcopy$(EXEEXT): $(ivcopy_OBJECTS) $(ivcopy_DEPENDENCIES) 
+	@rm -f ivcopy$(EXEEXT)
+	$(CXXLINK) $(ivcopy_LDFLAGS) $(ivcopy_OBJECTS) $(ivcopy_LDADD) $(LIBS)
 matrixtransform$(EXEEXT): $(matrixtransform_OBJECTS) $(matrixtransform_DEPENDENCIES) 
 	@rm -f matrixtransform$(EXEEXT)
 	$(CXXLINK) $(matrixtransform_LDFLAGS) $(matrixtransform_OBJECTS) $(matrixtransform_LDADD) $(LIBS)
@@ -192,6 +202,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/intersection.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ivcopy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/matrixtransform.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/raypick.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/search.Po@am__quote@
