@@ -55,8 +55,11 @@ main(
     }
   }
 
-  fprintf( stdout, "PointSet contains a total of %d points.\n", num );
-  fprintf( stdout, "Spin the pointset to see the moiré patterns change.\n" );
+  (void)fprintf( stdout, "PointSet contains a total of %d points.\n\n", num );
+  (void)fprintf( stdout, "Spin the pointset to see the moiré patterns change.\n" );
+  (void)fprintf( stdout, "Change between perspective camera to orthographic camera\n" );
+  (void)fprintf( stdout, "to get different types of patterns.\n" );
+  (void)fprintf( stdout, "\n" );
   
   // draw style
   SoDrawStyle * dstyle = new SoDrawStyle;
