@@ -20,6 +20,56 @@
  *
 \**************************************************************************/
 
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+// this example requires the SoTextureScalePolicy node
+#if !defined(HAVE_SOTEXTURESCALEPOLICY)
+
+#include <Inventor/nodes/SoText3.h>
+#include <stdio.h>
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  const char * info[] = {
+    "This example depends on a Coin specifc",
+    "extensions. This is just an informational",
+    "message and not the real functionality",
+    "of the example."
+  };
+
+  SoText3 * msg = new SoText3;
+  msg->justification = SoText3::CENTER;
+  msg->string.setValues(0, sizeof(info) / sizeof(const char *), info);
+  root->addChild(msg);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->show();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+
+  return 1;
+}
+
+#else // ! HAVE_SOTEXTURESCALEPOLICY
+
 #include <stdlib.h> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
@@ -170,5 +220,10 @@ main (int, char ** argv)
   So@Gui@::mainLoop();   // main Coin event loop
   delete viewer;
   root->unref();
-  return 0;
+
+  delete[] bitmap;
+  return 0;  
 }
+
+#endif // HAVE_SOTEXTURESCALEPOLICY
+
