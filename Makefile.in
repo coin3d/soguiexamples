@@ -51,6 +51,8 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 BUILD_WITH_MSVC = @BUILD_WITH_MSVC@
+BUILD_WITH_MSVC_FALSE = @BUILD_WITH_MSVC_FALSE@
+BUILD_WITH_MSVC_TRUE = @BUILD_WITH_MSVC_TRUE@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -110,6 +112,7 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -122,6 +125,7 @@ X_LIBS = @X_LIBS@
 X_PRE_LIBS = @X_PRE_LIBS@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
+ac_ct_RANLIB = @ac_ct_RANLIB@
 ac_ct_STRIP = @ac_ct_STRIP@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
@@ -171,10 +175,7 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 
-# FIXME: tmp disabled, as the SoQtGradientColor editor has been taken out of
-# SoQt, so some sources doesn't compile. (This class should be moved to a
-# new "SIM-wide" repository with Qt-extensions.) 20040903 mortene.
-@HAVE_SIMVOLEON_TRUE@VOLUMERENDERINGDIR = #volumerendering
+@HAVE_SIMVOLEON_TRUE@VOLUMERENDERINGDIR = volumerendering
 @HAVE_SIMVOLEON_FALSE@VOLUMERENDERINGDIR = 
 
 
@@ -201,7 +202,8 @@ DIST_COMMON = README AUTHORS COPYING ChangeLog INSTALL Makefile.am \
 	cfg/config.sub cfg/depcomp cfg/install-sh cfg/missing \
 	cfg/mkinstalldirs config.h.in configure configure.ac
 DIST_SUBDIRS = . components eyecandy coin-competitions annex actions \
-	draggers engines manipulators nodes sensors nodekits sound
+	draggers engines manipulators nodes sensors nodekits sound \
+	volumerendering
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
