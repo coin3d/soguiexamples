@@ -43,6 +43,7 @@ main(
 
   viewer->setSceneGraph( root );
   viewer->show();
+  viewer->setFeedbackVisibility(TRUE);
   So@Gui@::show( window );
 
   So@Gui@::mainLoop();
