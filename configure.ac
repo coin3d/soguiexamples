@@ -476,6 +476,7 @@ AC_CONFIG_FILES([
         annex/hardcopy.cpp
 
         draggers/Makefile
+        draggers/jackdragger.cpp
         draggers/translate1.cpp
         draggers/translate2.cpp
         draggers/dragpoint.cpp

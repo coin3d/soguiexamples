@@ -1,10 +1,12 @@
 BUILT_SOURCES = \
+	jackdragger.cpp \
 	translate1.cpp \
 	translate2.cpp \
 	dragpoint.cpp
 
-noinst_PROGRAMS = translate1 translate2 dragpoint
+noinst_PROGRAMS = jackdragger translate1 translate2 dragpoint
 
+jackdragger_SOURCES = jackdragger.cpp
 translate1_SOURCES = translate1.cpp
 translate2_SOURCES = translate2.cpp
 dragpoint_SOURCES = dragpoint.cpp

@@ -1,0 +1,135 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2004 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoBaseColor.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoLineSet.h>
+#include <Inventor/nodes/SoSwitch.h>
+#include <Inventor/draggers/SoJackDragger.h>
+#include <Inventor/sensors/SoFieldSensor.h>
+
+// *************************************************************************
+
+SoJackDragger * jackdragger1;
+SoJackDragger * jackdragger2;
+SoCoordinate3 * linecoords;
+SoSwitch * lineswitch;
+
+// *************************************************************************
+
+void 
+sensor_cb(void * data, SoSensor * sensor)
+{
+  
+  // Create two planes based on the jackdraggers rotation and
+  // translation.
+  SbMatrix m;  
+  m.setTransform(jackdragger1->translation.getValue(), 
+                 jackdragger1->rotation.getValue(), 
+                 SbVec3f(1.0f, 1.0f, 1.0f), 
+                 SbRotation());
+  SbPlane plane1(SbVec3f(0.0f, 1.0f, 0.0f), 0.0f);
+  plane1.transform(m);
+
+  m.setTransform(jackdragger2->translation.getValue(), 
+                 jackdragger2->rotation.getValue(), 
+                 SbVec3f(1.0f, 1.0f, 1.0f), 
+                 SbRotation());
+  SbPlane plane2(SbVec3f(0.0f, 1.0f, 0.0f), 0.0f);
+  plane2.transform(m);
+
+  // Test the intersection of the two planes.
+  SbLine line;
+  if (plane1.intersect(plane2, line)) {
+    linecoords->point.set1Value(0, line.getPosition() - (3*line.getDirection()));
+    linecoords->point.set1Value(1, line.getPosition() + (3*line.getDirection()));
+    lineswitch->whichChild.setValue(SO_SWITCH_ALL);
+  } else {
+    lineswitch->whichChild.setValue(SO_SWITCH_NONE);    
+    printf("The two planes does not intesect.\n");
+  }
+
+}
+
+// *************************************************************************
+
+int main(int argc,char **argv)
+{
+
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  SoDB::init(); 
+
+  printf("\nA simple Plane-Plane intersection example using SoJackDragger.\n\n"
+         " Quick instructions:\n\n"
+         " * Manipulate the JackDraggers with the mouse in "
+         "order to move the intersecting planes.\n"
+         " * The red line indicates the intersection of the two planes.\n\n");
+   
+  So@Gui@ExaminerViewer * vwr = new So@Gui@ExaminerViewer(window);
+
+  vwr->setBackgroundColor(SbColor(.1f,.1f,.2f));
+  
+  SoSeparator* sep = new SoSeparator;
+  sep->ref();
+  
+  jackdragger1 = new SoJackDragger;
+  jackdragger2 = new SoJackDragger;
+  sep->addChild(jackdragger1);
+  sep->addChild(jackdragger2);
+
+  lineswitch = new SoSwitch;
+  sep->addChild(lineswitch);
+
+  SoBaseColor * bc = new SoBaseColor;
+  bc->rgb.setValue(1, 0, 0);
+  lineswitch->addChild(bc);
+
+  linecoords = new SoCoordinate3;
+  SoLineSet * ls = new SoLineSet;
+  ls->numVertices.setValue(2);
+  lineswitch->addChild(linecoords);
+  lineswitch->addChild(ls);
+  
+  SoFieldSensor * fs1 = new SoFieldSensor(sensor_cb, jackdragger1);
+  fs1->attach(&jackdragger1->rotation);
+  SoFieldSensor * fs2 = new SoFieldSensor(sensor_cb, jackdragger2);
+  fs2->attach(&jackdragger2->rotation);
+  
+  jackdragger1->rotation.setValue(SbVec3f(1,1,0), 3.1415916f/3.0f);
+
+  vwr->setSceneGraph(sep);
+  vwr->viewAll();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete vwr;
+  sep->unref();
+
+  return 0;
+
+}
+
+// *************************************************************************

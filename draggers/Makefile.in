@@ -167,13 +167,15 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 BUILT_SOURCES = \
+	jackdragger.cpp \
 	translate1.cpp \
 	translate2.cpp \
 	dragpoint.cpp
 
 
-noinst_PROGRAMS = translate1 translate2 dragpoint
+noinst_PROGRAMS = jackdragger translate1 translate2 dragpoint
 
+jackdragger_SOURCES = jackdragger.cpp
 translate1_SOURCES = translate1.cpp
 translate2_SOURCES = translate2.cpp
 dragpoint_SOURCES = dragpoint.cpp
@@ -181,9 +183,10 @@ subdir = draggers
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES = translate1.cpp translate2.cpp dragpoint.cpp
-noinst_PROGRAMS = translate1$(EXEEXT) translate2$(EXEEXT) \
-	dragpoint$(EXEEXT)
+CONFIG_CLEAN_FILES = jackdragger.cpp translate1.cpp translate2.cpp \
+	dragpoint.cpp
+noinst_PROGRAMS = jackdragger$(EXEEXT) translate1$(EXEEXT) \
+	translate2$(EXEEXT) dragpoint$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_dragpoint_OBJECTS = dragpoint.$(OBJEXT)
@@ -191,6 +194,11 @@ dragpoint_OBJECTS = $(am_dragpoint_OBJECTS)
 dragpoint_LDADD = $(LDADD)
 dragpoint_DEPENDENCIES =
 dragpoint_LDFLAGS =
+am_jackdragger_OBJECTS = jackdragger.$(OBJEXT)
+jackdragger_OBJECTS = $(am_jackdragger_OBJECTS)
+jackdragger_LDADD = $(LDADD)
+jackdragger_DEPENDENCIES =
+jackdragger_LDFLAGS =
 am_translate1_OBJECTS = translate1.$(OBJEXT)
 translate1_OBJECTS = $(am_translate1_OBJECTS)
 translate1_LDADD = $(LDADD)
@@ -206,17 +214,18 @@ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/dragpoint.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/jackdragger.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/translate1.Po ./$(DEPDIR)/translate2.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
-DIST_SOURCES = $(dragpoint_SOURCES) $(translate1_SOURCES) \
-	$(translate2_SOURCES)
+DIST_SOURCES = $(dragpoint_SOURCES) $(jackdragger_SOURCES) \
+	$(translate1_SOURCES) $(translate2_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in dragpoint.cpp.in \
-	translate1.cpp.in translate2.cpp.in
-SOURCES = $(dragpoint_SOURCES) $(translate1_SOURCES) $(translate2_SOURCES)
+	jackdragger.cpp.in translate1.cpp.in translate2.cpp.in
+SOURCES = $(dragpoint_SOURCES) $(jackdragger_SOURCES) $(translate1_SOURCES) $(translate2_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -228,6 +237,8 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configu
 	  $(AUTOMAKE) --gnu  draggers/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
+jackdragger.cpp: $(top_builddir)/config.status jackdragger.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 translate1.cpp: $(top_builddir)/config.status translate1.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 translate2.cpp: $(top_builddir)/config.status translate2.cpp.in
@@ -240,6 +251,9 @@ clean-noinstPROGRAMS:
 dragpoint$(EXEEXT): $(dragpoint_OBJECTS) $(dragpoint_DEPENDENCIES) 
 	@rm -f dragpoint$(EXEEXT)
 	$(CXXLINK) $(dragpoint_LDFLAGS) $(dragpoint_OBJECTS) $(dragpoint_LDADD) $(LIBS)
+jackdragger$(EXEEXT): $(jackdragger_OBJECTS) $(jackdragger_DEPENDENCIES) 
+	@rm -f jackdragger$(EXEEXT)
+	$(CXXLINK) $(jackdragger_LDFLAGS) $(jackdragger_OBJECTS) $(jackdragger_LDADD) $(LIBS)
 translate1$(EXEEXT): $(translate1_OBJECTS) $(translate1_DEPENDENCIES) 
 	@rm -f translate1$(EXEEXT)
 	$(CXXLINK) $(translate1_LDFLAGS) $(translate1_OBJECTS) $(translate1_LDADD) $(LIBS)
@@ -254,6 +268,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dragpoint.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jackdragger.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/translate1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/translate2.Po@am__quote@
 
