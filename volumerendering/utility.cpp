@@ -20,8 +20,7 @@
  *
 \**************************************************************************/
 
-#include <Inventor/SbVec3s.h>
-#include <Inventor/SbVec3f.h>
+#include <Inventor/SbLinear.h>
 #include <string.h>
 #include <assert.h>
 
