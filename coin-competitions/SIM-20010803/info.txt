@@ -1,0 +1,8 @@
+Contributions:
+
+        * stars: submitted by Marius Bugge Monsen <mariusbu@sim.no>.
+        * chart: submitted by Lars J Aas <larsa@sim.no>.
+        * plasmafun: submitted by Peder Blekken <pederb@sim.no>.
+
+Jury: Majken Askeland & Øyvind Rideng.
+Winner: chart.

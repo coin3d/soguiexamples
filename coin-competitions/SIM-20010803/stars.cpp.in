@@ -1,0 +1,310 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoTextureCoordinateEnvironment.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoText3.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoRotor.h>
+#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoTriangleStripSet.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoShuttle.h>
+
+#include "envq_raw"
+#include "star_raw"
+
+static float vertices[18][3] =
+{
+	{ -0.5, 0.5, 0 }, { 0.5, 0.5, 0 }, { 0.5, -0.5, 0 },
+	{ -0.5, 0.5, 0 }, { -0.5, -0.5, 0 }, { 0.5, -0.5, 0 },
+
+	{ -0.5, 0, 0.5 }, { 0.5, 0, 0.5 }, { 0.5, 0, -0.5 },
+	{ -0.5, 0, 0.5 }, { -0.5, 0, -0.5 }, { 0.5, 0, -0.5 },
+
+	{ 0 ,-0.5, 0.5}, { 0, 0.5, 0.5 }, { 0, 0.5, -0.5 },
+	{ 0, -0.5, 0.5 }, { 0, -0.5, -0.5 }, { 0, 0.5, -0.5 }
+};
+
+static int numVertices[3] =
+{
+	6, 6, 6
+};
+
+void make_data_header(char* file_name, unsigned char* data, unsigned int size);
+
+SoTexture2 *
+create_texture(int width, int height, int bpp, unsigned char * raw, bool blend)
+{
+  SoTexture2 * texture = new SoTexture2;
+  texture->image.setValue(SbVec2s(width, height), bpp, raw);
+  texture->model = (blend?SoTexture2::BLEND:SoTexture2::DECAL);
+  texture->blendColor.setValue(1.0, 0.0, 0.0);
+  return texture;
+}
+/*
+SoSeparator * create_sphere(void)
+{
+	SoSeparator * sep = new SoSeparator;
+	sep->ref();
+
+	SoMaterial * mat = new SoMaterial;
+	mat->specularColor.setValue( 0.5f, 0.5f, 0.5f );
+	mat->emissiveColor.setValue( 0.0f, 0.0f, 0.0f );
+	mat->shininess = 0.01f;
+	mat->transparency = 0.99f;
+	sep->addChild(mat);
+
+	SoScale * scale = new SoScale;
+	scale->scaleFactor.setValue(6.0f, 6.0f, 6.0f);
+	sep->addChild(scale);
+	sep->addChild(new SoSphere);
+
+	sep->unrefNoDelete();
+	
+	return sep;
+}
+*/
+SoSeparator * create_star(SoTexture2 * texture, SbVec3f pos)
+{
+	SoSeparator * sep = new SoSeparator;
+	sep->ref();
+
+	SoMaterial * mat = new SoMaterial;
+	mat->specularColor.setValue( 1.0f, 1.0f, 1.0f );
+	mat->emissiveColor.setValue( 1.0f, 1.0f, 1.0f );
+	mat->shininess = 0.0f;
+	mat->transparency = 0.7f;
+	sep->addChild(mat);
+
+	sep->addChild(texture);
+
+  	SoTranslation * trans = new SoTranslation;
+	trans->translation.setValue(pos);
+	sep->addChild(trans);
+
+	SoCoordinate3 * coords = new SoCoordinate3;
+	coords->point.setValues(0, 6, vertices);
+	sep->addChild(coords);
+
+	SoTriangleStripSet * strip = new SoTriangleStripSet;
+	strip->numVertices.setValues(0, 1, (int *)numVertices);
+	sep->addChild(strip);
+
+	coords = new SoCoordinate3;
+	coords->point.setValues(0, 6, &vertices[6]);
+	sep->addChild(coords);
+
+	strip = new SoTriangleStripSet;
+	strip->numVertices.setValues(0, 1, (int *)&numVertices[1]);
+	sep->addChild(strip);
+
+	coords = new SoCoordinate3;
+	coords->point.setValues(0, 6, &vertices[12]);
+	sep->addChild(coords);
+
+	strip = new SoTriangleStripSet;
+	strip->numVertices.setValues(0, 1, (int *)&numVertices[2]);
+	sep->addChild(strip);
+
+	sep->unrefNoDelete();
+	
+	return sep;
+}
+
+SoSeparator * create_logo(SoTexture2 * texture)
+{
+	SoSeparator * sep = new SoSeparator;
+	sep->ref();
+
+	SoMaterial * mat = new SoMaterial;
+	mat->specularColor.setValue( 1.0f, 1.0f, 1.0f );
+	mat->emissiveColor.setValue( 1.0f, 5.0f, 5.0f );
+	mat->shininess = 0.8f;
+	mat->transparency = 0.2f;
+
+	sep->addChild(mat);
+
+	sep->addChild(new SoTextureCoordinateEnvironment);
+	sep->addChild(texture);
+
+	SoTranslation * trans = new SoTranslation;
+	trans->translation.setValue(-2.0f, -2.5f, 0.2f);
+	sep->addChild(trans);
+
+	SoScale * scale = new SoScale;
+	scale->scaleFactor.setValue(0.6f, 0.7f, 0.6f);
+	sep->addChild(scale);
+	
+	// C
+	SoText3 * c = new SoText3;
+	c->string.setValue( "C" );
+	c->parts.setValue( SoText3::ALL );
+	sep->addChild(c);
+
+	SoSeparator * separator = new SoSeparator;
+
+	// O
+	SoTranslation * trans_o = new SoTranslation;
+	trans_o->translation.setValue(1.75f, 2.5f, 0.0f);
+	separator->addChild(trans_o);
+
+	SoScale * scale_o = new SoScale;
+	scale_o->scaleFactor.setValue(0.57f, 0.57f, 1.0f);
+	separator->addChild(scale_o);
+
+	SoText3 * o = new SoText3;
+	o->string.setValue( "O" );
+	o->parts.setValue( SoText3::ALL );
+	separator->addChild(o);
+
+	// I
+	SoTranslation * trans_i = new SoTranslation;
+	trans_i->translation.setValue(2.5f, 1.1f, 0.0f);
+	separator->addChild(trans_i);
+
+	SoScale * scale_i = new SoScale;
+	scale_i->scaleFactor.setValue(0.7f, 0.7f, 1.0f);
+	separator->addChild(scale_i);
+
+	SoText3 * i = new SoText3;
+	i->string.setValue( "I" );
+	i->parts.setValue( SoText3::ALL );
+	separator->addChild(i);
+
+	// N
+	SoTranslation * trans_n = new SoTranslation;
+	trans_n->translation.setValue(-0.8f, -6.3f, 0.0f);
+	separator->addChild(trans_n);
+
+	SoScale * scale_n = new SoScale;
+	scale_n->scaleFactor.setValue(0.6f, 0.6f, 1.0f);
+	separator->addChild(scale_n);
+
+	SoText3 * n = new SoText3;
+	n->string.setValue( "N" );
+	n->parts.setValue( SoText3::ALL );
+	separator->addChild(n);
+
+	// separator
+	sep->addChild(separator);
+
+	// top
+	SoTranslation * trans_t = new SoTranslation;
+	trans_t->translation.setValue(3.6f, -0.9f, -0.5f);
+	sep->addChild(trans_t);
+
+	SoScale * scale_t = new SoScale;
+	scale_t->scaleFactor.setValue(0.2f, 0.8f, 0.5f);
+	sep->addChild(scale_t);
+
+	SoCube * t = new SoCube;
+	sep->addChild(t);
+
+	// bottom
+	SoTranslation * trans_b = new SoTranslation;
+	trans_b->translation.setValue(0.0f, 11.4f, 0.0f);
+	sep->addChild(trans_b);
+
+	SoCube * b = new SoCube;
+	sep->addChild(b);
+
+  	sep->unrefNoDelete();
+	
+	return sep;
+}
+
+
+int 
+main (int, char ** argv) 
+{ 
+	@WIDGET@ window = So@Gui@::init(argv[0]);
+	if (window==NULL) exit(1);
+
+	SoSeparator * root = new SoSeparator;
+	SoShapeHints * hints = new SoShapeHints;
+
+	hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+	hints->shapeType = SoShapeHints::SOLID;
+
+	root->ref();
+	root->addChild(hints);
+
+	SoRotor * rotor = new SoRotor;
+	rotor->speed = 0.05f;
+	rotor->rotation.setValue(SbVec3f(0, 1., 0), 0.4);
+	root->addChild(rotor);
+
+	rotor = new SoRotor;
+	rotor->speed = 0.10f;
+	rotor->rotation.setValue(SbVec3f(1., 0, 0), 0.4);
+	root->addChild(rotor);
+
+	rotor = new SoRotor;
+	rotor->speed = 0.07f;
+	rotor->rotation.setValue(SbVec3f(0, 0, 1), -0.4);
+	root->addChild(rotor);
+
+	SoSeparator * logo = new SoSeparator;
+	logo->addChild(create_logo(create_texture(64,64,4,(unsigned char*)envq_raw,true)));
+	root->addChild(logo);
+
+	rotor = new SoRotor;
+	rotor->speed = 0.10f;
+	rotor->rotation.setValue(SbVec3f(1, 0, 0), 0.8);
+	root->addChild(rotor);
+
+	rotor = new SoRotor;
+	rotor->speed = 0.07f;
+	rotor->rotation.setValue(SbVec3f(0, 0, 1), 0.8);
+	root->addChild(rotor);
+
+	SoSeparator * stars = new SoSeparator;
+	stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(2.5,2.5,2.5)));
+	stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(-2.5,-2.5,-2.5)));
+	root->addChild(stars);
+
+	rotor = new SoRotor;
+	rotor->speed = 0.07f;
+	rotor->rotation.setValue(SbVec3f(1, 0, 0), -0.2);
+	root->addChild(rotor);
+
+	stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(0,3.0,3.0)));
+	stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(-3.0,3.0,-3.0)));
+
+	root->addChild(stars);
+
+	stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(4.0,0,4.0)));
+	stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(-4.0,0,-4.0)));
+
+	rotor = new SoRotor;
+	rotor->speed = 0.07f;
+	rotor->rotation.setValue(SbVec3f(0, 1, 0), 0.4);
+	root->addChild(rotor);
+
+	root->addChild(stars);
+
+	//root->addChild(create_sphere());
+
+	So@Gui@ExaminerViewer *viewer = new So@Gui@ExaminerViewer(window);
+	viewer->setSceneGraph(root);
+	viewer->setTitle("EyeCandy");
+	viewer->setTransparencyType( SoGLRenderAction::ADD );
+	viewer->viewAll();
+	viewer->show();
+
+	So@Gui@::show(window);
+	So@Gui@::mainLoop();
+
+	delete viewer;
+	root->unref();
+
+	return 0;
+}
+
+

@@ -1,0 +1,792 @@
+/* ********************************************************************** *
+ * chart
+ *
+ * Demo application for showcasing Coin.
+ *
+ * Written by Lars J. Aas <larsa@coin3d.org>.
+ * Copyright (C) 2001, Lars J. Aas.
+ * Copyright (C) 2001, Systems in Motion AS.
+ * This file is licensed under the GNU GPL.
+ * ********************************************************************** */
+ 
+/*
+ * TODO:
+ * - improve pick-plane generation, so it's not up/down movement that
+ *   matters
+ * - encapsulate faceset in chart node with these fields:
+ *     SFInt32 width, SFInt32 depth, MFFloat level
+ *   and honor Material node and MaterialBinding element
+ * - make width/height command line options with defaults
+ * - reorder topfaces coordinates so the 4 coords for one face are in
+ *   sequence
+ */
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#include <Inventor/actions/SoSearchAction.h>
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/actions/SoHandleEventAction.h>
+#include <Inventor/actions/SoRayPickAction.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoCallback.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoRotor.h>
+#include <Inventor/nodes/SoNormal.h>
+#include <Inventor/nodes/SoCamera.h>
+#include <Inventor/nodes/SoIndexedFaceSet.h>
+#include <Inventor/nodes/SoAsciiText.h>
+#include <Inventor/nodes/SoText2.h>
+#include <Inventor/events/SoMouseButtonEvent.h>
+#include <Inventor/events/SoLocation2Event.h>
+#include <Inventor/details/SoFaceDetail.h>
+#include <Inventor/details/SoPointDetail.h>
+#include <Inventor/SoPickedPoint.h>
+#include <Inventor/SoPath.h>
+
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+#include <math.h>
+
+/* to facilitate picking on 0-level bars
+ * picking is not affected by the PolygonOffset node */
+#ifndef FLOAT_EPSILON
+#define FLOAT_EPSILON 1.0e-4f
+#endif
+
+SoNode * initSceneGraph(int WIDTH, int DEPTH);
+void startLevelEditing(void);
+void setLevel(int WIDTH, int DEPTH, int x, int y, float level);
+void finishLevelEditing(void);
+void event_cb(void * userdata, SoAction * action);
+
+static So@Gui@ExaminerViewer * viewer = NULL;
+
+extern char scene_iv[];
+
+/* ********************************************************************** */
+// graph config [to come]
+
+/* ********************************************************************** */
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  setbuf( stderr, NULL );
+  setbuf( stdout, NULL );
+  @WIDGET@ win = So@Gui@::init(argc, argv, "Chart");
+  srand(SbTime::getTimeOfDay().getMsecValue());
+  viewer = new So@Gui@ExaminerViewer(win);
+  viewer->setViewing(false);
+  int x, y, w = 12, d = 12;
+  SoNode * scene = initSceneGraph( w, d );
+  viewer->setSceneGraph(scene);
+  viewer->show();
+  So@Gui@::show(win);
+  SoCamera * camera = viewer->getCamera();
+  camera->orientation.setValue( SbRotation(SbVec3f(1, 0, 0), (M_PI/3.0f)) *
+                                SbRotation(SbVec3f(0, 0, 1), -(M_PI/4.0f)) );
+  viewer->viewAll();
+  So@Gui@::mainLoop();
+  viewer->hide();
+  delete viewer;
+  return 0;
+}
+
+/* ********************************************************************** */
+
+static SoNode * scene = NULL;
+
+SoNode *
+findNode(
+  const char * name )
+{
+  static SoSearchAction * searcher = NULL;
+  if ( ! searcher )
+    searcher = new SoSearchAction;
+  searcher->setName(SbName(name));
+  searcher->setFind(SoSearchAction::NAME);
+  searcher->setInterest(SoSearchAction::FIRST);
+  searcher->apply(scene);
+  if ( ! searcher->isFound() )
+    return NULL;
+  return searcher->getPath()->getTail();
+}
+
+SoNode *
+initSceneGraph(
+  int WIDTH,
+  int DEPTH)
+{
+  SoInput * in = new SoInput;
+  in->setBuffer(scene_iv, strlen(scene_iv));
+  if ( ! SoDB::read(in, scene) ) {
+    delete in;
+    return NULL;
+  }
+  delete in;
+
+  scene->ref();
+
+  SoCoordinate3 * points = (SoCoordinate3 *) findNode("points");
+  assert(points != NULL);
+  SoMaterial * materials = (SoMaterial *) findNode("materials");
+  assert(materials != NULL);
+  SoIndexedFaceSet * topfaces = (SoIndexedFaceSet *) findNode("topfaces");
+  assert(topfaces != NULL);
+  SoIndexedFaceSet * sidefaces = (SoIndexedFaceSet *) findNode("sidefaces");
+  assert(sidefaces != NULL);
+  SoCallback * hook = (SoCallback *) findNode("hook");
+  assert(hook != NULL);
+
+  do { // set up materials
+    int i;
+    SbColor * colors = new SbColor[ WIDTH + DEPTH ];
+    for ( i = 0; i < WIDTH; i++ )
+      colors[i].setValue( 1.0f, 0.0f, float(i) / float(WIDTH-1) );
+    for ( i = 1; i < DEPTH; i++ )
+      colors[WIDTH + i - 1].setValue( float(DEPTH-1-i)/float(DEPTH-1), 0.0f, 1.0f);
+    colors[WIDTH + DEPTH - 1].setValue( 0.0f, 1.0f, 1.0f);
+    materials->diffuseColor.setValues(0, WIDTH + DEPTH, colors);
+    delete [] colors;
+  } while ( 0 );
+
+  do { // set up geometry points
+    // the base geometry points
+    float coords[][3] = {
+      { -1.0f, -1.0f, -FLOAT_EPSILON },
+      { float(DEPTH) + 1.0f, -1.0f, -FLOAT_EPSILON },
+      { float(DEPTH) + 1.0f, float(WIDTH) + 1.0f, -FLOAT_EPSILON },
+      { -1.0f, float(WIDTH) + 1.0f, -FLOAT_EPSILON },
+      { -1.0f, -1.0f, -0.2f },
+      { float(DEPTH) + 1.0f, -1.0f, -0.2f },
+      { float(DEPTH) + 1.0f, float(WIDTH) + 1.0f, -0.2f },
+      { -1.0f, float(WIDTH) + 1.0f, -0.2f }
+    };
+    points->point.setValues(0, 8, coords);
+    int i, j;
+    const int numvalues = (WIDTH + 1) * (DEPTH + 1) + WIDTH * DEPTH * 4;
+    float * values = new float [ numvalues * 3 ];
+    float * ptr = values;
+
+    // the base points
+    for ( j = 0; j <= DEPTH; j++ ) {
+      for ( i = 0; i <= WIDTH; i++ ) {
+        *ptr++ = 1.0f * float(i); // x
+        *ptr++ = 1.0f * float(j); // y
+        *ptr++ = 0.0f; // floor
+      }
+    }
+    // the top-face points
+    for ( j = 0; j < (DEPTH*2); j++ ) {
+      for ( i = 0; i < (WIDTH*2); i++ ) {
+        *ptr++ = 1.0f * float( ((i+1)>>1) ); // x
+        *ptr++ = 1.0f * float( ((j+1)>>1) ); // y
+        *ptr++ = 1.0f; // height level
+      }
+    }
+    points->point.setValues(8, numvalues, (float(*)[3]) values);
+    delete [] values;
+  } while ( 0 );
+
+  do { // set up topfaces
+    int i, j;
+    const int offset = 8 + (WIDTH+1) * (DEPTH+1);
+    int * indexvalues, * iptr, * materialindex, * mptr, * normalindex, * nptr;
+    indexvalues = new int [ 6 * WIDTH * DEPTH ];
+    iptr = indexvalues;
+    materialindex = new int [ WIDTH * DEPTH + 1 ];
+    normalindex = new int [ WIDTH * DEPTH + 1 ];
+    for ( j = 0; j < DEPTH; j++ ) {
+      for ( i = 0; i < WIDTH; i++ ) {
+        *iptr++ = offset + ((2 * j) * WIDTH * 2) + (i * 2);
+        *iptr++ = offset + ((2 * j) * WIDTH * 2) + (i * 2) + 1;
+        *iptr++ = offset + (((2 * j) + 1) * WIDTH * 2) + (i * 2) + 1;
+        *iptr++ = offset + (((2 * j) + 1) * WIDTH * 2) + (i * 2);
+        *iptr++ = offset + ((2 * j) * WIDTH * 2) + (i * 2);
+        *iptr++ = -1;
+        materialindex[(j*WIDTH)+i] = i + j;
+        normalindex[(j*WIDTH)+i] = 4;
+      }
+    }
+    materialindex[WIDTH*DEPTH] = -1;
+    normalindex[WIDTH*DEPTH] = -1;
+    topfaces->coordIndex.setValues(0, 6 * WIDTH * DEPTH, indexvalues);
+    topfaces->materialIndex.setValues(0, WIDTH * DEPTH + 1, materialindex);
+    topfaces->normalIndex.setValues(0, WIDTH * DEPTH + 1, normalindex);
+    delete [] indexvalues;
+    delete [] materialindex;
+    delete [] normalindex;
+  } while ( 0 );
+
+  do { // set up sidefaces
+    const int offset = (WIDTH+1) * (DEPTH+1);
+    int * indexvalues, * iptr, * materialindex, * mptr, * normalindex, * nptr;
+    int i, j;
+  
+    indexvalues = new int [ 6 * WIDTH * DEPTH * 4 ];
+    iptr = indexvalues;
+    materialindex = new int [ WIDTH * DEPTH * 4 + 1 ];
+    normalindex = new int [ WIDTH * DEPTH * 4 + 1 ];
+    mptr = materialindex;
+    nptr = normalindex;
+    for ( j = 0; j < DEPTH; j++ ) {
+      for ( i = 0; i < WIDTH; i++ ) {
+        // south
+        *iptr++ = 8 + (j * (WIDTH+1)) + i;
+        *iptr++ = 8 + (j * (WIDTH+1)) + i + 1;
+        *iptr++ = 8 + (j * WIDTH * 4) + (i * 2) + 1 + offset;
+        *iptr++ = 8 + (j * WIDTH * 4) + (i * 2) + offset;
+        *iptr++ = 8 + (j * (WIDTH+1)) + i;
+        *iptr++ = -1;
+        // west
+        *iptr++ = 8 + (j * (WIDTH+1)) + i + 1;
+        *iptr++ = 8 + ((j+1) * (WIDTH+1)) + i + 1;
+        *iptr++ = 8 + offset + (((2 * j) + 1) * WIDTH * 2) + (i * 2) + 1;
+        *iptr++ = 8 + offset + ((2 * j) * WIDTH * 2) + (i * 2) + 1;
+        *iptr++ = 8 + (j * (WIDTH+1)) + i + 1;
+        *iptr++ = -1;
+        // north
+        *iptr++ = 8 + ((j+1) * (WIDTH+1)) + i + 1;
+        *iptr++ = 8 + ((j+1) * (WIDTH+1)) + i;
+        *iptr++ = 8 + offset + (((2 * j) + 1) * WIDTH * 2) + (i * 2) + 0;
+        *iptr++ = 8 + offset + (((2 * j) + 1) * WIDTH * 2) + (i * 2) + 1;
+        *iptr++ = 8 + ((j+1) * (WIDTH+1)) + i + 1;
+        *iptr++ = -1;
+        // east
+        *iptr++ = 8 + ((j+1) * (WIDTH+1)) + i + 0;
+        *iptr++ = 8 + (j * (WIDTH+1)) + i + 0;
+        *iptr++ = 8 + offset + ((2 * j) * WIDTH * 2) + (i * 2) + 0;
+        *iptr++ = 8 + offset + (((2 * j) + 1) * WIDTH * 2) + (i * 2) + 0;
+        *iptr++ = 8 + ((j+1) * (WIDTH+1)) + i + 0;
+        *iptr++ = -1;
+        *mptr++ = i + j;
+        *mptr++ = i + j;
+        *mptr++ = i + j;
+        *mptr++ = i + j;
+        *nptr++ = 3;
+        *nptr++ = 0;
+        *nptr++ = 2;
+        *nptr++ = 1;
+      }
+    }
+    *mptr++ = -1;
+  
+    sidefaces->coordIndex.setValues(0, 6 * WIDTH * DEPTH * 4, indexvalues);
+    sidefaces->materialIndex.setValues(0, WIDTH * DEPTH * 4 + 1, materialindex);
+    sidefaces->normalIndex.setValues(0, WIDTH * DEPTH * 4 + 1, normalindex);
+    delete [] indexvalues;
+    delete [] materialindex;
+    delete [] normalindex;
+  } while ( 0 );
+
+  hook->setCallback(event_cb);
+
+  scene->unrefNoDelete();
+  return scene;
+}
+
+static SbVec3f * vertices;
+void
+startLevelEditing(void)
+{
+  SoCoordinate3 * points = (SoCoordinate3 *) findNode("points");
+  vertices = points->point.startEditing();
+}
+
+void
+finishLevelEditing(void)
+{
+  SoCoordinate3 * points = (SoCoordinate3 *) findNode("points");
+  points->point.finishEditing();
+}
+
+
+void
+setLevel(
+  int WIDTH,
+  int DEPTH,
+  int x,
+  int y,
+  float level )
+{
+  SoCoordinate3 * points = (SoCoordinate3 *) findNode("points");
+  const int offset = 8 + (WIDTH + 1) * (DEPTH + 1);
+  const int seidx = offset + y * WIDTH * 4 + x * 2;
+  const int swidx = offset + y * WIDTH * 4 + x * 2 + 1;
+  const int neidx = offset + (2 * y + 1) * WIDTH * 2 + x * 2;
+  const int nwidx = offset + (2 * y + 1) * WIDTH * 2 + x * 2 + 1;
+  SbVec3f * vertices = points->point.startEditing();
+  vertices[seidx][2] = level;
+  vertices[swidx][2] = level;
+  vertices[neidx][2] = level;
+  vertices[nwidx][2] = level;
+  points->point.finishEditing();
+}
+
+float
+getLevel(
+  int WIDTH,
+  int DEPTH,
+  int x,
+  int y )
+{
+  SoCoordinate3 * points = (SoCoordinate3 *) findNode("points");
+  const int offset = 8 + (WIDTH + 1) * (DEPTH + 1);
+  const int seidx = offset + y * WIDTH * 4 + x * 2;
+  SbVec3f se = points->point[seidx];
+  return se[2];
+}
+
+void
+mark(
+  int WIDTH,
+  int DEPTH,
+  int x,
+  int y,
+  SbBool selected )
+{
+  SoIndexedFaceSet * topfaces = (SoIndexedFaceSet *) findNode("topfaces");
+  SoIndexedFaceSet * sidefaces = (SoIndexedFaceSet *) findNode("sidefaces");
+  if ( selected ) {
+    topfaces->materialIndex.set1Value( (y * WIDTH) + x, WIDTH + DEPTH - 1 );
+    sidefaces->materialIndex.set1Value( ((y * WIDTH) + x) * 4, WIDTH + DEPTH - 1 );
+    sidefaces->materialIndex.set1Value( ((y * WIDTH) + x) * 4 + 1, WIDTH + DEPTH - 1 );
+    sidefaces->materialIndex.set1Value( ((y * WIDTH) + x) * 4 + 2, WIDTH + DEPTH - 1 );
+    sidefaces->materialIndex.set1Value( ((y * WIDTH) + x) * 4 + 3, WIDTH + DEPTH - 1 );
+  } else {
+    topfaces->materialIndex.set1Value( (y * WIDTH) + x, x + y );
+    sidefaces->materialIndex.set1Value( ((y * WIDTH) + x) * 4, x + y );
+    sidefaces->materialIndex.set1Value( ((y * WIDTH) + x) * 4 + 1, x + y );
+    sidefaces->materialIndex.set1Value( ((y * WIDTH) + x) * 4 + 2, x + y );
+    sidefaces->materialIndex.set1Value( ((y * WIDTH) + x) * 4 + 3, x + y );
+  }
+}
+
+static SbBool demomode = TRUE;
+static SbBool attached = FALSE;
+static SoRayPickAction * picker = NULL;
+static SbPlane * pickplane = NULL;
+static int column = 0;
+static int row = 0;
+static float offset = 0.0f;
+
+static SbTime demochange(0,0);
+static SbBool animateddemo = FALSE; // not implemented
+static int mode = 0;
+
+static SbVec2s lastviewport = SbVec2s(-1,-1);
+
+void
+setRandomDemoMode(void)
+{
+  static int prev = -1;
+  int mode;
+  while ( (mode = rand() % 10) == prev ) { }
+  prev = mode; // = 9;
+  int x, y;
+  int w = 12;
+  int d = 12;
+  animateddemo = FALSE;
+  startLevelEditing();
+
+  switch ( mode ) {
+  case 0:
+    do {
+      for ( y = 0; y < d; y++ )
+        for ( x = 0; x < w; x++ )
+          setLevel( w, d, x, y, 0.1f + float((x+y)*(x+y)) / 100.0f );
+    } while ( 0 );
+    break;
+  case 1:
+    do {
+      for ( y = 0; y < d; y++ )
+        for ( x = 0; x < w; x++ )
+          setLevel( w, d, x, y, 0.0f );
+    } while ( 0 );
+    break;
+  case 2:
+    do {
+      for ( y = 0; y < d; y++ ) {
+        int disty;
+        if ( y >= 6 ) disty = y - 6;
+        else disty = 5 - y;
+        disty = disty * disty;
+        for ( x = 0; x < w; x++ ) {
+          int distx;
+          if ( x >= 6 ) distx = x - 6;
+          else distx = 5 - x;
+          float height = float(distx * distx + disty) * 0.05f;
+          setLevel( w, d, x, y, height );
+        }
+      }
+    } while ( 0 );
+    break;
+  case 3:
+    do {
+      for ( y = 0; y < d; y++ ) {
+        int disty;
+        if ( y >= 6 ) disty = 6 - (y - 6);
+        else disty = 6 - (5 - y);
+        disty = disty * disty;
+        for ( x = 0; x < w; x++ ) {
+          int distx;
+          if ( x >= 6 ) distx = 6 - (x - 6);
+          else distx = 6 - (5 - x);
+          float height = float(distx * distx + disty) * 0.05f;
+          setLevel( w, d, x, y, height );
+        }
+      }
+    } while ( 0 );
+    break;
+  case 4:
+    do {
+      for ( y = 0; y < d; y++ )
+        for ( x = 0; x < w; x++ )
+          setLevel( w, d, x, y, 0.15 * float(x+y) );
+    } while ( 0 );
+    break;
+  case 5:
+    do {
+      for ( y = 0; y < d; y++ ) {
+        int disty;
+        if ( y >= 6 ) disty = y - 6;
+        else disty = 5 - y;
+        disty = disty * disty;
+        for ( x = 0; x < w; x++ ) {
+          int distx;
+          if ( x >= 6 ) distx = x - 6;
+          else distx = 5 - x;
+          float height = 4.0f - float(distx * distx + disty) * 0.05f;
+          setLevel( w, d, x, y, height );
+        }
+      }
+    } while ( 0 );
+    break;
+  case 6:
+    do {
+      for ( y = 0; y < d; y++ ) {
+        for ( x = 0; x < w; x++ ) {
+          int disty = -6 + y;
+          disty = disty * disty;
+          int distx = 6 - x;
+          distx = distx * distx;
+          float height = 2.0f + float(distx - disty) * 0.05f;
+          setLevel( w, d, x, y, height );
+        }
+      }
+    } while ( 0 );
+    break;
+  case 7:
+    do {
+      for ( y = 0; y < d; y++ ) {
+        for ( x = 0; x < w; x++ ) {
+          int disty = -6 + y;
+          disty = disty * disty * disty;
+          int distx = 6 - x;
+          distx = distx * distx * distx;
+          float height = 2.0f + float(distx - disty) * 0.008f;
+          setLevel( w, d, x, y, height );
+        }
+      }
+    } while ( 0 );
+    break;
+  case 8:
+    do {
+      for ( y = 0; y < d; y++ ) {
+        for ( x = 0; x < w; x++ ) {
+          float disty = 5.5 - float(y);
+          float distx = 5.5 - float(x);
+          disty = disty * disty;
+          distx = distx * distx;
+          float height = 4.0f;
+          if ( x < 6 ) {
+            if ( y < 6 )
+              height += distx * disty * 0.004f;
+            else
+              height -= distx * disty * 0.004f;
+          } else {
+            if ( y < 6 )
+              height += distx * disty * 0.004f;
+            else
+              height -= distx * disty * 0.004f;
+          }
+          setLevel( w, d, x, y, height );
+        }
+      }
+    } while ( 0 );
+    break;
+  case 9:
+    do {
+      for ( y = 0; y < d; y++ ) {
+        for ( x = 0; x < w; x++ ) {
+          float disty = 5.5 - float(y);
+          float distx = 5.5 - float(x);
+          disty = disty * disty;
+          distx = distx * distx;
+          float height = 4.0f;
+          if ( x < 6 ) {
+            if ( y < 6 )
+              height += distx * disty * 0.004f;
+            else
+              height -= distx * disty * 0.004f;
+          } else {
+            if ( y < 6 )
+              height -= distx * disty * 0.004f;
+            else
+              height += distx * disty * 0.004f;
+          }
+          setLevel( w, d, x, y, height );
+        }
+      }
+    } while ( 0 );
+    break;
+  } // case
+  finishLevelEditing();
+}
+
+void
+animateDemoMode(void)
+{
+}
+
+void
+event_cb(
+  void * userdata,
+  SoAction * actio )
+{
+  if ( demomode && actio->isOfType(SoGLRenderAction::getClassTypeId()) ) {
+    SoGLRenderAction * action = (SoGLRenderAction *) actio;
+    SbVec2s viewport = action->getViewportRegion().getWindowSize();
+    if ( viewport != lastviewport ) {
+      lastviewport = viewport;
+      SoTranslation * translation = (SoTranslation *) findNode("menuposition");
+      float aspect = float(viewport[0]) / float(viewport[1]);
+      float factor = float(100)/float(viewport[1]) * 3.0f;
+      if ( aspect > 1.0f ) {
+	translation->translation.setValue(SbVec3f(-0.5f * aspect, 0.5f, 0.0f));
+      } else {
+	translation->translation.setValue(SbVec3f(-0.5f, 0.5f / aspect, 0.0f));
+	factor /= aspect;
+      }
+      SoScale * scale = (SoScale *) findNode("menusize");
+      scale->scaleFactor.setValue( SbVec3f(factor,factor,1.0f) );
+    }
+    SbTime now = SbTime::getTimeOfDay();
+    if ( (now.getMsecValue() - demochange.getMsecValue()) > 4000 ) {
+      demochange = now;
+      setRandomDemoMode();
+    } else if ( animateddemo ) {
+      animateDemoMode();
+    }
+    return;
+  }
+  if ( actio->getTypeId() != SoHandleEventAction::getClassTypeId() ) return;
+  SoHandleEventAction * action = (SoHandleEventAction *) actio;
+  const SoEvent * event = action->getEvent();
+  SoIndexedFaceSet * topfaces = (SoIndexedFaceSet *) findNode("topfaces");
+  assert(topfaces != NULL);
+  SoIndexedFaceSet * sidefaces = (SoIndexedFaceSet *) findNode("sidefaces");
+  assert(sidefaces != NULL);
+  SoIndexedFaceSet * demoface = (SoIndexedFaceSet *) findNode( "demoface" );
+  SoAsciiText * demotext = (SoAsciiText *) findNode( "demotext" );
+  SoIndexedFaceSet * interactface = (SoIndexedFaceSet *) findNode( "interactface" );
+  SoAsciiText * interacttext = (SoAsciiText *) findNode( "interacttext" );
+
+  if ( event->getTypeId() == SoMouseButtonEvent::getClassTypeId() ) {
+    SoMouseButtonEvent * bevent = (SoMouseButtonEvent *) event;
+    if ( bevent->getState() == SoButtonEvent::DOWN ) {
+      if ( bevent->getButton() != SoMouseButtonEvent::BUTTON1 ) return;
+      if ( ! picker ) picker = new SoRayPickAction(action->getViewportRegion());
+      else picker->setViewportRegion(action->getViewportRegion());
+      picker->setPoint( bevent->getPosition() );
+      SoNode * menu = findNode("menu");
+      SoNode * scene = findNode("scene");
+      do {
+        picker->apply(menu);
+        SoPickedPoint * point = picker->getPickedPoint();
+        if ( ! point ) break;
+        SoPath * path = point->getPath();
+        if ( ! path ) break;
+        if ( path->getTail() == demoface || path->getTail() == demotext ) {
+          if ( ! demomode ) {
+            demochange = SbTime::getTimeOfDay();
+            SoRotor * spin = (SoRotor *) findNode("spin");
+            spin->on.setValue(TRUE);
+            demomode = TRUE;
+          }
+        } else if ( path->getTail() == interactface
+		    || path->getTail() == interacttext ) {
+          if ( demomode ) {
+            SoRotor * spin = (SoRotor *) findNode("spin");
+            spin->on.setValue(FALSE);
+            demomode = FALSE;
+          }
+        }
+        return;
+      } while ( FALSE );
+
+      if ( demomode ) return;
+
+      picker->apply(scene);
+      SoPickedPoint * point = picker->getPickedPoint();
+      if ( ! point ) return;
+      SoPath * path = point->getPath();
+      if ( ! path ) return;
+      SoCamera * camera = viewer->getCamera();
+      if ( ! camera ) return;
+      if ( path->getTail() != topfaces
+	   && path->getTail() != sidefaces ) return;
+      attached = TRUE;
+      SbVec3f pos = point->getObjectPoint();
+      SbVec3f wpos = point->getPoint();
+      if ( path->getTail() == topfaces ) {
+        row = (int) pos[1];
+        column = (int) pos[0];
+        offset = 0.0f;
+      } else {
+        // get row and column from "fixed" pick position _inside_ the bar,
+	// adjusted by the face normal
+	const SoDetail * detail = point->getDetail();
+	if ( ! detail || ! detail->isOfType(SoFaceDetail::getClassTypeId()) )
+	  return;
+	int faceidx = ((SoFaceDetail *)detail)->getFaceIndex();
+	SoIndexedFaceSet * faceset = (SoIndexedFaceSet *) findNode("sidefaces");
+	int normalidx = faceset->normalIndex[faceidx];
+	SoNormal * normals = (SoNormal *) findNode("normals");
+        SbVec3f fixedpos = pos - (normals->vector[normalidx] * 0.01f);
+        row = (int) fixedpos[1];
+        column = (int) fixedpos[0];
+        offset = getLevel( 12, 12, column, row ) - pos[2];
+      }
+      mark( 12, 12, column, row, TRUE );
+      char string[16];
+      sprintf(string, "(%d,%d) %4.2f", column, row, getLevel(12, 12, column, row) );
+      SoText2 * positiontext = (SoText2 *) findNode("positiontext");
+      positiontext->string.setValue(string);
+      SbVec3f point1(wpos[0], wpos[1], 0.0f);
+      SbVec3f point2(wpos[0], wpos[1], 1.0f);
+      SbVec3f point3(0, 0, 0);
+      SbRotation rot( camera->orientation.getValue() );
+      rot.multVec( SbVec3f( 1, 0, 0 ), point3 );
+      if ( pickplane != NULL ) delete pickplane;
+      pickplane = new SbPlane( point1, point2, point1 - point3 );
+    } else if ( bevent->getState() == SoButtonEvent::UP ) {
+      if ( bevent->getButton() != SoMouseButtonEvent::BUTTON1 ) return;
+      mark( 12, 12, column, row, FALSE );
+      SoText2 * positiontext = (SoText2 *) findNode("positiontext");
+      positiontext->string.setValue("");
+      attached = FALSE;
+    }
+    return;
+  }
+  if ( event->getTypeId() == SoLocation2Event::getClassTypeId() ) {
+    if ( ! attached ) return;
+    SoLocation2Event * levent = (SoLocation2Event *) event;
+    if ( ! picker ) picker = new SoRayPickAction(viewer->getGLRenderAction()->getViewportRegion());
+    picker->setPoint( levent->getPosition() );
+    picker->apply(actio->getNodeAppliedTo());
+    SbLine line( picker->getLine() );
+    SbVec3f ipos;
+    if ( pickplane->intersect(line, ipos)) {
+      if ( (ipos[2] + offset) < 0 ) ipos[2] = 0 - offset;
+      startLevelEditing();
+      setLevel( 12, 12, (int) column, row, ipos[2] + offset );
+      finishLevelEditing();
+    }
+    char string[16];
+    sprintf(string, "(%d,%d) %4.2f", column, row, getLevel(12, 12, column, row) );
+    SoText2 * positiontext = (SoText2 *) findNode("positiontext");
+    positiontext->string.setValue(string);
+  }
+}
+
+/************************************************************************ */
+// the scene graph
+
+char scene_iv[] = "\
+#Inventor V2.1 ascii\n\
+\n\
+Separator {\n\
+DEF scene Separator {\n\
+PerspectiveCamera {}\n\
+DEF spin Rotor {\n\
+on TRUE\n\
+speed 0.05\n\
+}\n\
+Translation { translation -6 -6 0 }\n\
+ShapeHints {\n\
+vertexOrdering COUNTERCLOCKWISE\n\
+shapeType SOLID\n\
+}\n\
+DEF normals Normal {\n\
+vector [ 1 0 0  -1 0 0  0 1 0  0 -1 0  0 0 1  0 0 -1 ]\n\
+}\n\
+NormalBinding { value PER_FACE_INDEXED }\n\
+DEF points Coordinate3 {}\n\
+Separator {\n\
+PolygonOffset {\n\
+factor 1\n\
+units 1\n\
+}\n\
+IndexedFaceSet {\n\
+coordIndex [\n\
+0 1 2 3 0 -1  4 7 6 5 4 -1  0 4 5 1 0 -1\n\
+1 5 6 2 1 -1  2 6 7 3 2 -1  3 7 4 0 3 -1\n\
+]\n\
+normalIndex [ 4 5 3 0 2 1 -1 ]\n\
+}\n\
+}\n\
+MaterialBinding { value PER_FACE_INDEXED }\n\
+DEF materials Material {}\n\
+DEF topfaces IndexedFaceSet {}\n\
+DEF hook Callback {}\n\
+DEF sidefaces IndexedFaceSet {}\n\
+}\n\
+DEF menu Separator {\n\
+OrthographicCamera { height 1 }\n\
+DirectionalLight {\n\
+color 1 1 1\n\
+direction 0 0 1\n\
+}\n\
+Coordinate3 {\n\
+point [\n\
+0.01 -0.17 -0.1  0.01 -0.06 -0.1  0.39 -0.06 -0.1  0.39 -0.17 -0.1\n\
+0.01 -0.29 -0.1  0.01 -0.18 -0.1  0.39 -0.18 -0.1  0.39 -0.29 -0.1\n\
+0.00  0.00 -0.2  0.40  0.00 -0.2  0.40 -0.40 -0.2  0.00 -0.40 -0.2\n\
+]\n\
+}\n\
+DEF menuposition Translation {}\n\
+DEF menusize Scale {}\n\
+Separator {\n\
+Material { diffuseColor 0.7 0.2 0.2 }\n\
+DEF baseface IndexedFaceSet { coordIndex [ 8 9 10 11 8 -1 ] }\n\
+BaseColor { rgb 0 0 0 }\n\
+Translation { translation 0.02 -0.05 0 }\n\
+DEF wwwtext Text2 { string \"www.Coin3D.org\" }\n\
+Translation { translation 0.02 -0.32 0 }\n\
+DEF positiontext Text2 { string \"\" }\n\
+}\n\
+Separator {\n\
+Material { diffuseColor 0 0.8 0.9 }\n\
+DEF interactface IndexedFaceSet { coordIndex [ 4 5 6 7 4 -1 ] }\n\
+Translation { translation 0.02 -0.27 0 }\n\
+Scale { scaleFactor 0.01 0.01 0.01 }\n\
+BaseColor { rgb 0 0 0 }\n\
+DEF interacttext AsciiText { string \"Interact\" }\n\
+}\n\
+Separator {\n\
+Material { diffuseColor 0 0.9 0.8 }\n\
+DEF demoface IndexedFaceSet { coordIndex [ 0 1 2 3 0 -1 ] }\n\
+Translation { translation 0.02 -0.15 0 }\n\
+Scale { scaleFactor 0.01 0.01 0.01 }\n\
+BaseColor { rgb 0 0 0 }\n\
+DEF demotext AsciiText { string \"Demo\" }\n\
+}\n}\n}\n";
+
+/* EOF ****************************************************************** */
