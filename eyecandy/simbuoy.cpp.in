@@ -930,7 +930,7 @@ main(
   initialize();
 
   SoTimerSensor * timer = new SoTimerSensor( timerSensorCallback, NULL );
-  timer->setInterval( 0.01 );
+  timer->setInterval( 0.05 );
   timer->schedule();
 
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
