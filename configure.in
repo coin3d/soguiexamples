@@ -28,7 +28,8 @@ SIM_AC_SETUP_MSVC_IFELSE([
 
 ## CPP needed for the Open Inventor version check.
 AC_PROG_CPP
-## C++ compiler necessary, of course.
+## Locate C++ compiler and set C++ as the default compiler to run
+## in tests.
 AC_PROG_CXX
 AC_LANG(C++)
 
@@ -221,14 +222,22 @@ AC_SUBST(COMPONENTHEADER)
 # **************************************************************************
 # In case of building against SGI/TGS SoXt.
 
+## FIXME: what is the point of setting up C here before C++? Strange.
+## 20010919 mortene.
 AC_LANG(C)
 AC_LANG(C++)
 SIM_AC_HAVE_INVENTOR_FEATURE(
-  [for So${Gui}Viewer::setStereoViewing functions],
+  [for So${Gui}Viewer::setStereoViewing()],
   [#include <Inventor/${Gui}/viewers/So${Gui}ExaminerViewer.h>], [
    So${Gui}ExaminerViewer * viewer = (So${Gui}ExaminerViewer *) 0;
    viewer->setStereoViewing(FALSE);],
   [HAVE_VIEWER_STEREO_VIEWING])
+SIM_AC_HAVE_INVENTOR_FEATURE(
+  [for So${Gui}Viewer::setQuadBufferStereo()],
+  [#include <Inventor/${Gui}/viewers/So${Gui}ExaminerViewer.h>], [
+   So${Gui}ExaminerViewer * viewer = (So${Gui}ExaminerViewer *) 0;
+   viewer->setQuadBufferStereo(0);],
+  [HAVE_VIEWER_QUADBUFFER_STEREO])
 
 # **************************************************************************
 # All files configure must automatically generate.
