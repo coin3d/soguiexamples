@@ -24,6 +24,15 @@
 // scenegraph by Marius Bugge Monsen <mariusbu@sim.no>. Submitted to
 // SoGuiExamples module by Marius Kintel <kintel@sim.no>.
 
+// Here's a code snippet to show how to use it:
+//
+//  [...]
+//    SoInput in;
+//    in.setBuffer((void *)COIN_LOGO, strlen(COIN_LOGO));
+//    SoNode * root;
+//    SbBool ok = SoDB::read(&in, root);
+//    assert(ok && "COIN_LOGO import failed");
+//  [...]
 
 // FIXME: this would be better implemented as a SoCoordinate3 and a
 // SoIndexedFaceSet.  It works well enough now with a hardcoded font
