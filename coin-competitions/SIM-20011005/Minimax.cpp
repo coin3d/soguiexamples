@@ -23,6 +23,7 @@
 #include "GameLogic.h"
 #include <string.h>
 #include <limits.h>
+#include <assert.h>
 #include <stdio.h>
 
 Queue Minimax::q;
@@ -153,7 +154,11 @@ Minimax::getFirstChild()
 int
 Minimax::doMinimax()
 {
-  int minimaxVal, idx, val;
+  // FIXME: just to check to see if we're using idx uninitialized
+  // further down. 20020107 mortene.
+  int idx = INT_MAX;
+
+  int minimaxVal, val;
   bool leaf=true;
 //    bool max = (this->depth%2==0);
   minimaxVal=-INT_MAX;
@@ -180,6 +185,12 @@ Minimax::doMinimax()
     }
   }
   if (!leaf) {
+    // FIXME: just to check to see if we're using idx uninitialized.
+    // (We're getting a compiler warning here from g++ 2.95.3, at
+    // least, and I'm too lazy right now to try to grok the code above
+    // to see if g++'s concern is actually valid. Just asserting is
+    // simpler. ;-)) 20020107 mortene.
+    assert(idx != INT_MAX);
     this->selectedChild=idx;
     this->minimaxscore=minimaxVal;
     return this->minimaxscore;
