@@ -46,10 +46,8 @@ SbVec3f colors[]={SbVec3f(1.0, 0.0, 0.0),
                   SbVec3f(1.0, 1.0, 1.0),
                   SbVec3f(0.0, 0.0, 1.0),
                   SbVec3f(1.0, 1.0, 0.5)};
-char scrolltext[]={"Welcome to a new example that "
-                   "shows how to use the SoText3 node. Just another great "
-                   "example to the Open Inventor killer Coin from "
-                   "Systems in Motion......  "};
+
+char scrolltext[ ] = { "This example shows how to use the SoText3 node...  " };
 
 // Function to change one specific SoText3 node.
 // Parameter:
