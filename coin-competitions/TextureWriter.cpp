@@ -36,7 +36,7 @@
 
 //FIXME: Datatype for texture?
 
-TextureWriter::TextureWriter(int cols, int lines)
+TextureWriter::TextureWriter(unsigned int cols, unsigned int lines)
 {
   this->buffer = new char[cols*lines];
   this->numCols = cols;
@@ -139,8 +139,8 @@ void *TextureWriter::getTexture()
 
 void TextureWriter::render( void )
 {
-  for (int line = 0; line < this->numLines; line++ ) {
-    for (int column = 0; column < this->numCols; column++ ) {
+  for (unsigned int line = 0; line < this->numLines; line++ ) {
+    for (unsigned int column = 0; column < this->numCols; column++ ) {
       this->render(buffer[line*this->numCols+column], line, column );
     }
   }

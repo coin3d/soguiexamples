@@ -30,12 +30,12 @@
 
 class TextureWriter
 {
-  int numCols;
-  int numLines;
-  int fontXSize;
-  int fontYSize;
-  int texXSize;
-  int texYSize;
+  unsigned int numCols;
+  unsigned int numLines;
+  unsigned int fontXSize;
+  unsigned int fontYSize;
+  unsigned int texXSize;
+  unsigned int texYSize;
 
   char *buffer;
   unsigned int *texture;
@@ -48,7 +48,7 @@ class TextureWriter
   void render(char c, unsigned int line, unsigned int column);
 public:
 
-  TextureWriter(int cols, int lines); // constructor
+  TextureWriter(unsigned int cols, unsigned int lines);
   ~TextureWriter();                   // destructor
   void out(SbString& string);       // output string
   void out(const char *string);     // output string
