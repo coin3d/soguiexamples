@@ -170,7 +170,7 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 
-@HAVE_SIMAGE_TRUE@SIMAGE_DEPENDENTS = rgbload
+@HAVE_SIMAGE_TRUE@SIMAGE_DEPENDENTS = # rgbload <- FIXME: disabled, used to depend on 32-bit voxel functionality. 20040505 mortene.
 @HAVE_SIMAGE_FALSE@SIMAGE_DEPENDENTS = 
 
 
@@ -222,8 +222,10 @@ examine_SOURCES = examine.cpp utility.cpp utility.h
 
 raypick_SOURCES = raypick.cpp utility.cpp utility.h
 
-rgbload_SOURCES = rgbload.cpp
 
+# FIXME: disabled, used to depend on 32-bit voxel functionality, which
+# is no longer available in SoVolumeData. 20040505 mortene.
+# rgbload_SOURCES = rgbload.cpp
 simple8bit_SOURCES = simple8bit.cpp utility.cpp utility.h
 
 opaquechair_SOURCES = chair.cpp OpaqueChair.cpp OpaqueChair.h OpaqueChair-iv.h
@@ -252,8 +254,7 @@ CONFIG_CLEAN_FILES = readvol.cpp changingdataset.cpp examine.cpp \
 @HAVE_SIMAGE_TRUE@noinst_PROGRAMS = readvol$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@	changingdataset$(EXEEXT) examine$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@	orthoslicer$(EXEEXT) raypick$(EXEEXT) \
-@HAVE_SIMAGE_TRUE@	simple8bit$(EXEEXT) rgbload$(EXEEXT) \
-@HAVE_SIMAGE_TRUE@	opaquechair$(EXEEXT)
+@HAVE_SIMAGE_TRUE@	simple8bit$(EXEEXT) opaquechair$(EXEEXT)
 @HAVE_SIMAGE_FALSE@noinst_PROGRAMS = readvol$(EXEEXT) \
 @HAVE_SIMAGE_FALSE@	changingdataset$(EXEEXT) examine$(EXEEXT) \
 @HAVE_SIMAGE_FALSE@	orthoslicer$(EXEEXT) raypick$(EXEEXT) \
@@ -301,11 +302,6 @@ readvol_OBJECTS = $(am_readvol_OBJECTS)
 readvol_LDADD = $(LDADD)
 readvol_DEPENDENCIES =
 readvol_LDFLAGS =
-am_rgbload_OBJECTS = rgbload.$(OBJEXT)
-rgbload_OBJECTS = $(am_rgbload_OBJECTS)
-rgbload_LDADD = $(LDADD)
-rgbload_DEPENDENCIES =
-rgbload_LDFLAGS =
 am_simple8bit_OBJECTS = simple8bit.$(OBJEXT) utility.$(OBJEXT)
 simple8bit_OBJECTS = $(am_simple8bit_OBJECTS)
 simple8bit_LDADD = $(LDADD)
@@ -331,8 +327,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/moc_TransferFunctionHandler.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/moc_VolumeRenderHandler.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/orthoslicer.Po ./$(DEPDIR)/raypick.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/readvol.Po ./$(DEPDIR)/rgbload.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/simple8bit.Po ./$(DEPDIR)/utility.Po
+@AMDEP_TRUE@	./$(DEPDIR)/readvol.Po ./$(DEPDIR)/simple8bit.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/utility.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -344,12 +340,11 @@ CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) \
 	$(opaquechair_SOURCES) $(orthoslicer_SOURCES) \
-	$(raypick_SOURCES) $(readvol_SOURCES) $(rgbload_SOURCES) \
-	$(simple8bit_SOURCES)
+	$(raypick_SOURCES) $(readvol_SOURCES) $(simple8bit_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in changingdataset.cpp.in \
 	examine.cpp.in orthoslicer.cpp.in raypick.cpp.in readvol.cpp.in \
 	rgbload.cpp.in simple8bit.cpp.in
-SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) $(opaquechair_SOURCES) $(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) $(rgbload_SOURCES) $(simple8bit_SOURCES)
+SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) $(opaquechair_SOURCES) $(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) $(simple8bit_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -396,9 +391,6 @@ raypick$(EXEEXT): $(raypick_OBJECTS) $(raypick_DEPENDENCIES)
 readvol$(EXEEXT): $(readvol_OBJECTS) $(readvol_DEPENDENCIES) 
 	@rm -f readvol$(EXEEXT)
 	$(CXXLINK) $(readvol_LDFLAGS) $(readvol_OBJECTS) $(readvol_LDADD) $(LIBS)
-rgbload$(EXEEXT): $(rgbload_OBJECTS) $(rgbload_DEPENDENCIES) 
-	@rm -f rgbload$(EXEEXT)
-	$(CXXLINK) $(rgbload_LDFLAGS) $(rgbload_OBJECTS) $(rgbload_LDADD) $(LIBS)
 simple8bit$(EXEEXT): $(simple8bit_OBJECTS) $(simple8bit_DEPENDENCIES) 
 	@rm -f simple8bit$(EXEEXT)
 	$(CXXLINK) $(simple8bit_LDFLAGS) $(simple8bit_OBJECTS) $(simple8bit_LDADD) $(LIBS)
@@ -428,7 +420,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/orthoslicer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/raypick.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readvol.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rgbload.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simple8bit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utility.Po@am__quote@
 

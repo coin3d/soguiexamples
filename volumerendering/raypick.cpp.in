@@ -149,10 +149,10 @@ main(int argc, char ** argv)
   root->addChild(ecb);
 
   SbVec3s dim(64, 64, 64);
-  void * voxels = generateRGBAVoxelSet(dim);
+  void * voxels = generate8bitVoxelSet(dim);
 
   SoVolumeData * voldata = new SoVolumeData();
-  voldata->setVolumeData(dim, voxels, SoVolumeData::RGBA);
+  voldata->setVolumeData(dim, voxels, SoVolumeData::UNSIGNED_BYTE);
   root->addChild(voldata);
 
   SoTransferFunction * transfun = new SoTransferFunction();

@@ -102,10 +102,10 @@ main(int argc, char ** argv)
 
   if (argc != 2) { // Generate dataset
     SbVec3s dim = SbVec3s(64, 64, 64);
-    voxeldata = generateRGBAVoxelSet(dim);
+    voxeldata = generate8bitVoxelSet(dim);
 
     volumedata = new SoVolumeData();
-    volumedata->setVolumeData(dim, voxeldata, SoVolumeData::RGBA);
+    volumedata->setVolumeData(dim, voxeldata, SoVolumeData::UNSIGNED_BYTE);
     volumedata->setVolumeSize(SbBox3f(-64, -32, -32, 64, 32, 32));
     root->addChild(volumedata);
   }
@@ -139,7 +139,7 @@ main(int argc, char ** argv)
 
   // These spheres are here just for testing the cutting
   // functionality.
-  if (0) {
+  if (1) {
     const SbBox3f & volumebbox = volumedata->getVolumeSize();
     float dx, dy, dz;
     volumebbox.getSize(dx, dy, dz);

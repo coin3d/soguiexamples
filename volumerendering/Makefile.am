@@ -2,7 +2,7 @@
 # Conditional build.
 
 if HAVE_SIMAGE
-SIMAGE_DEPENDENTS = rgbload
+SIMAGE_DEPENDENTS = # rgbload <- FIXME: disabled, used to depend on 32-bit voxel functionality. 20040505 mortene.
 else
 SIMAGE_DEPENDENTS = 
 endif
@@ -51,7 +51,9 @@ examine_SOURCES = examine.cpp utility.cpp utility.h
 
 raypick_SOURCES = raypick.cpp utility.cpp utility.h
 
-rgbload_SOURCES = rgbload.cpp
+# FIXME: disabled, used to depend on 32-bit voxel functionality, which
+# is no longer available in SoVolumeData. 20040505 mortene.
+# rgbload_SOURCES = rgbload.cpp
 
 simple8bit_SOURCES = simple8bit.cpp utility.cpp utility.h
 
