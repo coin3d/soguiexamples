@@ -15,7 +15,7 @@
 @SET_MAKE@
 
 ############################################################################
-# Executables.
+# Conditional build.
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -80,6 +80,8 @@ HAVE_MATERIALLIST_FALSE = @HAVE_MATERIALLIST_FALSE@
 HAVE_MATERIALLIST_TRUE = @HAVE_MATERIALLIST_TRUE@
 HAVE_PRINTDIALOG_FALSE = @HAVE_PRINTDIALOG_FALSE@
 HAVE_PRINTDIALOG_TRUE = @HAVE_PRINTDIALOG_TRUE@
+HAVE_SIMAGE_FALSE = @HAVE_SIMAGE_FALSE@
+HAVE_SIMAGE_TRUE = @HAVE_SIMAGE_TRUE@
 HAVE_SIMVOLEON_FALSE = @HAVE_SIMVOLEON_FALSE@
 HAVE_SIMVOLEON_TRUE = @HAVE_SIMVOLEON_TRUE@
 HAVE_SLIDERSETS_FALSE = @HAVE_SLIDERSETS_FALSE@
@@ -152,6 +154,7 @@ program_transform_name = @program_transform_name@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sim_ac_qt_cygpath = @sim_ac_qt_cygpath@
+sim_ac_simage_configcmd = @sim_ac_simage_configcmd@
 sim_ac_simvoleon_configcmd = @sim_ac_simvoleon_configcmd@
 sim_ac_smallchange_configcmd = @sim_ac_smallchange_configcmd@
 soguiconfig = @soguiconfig@
@@ -162,9 +165,15 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 
+@HAVE_SIMAGE_TRUE@SIMAGE_DEPENDENTS = rgbload
+@HAVE_SIMAGE_FALSE@SIMAGE_DEPENDENTS = 
+
+
+############################################################################
+# Executables.
 noinst_PROGRAMS = \
-	readvol changingdataset examine examinerviewer orthoslicer \
-	raypick rgbload simple8bit
+	readvol changingdataset examine orthoslicer \
+	raypick simple8bit $(SIMAGE_DEPENDENTS)
 
 
 
@@ -205,8 +214,6 @@ changingdataset_SOURCES = changingdataset.cpp
 
 examine_SOURCES = examine.cpp utility.cpp utility.h
 
-examinerviewer_SOURCES = examinerviewer.cpp
-
 raypick_SOURCES = raypick.cpp utility.cpp utility.h
 
 rgbload_SOURCES = rgbload.cpp
@@ -233,11 +240,15 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES = readvol.cpp changingdataset.cpp examine.cpp \
-	examinerviewer.cpp orthoslicer.cpp raypick.cpp rgbload.cpp \
-	simple8bit.cpp
-noinst_PROGRAMS = readvol$(EXEEXT) changingdataset$(EXEEXT) \
-	examine$(EXEEXT) examinerviewer$(EXEEXT) orthoslicer$(EXEEXT) \
-	raypick$(EXEEXT) rgbload$(EXEEXT) simple8bit$(EXEEXT)
+	orthoslicer.cpp raypick.cpp rgbload.cpp simple8bit.cpp
+@HAVE_SIMAGE_TRUE@noinst_PROGRAMS = readvol$(EXEEXT) \
+@HAVE_SIMAGE_TRUE@	changingdataset$(EXEEXT) examine$(EXEEXT) \
+@HAVE_SIMAGE_TRUE@	orthoslicer$(EXEEXT) raypick$(EXEEXT) \
+@HAVE_SIMAGE_TRUE@	simple8bit$(EXEEXT) rgbload$(EXEEXT)
+@HAVE_SIMAGE_FALSE@noinst_PROGRAMS = readvol$(EXEEXT) \
+@HAVE_SIMAGE_FALSE@	changingdataset$(EXEEXT) examine$(EXEEXT) \
+@HAVE_SIMAGE_FALSE@	orthoslicer$(EXEEXT) raypick$(EXEEXT) \
+@HAVE_SIMAGE_FALSE@	simple8bit$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_changingdataset_OBJECTS = changingdataset.$(OBJEXT)
@@ -250,11 +261,6 @@ examine_OBJECTS = $(am_examine_OBJECTS)
 examine_LDADD = $(LDADD)
 examine_DEPENDENCIES =
 examine_LDFLAGS =
-am_examinerviewer_OBJECTS = examinerviewer.$(OBJEXT)
-examinerviewer_OBJECTS = $(am_examinerviewer_OBJECTS)
-examinerviewer_LDADD = $(LDADD)
-examinerviewer_DEPENDENCIES =
-examinerviewer_LDFLAGS =
 am__objects_1 = SoTransferFunction_ctrl.$(OBJEXT) \
 	moc_SoTransferFunction_ctrl.$(OBJEXT) \
 	TransferFunctionHandler.$(OBJEXT) \
@@ -303,7 +309,6 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/VolumeRenderHandler.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/changingdataset.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/examine.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/examinerviewer.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/moc_OrthoSliceHandler.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/moc_SoOrthoSlice_ctrl.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/moc_SoTransferFunction_ctrl.Po \
@@ -323,13 +328,12 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) \
-	$(examinerviewer_SOURCES) $(orthoslicer_SOURCES) \
-	$(raypick_SOURCES) $(readvol_SOURCES) $(rgbload_SOURCES) \
-	$(simple8bit_SOURCES)
+	$(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) \
+	$(rgbload_SOURCES) $(simple8bit_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in changingdataset.cpp.in \
-	examine.cpp.in examinerviewer.cpp.in orthoslicer.cpp.in \
-	raypick.cpp.in readvol.cpp.in rgbload.cpp.in simple8bit.cpp.in
-SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) $(examinerviewer_SOURCES) $(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) $(rgbload_SOURCES) $(simple8bit_SOURCES)
+	examine.cpp.in orthoslicer.cpp.in raypick.cpp.in readvol.cpp.in \
+	rgbload.cpp.in simple8bit.cpp.in
+SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) $(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) $(rgbload_SOURCES) $(simple8bit_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -346,8 +350,6 @@ readvol.cpp: $(top_builddir)/config.status readvol.cpp.in
 changingdataset.cpp: $(top_builddir)/config.status changingdataset.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 examine.cpp: $(top_builddir)/config.status examine.cpp.in
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
-examinerviewer.cpp: $(top_builddir)/config.status examinerviewer.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 orthoslicer.cpp: $(top_builddir)/config.status orthoslicer.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
@@ -366,9 +368,6 @@ changingdataset$(EXEEXT): $(changingdataset_OBJECTS) $(changingdataset_DEPENDENC
 examine$(EXEEXT): $(examine_OBJECTS) $(examine_DEPENDENCIES) 
 	@rm -f examine$(EXEEXT)
 	$(CXXLINK) $(examine_LDFLAGS) $(examine_OBJECTS) $(examine_LDADD) $(LIBS)
-examinerviewer$(EXEEXT): $(examinerviewer_OBJECTS) $(examinerviewer_DEPENDENCIES) 
-	@rm -f examinerviewer$(EXEEXT)
-	$(CXXLINK) $(examinerviewer_LDFLAGS) $(examinerviewer_OBJECTS) $(examinerviewer_LDADD) $(LIBS)
 orthoslicer$(EXEEXT): $(orthoslicer_OBJECTS) $(orthoslicer_DEPENDENCIES) 
 	@rm -f orthoslicer$(EXEEXT)
 	$(CXXLINK) $(orthoslicer_LDFLAGS) $(orthoslicer_OBJECTS) $(orthoslicer_LDADD) $(LIBS)
@@ -399,7 +398,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/VolumeRenderHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/changingdataset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/examine.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/examinerviewer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moc_OrthoSliceHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moc_SoOrthoSlice_ctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moc_SoTransferFunction_ctrl.Po@am__quote@
