@@ -156,7 +156,8 @@ BUILT_SOURCES = \
 	sensors/timersensor.cpp \
 	eyecandy/moirepatterns.cpp \
 	eyecandy/juliaanim.cpp \
-	eyecandy/mandelzoom.cpp
+	eyecandy/mandelzoom.cpp \
+	eyecandy/blob.cpp
 
 
 noinst_DATA = $(BUILT_SOURCES)
@@ -658,6 +659,9 @@ eyecandy/juliaanim.cpp: $(srcdir)/eyecandy/juliaanim.cpp.in
 	@./config.status --file=$@
 
 eyecandy/mandelzoom.cpp: $(srcdir)/eyecandy/mandelzoom.cpp.in
+	@./config.status --file=$@
+
+eyecandy/blob.cpp: $(srcdir)/eyecandy/blob.cpp.in
 	@./config.status --file=$@
 
 eyecandy/simbuoy.cpp: $(srcdir)/eyecandy/simbuoy.cpp.in

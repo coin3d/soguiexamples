@@ -1,0 +1,680 @@
+
+// Yep, this code is ugly...
+
+#include <assert.h>
+#include <stdio.h>
+#include <math.h>
+
+#include <Inventor/SbVec3f.h>
+#include <Inventor/SoDB.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoFaceSet.h>
+#include <Inventor/nodes/SoLightModel.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoMaterialBinding.h>
+#include <Inventor/nodes/SoNormal.h>
+#include <Inventor/nodes/SoNormalBinding.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+static void timerSensorCallback( void *, SoSensor * );
+
+static void calcTables(void);
+static void updateBalls(void);
+static void initCube(void);
+
+// *************************************************************************
+
+// Number of grid-elements in each direction
+#define GRIDX 32
+#define GRIDY 32
+#define GRIDZ 32
+#define CUBEX (GRIDX-1)
+#define CUBEY (GRIDY-1)
+#define CUBEZ (GRIDZ-1)
+#define NUMCUBES (GRIDX*GRIDY*GRIDZ)
+#define NUMBALLS 5
+#define MAXPOLYS 32768
+// Distance between each grid-element in 3d
+#define GRIDSIZE 15
+// Value at surface (larger = inside)
+#define THRESHOLD 300
+// 3D -> 2D verdier
+#define ZADD -750
+#define XMUL 256
+#define YMUL 256
+
+typedef struct sVertex {
+  unsigned int CalcFlag;
+  float x, y, z;
+  float nx, ny, nz;
+} sVertex;
+
+typedef struct sPolygon {
+  sVertex * v[3];
+} sPolygon;
+
+typedef struct cube_t {
+  sVertex * V[12];
+} cube_t;
+
+typedef struct BALL {
+  float x, y, z;
+  float sx, sy, sz;
+  float sx_add, sy_add, sz_add;
+  float strength;
+} BALL;
+ 
+int vertTable[12][6] = {
+  { 0, 0, 0,  0, 0, 1},  { 0,-1, 0,  0,-1,+1},
+  { 0, 0, 0,  0,-1, 0},  { 0, 0, 1,  0,-1, 1},
+  { 1, 0, 0,  1, 0, 1},  { 1,-1, 0,  1,-1,+1},
+  { 1, 0, 0,  1,-1, 0},  { 1, 0, 1,  1,-1, 1},
+  { 0, 0, 0,  1, 0, 0},  { 0, 0, 1,  1, 0,+1},
+  { 0,-1, 0,  1,-1, 0},  { 0,-1, 1,  1,-1, 1}
+};
+
+// format:
+// char numedges, then chars for each edge (clockwise)
+// repeat until -1, eller max 16...
+
+int triTable[256][16];
+unsigned int edgeTable[256];
+
+float IsoGrid[ GRIDX ][ GRIDY ][ GRIDZ ];
+cube_t Cube[ CUBEX ][ CUBEY ][ CUBEZ ];
+sVertex * Vertices;
+sPolygon * Polygons;
+int NumPolys;
+int NumCalced;
+int NumReused;
+int DoCubeCounter;
+int CubesWithData;
+BALL balls[ NUMBALLS ];
+
+SoNormal * blob_normals;
+SoCoordinate3 * blob_coords;
+SoFaceSet * blob_faceset;
+int32_t rendernumvert[ MAXPOLYS ];
+
+// CalcTabl
+#define L   0      // left direction: -x, -i
+#define R   1      // right direction:  +x, +i
+#define B   2      // bottom direction: -y, -j
+#define T   3      // top direction:  +y, +j
+#define N   4      // near direction: -z, -k
+#define F   5      // far direction:  +z, +k
+
+// Edges
+//
+//       /--11---
+//      /|      /|
+//     / |     / |
+//    1  3    5  |
+//   /   |   /   |
+//  /    |  /    |
+// /--10---|     7
+// |     | |     |
+// |     | |     |
+// 2    / -|-9--/
+// |   /   |   /
+// |  0    6  4
+// | /     | /
+// |/      |/
+//  ---8---
+
+#define LB  0  // left bottom edge
+#define LT  1  // left top edge
+#define LN  2  // left near edge
+#define LF  3  // left far edge
+#define RB  4  // right bottom edge
+#define RT  5  // right top edge
+#define RN  6  // right near edge
+#define RF  7  // right far edge
+#define BN  8  // bottom near edge
+#define BF  9  // bottom far edge
+#define TN  10 // top near edge
+#define TF  11 // top far edge
+ 
+// Corners
+//
+//   3---7
+//  /|  /|
+// 2---6 |
+// | | | |
+// | 1-|-5
+// |/  |/
+// 0---4
+ 
+#define LBN 0      // left bottom near corner
+#define LBF 1      // left bottom far corner
+#define LTN 2      // left top near corner
+#define LTF 3      // left top far corner
+#define RBN 4      // right bottom near corner
+#define RBF 5      // right bottom far corner
+#define RTN 6      // right top near corner
+#define RTF 7      // right top far corner
+
+#define BIT(i, bit) (((i)>>(bit))&1)
+ 
+typedef struct intlist {
+  int i;
+  struct intlist * next;
+} INTLIST;
+
+typedef struct intlists {
+  INTLIST *list;
+  struct intlists * next;
+} INTLISTS;
+
+INTLISTS *cubetable[256];
+int corner1[12]   = {LBN,LTN,LBN,LBF,RBN,RTN,RBN,RBF,LBN,LBF,LTN,LTF};
+int corner2[12]   = {LBF,LTF,LTN,LTF,RBF,RTF,RTN,RTF,RBN,RBF,RTN,RTF};
+int leftface[12]  = {B,  L,  L,  F,  R,  T,  N,  R,  N,  B,  T,  F};
+int rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F,  N,  T};
+
+// *************************************************************************
+
+int
+main(
+  int argc,
+  char ** argv)
+{
+  int num;
+
+  Vertices = NULL;
+  Polygons = NULL;
+
+  calcTables();
+
+  @WINWIDGET@ window = So@Gui@::init(argv[0]);
+  if ( ! window )
+    exit( 1 );
+
+  SoSeparator * root = new SoSeparator;
+	
+  // Light model
+  SoLightModel * lm = new SoLightModel;
+  lm->model.setValue( SoLightModel::PHONG );
+  root->addChild( lm );
+  
+  // Shape hints
+  SoShapeHints * shint = new SoShapeHints;
+  shint->vertexOrdering.setValue( SoShapeHints::CLOCKWISE );
+  shint->shapeType.setValue( SoShapeHints::SOLID );
+  shint->creaseAngle = 3.14;
+  root->addChild( shint );
+  
+  // Normals & Normal binding
+  blob_normals = new SoNormal;
+  root->addChild( blob_normals );
+  SoNormalBinding *normbind = new SoNormalBinding;
+  normbind->value.setValue( SoNormalBinding::PER_VERTEX );
+  root->addChild(normbind);
+  
+  // Material & binding
+  SoMaterial * mat = new SoMaterial;
+  mat->diffuseColor.setValue( 0.3, 0.6, 0.5 );
+  mat->specularColor.setValue( 1, 1, 1 );
+  root->addChild( mat );
+  SoMaterialBinding * matbind = new SoMaterialBinding;
+  matbind->value.setValue( SoMaterialBinding::PER_VERTEX );
+  root->addChild( matbind );
+  
+  // Vertices / Faceset
+  blob_coords = new SoCoordinate3;
+  root->addChild( blob_coords );
+  blob_faceset = new SoFaceSet;
+  root->addChild( blob_faceset );
+
+  Polygons = (sPolygon *) malloc( MAXPOLYS * sizeof(sPolygon) );
+  
+  for ( num = 0; num < MAXPOLYS; num++ )
+    rendernumvert[num] = 3;
+
+  initCube();
+
+  for ( num = 0; num < NUMBALLS; num++ ) {
+    balls[num].sx = num;
+    balls[num].sy = num;
+    balls[num].sz = num;
+    balls[num].sx_add = 0.01f  * (num+1);
+    balls[num].sy_add = 0.02f  * (num+1);
+    balls[num].sz_add = 0.015f * (num+1);
+    balls[num].strength = 1;
+  }
+  
+  updateBalls();
+
+  SoTimerSensor * timer = new SoTimerSensor( timerSensorCallback, NULL );
+  timer->setInterval( 0.01f );
+  timer->schedule();
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
+  viewer->setSceneGraph( root );
+  viewer->setTitle( "Blob Viewer" );
+  viewer->show();
+  So@Gui@::show( window );
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  if ( Vertices != NULL ) free( Vertices );
+  if ( Polygons != NULL ) free( Polygons );
+  return 0;
+} // main()
+
+// *************************************************************************
+
+// --- Make cube table ------------------------------------------------------
+
+// nextcwedge: return next clockwise edge from given edge around given face
+// used in: makecubetable
+
+int
+nextcwedge(
+  int edge,
+  int face )
+{
+  switch ( edge ) {
+  case LB: return (face == L)? LF : BN;
+  case LT: return (face == L)? LN : TF;
+  case LN: return (face == L)? LB : TN;
+  case LF: return (face == L)? LT : BF;
+  case RB: return (face == R)? RN : BF;
+  case RT: return (face == R)? RF : TN;
+  case RN: return (face == R)? RT : BN;
+  case RF: return (face == R)? RB : TF;
+  case BN: return (face == B)? RB : LN;
+  case BF: return (face == B)? LB : RF;
+  case TN: return (face == T)? LT : RN;
+  case TF: return (face == T)? RT : LF;
+  }
+  return 0;
+} // nextcwedge()
+
+// otherface: return face adjoining edge that is not the given face
+// used in: makecubetable
+
+int
+otherface(
+  int edge,
+  int face )
+{
+  int other = leftface[edge];
+  return face == other ? rightface[edge] : other;
+}
+
+// ---
+
+ // makecubetable: create the 256 entry table for cubical polygonization
+void
+makecubetable(
+  void )
+{
+  int i, e, c, done[12], pos[8];
+
+  for (i = 0; i < 256; i++ ) {
+    for ( e = 0; e < 12; e++ ) done[e] = 0;
+    for ( c = 0; c < 8; c++ ) pos[c] = BIT(i, c);
+    for ( e = 0; e < 12; e++ ) {
+      if ( ! done[e] && (pos[corner1[e]] != pos[corner2[e]]) ) {
+        INTLIST *ints = 0;
+        INTLISTS *lists = (INTLISTS *) malloc(/*1,*/ sizeof(INTLISTS));
+        int start = e, edge = e;
+        // get face that is to right of edge from pos to neg corner:
+        int face = pos[corner1[e]] ? rightface[e] : leftface[e];
+        while ( TRUE ) {
+          edge = nextcwedge(edge, face);
+          done[edge] = 1;
+          if ( pos[corner1[edge]] != pos[corner2[edge]] ) {
+            INTLIST *tmp = ints;
+            ints = (INTLIST *) malloc(/*1,*/ sizeof(INTLIST));
+            ints->i = edge;
+            ints->next = tmp;              // add edge to head of list
+            if (edge == start) break;
+            face = otherface(edge, face);
+          }
+        }
+        lists->list = ints;              // add ints to head of table entry
+        lists->next = cubetable[i];
+        cubetable[i] = lists;
+      }
+    }
+  }
+} // makecubetable()
+
+static void
+calcTables(
+  void )
+{
+  int i, j, num, len;
+  INTLIST * list;
+  INTLISTS * l;
+
+  makecubetable();
+  for ( i = 0; i < 256; i++ ) {
+    for ( j = 0; j < 16; j++ )
+      triTable[i][j] = -1;
+    j = 0;
+    len = 0;
+    l = cubetable[i];
+    while ( l != NULL ) {
+      num = 0;
+      list = l->list;
+      while ( list != 0 ) {
+        num++;
+        list = list->next;
+      }
+      len =+ num;
+      len++;
+      triTable[i][j++] = num;
+      list = l->list;
+      while ( list != NULL ) {
+        triTable[i][j++] = list->i;
+        list = list->next;
+      }
+      l = l->next;
+    }
+  }
+  for ( i = 0; i < 256; i++ ) {
+    l = cubetable[i];
+    num = 0;
+    while ( l != NULL ) {
+      list = l->list;
+      while ( list != NULL ) {
+        num |= (1 << list->i);
+        list = list->next;
+      }
+      l = l->next;
+    }
+    edgeTable[i] = num;
+  }
+}
+
+// 1/sqrt(n) approximation. Up to 3.5% error... :-/
+// Used when calculating U/V coordinates for EnvMap
+float
+InvSqrt(
+  const float number )
+{
+  int i;
+  i = 0x5f3759df - ((*((int *)&number))>>1);
+  return *(float *)&i;
+}
+
+static void
+initCube(
+  void )
+{
+  int num = 0;
+  Vertices = (sVertex *) malloc( sizeof(sVertex) * (NUMCUBES*3) );
+  for ( int z = 0; z < CUBEZ; z++ ) {
+    for ( int y = 0; y < CUBEY; y++ ) {
+      for ( int x = 0; x < CUBEX; x++ ) {
+        Cube[x][y][z].V[ 1] = &(Vertices[num]); num++;
+        Cube[x][y][z].V[ 2] = &(Vertices[num]); num++;
+        Cube[x][y][z].V[10] = &(Vertices[num]); num++;
+        if ( x != 0 ) {
+          Cube[x-1][y  ][z  ].V[ 5] = Cube[x][y][z].V[ 1];
+          Cube[x-1][y  ][z  ].V[ 6] = Cube[x][y][z].V[ 2];
+        }
+        if ( y != 0 ) {
+          Cube[x  ][y-1][z  ].V[ 8] = Cube[x][y][z].V[10];
+          Cube[x  ][y-1][z  ].V[ 0] = Cube[x][y][z].V[ 1];
+        }
+        if ( z != 0 ) {
+          Cube[x  ][y  ][z-1].V[11] = Cube[x][y][z].V[10];
+          Cube[x  ][y  ][z-1].V[ 3] = Cube[x][y][z].V[ 2];
+        }
+        if ( x != 0 && y != 0 )
+          Cube[x-1][y-1][z  ].V[4] = Cube[x][y][z].V[1];
+        if ( x != 0 && z != 0 )
+          Cube[x-1][y  ][z-1].V[7] = Cube[x][y][z].V[2];
+        if ( y != 0 && z != 0 )
+          Cube[x  ][y-1][z-1].V[9] = Cube[x][y][z].V[10];
+      }
+    }
+  }
+} // initCube()
+
+// ----------
+
+// Calculate ISO values for entire grid (brute force!)
+ 
+void
+CalcField(
+  void )
+{
+  int ix, iy, iz, k;
+  float dx, dy, dz, dst;
+  float x, y, z;
+
+  x = -GRIDX*(GRIDSIZE/2);
+  for ( ix = 0; ix < GRIDX; ix++ ) {
+    y = -GRIDY*(GRIDSIZE/2);
+    for ( iy = 0; iy < GRIDY; iy++ ) {
+      z = -GRIDZ*(GRIDSIZE/2);
+      for ( iz = 0; iz < GRIDZ; iz++ ) {
+        for ( k = 0; k < NUMBALLS; k++ ) {
+          dx = x - balls[k].x;
+          dy = y - balls[k].y;
+          dz = z - balls[k].z;
+          dst = dx * dx + dy * dy + dz * dz;
+          if ( dst > 0.00001 )
+            IsoGrid[ix][iy][iz] += (1000000/dst) * balls[k].strength;
+        }
+        z += GRIDSIZE;
+      }
+      y += GRIDSIZE;
+    }
+    x += GRIDSIZE;
+  }
+}
+
+// ----------
+
+void
+interpolate(
+  sVertex * res,
+  int x1,
+  int y1,
+  int z1,
+  int x2,
+  int y2,
+  int z2 )
+{
+  float nx1, ny1, nz1, nx2, ny2, nz2, c1, c2, pc;
+  float int_x, int_y, int_z, qwe, inv_z;
+
+  c1 = IsoGrid[x1][y1][z1];
+  c2 = IsoGrid[x2][y2][z2];
+  pc = (THRESHOLD-c1) / (c2-c1);
+
+  res->x = (float) ((x1 + (x2-x1)*pc) - (GRIDX/2)) * GRIDSIZE;
+  res->y = (float) ((y1 + (y2-y1)*pc) - (GRIDY/2)) * GRIDSIZE;
+  res->z = (float) ((z1 + (z2-z1)*pc) - (GRIDZ/2)) * GRIDSIZE + ZADD;
+
+  // NORMAL
+  nx1 = IsoGrid[x1+1][y1][z1] - IsoGrid[x1  ][y1][z1];
+  ny1 = IsoGrid[x1][y1+1][z1] - IsoGrid[x1][y1  ][z1];
+  nz1 = IsoGrid[x1][y1][z1+1] - IsoGrid[x1][y1][z1  ];
+  nx2 = IsoGrid[x2+1][y2][z2] - IsoGrid[x2  ][y2][z2];
+  ny2 = IsoGrid[x2][y2+1][z2] - IsoGrid[x2][y2  ][z2];
+  nz2 = IsoGrid[x2][y2][z2+1] - IsoGrid[x2][y2][z2  ];
+  int_x = nx1 + (nx2-nx1) * pc;
+  int_y = ny1 + (ny2-ny1) * pc;
+  int_z = nz1 + (nz2-nz1) * pc;
+
+  qwe = int_x * int_x + int_y * int_y + int_z * int_z;
+  if ( qwe > 1.0f ) {
+    float inv_modulo = InvSqrt(qwe);
+    res->nx = int_x * inv_modulo;
+    res->ny = int_y * inv_modulo;
+    res->nz = int_z * inv_modulo;
+  } else {
+    res->nx = 0.0f;
+    res->ny = 0.0f;
+    res->nz = 1.0f;
+  }
+} // interpolate()
+
+static unsigned char
+SetCorners(
+  int x,
+  int y,
+  int z )
+{
+  unsigned char value = 0;
+  if ( IsoGrid[x  ][y  ][z  ] > THRESHOLD ) value |= 0x01;
+  if ( IsoGrid[x  ][y  ][z+1] > THRESHOLD ) value |= 0x02;
+  if ( IsoGrid[x  ][y-1][z  ] > THRESHOLD ) value |= 0x04;
+  if ( IsoGrid[x  ][y-1][z+1] > THRESHOLD ) value |= 0x08;
+  if ( IsoGrid[x+1][y  ][z  ] > THRESHOLD ) value |= 0x10;
+  if ( IsoGrid[x+1][y  ][z+1] > THRESHOLD ) value |= 0x20;
+  if ( IsoGrid[x+1][y-1][z  ] > THRESHOLD ) value |= 0x40;
+  if ( IsoGrid[x+1][y-1][z+1] > THRESHOLD ) value |= 0x80;
+  return value;
+} // SetCorners()
+
+// Polygonize a single cube...
+// in : x,y,z of lower left front of cube
+
+static unsigned char
+Polygonize(
+  int x,
+  int y,
+  int z )
+{
+  unsigned char value = SetCorners( x, y, z );
+  if ( value == 0 || value == 255 )
+    return 0;
+
+  // calc edge values for edges that are not already calculated (check edgeTable)
+  CubesWithData++;
+  unsigned int edge = edgeTable[value];
+  for ( int i = 0; i < 12; i++ ) {
+    unsigned int bit = 1 << i;
+    if ( (edge & bit) != 0 ) {
+      if ( Cube[x][y][z].V[i]->CalcFlag == 1 ) {
+        NumReused++;
+      } else {
+        NumCalced++;
+        interpolate( Cube[x][y][z].V[i],
+          x+vertTable[i][0], y+vertTable[i][1], z+vertTable[i][2],
+          x+vertTable[i][3], y+vertTable[i][4], z+vertTable[i][5] );
+        Cube[x][y][z].V[i]->CalcFlag = 1;
+      }
+    }
+  }
+
+  // --- "draw" polygons in cube ---
+  int n = 0;
+  while ( triTable[value][n] != -1 && n < 16 ) {
+    int num = triTable[value][n  ];
+    int a = triTable[value][n+1];
+    int b = triTable[value][n+2];
+    int c = triTable[value][n+3];
+    n += 4;
+    sPolygon * P = &Polygons[NumPolys];
+    sVertex ** _dst = P->v;
+    sVertex ** const _src = Cube[x][y][z].V;
+    _dst[0] = _src[a];  // P->v[0] = Cube[x][y][z].V[a];
+    _dst[1] = _src[b];  // P->v[1] = Cube[x][y][z].V[b];
+    _dst[2] = _src[c];  // P->v[2] = Cube[x][y][z].V[c];
+    NumPolys++;
+    num -= 3;
+    while ( num > 0 ) {
+      // a = a;
+      b = c;
+      c = triTable[value][n];
+      n++;
+      P = &Polygons[NumPolys];
+      _dst = P->v;
+      _dst[0] = _src[a];  // P->v[0] = Cube[x][y][z].V[a];
+      _dst[1] = _src[b];  // P->v[1] = Cube[x][y][z].V[b];
+      _dst[2] = _src[c];  // P->v[2] = Cube[x][y][z].V[c];
+      NumPolys++;
+      num--;
+    }
+  }
+  return value;
+} // Polygonize()
+
+static void
+updateBalls(
+  void )
+{
+  int i, x, y, z;
+
+  sPolygon *P;
+  sVertex *V1,*V2,*V3;
+
+  for ( x = 0; x < (NUMCUBES*3); x++ )
+    Vertices[x].CalcFlag = 0;
+  memset( &IsoGrid, 0, sizeof(IsoGrid) );
+
+  for ( i = 0; i < NUMBALLS; i++ ) {
+    balls[i].x = sin(balls[i].sx) * 100;
+    balls[i].y = sin(balls[i].sy) * 100;
+    balls[i].z = sin(balls[i].sz) * 100;
+  }
+
+  CalcField();
+  NumPolys = 0;
+  NumCalced = 0;
+  NumReused = 0;
+  CubesWithData = 0;
+  DoCubeCounter = 0;
+  for ( z = 1; z < (CUBEZ-1); z++ )
+    for ( y = 1; y < (CUBEY-1); y++ )
+      for ( x = 1; x < (CUBEX-1); x++ )
+        Polygonize( x, y, z );
+
+  if ( NumPolys > 0 ) {
+    blob_coords->point.setNum( NumPolys*3 );
+    SbVec3f * coords  = blob_coords->point.startEditing();
+    blob_normals->vector.setNum( NumPolys*3 );
+    SbVec3f * normals = blob_normals->vector.startEditing();
+		
+    for ( i = 0; i < NumPolys; i++ ) {
+      P = &Polygons[i];
+      V1 = P->v[0];
+      V2 = P->v[1];
+      V3 = P->v[2];
+      coords[ (i*3)   ].setValue(V1->x,V1->y,V1->z);
+      coords[ (i*3)+1 ].setValue(V2->x,V2->y,V2->z);
+      coords[ (i*3)+2 ].setValue(V3->x,V3->y,V3->z);
+      normals[ (i*3)   ].setValue(-V1->nx,-V1->ny,-V1->nz);
+      normals[ (i*3)+1 ].setValue(-V2->nx,-V2->ny,-V2->nz);
+      normals[ (i*3)+2 ].setValue(-V3->nx,-V3->ny,-V3->nz);
+    }
+    for (i=0; i<NumPolys; i++) rendernumvert[i] = 3;
+    blob_faceset->numVertices.setNum(NumPolys);
+    blob_faceset->numVertices.setValues(0,NumPolys,rendernumvert);
+    blob_coords->point.finishEditing();
+    blob_normals->vector.finishEditing();
+  }
+
+  for ( i = 0; i < NUMBALLS; i++ ) {
+    balls[i].sx += balls[i].sx_add;
+    balls[i].sy += balls[i].sy_add;
+    balls[i].sz += balls[i].sz_add;
+  }
+} // updateBalls()
+
+// *************************************************************************
+
+static void
+timerSensorCallback( void *, SoSensor * )
+{
+  updateBalls();
+} // timerCallback()
+
+// *************************************************************************
