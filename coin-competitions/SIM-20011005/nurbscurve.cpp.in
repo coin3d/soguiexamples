@@ -18,6 +18,24 @@
 
 // *************************************************************************
 
+static
+char * REPLACEMENTPARTS = "#Inventor V2.1 ascii\n\n"
+""
+"Separator {"
+"   DEF AXISTRANSLATOR Separator {"
+"      Cube { width 1.0 height 0.2 depth 0.2 }"
+"   }"
+"   DEF PLANETRANSLATOR Separator {"
+"      Sphere { radius 0.3 }"
+"   }"
+"   DEF PLANETRANSLATOR_ACTIVE Separator {"
+"      Sphere { radius 0.3 }"
+"   }"
+"}";
+
+
+// *************************************************************************
+
 static float pts[][3] = {
   { 4.0, -6.0,  0.0},
   {-4.0,  1.0,  0.0},
@@ -87,10 +105,11 @@ main(int argc, char ** argv )
   @WIDGET@ window = So@Gui@::init(argv[0]);
 
   SoInput in;
-  SbBool r = in.openFile("dpd.iv");
-  assert(r && "missing iv-file");
+  in.setBuffer(REPLACEMENTPARTS, strlen(REPLACEMENTPARTS));
+//    SbBool r = in.openFile("dpd.iv");
+//    assert(r && "missing iv-file");
   SoNode * ivroot;
-  r = SoDB::read(&in, ivroot);
+  SbBool r = SoDB::read(&in, ivroot);
   assert(r && "failed import");
 
   ivroot->ref();
