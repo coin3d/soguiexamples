@@ -83,8 +83,6 @@ HAVE_SIMVOLEON_FALSE = @HAVE_SIMVOLEON_FALSE@
 HAVE_SIMVOLEON_TRUE = @HAVE_SIMVOLEON_TRUE@
 HAVE_SLIDERSETS_FALSE = @HAVE_SLIDERSETS_FALSE@
 HAVE_SLIDERSETS_TRUE = @HAVE_SLIDERSETS_TRUE@
-HAVE_SMALLCHANGE_FALSE = @HAVE_SMALLCHANGE_FALSE@
-HAVE_SMALLCHANGE_TRUE = @HAVE_SMALLCHANGE_TRUE@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -202,7 +200,8 @@ BUILT_SOURCES = \
 	markerset.cpp \
 	image.cpp \
 	bigimage.cpp \
-	textureunit.cpp
+	textureunit.cpp \
+	bumpmap.cpp
 
 
 noinst_PROGRAMS = \
@@ -212,7 +211,7 @@ noinst_PROGRAMS = \
         faceset facesetindexed quadmesh trianglestripset \
         camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
-        pointset markerset image bigimage textureunit
+        pointset markerset image bigimage textureunit bumpmap
 
 
 drawstyle_SOURCES = drawstyle.cpp
@@ -252,6 +251,7 @@ markerset_SOURCES = markerset.cpp
 image_SOURCES = image.cpp
 bigimage_SOURCES = bigimage.cpp
 textureunit_SOURCES = textureunit.cpp
+bumpmap_SOURCES = bumpmap.cpp
 subdir = nodes
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
@@ -264,7 +264,8 @@ CONFIG_CLEAN_FILES = drawstyle.cpp material.cpp selection.cpp \
 	blinker.cpp texture.cpp texture3.cpp environment.cpp \
 	atmospheric.cpp shuttle.cpp complexity.cpp text2.cpp text3.cpp \
 	clipplane.cpp levelofdetail.cpp extselection.cpp pointset.cpp \
-	markerset.cpp image.cpp bigimage.cpp textureunit.cpp
+	markerset.cpp image.cpp bigimage.cpp textureunit.cpp \
+	bumpmap.cpp
 noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	selection$(EXEEXT) slideshow$(EXEEXT) sphere$(EXEEXT) \
 	spherecolor$(EXEEXT) rotation$(EXEEXT) scale$(EXEEXT) \
@@ -278,7 +279,7 @@ noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	text2$(EXEEXT) text3$(EXEEXT) clipplane$(EXEEXT) \
 	levelofdetail$(EXEEXT) extselection$(EXEEXT) pointset$(EXEEXT) \
 	markerset$(EXEEXT) image$(EXEEXT) bigimage$(EXEEXT) \
-	textureunit$(EXEEXT)
+	textureunit$(EXEEXT) bumpmap$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_atmospheric_OBJECTS = atmospheric.$(OBJEXT)
@@ -296,6 +297,11 @@ blinker_OBJECTS = $(am_blinker_OBJECTS)
 blinker_LDADD = $(LDADD)
 blinker_DEPENDENCIES =
 blinker_LDFLAGS =
+am_bumpmap_OBJECTS = bumpmap.$(OBJEXT)
+bumpmap_OBJECTS = $(am_bumpmap_OBJECTS)
+bumpmap_LDADD = $(LDADD)
+bumpmap_DEPENDENCIES =
+bumpmap_LDFLAGS =
 am_camera_OBJECTS = camera.$(OBJEXT)
 camera_OBJECTS = $(am_camera_OBJECTS)
 camera_LDADD = $(LDADD)
@@ -472,8 +478,8 @@ depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/atmospheric.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/bigimage.Po ./$(DEPDIR)/blinker.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/camera.Po ./$(DEPDIR)/clipplane.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/complexity.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/bumpmap.Po ./$(DEPDIR)/camera.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/clipplane.Po ./$(DEPDIR)/complexity.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/directionallight.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/drawstyle.Po ./$(DEPDIR)/environment.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/extselection.Po ./$(DEPDIR)/faceset.Po \
@@ -497,11 +503,11 @@ CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 DIST_SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) \
-	$(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) \
-	$(complexity_SOURCES) $(directionallight_SOURCES) \
-	$(drawstyle_SOURCES) $(environment_SOURCES) \
-	$(extselection_SOURCES) $(faceset_SOURCES) \
-	$(facesetindexed_SOURCES) $(image_SOURCES) \
+	$(blinker_SOURCES) $(bumpmap_SOURCES) $(camera_SOURCES) \
+	$(clipplane_SOURCES) $(complexity_SOURCES) \
+	$(directionallight_SOURCES) $(drawstyle_SOURCES) \
+	$(environment_SOURCES) $(extselection_SOURCES) \
+	$(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) \
 	$(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) \
 	$(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) \
 	$(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) \
@@ -512,18 +518,18 @@ DIST_SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) \
 	$(transform_SOURCES) $(translation_SOURCES) \
 	$(trianglestripset_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in atmospheric.cpp.in \
-	bigimage.cpp.in blinker.cpp.in camera.cpp.in clipplane.cpp.in \
-	complexity.cpp.in directionallight.cpp.in drawstyle.cpp.in \
-	environment.cpp.in extselection.cpp.in faceset.cpp.in \
-	facesetindexed.cpp.in image.cpp.in levelofdetail.cpp.in \
-	lights.cpp.in markerset.cpp.in material.cpp.in \
-	pointlight.cpp.in pointset.cpp.in quadmesh.cpp.in \
-	rotation.cpp.in rotor.cpp.in scale.cpp.in selection.cpp.in \
-	shuttle.cpp.in slideshow.cpp.in sphere.cpp.in \
+	bigimage.cpp.in blinker.cpp.in bumpmap.cpp.in camera.cpp.in \
+	clipplane.cpp.in complexity.cpp.in directionallight.cpp.in \
+	drawstyle.cpp.in environment.cpp.in extselection.cpp.in \
+	faceset.cpp.in facesetindexed.cpp.in image.cpp.in \
+	levelofdetail.cpp.in lights.cpp.in markerset.cpp.in \
+	material.cpp.in pointlight.cpp.in pointset.cpp.in \
+	quadmesh.cpp.in rotation.cpp.in rotor.cpp.in scale.cpp.in \
+	selection.cpp.in shuttle.cpp.in slideshow.cpp.in sphere.cpp.in \
 	spherecolor.cpp.in spotlight.cpp.in text2.cpp.in text3.cpp.in \
 	texture.cpp.in texture3.cpp.in textureunit.cpp.in \
 	transform.cpp.in translation.cpp.in trianglestripset.cpp.in
-SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) $(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(textureunit_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
+SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) $(blinker_SOURCES) $(bumpmap_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(textureunit_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -609,6 +615,8 @@ bigimage.cpp: $(top_builddir)/config.status bigimage.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 textureunit.cpp: $(top_builddir)/config.status textureunit.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+bumpmap.cpp: $(top_builddir)/config.status bumpmap.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -621,6 +629,9 @@ bigimage$(EXEEXT): $(bigimage_OBJECTS) $(bigimage_DEPENDENCIES)
 blinker$(EXEEXT): $(blinker_OBJECTS) $(blinker_DEPENDENCIES) 
 	@rm -f blinker$(EXEEXT)
 	$(CXXLINK) $(blinker_LDFLAGS) $(blinker_OBJECTS) $(blinker_LDADD) $(LIBS)
+bumpmap$(EXEEXT): $(bumpmap_OBJECTS) $(bumpmap_DEPENDENCIES) 
+	@rm -f bumpmap$(EXEEXT)
+	$(CXXLINK) $(bumpmap_LDFLAGS) $(bumpmap_OBJECTS) $(bumpmap_LDADD) $(LIBS)
 camera$(EXEEXT): $(camera_OBJECTS) $(camera_DEPENDENCIES) 
 	@rm -f camera$(EXEEXT)
 	$(CXXLINK) $(camera_LDFLAGS) $(camera_OBJECTS) $(camera_LDADD) $(LIBS)
@@ -733,6 +744,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atmospheric.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bigimage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blinker.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bumpmap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/camera.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clipplane.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/complexity.Po@am__quote@

@@ -35,7 +35,8 @@ BUILT_SOURCES = \
 	markerset.cpp \
 	image.cpp \
 	bigimage.cpp \
-	textureunit.cpp
+	textureunit.cpp \
+	bumpmap.cpp
 
 
 
@@ -46,7 +47,7 @@ noinst_PROGRAMS = \
         faceset facesetindexed quadmesh trianglestripset \
         camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
-        pointset markerset image bigimage textureunit
+        pointset markerset image bigimage textureunit bumpmap
 
 drawstyle_SOURCES = drawstyle.cpp
 material_SOURCES = material.cpp
@@ -85,3 +86,4 @@ markerset_SOURCES = markerset.cpp
 image_SOURCES = image.cpp
 bigimage_SOURCES = bigimage.cpp
 textureunit_SOURCES = textureunit.cpp
+bumpmap_SOURCES = bumpmap.cpp

@@ -42,6 +42,9 @@
 /* Define to enable use of SmallChange library */
 #undef HAVE_SMALLCHANGE_LIBRARY
 
+/* Define to enable use of the Open Inventor SoBumpMap node */
+#undef HAVE_SOBUMPMAP
+
 /* Define to enable use of Inventor feature */
 #undef HAVE_SOCOMPONENT_SETFULLSCREEN
 
