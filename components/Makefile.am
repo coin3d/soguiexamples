@@ -7,7 +7,6 @@
 ROSTER =
 #endif
 
-RENDERAREA = renderarea
 renderarea_SOURCES = \
 	renderarea.cpp \
 	computils.cpp \
@@ -23,33 +22,15 @@ overlay_SOURCES = \
 	computils.cpp \
 	computils.h
 
-if HAVE_PLANEVIEWER
-PLANEVIEWER = planeviewer
-else
-PLANEVIEWER =
-endif
-
 planeviewer_SOURCES = \
 	planeviewer.cpp \
 	computils.cpp \
 	computils.h
 
-if HAVE_WALKVIEWER
-WALKVIEWER = walkviewer
-else
-WALKVIEWER =
-endif
-
 walkviewer_SOURCES = \
 	walkviewer.cpp \
 	computils.cpp \
 	computils.h
-
-if HAVE_FLYVIEWER
-FLYVIEWER = flyviewer
-else
-FLYVIEWER =
-endif
 
 flyviewer_SOURCES = \
 	flyviewer.cpp \
@@ -132,53 +113,56 @@ BUILT_SOURCES = \
 	materiallist2.cpp \
 	grapheditor.cpp
 
-noinst_PROGRAMS = $(RENDERAREA) examinerviewer overlay \
-	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) \
+noinst_PROGRAMS = renderarea examinerviewer overlay \
+	planeviewer flyviewer walkviewer \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
 	$(MATERIALLIST) $(PRINTDIALOG)
 
 ############################################################################
 
 computils.cpp: $(srcdir)/computils.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) computils.cpp )
 
 computils.h: $(srcdir)/computils.h.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) computils.h )
 
 renderarea.cpp: $(srcdir)/renderarea.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) renderarea.cpp )
 
 examinerviewer.cpp: $(srcdir)/examinerviewer.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) examinerviewer.cpp )
 
 planeviewer.cpp: $(srcdir)/planeviewer.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) planeviewer.cpp )
 
 walkviewer.cpp: $(srcdir)/walkviewer.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) walkviewer.cpp )
 
 flyviewer.cpp: $(srcdir)/flyviewer.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) flyviewer.cpp )
+
+overlay.cpp: $(srcdir)/overlay.cpp.in
+	@( cd ..; $(MAKE) components/overlay.cpp )
 
 lightsliderset.cpp: $(srcdir)/lightsliderset.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) lightsliderset.cpp )
 
 materialsliderset.cpp: $(srcdir)/materialsliderset.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) materialsliderset.cpp )
 
 materialsliderset2.cpp: $(srcdir)/materialsliderset2.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) materialsliderset2.cpp )
 
 transformsliderset.cpp: $(srcdir)/transformsliderset.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) transformsliderset.cpp )
 
 materiallist.cpp: $(srcdir)/materiallist.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) materiallist.cpp )
 
 materiallist2.cpp: $(srcdir)/materiallist2.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) materiallist2.cpp )
 
 grapheditor.cpp: $(srcdir)/grapheditor.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd ..; $(MAKE) grapheditor.cpp )
 
 ############################################################################
