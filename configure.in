@@ -187,7 +187,7 @@ else
   sim_ac_gui_configcmd=${sim_ac_gui_toolkit}-config
   AC_PATH_PROG(soguiconfig, $sim_ac_gui_configcmd, false, $sim_ac_path)
   if $soguiconfig $alternate_option; then
-    SIM_AC_CONFIGURATION_SETTING([Configuration Setting], [$sim_ac_alternate_keyword])
+    SIM_AC_CONFIGURATION_SETTING([Configuration Setting], ['$sim_ac_alternate_keyword'])
     GUI=`$soguiconfig $alternate_option --ac-subst GUI`
     Gui=`$soguiconfig $alternate_option --ac-subst Gui`
     gui=`$soguiconfig $alternate_option --ac-subst gui`

@@ -8441,9 +8441,9 @@ fi
 
   if $soguiconfig $alternate_option; then
     if test x${sim_ac_configuration_settings+set} != xset; then
-  sim_ac_configuration_settings="Configuration Setting:$sim_ac_alternate_keyword"
+  sim_ac_configuration_settings="Configuration Setting:'$sim_ac_alternate_keyword'"
 else
-  sim_ac_configuration_settings="$sim_ac_configuration_settings|Configuration Setting:$sim_ac_alternate_keyword"
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|Configuration Setting:'$sim_ac_alternate_keyword'"
 fi
 
     GUI=`$soguiconfig $alternate_option --ac-subst GUI`
