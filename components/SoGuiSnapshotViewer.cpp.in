@@ -21,6 +21,7 @@
 #include <SoGuiSnapshotViewer.h>
 
 #define INFO_TIME 5
+#define STATUS_LINE 8
 
 // *************************************************************************
 
@@ -35,6 +36,7 @@ public:
   SbBool antialiasing;
   SbBool transparency;
   SbBool autocropping;
+  int cropborder;
 
   const char * defaultfilename;
   SbVec2s viewport;
@@ -56,6 +58,7 @@ SoGuiSnapshotViewerP::SoGuiSnapshotViewerP(So@Gui@SnapshotViewer * viewer)
   this->antialiasing = TRUE;
   this->transparency = TRUE;
   this->autocropping = FALSE;
+  this->cropborder = 0;
   this->defaultfilename = strdup("snapshot.png");
   this->viewport = SbVec2s(0, 0);
   this->realroot = NULL;
@@ -108,7 +111,7 @@ SoGuiSnapshotViewerP::hideCB(void * userdata, SoSensor * sensor)
 {
   SoGuiSnapshotViewerP * pimpl = (SoGuiSnapshotViewerP *) userdata;
   pimpl->inforoot->whichChild.setValue(SO_SWITCH_NONE);
-  pimpl->infotext->string.set1Value(7, "");
+  pimpl->infotext->string.set1Value(STATUS_LINE, "");
   pimpl->api->scheduleRedraw();
   if ( sensor->isScheduled() ) sensor->unschedule();
 }
@@ -169,6 +172,19 @@ So@Gui@SnapshotViewer::isAutoCroppingEnabled(void) const
 }
 
 void
+So@Gui@SnapshotViewer::setCropBorderSize(int size)
+{
+  if ( size < 0 ) size = 0;
+  THIS->cropborder = size;
+}
+
+int
+So@Gui@SnapshotViewer::getCropBorderSize(void) const
+{
+  return THIS->cropborder;
+}
+
+void
 So@Gui@SnapshotViewer::setDefaultSnapshotFilename(const char * filename)
 {
   if ( THIS->defaultfilename ) {
@@ -191,16 +207,18 @@ So@Gui@SnapshotViewer::showInfo(float seconds)
   SbString string;
   string.sprintf("[i] - display info, [s] - save snapshot");
   THIS->infotext->string.set1Value(1, string);
-  string.sprintf("[a]ntialiasing : %s", this->isAntialiasingEnabled() ? "on" : "off");
+  string.sprintf("[a]ntialiasing    : %s", this->isAntialiasingEnabled() ? "on" : "off");
   THIS->infotext->string.set1Value(2, string);
-  string.sprintf("[t]ransparency : %s", this->isTransparencyEnabled() ? "on" : "off");
+  string.sprintf("[t]ransparency    : %s", this->isTransparencyEnabled() ? "on" : "off");
   THIS->infotext->string.set1Value(3, string);
-  string.sprintf("auto[c]ropping : %s", this->isAutoCroppingEnabled() ? "on (unsupported)" : "off");
+  string.sprintf("auto[c]ropping    : %s", this->isAutoCroppingEnabled() ? "on (unsupported)" : "off");
   THIS->infotext->string.set1Value(4, string);
-  string.sprintf("viewport size  : %dx%d", THIS->viewport[0], THIS->viewport[1]);
+  string.sprintf("crop border [b/B] : %d pixels", this->getCropBorderSize());
   THIS->infotext->string.set1Value(5, string);
-  string.sprintf("snapshot file  : %s", this->getDefaultSnapshotFilename());
+  string.sprintf("viewport size     : %dx%d", THIS->viewport[0], THIS->viewport[1]);
   THIS->infotext->string.set1Value(6, string);
+  string.sprintf("snapshot filename : %s", this->getDefaultSnapshotFilename());
+  THIS->infotext->string.set1Value(7, string);
   
   if ( THIS->alarm->isScheduled() ) THIS->alarm->unschedule();
   THIS->alarm->setTime(SbTime::getTimeOfDay() + seconds);
@@ -214,7 +232,7 @@ void
 So@Gui@SnapshotViewer::hideInfo(void)
 {
   THIS->inforoot->whichChild.setValue(SO_SWITCH_NONE);
-  THIS->infotext->string.set1Value(7, "");
+  THIS->infotext->string.set1Value(STATUS_LINE, "");
   this->scheduleRedraw();
   if ( THIS->alarm->isScheduled() ) THIS->alarm->unschedule();
 }
@@ -272,6 +290,10 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
 	for ( int c = 0; loop && (c < components); c++ )
 	  if ( buffer[(bottom*components*THIS->viewport[0])+(i*components)+c] != bg[c] )
 	    loop = FALSE;
+    left -= THIS->cropborder;
+    right += THIS->cropborder;
+    top -= THIS->cropborder;
+    bottom += THIS->cropborder;
     SoDebugError::postInfo("So@Gui@SnapshotViewer::createSnapshot",
                            "Crop rectangle: (%d, %d) to (%d, %d)\n", left, top, right, bottom);
     // FIXME: support autocropping
@@ -289,9 +311,9 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
   }
   if ( !renderer->writeToFile(filename, format) ) {
     SoDebugError::post(":So@Gui@SnapshotViewer::createSnapshot", "error writing snapshot with format %s\n", format);
-    THIS->infotext->string.set1Value(7, "SAVE ERROR");
+    THIS->infotext->string.set1Value(STATUS_LINE, "SAVE ERROR");
   } else {
-    THIS->infotext->string.set1Value(7, "SAVE OK");
+    THIS->infotext->string.set1Value(STATUS_LINE, "SAVE OK");
   }
   delete renderer;
   this->showInfo(INFO_TIME);
@@ -347,6 +369,16 @@ So@Gui@SnapshotViewer::processSoEvent(const SoEvent * const event)
         this->showInfo(INFO_TIME);
       }
       return TRUE;
+    case SoKeyboardEvent::B: // 'b' for border
+      if ( kbevent->getState() == SoButtonEvent::DOWN ) {
+        if ( !kbevent->wasShiftDown() ) {
+	  this->setCropBorderSize(this->getCropBorderSize() + 1);
+        } else {
+	  this->setCropBorderSize(this->getCropBorderSize() - 1);
+        }
+        this->showInfo(INFO_TIME);
+      }
+      return TRUE;
     case SoKeyboardEvent::I: // 'i' for info
       if ( kbevent->getState() == SoButtonEvent::DOWN )
         this->showInfo(10);
@@ -362,7 +394,7 @@ So@Gui@SnapshotViewer::processSoEvent(const SoEvent * const event)
       break;
     }
   }
-  So@Gui@ExaminerViewer::processSoEvent(event);
+  return So@Gui@ExaminerViewer::processSoEvent(event);
 }
 
 void
