@@ -308,7 +308,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS sim_ac_mks_make BUILD_WITH_MSVC BUILD_WITH_MSVC_TRUE BUILD_WITH_MSVC_FALSE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT RANLIB ac_ct_RANLIB DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd HAVE_SMALLCHANGE_TRUE HAVE_SMALLCHANGE_FALSE sim_ac_qt_cygpath MOC UIC sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE sim_ac_simage_configcmd HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE soguiexamples_src_dir soguiexamples_build_dir LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS sim_ac_mks_make BUILD_WITH_MSVC BUILD_WITH_MSVC_TRUE BUILD_WITH_MSVC_FALSE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT RANLIB ac_ct_RANLIB DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd HAVE_SMALLCHANGE_TRUE HAVE_SMALLCHANGE_FALSE sim_ac_coinscenery_configcmd HAVE_COINSCENERY_TRUE HAVE_COINSCENERY_FALSE sim_ac_qt_cygpath MOC UIC sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE sim_ac_simage_configcmd HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE soguiexamples_src_dir soguiexamples_build_dir LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -903,6 +903,8 @@ Optional Packages:
                           select GUI toolkit to use (default=SoXt)
   --with-smallchange      enable use of SmallChange [default=no]
   --with-smallchange=DIR  give prefix location of SmallChange
+  --with-coinscenery      enable use of coinscenery [default=no]
+  --with-coinscenery=DIR  give prefix location of coinscenery
   --with-qt=true|false|DIR
                           specify if Qt should be used, and optionally the
                           location of the Qt library default=true
@@ -10660,6 +10662,239 @@ fi
 
 
 # **************************************************************************
+# Use libcoinscenery if available.
+
+sim_ac_coinscenery_desired=false
+
+
+
+
+# official variables
+sim_ac_coinscenery_avail=false
+sim_ac_coinscenery_cppflags=
+sim_ac_coinscenery_cflags=
+sim_ac_coinscenery_cxxflags=
+sim_ac_coinscenery_ldflags=
+sim_ac_coinscenery_libs=
+sim_ac_coinscenery_datadir=
+sim_ac_coinscenery_includedir=
+sim_ac_coinscenery_version=
+
+# internal variables
+: ${sim_ac_coinscenery_desired=true}
+sim_ac_coinscenery_extrapath=
+
+
+# Check whether --with-coinscenery or --without-coinscenery was given.
+if test "${with_coinscenery+set}" = set; then
+  withval="$with_coinscenery"
+   case $withval in
+    no)  sim_ac_coinscenery_desired=false ;;
+    yes) sim_ac_coinscenery_desired=true ;;
+    *)   sim_ac_coinscenery_desired=false
+         sim_ac_coinscenery_extrapath=$withval ;;
+    esac
+fi;
+
+case $build in
+*-mks ) sim_ac_pathsep=";" ;;
+* )     sim_ac_pathsep="${PATH_SEPARATOR}" ;;
+esac
+
+if $sim_ac_coinscenery_desired; then
+  sim_ac_path=$PATH
+  test -z "$sim_ac_coinscenery_extrapath" || ## search in --with-coinscenery path
+    sim_ac_path="$sim_ac_coinscenery_extrapath/bin${sim_ac_pathsep}$sim_ac_path"
+  test x"$prefix" = xNONE ||          ## search in --prefix path
+    sim_ac_path="$sim_ac_path${sim_ac_pathsep}$prefix/bin"
+
+  # Extract the first word of "coinscenery-config", so it can be a program name with args.
+set dummy coinscenery-config; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_sim_ac_coinscenery_configcmd+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $sim_ac_coinscenery_configcmd in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_sim_ac_coinscenery_configcmd="$sim_ac_coinscenery_configcmd" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $sim_ac_path
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_sim_ac_coinscenery_configcmd="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_sim_ac_coinscenery_configcmd" && ac_cv_path_sim_ac_coinscenery_configcmd="false"
+  ;;
+esac
+fi
+sim_ac_coinscenery_configcmd=$ac_cv_path_sim_ac_coinscenery_configcmd
+
+if test -n "$sim_ac_coinscenery_configcmd"; then
+  echo "$as_me:$LINENO: result: $sim_ac_coinscenery_configcmd" >&5
+echo "${ECHO_T}$sim_ac_coinscenery_configcmd" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+
+  if ! test "X$sim_ac_coinscenery_configcmd" = "Xfalse"; then
+    test -n "$CONFIG" &&
+      $sim_ac_coinscenery_configcmd --alternate=$CONFIG >/dev/null 2>/dev/null &&
+      sim_ac_coinscenery_configcmd="$sim_ac_coinscenery_configcmd --alternate=$CONFIG"
+  fi
+
+  if $sim_ac_coinscenery_configcmd; then
+    sim_ac_coinscenery_version=`$sim_ac_coinscenery_configcmd --version`
+    sim_ac_coinscenery_cppflags=`$sim_ac_coinscenery_configcmd --cppflags`
+    sim_ac_coinscenery_cflags=`$sim_ac_coinscenery_configcmd --cflags 2>/dev/null`
+    sim_ac_coinscenery_cxxflags=`$sim_ac_coinscenery_configcmd --cxxflags`
+    sim_ac_coinscenery_ldflags=`$sim_ac_coinscenery_configcmd --ldflags`
+    sim_ac_coinscenery_libs=`$sim_ac_coinscenery_configcmd --libs`
+    sim_ac_coinscenery_datadir=`$sim_ac_coinscenery_configcmd --datadir`
+    # Hide stderr on the following, as ``--includedir'', ``--msvcrt''
+    # and ``--cflags'' options were added late to coinscenery-config.
+    sim_ac_coinscenery_includedir=`$sim_ac_coinscenery_configcmd --includedir 2>/dev/null`
+    sim_ac_coinscenery_msvcrt=`$sim_ac_coinscenery_configcmd --msvcrt 2>/dev/null`
+    sim_ac_coinscenery_cflags=`$sim_ac_coinscenery_configcmd --cflags 2>/dev/null`
+    echo "$as_me:$LINENO: checking whether libcoinscenery is available" >&5
+echo $ECHO_N "checking whether libcoinscenery is available... $ECHO_C" >&6
+if test "${sim_cv_coinscenery_avail+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  sim_ac_save_cppflags=$CPPFLAGS
+      sim_ac_save_ldflags=$LDFLAGS
+      sim_ac_save_libs=$LIBS
+      CPPFLAGS="$CPPFLAGS $sim_ac_coinscenery_cppflags"
+      LDFLAGS="$LDFLAGS $sim_ac_coinscenery_ldflags"
+      LIBS="$sim_ac_coinscenery_libs $LIBS"
+      ac_ext=cc
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <sim/coinscenery/SmScenery.h>
+int
+main ()
+{
+SmScenery::initClasses();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  sim_cv_coinscenery_avail=true
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+sim_cv_coinscenery_avail=false
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+      ac_ext=cc
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      CPPFLAGS=$sim_ac_save_cppflags
+      LDFLAGS=$sim_ac_save_ldflags
+      LIBS=$sim_ac_save_libs
+
+fi
+echo "$as_me:$LINENO: result: $sim_cv_coinscenery_avail" >&5
+echo "${ECHO_T}$sim_cv_coinscenery_avail" >&6
+    sim_ac_coinscenery_avail=$sim_cv_coinscenery_avail
+  else
+    locations=`IFS="${sim_ac_pathsep}"; for p in $sim_ac_path; do echo " -> $p/coinscenery-config"; done`
+    { echo "$as_me:$LINENO: WARNING: cannot find 'coinscenery-config' at any of these locations:
+$locations" >&5
+echo "$as_me: WARNING: cannot find 'coinscenery-config' at any of these locations:
+$locations" >&2;}
+  fi
+fi
+
+if $sim_ac_coinscenery_avail; then
+
+  CPPFLAGS="$CPPFLAGS `$sim_ac_coinscenery_configcmd $alternate_option --cppflags`"
+  CXXFLAGS="$CXXFLAGS `$sim_ac_coinscenery_configcmd $alternate_option --cxxflags`"
+  CFLAGS="$CFLAGS `$sim_ac_coinscenery_configcmd $alternate_option --cflags`"
+  LDFLAGS="$LDFLAGS `$sim_ac_coinscenery_configcmd $alternate_option --ldflags`"
+  LIBS="`$sim_ac_coinscenery_configcmd $alternate_option --libs` $LIBS"
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_COINSCENERY_LIBRARY 1
+_ACEOF
+
+
+if test x"${sim_ac_configuration_settings+set}" = x"set"; then
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|libcoinscenery:is being used"
+else
+  sim_ac_configuration_settings="libcoinscenery:is being used"
+fi
+
+
+else
+
+  if $sim_ac_coinscenery_desired; then
+    { { echo "$as_me:$LINENO: error: Couldn't link with libcoinscenery." >&5
+echo "$as_me: error: Couldn't link with libcoinscenery." >&2;}
+   { (exit 1); exit 1; }; }
+  else
+
+if test x"${sim_ac_configuration_settings+set}" = x"set"; then
+  sim_ac_configuration_settings="$sim_ac_configuration_settings|libcoinscenery:not used (enable with --with-coinscenery)"
+else
+  sim_ac_configuration_settings="libcoinscenery:not used (enable with --with-coinscenery)"
+fi
+
+  fi
+
+fi
+
+
+
+
+if $sim_ac_coinscenery_avail; then
+  HAVE_COINSCENERY_TRUE=
+  HAVE_COINSCENERY_FALSE='#'
+else
+  HAVE_COINSCENERY_TRUE='#'
+  HAVE_COINSCENERY_FALSE=
+fi
+
+
+# **************************************************************************
 # If we're using SoQt, check to see if SIM Voleon is also available.
 # Those are the two dependencies of the examples under the
 # volumerendering/ directory.
@@ -11875,6 +12110,13 @@ echo "$as_me: error: conditional \"HAVE_SMALLCHANGE\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${HAVE_COINSCENERY_TRUE}" && test -z "${HAVE_COINSCENERY_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"HAVE_COINSCENERY\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"HAVE_COINSCENERY\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${HAVE_SIMVOLEON_TRUE}" && test -z "${HAVE_SIMVOLEON_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"HAVE_SIMVOLEON\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -12642,6 +12884,9 @@ s,@COMPONENTHEADER@,$COMPONENTHEADER,;t t
 s,@sim_ac_smallchange_configcmd@,$sim_ac_smallchange_configcmd,;t t
 s,@HAVE_SMALLCHANGE_TRUE@,$HAVE_SMALLCHANGE_TRUE,;t t
 s,@HAVE_SMALLCHANGE_FALSE@,$HAVE_SMALLCHANGE_FALSE,;t t
+s,@sim_ac_coinscenery_configcmd@,$sim_ac_coinscenery_configcmd,;t t
+s,@HAVE_COINSCENERY_TRUE@,$HAVE_COINSCENERY_TRUE,;t t
+s,@HAVE_COINSCENERY_FALSE@,$HAVE_COINSCENERY_FALSE,;t t
 s,@sim_ac_qt_cygpath@,$sim_ac_qt_cygpath,;t t
 s,@MOC@,$MOC,;t t
 s,@UIC@,$UIC,;t t
