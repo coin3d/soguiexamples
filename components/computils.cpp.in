@@ -44,6 +44,33 @@
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
+#ifdef HAVE_SIMVOLEON_LIBRARY
+#include <VolumeViz/nodes/SoVolumeRendering.h>
+#endif // HAVE_SIMVOLEON_LIBRARY
+
+#ifdef HAVE_SMALLCHANGE_LIBRARY
+#include <SmallChange/misc/Init.h>
+#endif // HAVE_SMALLCHANGE_LIBRARY
+
+// *************************************************************************
+
+void
+init_extra_libraries(void)
+{
+#ifdef HAVE_SMALLCHANGE_LIBRARY
+  // It is useful to include and init the SmallChange library, as we
+  // can then automatically load iv-files which includes extension
+  // nodes, engines, nodekits, etc from SmallChange.
+  smallchange_init();
+#endif // HAVE_SMALLCHANGE_LIBRARY
+
+#ifdef HAVE_SIMVOLEON_LIBRARY
+  // Inits SimVoleon, if available, for the same reason as for
+  // SmallChange above.
+  SoVolumeRendering::init();
+#endif // HAVE_SIMVOLEON_LIBRARY
+}
+
 // *************************************************************************
 
 // Returns random value between 0.0f and 1.0f.
@@ -67,7 +94,7 @@ inline Type cu_min( const Type A, const Type B ) {
 
 // *************************************************************************
 
-SoNode *
+static SoNode *
 shape_to_scene_graph(
   SoShape * shape )
 {

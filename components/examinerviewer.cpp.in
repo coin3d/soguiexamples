@@ -28,10 +28,6 @@
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 
-#ifdef HAVE_SMALLCHANGE_LIBRARY
-#include <SmallChange/misc/Init.h>
-#endif // HAVE_SMALLCHANGE_LIBRARY
-
 #include "computils.h"
 
 // *************************************************************************
@@ -41,12 +37,7 @@ main(int argc, char ** argv)
 {
   @WIDGET@ window = So@Gui@::init(argv[0]);
 
-#ifdef HAVE_SMALLCHANGE_LIBRARY
-  // It is useful to include and init the SmallChange library, as we
-  // can then automatically load iv-files which includes extension
-  // nodes, engines, nodekits, etc from SmallChange.
-  smallchange_init();
-#endif // HAVE_SMALLCHANGE_LIBRARY
+  init_extra_libraries();
 
   SoNode * root = get_scene_graph(argc, argv);
   if (!root) { return 1; }

@@ -26,6 +26,8 @@
 // *************************************************************************
 class So@Gui@Viewer;
 
+void init_extra_libraries(void);
+
 int verify_usage( int argc, char ** argv );
 SoNode * get_scene_graph( int argc, char ** argv );
 void config_viewer( So@Gui@Viewer * viewer, int argc, char ** argv );

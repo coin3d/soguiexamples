@@ -32,6 +32,8 @@ main(int argc, char ** argv)
 {
   @WIDGET@ w = So@Gui@::init(argv[0]);
 
+  init_extra_libraries();
+
   SoNode * root = get_scene_graph( argc, argv );
   if ( ! root ) return -1;
 

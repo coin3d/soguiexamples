@@ -22,7 +22,8 @@
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
-#include <Inventor/SoInput.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoScale.h>
 #include <Inventor/nodes/SoText3.h>
 
 // *************************************************************************
@@ -32,41 +33,33 @@ main(int argc, char ** argv)
 {
   @WIDGET@ window = So@Gui@::init(argv[0]);
 
-  SoNode * root;
-  SbString err("");
-  if (argc == 2) {
-    SoInput in;
-    SbBool ok = in.openFile(argv[1]);
-    if (ok) {
-      ok = SoDB::read(&in, root);
-      if (!ok) { err.sprintf("Couldn't read file '%s'", argv[1]); }
-    }
-    else {
-      err.sprintf("Couldn't open file '%s'", argv[1]);
-    }
-  }
-  else {
-    err.sprintf("Usage: %s [modelfile.iv]",
-                (argc > 0) ?
-                (argv[0] ? argv[0] : "examinerviewer") :
-                "examinerviewer");
-  }
+  SoSeparator * root = new SoSeparator;
+  root->ref();
 
-  if (err.getLength() > 0) {
-    SoText3 * t3 = new SoText3;
-    t3->parts = SoText3::ALL;
-    t3->string.setValue(err);
-    root = t3;
-  }
+  float scalex = 1.0/10;
+//   float scaley = 1.0/4293;
+//   float scaley = 1.0/429;
+  float scaley = 1.0/42;
+  SoScale * scale = new SoScale;
+  scale->scaleFactor.setValue(scalex, scaley,1.0);
+  scale->scaleFactor.setIgnored(TRUE);
+
+  root->addChild(scale);
+  
+  SoText3 * t3 = new SoText3;
+  t3->parts = SoText3::ALL;
+  t3->string.setValue("tjo-bing");
+  root->addChild(t3);
 
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
-
   viewer->setSceneGraph(root);
+
   viewer->show();
   So@Gui@::show(window);
-
   So@Gui@::mainLoop();
 
   delete viewer;
+  root->unref();
+
   return 0;
 }

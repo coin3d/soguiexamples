@@ -40,6 +40,8 @@ main(
   if ( window == NULL )
     return -1;
 
+  init_extra_libraries();
+
   SoNode * userroot = get_scene_graph( argc, argv );
   if ( ! userroot )
     return -1;
