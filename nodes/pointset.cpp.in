@@ -21,8 +21,10 @@
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/events/SoKeyboardEvent.h>
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoDrawStyle.h>
+#include <Inventor/nodes/SoEventCallback.h>
 #include <Inventor/nodes/SoPointSet.h>
 #include <Inventor/nodes/SoSeparator.h>
 
@@ -55,15 +57,41 @@ setup_random_coordinates(float xyz[][3], int number, SbBox3f container)
 
 // *************************************************************************
 
+// React to "arrow up" or "arrow down" keyboard events by changing the
+// pointsize setting.
+static void
+eventcb(void * userdata, SoEventCallback * node)
+{
+  const SoEvent * event = node->getEvent();
+  SoDrawStyle * drawstyle = (SoDrawStyle *)userdata;
+
+  float oldpointsize = drawstyle->pointSize.getValue();
+  float newpointsize = oldpointsize;
+  if (SO_KEY_PRESS_EVENT(event, UP_ARROW)) {
+    newpointsize += 1;
+    node->setHandled();
+  }
+  else if (SO_KEY_PRESS_EVENT(event, DOWN_ARROW)) {
+    newpointsize -= 1;
+    node->setHandled();
+  }
+
+  if (newpointsize != oldpointsize) {
+    drawstyle->pointSize = newpointsize;
+    (void)fprintf(stdout, "pointsize: %.1f -> %.1f\n",
+                  oldpointsize, newpointsize);
+  }
+}
+
+// *************************************************************************
+
 int
-main(
-  int argc,
-  char ** argv )
+main(int argc, char ** argv)
 {
   const int NUMPOINTS = 5000;
   float xyz[NUMPOINTS][3];
 
-  @WIDGET@ window = So@Gui@::init( argv[0] );
+  @WIDGET@ window = So@Gui@::init(argv[0]);
 
   SoSeparator * root = new SoSeparator;
   root->ref();
@@ -81,16 +109,19 @@ main(
   SoPointSet * pointset = new SoPointSet;
   root->addChild(pointset);
 
-  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
-  viewer->setSceneGraph( root );
+  SoEventCallback * cb = new SoEventCallback;
+  cb->addEventCallback(SoKeyboardEvent::getClassTypeId(), eventcb, drawstyle);
+  root->insertChild(cb, 0);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setViewing(FALSE);
+  viewer->setSceneGraph(root);
   viewer->show();
-  So@Gui@::show( window );
+  So@Gui@::show(window);
 
   So@Gui@::mainLoop();
 
   root->unref();
   delete viewer;
   return 0;
-} // main()
-
-// *************************************************************************
+}
