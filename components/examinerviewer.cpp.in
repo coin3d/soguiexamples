@@ -53,6 +53,11 @@ main(int argc, char ** argv)
   So@Gui@::mainLoop();
 
   delete viewer;
+
+#ifdef __COIN__
+  SoDB::cleanup();
+#endif // __COIN__
+
   return 0;
 }
 
