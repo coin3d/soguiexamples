@@ -431,7 +431,7 @@ static const char COIN_LOGO[] =
 "		0.04 2.694 -0.4 ]\n"
 "  }\n"
 "  IndexedFaceSet {\n"
-"	coordIndex [ 0, 0, 1, -1, 0, 1, 2, -1,\n"
+"	coordIndex [ 0, 1, 2, -1,\n"
 "		0, 2, 3, -1, 3, 2, 4, -1,\n"
 "		3, 4, 5, -1, 5, 4, 6, -1,\n"
 "		5, 6, 7, -1, 7, 6, 8, -1,\n"
