@@ -21,6 +21,7 @@
 
 #include <stdlib.h> // exit()
 #include <assert.h>
+#include <string.h> // memset()
 
 #include <Inventor/SbBasic.h>
 #include <Inventor/nodes/SoSeparator.h>

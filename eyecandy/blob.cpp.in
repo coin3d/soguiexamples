@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h> // exit()
 #include <math.h>
+#include <string.h> // memset()
 
 #include <Inventor/SbLinear.h>
 #include <Inventor/SoDB.h>

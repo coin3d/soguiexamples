@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <float.h>
 #include <stdlib.h> // exit()
+#include <string.h> // memset()
 
 #include <Inventor/SbBasic.h>
 #include <Inventor/actions/SoGLRenderAction.h>
