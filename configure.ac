@@ -400,7 +400,8 @@ AC_SUBST([soguiexamples_build_dir])
 
 if $sim_ac_make_dspex; then
   soguiexamples_subst="\\\$\$\\(COIN3DDIR\\)=`cygpath -u $COIN3DDIR`"
-  SIM_AC_MSVC_DSPEX_SETUP([So${Gui}Examples], [$soguiexamples_src_dir], 
+  SIM_AC_MSVC_DSPEX_SETUP([So${Gui}Examples], [$soguiexamples_src_dir],
+                          [$soguiexamples_build_dir],
                           [vc6], [$soguiexamples_subst], [-DHAVE_CONFIG_H])
   SIM_AC_MSVC_DSPEX_PREPARE([$soguiexamples_src_dir], 
                             [$soguiexamples_build_dir])
