@@ -53,4 +53,8 @@
 
     20021220 mortene.
 
+    20021223 larsa update: Automake supports this through the
+    CLEAN_FILES (or CLEANFILES) variable.  It's used in some places,
+    but probably not very consistently.
+
 =====================================================================
