@@ -15,7 +15,7 @@ endif
 noinst_PROGRAMS = \
 	readvol changingdataset examine orthoslicer \
 	raypick simple8bit $(SIMAGE_DEPENDENTS) \
-	opaquechair
+	opaquechair voleonexplore
 
 ############################################################################
 # Executables using the Qt extensions in the "Cute/" subdir.
@@ -28,6 +28,7 @@ endif
 
 readvol_LDADD = $(CUTEARCHIVE)
 orthoslicer_LDADD = $(CUTEARCHIVE)
+voleonexplore_LDADD = $(CUTEARCHIVE)
 
 ############################################################################
 # Common sources.
@@ -72,6 +73,8 @@ raypick_SOURCES = raypick.cpp utility.cpp utility.h
 simple8bit_SOURCES = simple8bit.cpp utility.cpp utility.h
 
 opaquechair_SOURCES = chair.cpp OpaqueChair.cpp OpaqueChair.h OpaqueChair-iv.h
+
+voleonexplore_SOURCES = voleonexplore.cpp
 
 ############################################################################
 
@@ -118,6 +121,7 @@ moc_OrthoSliceHandler.cpp: $(srcdir)/OrthoSliceHandler.h
 ############################################################################
 
 BUILT_SOURCES = \
+	voleonexplore.cpp \
 	readvol.cpp \
 	changingdataset.cpp \
 	\

@@ -184,7 +184,7 @@ SUBDIRS = Cute .
 noinst_PROGRAMS = \
 	readvol changingdataset examine orthoslicer \
 	raypick simple8bit $(SIMAGE_DEPENDENTS) \
-	opaquechair
+	opaquechair voleonexplore
 
 
 
@@ -195,6 +195,7 @@ noinst_PROGRAMS = \
 
 readvol_LDADD = $(CUTEARCHIVE)
 orthoslicer_LDADD = $(CUTEARCHIVE)
+voleonexplore_LDADD = $(CUTEARCHIVE)
 
 
 ############################################################################
@@ -244,9 +245,12 @@ simple8bit_SOURCES = simple8bit.cpp utility.cpp utility.h
 
 opaquechair_SOURCES = chair.cpp OpaqueChair.cpp OpaqueChair.h OpaqueChair-iv.h
 
+voleonexplore_SOURCES = voleonexplore.cpp
+
 
 ############################################################################
 BUILT_SOURCES = \
+	voleonexplore.cpp \
 	readvol.cpp \
 	changingdataset.cpp \
 	\
@@ -268,11 +272,13 @@ CONFIG_CLEAN_FILES = readvol.cpp changingdataset.cpp examine.cpp \
 @HAVE_SIMAGE_TRUE@noinst_PROGRAMS = readvol$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@	changingdataset$(EXEEXT) examine$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@	orthoslicer$(EXEEXT) raypick$(EXEEXT) \
-@HAVE_SIMAGE_TRUE@	simple8bit$(EXEEXT) opaquechair$(EXEEXT)
+@HAVE_SIMAGE_TRUE@	simple8bit$(EXEEXT) opaquechair$(EXEEXT) \
+@HAVE_SIMAGE_TRUE@	voleonexplore$(EXEEXT)
 @HAVE_SIMAGE_FALSE@noinst_PROGRAMS = readvol$(EXEEXT) \
 @HAVE_SIMAGE_FALSE@	changingdataset$(EXEEXT) examine$(EXEEXT) \
 @HAVE_SIMAGE_FALSE@	orthoslicer$(EXEEXT) raypick$(EXEEXT) \
-@HAVE_SIMAGE_FALSE@	simple8bit$(EXEEXT) opaquechair$(EXEEXT)
+@HAVE_SIMAGE_FALSE@	simple8bit$(EXEEXT) opaquechair$(EXEEXT) \
+@HAVE_SIMAGE_FALSE@	voleonexplore$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_changingdataset_OBJECTS = changingdataset.$(OBJEXT)
@@ -321,6 +327,11 @@ simple8bit_OBJECTS = $(am_simple8bit_OBJECTS)
 simple8bit_LDADD = $(LDADD)
 simple8bit_DEPENDENCIES =
 simple8bit_LDFLAGS =
+am_voleonexplore_OBJECTS = voleonexplore.$(OBJEXT)
+voleonexplore_OBJECTS = $(am_voleonexplore_OBJECTS)
+@BUILD_WITH_MSVC_TRUE@voleonexplore_DEPENDENCIES = Cute/Cute.lst
+@BUILD_WITH_MSVC_FALSE@voleonexplore_DEPENDENCIES = Cute/Cute.a
+voleonexplore_LDFLAGS =
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
@@ -342,7 +353,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/moc_VolumeRenderHandler.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/orthoslicer.Po ./$(DEPDIR)/raypick.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/readvol.Po ./$(DEPDIR)/simple8bit.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/utility.Po
+@AMDEP_TRUE@	./$(DEPDIR)/utility.Po ./$(DEPDIR)/voleonexplore.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -354,7 +365,8 @@ CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) \
 	$(opaquechair_SOURCES) $(orthoslicer_SOURCES) \
-	$(raypick_SOURCES) $(readvol_SOURCES) $(simple8bit_SOURCES)
+	$(raypick_SOURCES) $(readvol_SOURCES) $(simple8bit_SOURCES) \
+	$(voleonexplore_SOURCES)
 
 RECURSIVE_TARGETS = info-recursive dvi-recursive pdf-recursive \
 	ps-recursive install-info-recursive uninstall-info-recursive \
@@ -365,7 +377,7 @@ DIST_COMMON = Makefile.am Makefile.in changingdataset.cpp.in \
 	examine.cpp.in orthoslicer.cpp.in raypick.cpp.in readvol.cpp.in \
 	rgbload.cpp.in simple8bit.cpp.in
 DIST_SUBDIRS = $(SUBDIRS)
-SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) $(opaquechair_SOURCES) $(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) $(simple8bit_SOURCES)
+SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) $(opaquechair_SOURCES) $(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) $(simple8bit_SOURCES) $(voleonexplore_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
@@ -415,6 +427,9 @@ readvol$(EXEEXT): $(readvol_OBJECTS) $(readvol_DEPENDENCIES)
 simple8bit$(EXEEXT): $(simple8bit_OBJECTS) $(simple8bit_DEPENDENCIES) 
 	@rm -f simple8bit$(EXEEXT)
 	$(CXXLINK) $(simple8bit_LDFLAGS) $(simple8bit_OBJECTS) $(simple8bit_LDADD) $(LIBS)
+voleonexplore$(EXEEXT): $(voleonexplore_OBJECTS) $(voleonexplore_DEPENDENCIES) 
+	@rm -f voleonexplore$(EXEEXT)
+	$(CXXLINK) $(voleonexplore_LDFLAGS) $(voleonexplore_OBJECTS) $(voleonexplore_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -443,6 +458,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readvol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simple8bit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utility.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/voleonexplore.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)
