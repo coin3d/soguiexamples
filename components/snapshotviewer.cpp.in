@@ -41,6 +41,7 @@ main(int argc, char ** argv)
   viewer->show();
 
   viewer->setSceneGraph(root);
+  viewer->setTitle("SnapshotViewer");
 
   So@Gui@::mainLoop();
 
