@@ -1,8 +1,595 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2003 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+// this example requires the SoBumpMap node
+#if !defined(HAVE_SOBUMPMAP) || !defined(HAVE_SOBUMPMAPTRANSFORM)
+
+#include <Inventor/nodes/SoText3.h>
 #include <stdio.h>
 
-int main(int argc, char ** argv)
+int
+main(int argc, char ** argv)
 {
-  fprintf(stderr,"Coming soon\n");
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  const char * info[] = {
+    "This example depends on a Coin specifc",
+    "extensions. This is just an informational",
+    "message and not the real functionality",
+    "of the example."
+  };
+
+  SoText3 * msg = new SoText3;
+  msg->justification = SoText3::CENTER;
+  msg->string.setValues(0, sizeof(info) / sizeof(const char *), info);
+  root->addChild(msg);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->show();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+
+  return 1;
+}
+
+#else // ! HAVE_SOBUMPMAP || !HAVE_SOBUMPMAPTRANSFORM
+
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoTextureCoordinate2.h>
+#include <Inventor/nodes/SoNormal.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoQuadMesh.h>
+#include <Inventor/nodes/SoTextureCoordinateEnvironment.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/elements/SoGLCacheContextElement.h>
+#include <Inventor/nodes/SoRotor.h>
+#include <Inventor/nodes/SoBumpMap.h>
+#include <Inventor/nodes/SoBumpMapTransform.h>
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h> // exit()
+#include <time.h>
+
+typedef struct
+{
+  unsigned char r,g,b,a;
+} myrgb;
+
+// yeah, statics :)
+static int * plasma;
+static unsigned int palette[256];
+static myrgb colors[256];
+static unsigned short rpos1, rpos2, rpos3, rpos4;
+static unsigned short gpos1, gpos2, gpos3, gpos4;
+static unsigned short bpos1, bpos2, bpos3, bpos4;
+static short adders[18];
+static SoQuadMesh * qm;
+static SoNormal * n;
+static SoCoordinate3 * c;
+static SoTextureCoordinate2 * tc;
+static SoBumpMap * bumpmap;
+static SoRotor * rotor;
+static int nsides = 66;
+static int nrings = 66;
+
+static void
+gentorus(double r, double R, int nsides, int rings,
+         SoCoordinate3 * c, SoNormal * n, SoQuadMesh * qm,
+         SoTextureCoordinate2 * tc)
+{
+  double theta, phi, theta1;
+  double costheta, sintheta;
+  double ringdelta, sidedelta;
+  double cosPhi, sinPhi, dist;
+
+  qm->verticesPerColumn = rings+1;
+  qm->verticesPerRow = nsides+1;
+
+  tc->point.setNum((rings+1)*(nsides+1));
+  c->point.setNum((rings+1)*(nsides+1));
+  n->vector.setNum((rings+1)*(nsides+1));
+
+  SbVec3f * cptr = c->point.startEditing();
+  SbVec3f * nptr = n->vector.startEditing();
+  SbVec2f * tcptr = tc->point.startEditing();
+
+  ringdelta = 2.0 * M_PI / rings;
+  sidedelta = 2.0 * M_PI / nsides;
+
+  theta = 0.0;
+  costheta = 1.0;
+  sintheta = 0.0;
+
+  double tmul = 1.0f / (M_PI*2.0);
+  double tadd = 0.05f;
+  double nt = R + r;
+
+  int cnt = 0;
+  while (rings-- >= 0) {
+    costheta = cos(theta);
+    sintheta = sin(theta);
+
+    phi = 0.0;
+    for (int i = 0; i <= nsides; i++) {
+      cosPhi = cos(phi);
+      sinPhi = sin(phi);
+      dist = R + r * cosPhi;
+
+      nptr[cnt] =
+        SbVec3f((float) (costheta * cosPhi),
+                (float)(-sintheta * cosPhi),
+                (float)sinPhi);
+
+      cptr[cnt] =
+        SbVec3f((float) (costheta * dist),
+                (float)(-sintheta * dist),
+                (float)(r * sinPhi));
+
+      float tx = (float) (phi * tmul);
+      float ty = (float) (theta * tmul);
+      tcptr[cnt] = SbVec2f(tx, ty);
+      cnt++;
+      phi += sidedelta;
+    }
+    theta += ringdelta;
+  }
+
+  c->point.finishEditing();
+  n->vector.finishEditing();
+  tc->point.finishEditing();
+}
+
+
+static const int imagewidth = 128;
+static const int imageheight = 128;
+static SbBool bigendian = FALSE;
+
+static int
+random(int maxval)
+{
+  return rand() % (maxval+1);
+}
+
+static void
+redraw_plasma(unsigned char * buffer)
+{
+  int i,j;
+  unsigned char color;
+  unsigned short rtpos1,rtpos2, rtpos3,rtpos4;
+  unsigned short gtpos1,gtpos2, gtpos3,gtpos4;
+  unsigned short btpos1,btpos2, btpos3,btpos4;
+
+  rtpos3 = rpos3;
+  rtpos4 = rpos4;
+  gtpos3 = gpos3;
+  gtpos4 = gpos4;
+  btpos3 = bpos3;
+  btpos4 = bpos4;
+
+  unsigned char * ptr = buffer;
+  unsigned int * c = (unsigned int*)colors;
+
+  unsigned int col;
+
+  for (i = 0; i < imageheight; i++) {
+    rtpos1 = rpos1;
+    rtpos2 = rpos2;
+    gtpos1 = gpos1;
+    gtpos2 = gpos2;
+    btpos1 = bpos1;
+    btpos2 = bpos2;
+    for (j = 0; j < imagewidth; j++) {
+      color = plasma[rtpos1]+plasma[rtpos2]+plasma[rtpos3]+
+	plasma[rtpos4]+plasma[i%0xff]+plasma[j&0xff];
+
+      col = palette[color];
+
+      color = plasma[gtpos1]+plasma[gtpos2]+plasma[gtpos3]+
+  	plasma[gtpos4]+plasma[i%0xff]+plasma[j&0xff];
+
+      col |= palette[color]<<8;
+
+      color = plasma[btpos1]+plasma[btpos2]+plasma[btpos3]+
+ 	plasma[btpos4]+plasma[i%0xff]+plasma[j&0xff];
+
+      col |= palette[color]<<16;
+
+      if (bigendian) {
+        *ptr++ = col>>24;
+        *ptr++ = (col>>16)&0xff;
+        *ptr++ = (col>>8)&0xff;
+      }
+      else {
+        *ptr++ = col & 0xff;
+        *ptr++ = (col>>8)&0xff;
+        *ptr++ = (col>>16)&0xff;
+      }
+
+      rtpos1 = rtpos1+adders[0];
+      rtpos2 = rtpos2+adders[1];
+      gtpos1 = gtpos1+adders[6];
+      gtpos2 = gtpos2+adders[7];
+      btpos1 = btpos1+adders[12];
+      btpos2 = btpos2+adders[13];
+    }								
+    rtpos3 = rtpos3+adders[2];
+    rtpos4 = rtpos4+adders[3];
+    gtpos3 = gtpos3+adders[8];
+    gtpos4 = gtpos4+adders[9];
+    btpos3 = btpos3+adders[14];
+    btpos4 = btpos4+adders[15];
+
+  }
+  rpos1 = rpos1 + adders[4];
+  rpos3 = rpos3 + adders[5];
+  gpos1 = gpos1 + adders[10];
+  gpos3 = gpos3 + adders[11];
+  bpos1 = bpos1 + adders[16];
+  bpos3 = bpos3 + adders[17];
+}
+
+
+static void
+setup_plasma(void)
+{
+  rpos1 = rand();
+  rpos2 = rand();
+  rpos3 = rand();
+  rpos4 = rand();
+  gpos1 = rand();
+  gpos2 = rand();
+  gpos3 = rand();
+  gpos4 = rand();
+  bpos1 = rand();
+  bpos2 = rand();
+  bpos3 = rand();
+  bpos4 = rand();
+
+  int i;
+
+  plasma = new int[65536];
+
+  double inc0 = M_PI*2.0f / (256.0f*(random(128)+1));
+  double inc1 = M_PI*2.0f / (256.0f*(random(64)+1));
+  double inc2 = M_PI*2.0f / (256.0f*(random(32)+1));
+  double inc3 = M_PI*2.0f / (256.0f*(random(1)+1));
+
+  double v0, v1, v2, v3;
+
+  v0 = v1 = v2 = v3 = 0.0;
+
+  for (i = 0; i < 65536; i++) {
+    plasma[i] = (int) ((sin(v0) + sin(v1) + sin(v2) + sin(v3)) * 32.0);
+    v0 += inc0;
+    v1 += inc1;
+    v2 += inc2;
+    v3 += inc3;
+  }
+
+  int maxval = random(10);
+  int maxval2 = random(26);
+  int maxval3 = random(44);
+
+  for (i = 0; i < 18; i++) {
+    if ((i % 6) < 2)
+      adders[i] = random(maxval) - maxval/2;
+    else if ((i % 6) < 4)
+      adders[i] = random(maxval2) - maxval2/2;
+    else
+      adders[i] = random(maxval3) - maxval3/2;
+  }
+
+  for (i = 0; i < 128; i++) {
+    palette[i] = (i*2);
+    palette[i+128] = (255-i*2);
+  }
+  double inc = M_PI / 256.0f;
+  double val = 0.0;
+  for (i = 0; i < 255; i++) {
+    palette[i] = (unsigned int) (sin(val) * 255);
+    val += inc;
+  }
+
+  for (i = 0; i < 64; i++) {
+    colors[i].r = 255;
+    colors[i].g = i*4;
+    colors[i].b = 0;
+    colors[i].a = 255;
+  }
+
+  for (i = 0; i < 64; i++) {
+    colors[i+64].r = 255-i*4;
+    colors[i+64].g = 255;
+    colors[i+64].b = i*4;
+    colors[i+64].a = 255;
+  }
+
+  for (i = 0; i < 64; i++) {
+    colors[i+128].r = 0;
+    colors[i+128].g = i*4;
+    colors[i+128].b = 255;
+    colors[i+128].a = 255;
+  }
+  for (i = 0; i < 64; i++) {
+    colors[i+192].r = i*4;
+    colors[i+192].g = 255 - i*4;
+    colors[i+192].b = 255 - i*4;
+    colors[i+192].a = 255;
+  }
+}
+
+static double scnt1 = 0.1;
+static double scnt2 = 0.5;
+static double sadd1 = 0.1;
+static double sadd2 = -0.1;
+static double bcnt1 = 0.2;
+static double bcnt2 = 0.3;
+static double badd1 = 0.2;
+static double badd2 = 0.05;
+
+static double smallr = 0.6;
+static double bigr = 1.0;
+
+static void
+update_bump(void)
+{
+  SbVec2s size;
+  int nc;
+    
+  unsigned char * image = bumpmap->image.startEditing(size, nc);
+  assert(nc == 1);
+  assert(size[0] == imagewidth * 2);
+  assert(size[1] == imageheight * 2);
+
+  unsigned char * tmp = new unsigned char[imagewidth * imageheight * 3];
+  redraw_plasma(tmp);
+
+  int bw = size[0];
+  int bh = size[1];
+
+  unsigned char * src = tmp;
+  for (int y = 0; y < imageheight; y++) {
+    for (int x = 0; x < imagewidth; x++) {
+#if 0
+      image[x+y*bw] = src[0];
+      image[(bw-1)-x+y*bw] = src[0];
+      image[x+((bh-1)-y)*bw] = src[0];
+      image[((bh-1)-y)*bw+(bw-1)-x] = src[0];
+
+#else // for a different look
+      unsigned char tmp = (src[0] * src[1] * src[2]) >> 16;
+      image[x+y*bw] = tmp;
+      image[(bw-1)-x+y*bw] = tmp; 
+      image[x+((bh-1)-y)*bw] = tmp;;
+      image[((bh-1)-y)*bw+(bw-1)-x] = tmp;
+#endif
+      src+=3;
+    }
+  }
+
+  delete[] tmp;
+  bumpmap->image.finishEditing();
+}
+
+
+static void
+event_cb(void * userdata, SoEventCallback * node)
+{
+  const SoEvent * event = node->getEvent();
+
+  SbBool updatebump = FALSE;;
+  SbBool updatetorus = FALSE;
+
+  int add = 1;
+  if (event->wasShiftDown()) add = -1;
+
+  if (SO_KEY_PRESS_EVENT(event, R)) {
+    rotor->on = !rotor->on.getValue();
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_1)) {
+    adders[0] += add;
+    updatebump = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_2)) {
+    adders[1] += add;
+    updatebump = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_3)) {
+    adders[2] += add;
+    updatebump = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_4)) {
+    adders[3] += add;
+    updatebump = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_5)) {
+    adders[4] += add;
+    updatebump = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_6)) {
+    adders[5] += add;
+    updatebump = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_7)) {
+    adders[6] += add;
+    updatebump = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_8)) {
+    adders[7] += add;
+    updatebump = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_9)) {
+    adders[8] += add;
+    updatebump = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_0)) {
+    adders[9] += add;
+    updatebump = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, UP_ARROW)) {
+    nsides++;
+    //    gentorus(0.8, 1.0, nsides, nrings, c, n, qm, tc);
+    updatetorus = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, DOWN_ARROW)) {
+    nsides--;
+    if (nsides < 5) nsides = 5;
+    //gentorus(0.8, 1.0, nsides, nrings, c, n, qm, tc);
+    updatetorus = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, LEFT_ARROW)) {
+    nrings--;
+    if (nrings < 5) nrings = 5;
+    updatetorus = TRUE;
+  }
+  if (SO_KEY_PRESS_EVENT(event, RIGHT_ARROW)) {
+    nrings++;
+    updatetorus = TRUE;
+  }
+
+  if (updatebump) {
+    update_bump();
+  }
+  if (updatetorus) {
+    gentorus(smallr, bigr, nsides, nrings, c, n, qm, tc);
+  }
+}
+
+int
+main(int argc, char **argv)
+{
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  SoDB::setRealTimeInterval(1.0/50.0);
+
+  // enable backface culling
+  SoShapeHints * sh = new SoShapeHints;
+  sh->vertexOrdering = SoShapeHints::CLOCKWISE;
+  sh->shapeType = SoShapeHints::SOLID;
+  sh->faceType = SoShapeHints::CONVEX;
+  sh->creaseAngle = 0.8f;
+  root->addChild(sh);
+
+  SoEventCallback * cb = new SoEventCallback;
+  cb->addEventCallback(SoKeyboardEvent::getClassTypeId(),
+                       event_cb, NULL);
+  root->insertChild(cb, 0);
+
+  SoPerspectiveCamera * cam = new SoPerspectiveCamera;
+  cam->position = SbVec3f(0.0f, 0.0f, 3.0f);
+  cam->focalDistance = 3.0f;
+  root->addChild(cam);
+
+  rotor = new SoRotor;
+  rotor->rotation = SbRotation(SbVec3f(0.5f, 0.6f, 0.3f), 0.3f);
+  rotor->speed = 0.1f;
+  root->addChild(rotor);
+
+  (void)printf("This example shows how to use the SoBumpMap and SoBumpMapTransform node.\n");
+  (void)printf("  * Use arrow keys to adjust torus resolution.\n");
+  (void)printf("  * Use keys 0-9 [SHIFT] to adjust bump map.\n");
+  (void)printf("  * Use R to toggle Rotor on/off\n");
+  (void)printf("  * Use ESC to toggle viewing mode on /off.\n\n\n");
+
+  srand((unsigned int) time(NULL));
+
+  setup_plasma();
+
+  bumpmap = new SoBumpMap;
+  bumpmap->image.setValue(SbVec2s((short) imagewidth*2, (short) imageheight*2), 1, NULL);
+
+  SoMaterial * mat = new SoMaterial;
+  mat->diffuseColor = SbColor(0.5f, 0.7f, 0.9f);
+  mat->specularColor = SbColor(1.0f, 1.0f, 1.0f);
+  mat->shininess = 0.9f;
+
+  SoBumpMapTransform * bmt = new SoBumpMapTransform;
+  bmt->scaleFactor = SbVec2f(4.0f, 4.0f);
+  root->addChild(mat);
+  root->addChild(bmt);
+  root->addChild(bumpmap);
+
+  qm = new SoQuadMesh;
+  n = new SoNormal;
+  c = new SoCoordinate3;
+  tc = new SoTextureCoordinate2;
+
+  gentorus(smallr, bigr, nsides, nrings, c, n, qm, tc);
+  update_bump();
+
+  root->addChild(c);
+  root->addChild(n);
+  root->addChild(tc);
+  root->addChild(qm);
+
+  // Setting up the examiner viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Plasma BumpMap");
+  //  viewer->viewAll();
+  viewer->setViewing(FALSE);
+  viewer->show();
+  So@Gui@::show(window); // display the main window
+
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;
+  root->unref();
   return 0;
 }
+
+
+#endif //  HAVE_SOBUMPMAP && HAVE_SOBUMPMAPTRANSFORM
 
