@@ -1,9 +1,10 @@
 Contributions:
 
-        * "plasmaball" submitted by Morten Eriksen <mortene@sim.no>
-        * "smiley" submitted by Marius Kintel <kintel@sim.no>
-        * "stars2" submitted by Marius Bugge Monsen <mariusbu@sim.no>
-        * "styx" submitted by Lars J Aas <larsa@sim.no>
+        * Plasmaball submitted by Morten Eriksen <mortene@sim.no>
+        * Smiley submitted by Marius Kintel <kintel@sim.no>
+        * Stars2 submitted by Marius Bugge Monsen <mariusbu@sim.no>
+        * Styx submitted by Lars J Aas <larsa@sim.no>
 
-Jury: TBD.
-Winner: TBD.
+Jury: Thomas + ?.
+Winner: Plasmaball
+Runner-up: Styx
