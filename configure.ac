@@ -334,7 +334,7 @@ AC_OUTPUT([
 
 	engines/Makefile
 	engines/computebbox.cpp
-	engines/computexfbbox.cpp.in
+	engines/computexfbbox.cpp
 
 	eyecandy/Makefile
 	eyecandy/moirepatterns.cpp
@@ -390,7 +390,7 @@ AC_OUTPUT([
 	nodes/bigimage.cpp
 
 	sensors/Makefile
-	sensors/timesensor.cpp
+	sensors/timersensor.cpp
 
 	coin-competitions/Makefile
 

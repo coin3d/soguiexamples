@@ -160,7 +160,7 @@ subdir = sensors
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES = timesensor.cpp
+CONFIG_CLEAN_FILES = timersensor.cpp
 noinst_PROGRAMS = timersensor$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
@@ -180,7 +180,7 @@ CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 DIST_SOURCES = $(timersensor_SOURCES)
-DIST_COMMON = Makefile.am Makefile.in
+DIST_COMMON = Makefile.am Makefile.in timersensor.cpp.in
 SOURCES = $(timersensor_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -193,7 +193,7 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configu
 	  $(AUTOMAKE) --gnu  sensors/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
-timesensor.cpp: $(top_builddir)/config.status timesensor.cpp.in
+timersensor.cpp: $(top_builddir)/config.status timersensor.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
