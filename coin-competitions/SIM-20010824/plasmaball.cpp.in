@@ -12,15 +12,18 @@
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/events/SoKeyboardEvent.h>
 #include <Inventor/nodes/SoAntiSquish.h>
+#include <Inventor/nodes/SoCamera.h>
 #include <Inventor/nodes/SoCube.h>
 #include <Inventor/nodes/SoEventCallback.h>
 #include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoOrthographicCamera.h>
 #include <Inventor/nodes/SoRotor.h>
 #include <Inventor/nodes/SoScale.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoShapeHints.h>
 #include <Inventor/nodes/SoSphere.h>
 #include <Inventor/nodes/SoSurroundScale.h>
+#include <Inventor/nodes/SoText2.h>
 #include <Inventor/nodes/SoText3.h>
 #include <Inventor/nodes/SoTexture2.h>
 #include <Inventor/nodes/SoTextureCoordinateEnvironment.h>
@@ -366,12 +369,15 @@ main(int argc, char **argv)
   sphere->radius = 1.2f;
   surroundsep->addChild(sphere);
 
+  SoSeparator * logosep = new SoSeparator;
+  root->addChild(logosep);
+
   SoRotor * logorot = new SoRotor;
   logorot->rotation = SbRotation(SbVec3f(0, 1, 0), 1);
   logorot->speed = 0.2f;
-  root->addChild(logorot);
+  logosep->addChild(logorot);
 
-  root->addChild(create_logo());
+  logosep->addChild(create_logo());
 
   // Timer sensor
   SoTimerSensor * texturetimer = new SoTimerSensor(timersensorcallback, texnode);
@@ -383,7 +389,33 @@ main(int argc, char **argv)
   viewer->setBackgroundColor( SbColor( 0.2f, 0.4f, 0.5f )  );
   viewer->setSceneGraph(root);
   viewer->setTitle("Hairy plasma ball");
+
   viewer->viewAll();
+
+  SoSeparator * instructsep = new SoSeparator;
+  root->addChild(instructsep);
+
+  SoOrthographicCamera * ocam = new SoOrthographicCamera;
+  instructsep->addChild(ocam);
+
+  SoTranslation * instructtrans = new SoTranslation;
+//    instructtrans->translation = SbVec3f();
+  instructsep->addChild(instructtrans);
+
+  SoText2 * instructions = new SoText2;
+  const char * str[] = {
+    "Click and drag with left mouse button to move sphere logo.",
+    "",
+    "Hit 'q' to exit demonstration."
+  };
+  instructions->string.setValues(0, sizeof(str) / sizeof(char *), str);
+  instructions->justification = SoText2::LEFT;
+  instructsep->addChild(instructions);
+
+  SbViewVolume vv = ocam->getViewVolume();
+  SbVec3f p = vv.getPlanePoint(0.0f, SbVec2f(0.0f, 0.95f));
+  instructtrans->translation.setValue(p[0], p[1], 0);
+
   viewer->setDecoration(FALSE);
   viewer->show();
   So@Gui@::show(window);
