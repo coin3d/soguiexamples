@@ -1,0 +1,221 @@
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/actions/SoSearchAction.h>
+#include <Inventor/draggers/SoDragPointDragger.h>
+#include <Inventor/nodes/SoComplexity.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoDrawStyle.h>
+#include <Inventor/nodes/SoNurbsCurve.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoOrthographicCamera.h>
+#include <Inventor/nodes/SoText2.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoBaseColor.h>
+
+// *************************************************************************
+
+static float pts[][3] = {
+  { 4.0, -6.0,  0.0},
+  {-4.0,  1.0,  0.0},
+  {-1.5,  5.0,  0.0},
+  { 0.0,  2.0,  0.0},
+  { 1.5,  5.0,  0.0},
+  { 4.0,  1.0,  0.0},
+  {-4.0, -6.0,  0.0}
+};
+static unsigned int NUMCOORDS = sizeof(pts) / (sizeof(float) * 3);
+
+static float knots[] = { 1, 2, 3, 4, 5, 5, 6, 7, 8, 9 };
+
+static SoDragPointDragger ** draggers = NULL;
+static SoCoordinate3 * ctrlpts = NULL;
+
+// *************************************************************************
+
+// Create and return subgraph with NURBS curve.
+static SoSeparator *
+nurbscurve_graph()
+{
+   SoSeparator * curvesep = new SoSeparator();
+
+   SoDrawStyle * ds  = new SoDrawStyle;
+   ds->lineWidth = 4;
+   curvesep->addChild(ds);
+
+   SoComplexity * cmplx = new SoComplexity;
+   cmplx->value = 0.8f;
+   curvesep->addChild(cmplx);
+
+   ctrlpts = new SoCoordinate3;
+   ctrlpts->point.setValues(0, NUMCOORDS, pts);
+   curvesep->addChild(ctrlpts);
+
+   SoNurbsCurve * curve = new SoNurbsCurve;
+   curve->numControlPoints = NUMCOORDS;
+   curve->knotVector.setValues(0, sizeof(knots) / sizeof(float), knots);
+   curvesep->addChild(curve);
+
+   return curvesep;
+}
+
+// *************************************************************************
+
+struct dragcb_data {
+  unsigned int idx;
+};
+
+// *************************************************************************
+
+static void
+dragger_moved(void * data, SoDragger * dragger)
+{
+  SoDragPointDragger * dpd = (SoDragPointDragger *)dragger;
+  struct dragcb_data * cbdata = (struct dragcb_data *)data;
+  SbVec3f v = dpd->translation.getValue();
+  ctrlpts->point.set1Value(cbdata->idx, v[0], v[1], v[2]);
+}
+
+// *************************************************************************
+
+int
+main(int argc, char ** argv )
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+
+  SoInput in;
+  SbBool r = in.openFile("dpd.iv");
+  assert(r && "missing iv-file");
+  SoNode * ivroot;
+  r = SoDB::read(&in, ivroot);
+  assert(r && "failed import");
+
+  ivroot->ref();
+
+  SoSearchAction search;
+  search.setName("AXISTRANSLATOR");
+  search.apply(ivroot);
+  SoPath * p = search.getPath();
+  assert(p && "couldn't find axistrans");
+  SoNode * axistrans = p->getTail();
+
+  search.reset();
+  search.setName("PLANETRANSLATOR");
+  search.apply(ivroot);
+  p = search.getPath();
+  assert(p && "couldn't find planetrans");
+  SoNode * planetrans = p->getTail();
+
+  search.reset();
+  search.setName("PLANETRANSLATOR_ACTIVE");
+  search.apply(ivroot);
+  p = search.getPath();
+  assert(p && "couldn't find planetrans active");
+  SoNode * planetrans_active = p->getTail();
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  draggers = new SoDragPointDragger*[NUMCOORDS];
+
+  for (unsigned int i=0; i < NUMCOORDS; i++) {
+    SoDragPointDragger * dpd = new SoDragPointDragger;
+    draggers[i] = dpd;
+
+    r = dpd->setPart("xTranslator.translator", axistrans->copy());
+    assert(r);
+    r = dpd->setPart("yTranslator.translator", axistrans->copy());
+    assert(r);
+    r = dpd->setPart("zTranslator.translator", axistrans->copy());
+    assert(r);
+
+    r = dpd->setPart("xyTranslator.translator", planetrans->copy());
+    assert(r);
+    r = dpd->setPart("xzTranslator.translator", planetrans->copy());
+    assert(r);
+    r = dpd->setPart("yzTranslator.translator", planetrans->copy());
+    assert(r);
+
+    // FIXME: the next line causes a Coin assert crash -- robustify. 20011005 mortene.
+//      r = dpd->setPart("xyFeedback.translator", planetrans_active->copy());
+
+    r = dpd->setPart("xyFeedback", planetrans_active->copy());
+    assert(r);
+    r = dpd->setPart("xzFeedback", planetrans_active->copy());
+    assert(r);
+    r = dpd->setPart("yzFeedback", planetrans_active->copy());
+    assert(r);
+    
+
+    struct dragcb_data * data = new struct dragcb_data;
+    data->idx = i;
+    dpd->addMotionCallback(dragger_moved, data); // FIXME: memory leak for data struct. 20010909 mortene.
+    dpd->translation.setValue(pts[i]);
+    root->addChild(dpd);
+  }
+
+  SoBaseColor * heartcol = new SoBaseColor;
+  heartcol->rgb.setValue(1, 0.5, 0.8);
+  root->addChild(heartcol);
+
+  root->addChild(nurbscurve_graph());
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->viewAll();
+
+  SoSeparator * instructsep = new SoSeparator;
+  root->addChild(instructsep);
+
+  SoOrthographicCamera * ocam = new SoOrthographicCamera;
+  instructsep->addChild(ocam);
+
+  SoTranslation * instructtrans = new SoTranslation;
+//    instructtrans->translation = SbVec3f();
+  instructsep->addChild(instructtrans);
+
+  SoBaseColor * col = new SoBaseColor;
+  col->rgb.setValue(1, 1, 0);
+  instructsep->addChild(col);
+
+  SoText2 * instructions = new SoText2;
+  const char * str[] = {
+    "This example demonstrates how NURBS curves are related to their control points.",
+    "", "",
+    "Use 'Esc' to toggle between examine mode and interact mode.",
+    "",
+    "When in examine mode, click and drag with left mouse button to rotate scene.",
+    "Use middle mouse button to translate scene and left+middle to zoom.",
+    "",
+    "When in interact mode, click and press on the markers to reposition the NURBS curve control points."
+  };
+  instructions->string.setValues(0, sizeof(str) / sizeof(char *), str);
+  instructions->justification = SoText2::LEFT;
+  instructsep->addChild(instructions);
+
+  SbViewVolume vv = ocam->getViewVolume();
+  SbVec3f pt = vv.getPlanePoint(0.0f, SbVec2f(0.0f, 0.95f));
+  instructtrans->translation.setValue(pt[0], pt[1], 0);
+
+
+  viewer->setFeedbackVisibility(TRUE); // axis cross
+  viewer->setDecoration(FALSE);
+  viewer->show();
+  So@Gui@::show(window);
+//  #ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
+  // Must do this _after_ show() to avoid the "Start"-bar being
+  // visible with SoWin. (Bug!)
+  (void)viewer->setFullScreen(TRUE);
+//  #endif // HAVE_SOCOMPONENT_SETFULLSCREEN
+
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+  return 0;
+} // main()
+
+// *************************************************************************
