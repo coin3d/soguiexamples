@@ -20,6 +20,11 @@
 \**************************************************************************/
 
 // SoMarkerSet is not part of SGI Inventor.
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #ifndef HAVE_SOMARKERSET
 
 #include <stdio.h>
