@@ -20,6 +20,10 @@
  *
 \**************************************************************************/
 
+// FIXME: there are many bugs in this example.. just play around with
+// the dragger a bit, and you should be able to get your hands
+// full. :-/ 20020219 mortene.
+
 #include <Inventor/SbClip.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoCoordinate3.h>
