@@ -3,137 +3,134 @@
 ## So@Gui@RenderArea component
 if HAVE_RENDERAREA
 RENDERAREA = renderarea
+else
+RENDERAREA =
+endif
+
 renderarea_SOURCES = \
 	renderarea.cpp \
 	computils.cpp \
 	computils.h
-else
-RENDERAREA =
-renderarea_SOURCES =
-endif
 
 ## So@Gui@ExaminerViewer component
 if HAVE_EXAMINERVIEWER
 EXAMINERVIEWER = examinerviewer
+else
+EXAMINERVIEWER =
+endif
+
 examinerviewer_SOURCES = \
 	examinerviewer.cpp \
 	computils.cpp \
 	computils.h
-else
-EXAMINERVIEWER =
-examinerviewer_SOURCES =
-endif
 
 ## So@Gui@PlaneViewer component
 if HAVE_PLANEVIEWER
 PLANEVIEWER = planeviewer
+else
+PLANEVIEWER =
+endif
+
 planeviewer_SOURCES = \
 	planeviewer.cpp \
 	computils.cpp \
 	computils.h
-else
-PLANEVIEWER =
-planeviewer_SOURCES =
-endif
 
 ## So@Gui@WalkViewer component
 if HAVE_WALKVIEWER
 WALKVIEWER = walkviewer
+else
+WALKVIEWER =
+endif
+
 walkviewer_SOURCES = \
 	walkviewer.cpp \
 	computils.cpp \
 	computils.h
-else
-WALKVIEWER =
-walkviewer_SOURCES =
-walkviewer_LDADD =
-endif
 
 ## So@Gui@FlyViewer component
 if HAVE_FLYVIEWER
 FLYVIEWER = flyviewer
+else
+FLYVIEWER =
+endif
+
 flyviewer_SOURCES = \
 	flyviewer.cpp \
 	computils.cpp \
 	computils.h
-else
-FLYVIEWER =
-flyviewer_SOURCES =
-endif
 
 ## So@Gui@LightSliderSet component
 if HAVE_LIGHTSLIDERSET
 LIGHTSLIDERSET = lightsliderset
-lightsliderset_SOURCES = \
-	lightsliderset.cpp
 else
 LIGHTSLIDERSET =
-lightsliderset_SOURCES =
 endif
+
+lightsliderset_SOURCES = \
+	lightsliderset.cpp
 
 ## So@Gui@MaterialSliderSet component
 if HAVE_MATERIALSLIDERSET
 MATERIALSLIDERSET = materialsliderset materialsliderset2
+else
+MATERIALSLIDERSET =
+endif
+
 materialsliderset_SOURCES = \
 	materialsliderset.cpp
 materialsliderset2_SOURCES = \
 	materialsliderset2.cpp
-else
-MATERIALSLIDERSET =
-materialsliderset_SOURCES =
-materialsliderset2_SOURCES =
-endif
 
 ## So@Gui@TransformSliderSet component
 if HAVE_TRANSFORMSLIDERSET
 TRANSFORMSLIDERSET = transformsliderset
-transformsliderset_SOURCES = \
-	transformsliderset.cpp
 else
 TRANSFORMSLIDERSET =
-transformsliderset_SOURCES =
 endif
+
+transformsliderset_SOURCES = \
+	transformsliderset.cpp
 
 ## So@Gui@DirectionalLightEditor component
 if HAVE_DIRECTIONALLIGHTEDITOR
 DIRECTIONALLIGHTEDITOR = directionallighteditor
-directionallighteditor_SOURCES = \
-	directionallighteditor.cpp
 else
 DIRECTIONALLIGHTEDITOR =
-directionallighteditor_SOURCES =
 endif
+
+directionallighteditor_SOURCES = \
+	directionallighteditor.cpp
 
 ## So@Gui@MaterialEditor component
 if HAVE_MATERIALEDITOR
 MATERIALEDITOR = materialeditor
-materialeditor_SOURCES = \
-	materialeditor.cpp
 else
 MATERIALEDITOR =
-materialeditor_SOURCES =
 endif
+
+materialeditor_SOURCES = \
+	materialeditor.cpp
 
 ## So@Gui@MaterialList component
 if HAVE_MATERIALLIST
 MATERIALLIST = materiallist materiallist2
-materiallist_SOURCES = materiallist.cpp
-materiallist2_SOURCES = materiallist2.cpp
 else
 MATERIALLIST =
-materiallist_SOURCES =
-materiallist2_SOURCES =
 endif
+
+materiallist_SOURCES = materiallist.cpp
+materiallist2_SOURCES = materiallist2.cpp
 
 ## So@Gui@PrintDialog component
 if HAVE_PRINTDIALOG
 PRINTDIALOG = printdialog
-printdialog_SOURCES = \
-	printdialog.cpp
 else
 PRINTDIALOG =
-printdialog_SOURCES =
 endif
+
+printdialog_SOURCES = \
+	printdialog.cpp
 
 ############################################################################
 

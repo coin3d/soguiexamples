@@ -95,79 +95,88 @@ soguiconfig = @soguiconfig@
 
 @HAVE_RENDERAREA_TRUE@RENDERAREA = @HAVE_RENDERAREA_TRUE@renderarea
 @HAVE_RENDERAREA_FALSE@RENDERAREA = 
-@HAVE_RENDERAREA_TRUE@renderarea_SOURCES = @HAVE_RENDERAREA_TRUE@\
-@HAVE_RENDERAREA_TRUE@	renderarea.cpp \
-@HAVE_RENDERAREA_TRUE@	computils.cpp \
-@HAVE_RENDERAREA_TRUE@	computils.h
-@HAVE_RENDERAREA_FALSE@renderarea_SOURCES = 
+
+renderarea_SOURCES = \
+	renderarea.cpp \
+	computils.cpp \
+	computils.h
+
 @HAVE_EXAMINERVIEWER_TRUE@EXAMINERVIEWER = @HAVE_EXAMINERVIEWER_TRUE@examinerviewer
 @HAVE_EXAMINERVIEWER_FALSE@EXAMINERVIEWER = 
-@HAVE_EXAMINERVIEWER_TRUE@examinerviewer_SOURCES = @HAVE_EXAMINERVIEWER_TRUE@\
-@HAVE_EXAMINERVIEWER_TRUE@	examinerviewer.cpp \
-@HAVE_EXAMINERVIEWER_TRUE@	computils.cpp \
-@HAVE_EXAMINERVIEWER_TRUE@	computils.h
-@HAVE_EXAMINERVIEWER_FALSE@examinerviewer_SOURCES = 
+
+examinerviewer_SOURCES = \
+	examinerviewer.cpp \
+	computils.cpp \
+	computils.h
+
 @HAVE_PLANEVIEWER_TRUE@PLANEVIEWER = @HAVE_PLANEVIEWER_TRUE@planeviewer
 @HAVE_PLANEVIEWER_FALSE@PLANEVIEWER = 
-@HAVE_PLANEVIEWER_TRUE@planeviewer_SOURCES = @HAVE_PLANEVIEWER_TRUE@\
-@HAVE_PLANEVIEWER_TRUE@	planeviewer.cpp \
-@HAVE_PLANEVIEWER_TRUE@	computils.cpp \
-@HAVE_PLANEVIEWER_TRUE@	computils.h
-@HAVE_PLANEVIEWER_FALSE@planeviewer_SOURCES = 
+
+planeviewer_SOURCES = \
+	planeviewer.cpp \
+	computils.cpp \
+	computils.h
+
 @HAVE_WALKVIEWER_TRUE@WALKVIEWER = @HAVE_WALKVIEWER_TRUE@walkviewer
 @HAVE_WALKVIEWER_FALSE@WALKVIEWER = 
-@HAVE_WALKVIEWER_TRUE@walkviewer_SOURCES = @HAVE_WALKVIEWER_TRUE@\
-@HAVE_WALKVIEWER_TRUE@	walkviewer.cpp \
-@HAVE_WALKVIEWER_TRUE@	computils.cpp \
-@HAVE_WALKVIEWER_TRUE@	computils.h
-@HAVE_WALKVIEWER_FALSE@walkviewer_SOURCES = 
-@HAVE_WALKVIEWER_FALSE@walkviewer_LDADD = 
+
+walkviewer_SOURCES = \
+	walkviewer.cpp \
+	computils.cpp \
+	computils.h
+
 @HAVE_FLYVIEWER_TRUE@FLYVIEWER = @HAVE_FLYVIEWER_TRUE@flyviewer
 @HAVE_FLYVIEWER_FALSE@FLYVIEWER = 
-@HAVE_FLYVIEWER_TRUE@flyviewer_SOURCES = @HAVE_FLYVIEWER_TRUE@\
-@HAVE_FLYVIEWER_TRUE@	flyviewer.cpp \
-@HAVE_FLYVIEWER_TRUE@	computils.cpp \
-@HAVE_FLYVIEWER_TRUE@	computils.h
-@HAVE_FLYVIEWER_FALSE@flyviewer_SOURCES = 
+
+flyviewer_SOURCES = \
+	flyviewer.cpp \
+	computils.cpp \
+	computils.h
+
 @HAVE_LIGHTSLIDERSET_TRUE@LIGHTSLIDERSET = @HAVE_LIGHTSLIDERSET_TRUE@lightsliderset
 @HAVE_LIGHTSLIDERSET_FALSE@LIGHTSLIDERSET = 
-@HAVE_LIGHTSLIDERSET_TRUE@lightsliderset_SOURCES = @HAVE_LIGHTSLIDERSET_TRUE@\
-@HAVE_LIGHTSLIDERSET_TRUE@	lightsliderset.cpp
-@HAVE_LIGHTSLIDERSET_FALSE@lightsliderset_SOURCES = 
+
+lightsliderset_SOURCES = \
+	lightsliderset.cpp
+
 @HAVE_MATERIALSLIDERSET_TRUE@MATERIALSLIDERSET = @HAVE_MATERIALSLIDERSET_TRUE@materialsliderset materialsliderset2
 @HAVE_MATERIALSLIDERSET_FALSE@MATERIALSLIDERSET = 
-@HAVE_MATERIALSLIDERSET_TRUE@materialsliderset_SOURCES = @HAVE_MATERIALSLIDERSET_TRUE@\
-@HAVE_MATERIALSLIDERSET_TRUE@	materialsliderset.cpp
-@HAVE_MATERIALSLIDERSET_FALSE@materialsliderset_SOURCES = 
-@HAVE_MATERIALSLIDERSET_TRUE@materialsliderset2_SOURCES = @HAVE_MATERIALSLIDERSET_TRUE@\
-@HAVE_MATERIALSLIDERSET_TRUE@	materialsliderset2.cpp
-@HAVE_MATERIALSLIDERSET_FALSE@materialsliderset2_SOURCES = 
+
+materialsliderset_SOURCES = \
+	materialsliderset.cpp
+
+materialsliderset2_SOURCES = \
+	materialsliderset2.cpp
+
 @HAVE_TRANSFORMSLIDERSET_TRUE@TRANSFORMSLIDERSET = @HAVE_TRANSFORMSLIDERSET_TRUE@transformsliderset
 @HAVE_TRANSFORMSLIDERSET_FALSE@TRANSFORMSLIDERSET = 
-@HAVE_TRANSFORMSLIDERSET_TRUE@transformsliderset_SOURCES = @HAVE_TRANSFORMSLIDERSET_TRUE@\
-@HAVE_TRANSFORMSLIDERSET_TRUE@	transformsliderset.cpp
-@HAVE_TRANSFORMSLIDERSET_FALSE@transformsliderset_SOURCES = 
+
+transformsliderset_SOURCES = \
+	transformsliderset.cpp
+
 @HAVE_DIRECTIONALLIGHTEDITOR_TRUE@DIRECTIONALLIGHTEDITOR = @HAVE_DIRECTIONALLIGHTEDITOR_TRUE@directionallighteditor
 @HAVE_DIRECTIONALLIGHTEDITOR_FALSE@DIRECTIONALLIGHTEDITOR = 
-@HAVE_DIRECTIONALLIGHTEDITOR_TRUE@directionallighteditor_SOURCES = @HAVE_DIRECTIONALLIGHTEDITOR_TRUE@\
-@HAVE_DIRECTIONALLIGHTEDITOR_TRUE@	directionallighteditor.cpp
-@HAVE_DIRECTIONALLIGHTEDITOR_FALSE@directionallighteditor_SOURCES = 
+
+directionallighteditor_SOURCES = \
+	directionallighteditor.cpp
+
 @HAVE_MATERIALEDITOR_TRUE@MATERIALEDITOR = @HAVE_MATERIALEDITOR_TRUE@materialeditor
 @HAVE_MATERIALEDITOR_FALSE@MATERIALEDITOR = 
-@HAVE_MATERIALEDITOR_TRUE@materialeditor_SOURCES = @HAVE_MATERIALEDITOR_TRUE@\
-@HAVE_MATERIALEDITOR_TRUE@	materialeditor.cpp
-@HAVE_MATERIALEDITOR_FALSE@materialeditor_SOURCES = 
+
+materialeditor_SOURCES = \
+	materialeditor.cpp
+
 @HAVE_MATERIALLIST_TRUE@MATERIALLIST = @HAVE_MATERIALLIST_TRUE@materiallist materiallist2
 @HAVE_MATERIALLIST_FALSE@MATERIALLIST = 
-@HAVE_MATERIALLIST_TRUE@materiallist_SOURCES = @HAVE_MATERIALLIST_TRUE@materiallist.cpp
-@HAVE_MATERIALLIST_FALSE@materiallist_SOURCES = 
-@HAVE_MATERIALLIST_TRUE@materiallist2_SOURCES = @HAVE_MATERIALLIST_TRUE@materiallist2.cpp
-@HAVE_MATERIALLIST_FALSE@materiallist2_SOURCES = 
+
+materiallist_SOURCES = materiallist.cpp
+materiallist2_SOURCES = materiallist2.cpp
 @HAVE_PRINTDIALOG_TRUE@PRINTDIALOG = @HAVE_PRINTDIALOG_TRUE@printdialog
 @HAVE_PRINTDIALOG_FALSE@PRINTDIALOG = 
-@HAVE_PRINTDIALOG_TRUE@printdialog_SOURCES = @HAVE_PRINTDIALOG_TRUE@\
-@HAVE_PRINTDIALOG_TRUE@	printdialog.cpp
-@HAVE_PRINTDIALOG_FALSE@printdialog_SOURCES = 
+
+printdialog_SOURCES = \
+	printdialog.cpp
+
 
 ############################################################################
 
@@ -204,94 +213,75 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-@HAVE_DIRECTIONALLIGHTEDITOR_FALSE@am_directionallighteditor_OBJECTS = 
-@HAVE_DIRECTIONALLIGHTEDITOR_TRUE@am_directionallighteditor_OBJECTS =  \
-@HAVE_DIRECTIONALLIGHTEDITOR_TRUE@directionallighteditor.o
+am_directionallighteditor_OBJECTS =  directionallighteditor.o
 directionallighteditor_OBJECTS =  $(am_directionallighteditor_OBJECTS)
 directionallighteditor_LDADD = $(LDADD)
 directionallighteditor_DEPENDENCIES = 
 directionallighteditor_LDFLAGS = 
-@HAVE_EXAMINERVIEWER_FALSE@am_examinerviewer_OBJECTS = 
-@HAVE_EXAMINERVIEWER_TRUE@am_examinerviewer_OBJECTS =  examinerviewer.o \
-@HAVE_EXAMINERVIEWER_TRUE@computils.o
+am_examinerviewer_OBJECTS =  examinerviewer.o computils.o
 examinerviewer_OBJECTS =  $(am_examinerviewer_OBJECTS)
 examinerviewer_LDADD = $(LDADD)
 examinerviewer_DEPENDENCIES = 
 examinerviewer_LDFLAGS = 
-@HAVE_FLYVIEWER_FALSE@am_flyviewer_OBJECTS = 
-@HAVE_FLYVIEWER_TRUE@am_flyviewer_OBJECTS =  flyviewer.o computils.o
+am_flyviewer_OBJECTS =  flyviewer.o computils.o
 flyviewer_OBJECTS =  $(am_flyviewer_OBJECTS)
 flyviewer_LDADD = $(LDADD)
 flyviewer_DEPENDENCIES = 
 flyviewer_LDFLAGS = 
-@HAVE_LIGHTSLIDERSET_FALSE@am_lightsliderset_OBJECTS = 
-@HAVE_LIGHTSLIDERSET_TRUE@am_lightsliderset_OBJECTS =  lightsliderset.o
+am_lightsliderset_OBJECTS =  lightsliderset.o
 lightsliderset_OBJECTS =  $(am_lightsliderset_OBJECTS)
 lightsliderset_LDADD = $(LDADD)
 lightsliderset_DEPENDENCIES = 
 lightsliderset_LDFLAGS = 
-@HAVE_MATERIALEDITOR_FALSE@am_materialeditor_OBJECTS = 
-@HAVE_MATERIALEDITOR_TRUE@am_materialeditor_OBJECTS =  materialeditor.o
+am_materialeditor_OBJECTS =  materialeditor.o
 materialeditor_OBJECTS =  $(am_materialeditor_OBJECTS)
 materialeditor_LDADD = $(LDADD)
 materialeditor_DEPENDENCIES = 
 materialeditor_LDFLAGS = 
-@HAVE_MATERIALLIST_FALSE@am_materiallist_OBJECTS = 
-@HAVE_MATERIALLIST_TRUE@am_materiallist_OBJECTS =  materiallist.o
+am_materiallist_OBJECTS =  materiallist.o
 materiallist_OBJECTS =  $(am_materiallist_OBJECTS)
 materiallist_LDADD = $(LDADD)
 materiallist_DEPENDENCIES = 
 materiallist_LDFLAGS = 
-@HAVE_MATERIALLIST_FALSE@am_materiallist2_OBJECTS = 
-@HAVE_MATERIALLIST_TRUE@am_materiallist2_OBJECTS =  materiallist2.o
+am_materiallist2_OBJECTS =  materiallist2.o
 materiallist2_OBJECTS =  $(am_materiallist2_OBJECTS)
 materiallist2_LDADD = $(LDADD)
 materiallist2_DEPENDENCIES = 
 materiallist2_LDFLAGS = 
-@HAVE_MATERIALSLIDERSET_FALSE@am_materialsliderset_OBJECTS = 
-@HAVE_MATERIALSLIDERSET_TRUE@am_materialsliderset_OBJECTS =  \
-@HAVE_MATERIALSLIDERSET_TRUE@materialsliderset.o
+am_materialsliderset_OBJECTS =  materialsliderset.o
 materialsliderset_OBJECTS =  $(am_materialsliderset_OBJECTS)
 materialsliderset_LDADD = $(LDADD)
 materialsliderset_DEPENDENCIES = 
 materialsliderset_LDFLAGS = 
-@HAVE_MATERIALSLIDERSET_FALSE@am_materialsliderset2_OBJECTS = 
-@HAVE_MATERIALSLIDERSET_TRUE@am_materialsliderset2_OBJECTS =  \
-@HAVE_MATERIALSLIDERSET_TRUE@materialsliderset2.o
+am_materialsliderset2_OBJECTS =  materialsliderset2.o
 materialsliderset2_OBJECTS =  $(am_materialsliderset2_OBJECTS)
 materialsliderset2_LDADD = $(LDADD)
 materialsliderset2_DEPENDENCIES = 
 materialsliderset2_LDFLAGS = 
-@HAVE_PLANEVIEWER_FALSE@am_planeviewer_OBJECTS = 
-@HAVE_PLANEVIEWER_TRUE@am_planeviewer_OBJECTS =  planeviewer.o \
-@HAVE_PLANEVIEWER_TRUE@computils.o
+am_planeviewer_OBJECTS =  planeviewer.o computils.o
 planeviewer_OBJECTS =  $(am_planeviewer_OBJECTS)
 planeviewer_LDADD = $(LDADD)
 planeviewer_DEPENDENCIES = 
 planeviewer_LDFLAGS = 
-@HAVE_PRINTDIALOG_FALSE@am_printdialog_OBJECTS = 
-@HAVE_PRINTDIALOG_TRUE@am_printdialog_OBJECTS =  printdialog.o
+am_printdialog_OBJECTS =  printdialog.o
 printdialog_OBJECTS =  $(am_printdialog_OBJECTS)
 printdialog_LDADD = $(LDADD)
 printdialog_DEPENDENCIES = 
 printdialog_LDFLAGS = 
-@HAVE_RENDERAREA_FALSE@am_renderarea_OBJECTS = 
-@HAVE_RENDERAREA_TRUE@am_renderarea_OBJECTS =  renderarea.o computils.o
+am_renderarea_OBJECTS =  renderarea.o computils.o
 renderarea_OBJECTS =  $(am_renderarea_OBJECTS)
 renderarea_LDADD = $(LDADD)
 renderarea_DEPENDENCIES = 
 renderarea_LDFLAGS = 
-@HAVE_TRANSFORMSLIDERSET_FALSE@am_transformsliderset_OBJECTS = 
-@HAVE_TRANSFORMSLIDERSET_TRUE@am_transformsliderset_OBJECTS =  \
-@HAVE_TRANSFORMSLIDERSET_TRUE@transformsliderset.o
+am_transformsliderset_OBJECTS =  transformsliderset.o
 transformsliderset_OBJECTS =  $(am_transformsliderset_OBJECTS)
 transformsliderset_LDADD = $(LDADD)
 transformsliderset_DEPENDENCIES = 
 transformsliderset_LDFLAGS = 
-@HAVE_WALKVIEWER_FALSE@am_walkviewer_OBJECTS = 
-@HAVE_WALKVIEWER_TRUE@am_walkviewer_OBJECTS =  walkviewer.o computils.o
+am_walkviewer_OBJECTS =  walkviewer.o computils.o
 walkviewer_OBJECTS =  $(am_walkviewer_OBJECTS)
-@HAVE_WALKVIEWER_FALSE@walkviewer_DEPENDENCIES = 
+walkviewer_LDADD = $(LDADD)
+walkviewer_DEPENDENCIES = 
 walkviewer_LDFLAGS = 
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
