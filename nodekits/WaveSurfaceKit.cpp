@@ -361,7 +361,6 @@ void WaveSurfaceKit::setDefaultValues(void)
   // use an indexed set of triangle strips for fast rendering
   SoIndexedTriangleStripSet* triangleStrips = new SoIndexedTriangleStripSet();
   triangleStrips->coordIndex.setValues(0, numIndices, indices);
-  delete[] indices;
 
   // this sets the parts we've just made
   setPart("appearance.material", material);

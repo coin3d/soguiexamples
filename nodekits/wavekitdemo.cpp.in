@@ -196,7 +196,6 @@ main(int argc, char ** argv)
   
   // Clean up resources.
   delete eviewer;
-  root->unref();
 
   return 0;
 }
