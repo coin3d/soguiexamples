@@ -27,7 +27,7 @@
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 
-#include <Inventor/SoDb.h>
+#include <Inventor/SoDB.h>
 #include <Inventor/SbColor.h>
 #include <Inventor/actions/SoSearchAction.h>
 #include <Inventor/nodes/SoNodes.h>
@@ -66,7 +66,7 @@ double round(double val)
 void
 timerCB(void *data, SoSensor *sensor)
 {
-  int num = round((double)rand() / (double)RAND_MAX * (double)(num_sources-1));
+  int num = (int) (round((double)rand() / (double)RAND_MAX * (double)(num_sources-1)));
   char str[5];
   sprintf(str, "N%d", num);
   SoNode *node = SoNode::getByName(str);
@@ -115,7 +115,7 @@ main(int argc, char *argv[])
   if (argc>2)
     num_sources = atoi(argv[2]);
   if (argc>3)
-    random = (strcmpi(argv[3], "random") == 0) ? TRUE : FALSE;
+    random = (strcmp(argv[3], "random") == 0) ? TRUE : FALSE;
       
   srand((unsigned)time(NULL));
   sources = new Source[num_sources];
