@@ -9170,6 +9170,68 @@ fi
 
 
 
+
+echo "$as_me:$LINENO: checking for SoIntersectionDetectionAction class" >&5
+echo $ECHO_N "checking for SoIntersectionDetectionAction class... $ECHO_C" >&6
+if test "${sim_cv_have_oiv_have_sointersectiondetectionaction+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+#include "confdefs.h"
+#include <Inventor/actions/SoIntersectionDetectionAction.h>
+#ifdef F77_DUMMY_MAIN
+#  ifdef __cplusplus
+     extern "C"
+#  endif
+   int F77_DUMMY_MAIN() { return 1; }
+#endif
+int
+main ()
+{
+
+   SoIntersectionDetectionAction ida;
+   ida.setDraggersEnabled(FALSE);
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  sim_cv_have_oiv_have_sointersectiondetectionaction=true
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+sim_cv_have_oiv_have_sointersectiondetectionaction=false
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+fi
+echo "$as_me:$LINENO: result: $sim_cv_have_oiv_have_sointersectiondetectionaction" >&5
+echo "${ECHO_T}$sim_cv_have_oiv_have_sointersectiondetectionaction" >&6
+
+if $sim_cv_have_oiv_have_sointersectiondetectionaction; then
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_SOINTERSECTIONDETECTIONACTION 1
+_ACEOF
+
+
+else
+  :
+fi
+
+
+
 # **************************************************************************
 # Remove redundant options from certain option lists, to clean up the
 # compiler and linker invocations.
