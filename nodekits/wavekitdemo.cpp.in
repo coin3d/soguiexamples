@@ -126,14 +126,16 @@ main(int argc, char ** argv)
   waveKit = new WaveSurfaceKit;
   waveKit->startAnimation();
 
+  SoSeparator* wavekitroot = new SoSeparator();
+  wavekitroot->addChild(texture1);
+  wavekitroot->addChild(waveKit);
+
   root->addChild(newCube(-1.1f,0,0,0,1.2f));
   root->addChild(newCube(1.1f,0,0,0,1.2f));
   root->addChild(newCube(0,1.1f,0,M_PI/2,1.0f));
   root->addChild(newCube(0,-1.1f,0,M_PI/2,1.0f));
   root->addChild(bottom(1.2f, 1.2f, 0.01f));
-
-  root->addChild(texture1);
-  root->addChild(waveKit);
+  root->addChild(wavekitroot);
 	
   coin_setenv("COIN_SHOW_FPS_COUNTER", "1", TRUE);
 
