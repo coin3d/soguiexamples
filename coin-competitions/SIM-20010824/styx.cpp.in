@@ -26,7 +26,7 @@
  *
  * Written by Lars J. Aas <larsa@coin3d.org>.
  * ********************************************************************** */
- 
+
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif // HAVE_CONFIG_H
@@ -250,8 +250,8 @@ tickLines1(SoCoordinate3 * coords)
       else              points[i] += p2dir * 5;
     } else {
       SbVec3f gravity = points[i-2] - points[i];
-      if ( (i&1) == 0 ) points[i] += (gravity * 0.2);
-      else              points[i] += (gravity * 0.2);
+      if ( (i&1) == 0 ) points[i] += (gravity * 0.2f);
+      else              points[i] += (gravity * 0.2f);
     }
   }
 
@@ -304,8 +304,8 @@ tickLines2(SoCoordinate3 * coords)
       else              points[i] += p2dir * 5;
     } else {
       SbVec3f gravity = points[i-2] - points[i];
-      if ( (i&1) == 0 ) points[i] += (gravity * 0.2);
-      else              points[i] += (gravity * 0.2);
+      if ( (i&1) == 0 ) points[i] += (gravity * 0.2f);
+      else              points[i] += (gravity * 0.2f);
     }
   }
 
@@ -358,8 +358,8 @@ tickLines3(SoCoordinate3 * coords)
       else              points[i] += p2dir * 5;
     } else {
       SbVec3f gravity = points[i-2] - points[i];
-      if ( (i&1) == 0 ) points[i] += (gravity * 0.2);
-      else              points[i] += (gravity * 0.2);
+      if ( (i&1) == 0 ) points[i] += (gravity * 0.2f);
+      else              points[i] += (gravity * 0.2f);
     }
   }
 
