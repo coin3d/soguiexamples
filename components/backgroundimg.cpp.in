@@ -89,7 +89,7 @@ MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
 {
   // Coin should not clear the pixel-buffer, so the background image
   // is not removed.
-  this->setClearBeforeRender(FALSE, TRUE);
+  this->setClearBeforeRender(FALSE);
 
 
   // Set up background scenegraph with image in it.
