@@ -89,7 +89,7 @@ gui = @gui@
 install_sh = @install_sh@
 soguiconfig = @soguiconfig@
 
-SUBDIRS = SIM-20010803 SIM-20010824 SIM-20010914
+SUBDIRS = SIM-20011005 SIM-20010914 SIM-20010824 SIM-20010803
 subdir = coin-competitions
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h

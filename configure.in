@@ -265,6 +265,7 @@ AC_OUTPUT([
 	Makefile
 	components/Makefile
 	coin-competitions/Makefile
+	coin-competitions/SIM-20011005/Makefile
 	coin-competitions/SIM-20010914/Makefile
 	coin-competitions/SIM-20010824/Makefile
 	coin-competitions/SIM-20010803/Makefile

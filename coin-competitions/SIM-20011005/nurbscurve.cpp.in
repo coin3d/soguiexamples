@@ -224,11 +224,11 @@ main(int argc, char ** argv )
   viewer->setDecoration(FALSE);
   viewer->show();
   So@Gui@::show(window);
-//  #ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
+#ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
   // Must do this _after_ show() to avoid the "Start"-bar being
   // visible with SoWin. (Bug!)
   (void)viewer->setFullScreen(TRUE);
-//  #endif // HAVE_SOCOMPONENT_SETFULLSCREEN
+#endif // HAVE_SOCOMPONENT_SETFULLSCREEN
 
   So@Gui@::mainLoop();
 
