@@ -50,8 +50,8 @@
 #include <Inventor/nodes/SoText2.h>
 #include <Inventor/elements/SoViewportRegionElement.h>
 #include <Inventor/sensors/SoTimerSensor.h>
-
 #include <Inventor/fields/SoSFString.h>
+#include <stdlib.h>
 
 SbBool room[4][4][14];
 SoSeparator * roomblocks[4][4][14];
@@ -1555,7 +1555,7 @@ main(int argc, char **argv)
   viewer->setViewing(FALSE);
 
   SoTimerSensor * ts = new SoTimerSensor(time_cb, NULL);
-  ts->setInterval(1.0f);
+  ts->setInterval(SbTime(1.0));
   ts->schedule();
 
   viewer->show();
