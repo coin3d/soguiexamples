@@ -18,6 +18,7 @@
 \**************************************************************************/
 
 #include <math.h>
+#include <stdlib.h>
 
 #include <Inventor/SoDB.h>
 #include <Inventor/SoInput.h>

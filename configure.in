@@ -103,7 +103,8 @@ AC_ARG_WITH(
     win | sowin)   sim_ac_gui_toolkit=sowin ;;
     gtk | sogtk)   sim_ac_gui_toolkit=sogtk ;;
     be  | sobe)    sim_ac_gui_toolkit=sobe  ;;
-    iv  | oiv)     sim_ac_gui_toolkit=oiv   ;;
+    ivxt| oivxt)   sim_ac_gui_toolkit=oivxt ;;
+    iv  | oiv)     sim_ac_gui_toolkit=oivxt ;;
     *) AC_MSG_ERROR([invalid --with-toolkit value: "$withval"]) ;;
   esac],
   [sim_ac_gui_toolkit=$sim_ac_gui_default])
