@@ -9,25 +9,24 @@
 #include <Inventor/VRMLnodes/SoVRMLAudioClip.h>
 #include <Inventor/VRMLnodes/SoVRMLSound.h>
 
-static void * 
-fill_buffer_callback(int frameoffset, void *buffer, 
-                    int numframes, int &channels, 
-                    void * userdataptr)
+static size_t 
+read_callback(void *datasource, void *buffer, 
+              int numframes, int &channels, 
+              SoVRMLAudioClip *clip,
+              void * userdataptr)
 {
   static int counter = 0;
   short int *ibuffer = (short int *)buffer;
   double a = 880.0 * 2.0 * 3.14159265 / 44100.0;
 
   for (int i=0; i< numframes; i++) {
-    // ibuffer[i] = counter+i;
     ibuffer[i] = 32000.0 * sin( (float)(counter + i) * a );
   }
   counter += numframes;
 
   channels = 1;
-  return buffer;
+  return numframes;
 }
-
 
 int 
 main(int argc, char *argv[]) 
@@ -47,8 +46,7 @@ main(int argc, char *argv[])
 
   clip->stopTime = SbTime::getTimeOfDay();
   clip->startTime = SbTime::getTimeOfDay();
-  clip->setFillBufferCallback(fill_buffer_callback, 0);
-  // clip->url = "clips/ticktack.wav";
+  clip->setCallbacks(NULL, read_callback, NULL, NULL, NULL, 0);
   clip->loop = TRUE;
 
   sound->source = clip;
