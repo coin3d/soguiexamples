@@ -1,0 +1,154 @@
+
+#include <assert.h>
+#include <stdio.h>
+#include <math.h>
+
+#include <Inventor/SbLinear.h>
+#include <Inventor/SbTime.h>
+#include <Inventor/SoDB.h>
+#include <Inventor/SoInput.h>
+#include <Inventor/nodes/SoNode.h>
+#include <Inventor/nodes/SoClipPlane.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoCallback.h>
+#include <Inventor/actions/SoSearchAction.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+static const char * ascii_scene[] = {
+  "#Inventor V2.1 ascii",
+  "",
+  "Separator {",
+  "  DirectionalLight {",
+  "    intensity 0.8",
+  "  }",
+  "  DEF c Callback { }",
+  "  Rotor {",
+  "    rotation 0 1 0 1",
+  "    speed 0.03",
+  "  }",
+  "  DEF t1 Translation {",
+  "    translation 0 0 0",
+  "  }",
+  "  DEF p1 ClipPlane {",
+  "    plane 1 0 0 1",
+  "    on TRUE",
+  "  }",
+  "  DEF t2 Translation {",
+  "    translation 0 0 0",
+  "  }",
+  "  DEF p2 ClipPlane {",
+  "    plane -1 0 0 1",
+  "    on TRUE",
+  "  }",
+  "  DEF t3 Translation {",
+  "    translation 0 0 0",
+  "  }",
+#include "../simlogo.h"
+  "}",
+  NULL
+};
+
+char *
+strconcat(const char * array[], unsigned int &total)
+{
+  int i;
+  for (i = total = 0; array[i]; i++ )
+    total += strlen(array[i]) + 1;
+  char * buf = new char [total + 1];
+  for (i = total = 0; array[i]; i++ ) {
+    strcpy(buf+total, array[i]);
+    total += strlen(array[i]); 
+    buf[total] = '\n';
+    total++;
+  }
+  return buf;
+}
+
+SoNode *
+getNodeByName(SoNode * root, const char * name)
+{
+  static SoSearchAction * action;
+  if ( !action ) action = new SoSearchAction;
+  action->reset();
+  // action->setFind(SoSearchAction::NAME);
+  action->setName(SbName(name));
+  action->setInterest(SoSearchAction::FIRST);
+  action->apply(root);
+  if ( !action->getPath() ) return NULL;
+  return action->getPath()->getTail();
+}
+
+static SoClipPlane *p1, *p2;
+static SoTranslation *t1, *t2, *t3;
+static SoCallback *c;
+
+static SbTime * starttime;
+
+void
+event_cb(void * closure, SoAction * action)
+{
+  if ( ! starttime )
+    starttime = new SbTime(SbTime::getTimeOfDay());
+  // fprintf( stderr, "delta = %g\n", deltat);
+
+  So@Gui@ExaminerViewer * viewer = (So@Gui@ExaminerViewer *) closure;
+  if ( action->isOfType(SoGLRenderAction::getClassTypeId()) ) {
+    SbTime now(SbTime::getTimeOfDay());
+    float deltat = (float) (now - *starttime).getMsecValue();
+    float pos = -2.0f + 8.0f * sin(deltat/600.0f);
+    float width = 5.0f + 2.0 * sin(deltat/300.0f);
+    t1->translation.setValue(SbVec3f(pos, 0.0f, 0.0f));
+    t2->translation.setValue(SbVec3f(width, 0.0f, 0.0f));
+    t3->translation.setValue(SbVec3f(-width - pos, 0.0f, 0.0f));
+  }
+}
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  @WIDGET@ mainw = So@Gui@::init("Entry");
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(mainw);
+
+  SoInput * in = new SoInput;
+  unsigned int len;
+  char * buffer = strconcat(ascii_scene, len);
+  in->setBuffer(buffer, len);
+  SoNode * scene;
+  if ( ! SoDB::read(in, scene) ) {
+    delete [] buffer;
+    delete in;
+    delete viewer;
+    fprintf(stderr, "%s: error in scene - exiting.\n", argv[0]);
+    exit(-1);
+  }
+  delete [] buffer;
+  delete in;
+
+  scene->ref();
+
+  p1 = (SoClipPlane *) getNodeByName(scene, "p1");
+  p2 = (SoClipPlane *) getNodeByName(scene, "p2");
+  t1 = (SoTranslation *) getNodeByName(scene, "t1");
+  t2 = (SoTranslation *) getNodeByName(scene, "t2");
+  t3 = (SoTranslation *) getNodeByName(scene, "t3");
+  c = (SoCallback *) getNodeByName(scene, "c");
+  assert(p1 && p2 && t1 && t2 && t3 && c);
+
+  c->setCallback(event_cb, viewer);
+
+  scene->unrefNoDelete();
+  viewer->setFullScreen(TRUE);
+  viewer->setDecoration(FALSE);
+  viewer->setSceneGraph(scene);
+
+  viewer->show();
+  So@Gui@::show(mainw);
+  So@Gui@::mainLoop();
+  delete viewer;
+  return 0;
+}
+
