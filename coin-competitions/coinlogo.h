@@ -1,21 +1,24 @@
-/**************************************************************************
+/**************************************************************************\
  *
- *  This file is part of the Coin 3D visualization library.
- *  Copyright (C) 1998-2001 by Systems in Motion. All rights reserved.
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2002 by Systems in Motion. All rights reserved.
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public License
- *  version 2.1 as published by the Free Software Foundation. See the
- *  file LICENSE.LGPL at the root directory of the distribution for
- *  more details.
+ *                   <URL:http://www.coin3d.org>
  *
- *  If you want to use Coin for applications not compatible with the
- *  LGPL, please contact SIM to acquire a Professional Edition license.
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
  *
- *  Systems in Motion, Prof Brochs gate 6, 7030 Trondheim, NORWAY
- *  http://www.sim.no support@sim.no Voice: +47 22114160 Fax: +47 22207097
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
  *
- **************************************************************************/
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
 
 #ifndef SOGUIEXAMPLES_COINLOGO_IV_H
 #define SOGUIEXAMPLES_COINLOGO_IV_H

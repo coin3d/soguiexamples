@@ -1,7 +1,9 @@
 /**************************************************************************\
  *
- *  This file is part of a set of demo programs for the Coin library.
- *  Copyright (C) 2000-2001 by Systems in Motion. All rights reserved.
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2002 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
  *
  *  This sourcecode can be redistributed and/or modified under the
  *  terms of the GNU General Public License version 2 as published by
@@ -14,8 +16,7 @@
  *  web pages for information about how to acquire a Professional Edition
  *  License.
  *
- *  Systems in Motion, Prof Brochs gate 6, 7030 Trondheim, NORWAY
- *  http://www.sim.no support@sim.no Voice: +47 22114160 Fax: +47 22207097
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
  *
 \**************************************************************************/
 // File: MooTokenizer.h
