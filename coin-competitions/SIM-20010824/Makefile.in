@@ -89,6 +89,8 @@ gui = @gui@
 install_sh = @install_sh@
 soguiconfig = @soguiconfig@
 
+INCLUDES = -I$(top_srcdir)/coin-competitions
+
 noinst_PROGRAMS = \
 	smiley \
 	plasmaball \

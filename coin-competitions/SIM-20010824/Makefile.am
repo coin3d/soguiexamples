@@ -1,3 +1,5 @@
+INCLUDES = -I$(top_srcdir)/coin-competitions
+
 noinst_PROGRAMS = \
 	smiley \
 	plasmaball \
