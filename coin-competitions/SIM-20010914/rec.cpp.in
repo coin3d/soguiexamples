@@ -389,10 +389,16 @@ int main(int, char ** argv){
 	const char * str[] = {
 	"This demonstration shows a line which vertices","are calculated through a recursive function.",
 	"",
-    "PAGE UP button:   increases recursion depth",
-    "PAGE DOWN button: decreases recursion depth",
+        "PAGE UP button:   increases recursion depth",
+        "PAGE DOWN button: decreases recursion depth",
 	"You can toggle between 8 recursion depths.",
 	"",
+        // FIXME: not really correct, only works under MSWin with
+        // default configuration settings.  I'm not sure if there
+        // actually _is_ a general way to quit the app that works for
+        // all window systems and both Coin and SGI / TGS Inventor
+        // (the 'q to quit' is specific for our
+        // So*-libraries). 20010920 mortene.
 	"Enter ALT+F4 to end the demonstration."
 	};
 	text->string.setValues(0, sizeof(str) / sizeof(char *), str);
