@@ -189,3 +189,12 @@
     20040624 mortene, reported by Sigurd T. Seteklev.
 
 =====================================================================
+
+010 Search path for soqt-config broken
+
+    configure doesn't search for soqt-config in the location given by
+    using --with-soqt=<SoQt-prefix>
+
+    20040624 kintel
+
+=====================================================================
