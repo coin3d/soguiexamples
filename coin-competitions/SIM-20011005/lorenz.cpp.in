@@ -52,13 +52,11 @@ SoSeparator * create_star(SbVec3f pos)
   SoSeparator * sep = new SoSeparator;
   sep->ref();
 
+  // FIXME: use delta-values for the translation on each "star" to
+  // avoid the necessity of using all the SoSeparator nodes. 20011009 mortene.
   SoTranslation * trans = new SoTranslation;
   trans->translation.setValue(pos);
   sep->addChild(trans);
-
-  SoCoordinate3 * coords = new SoCoordinate3;
-  coords->point.setValues(0, 18, vertices);
-  sep->addChild(coords);
 
   SoFaceSet * faces = new SoFaceSet;
   int32_t numverts[] = { 4, 4, 4 };
@@ -106,7 +104,6 @@ main (int argc, char ** argv)
 
   SoSeparator * stars = new SoSeparator;
 
-
   SoMaterial * mat = new SoMaterial;
   mat->specularColor.setValue( 1.0f, 1.0f, 1.0f );
   mat->emissiveColor.setValue( 1.0f, 1.0f, 1.0f );
@@ -129,6 +126,10 @@ main (int argc, char ** argv)
     { MINTEX, MINTEX }, { MINTEX, MAXTEX}, { MAXTEX, MAXTEX}, {MAXTEX, MINTEX} };
   texcoord->point.setValues(0, 12, tcs);
   stars->addChild(texcoord);
+
+  SoCoordinate3 * coords = new SoCoordinate3;
+  coords->point.setValues(0, 18, vertices);
+  stars->addChild(coords);
 
   printf("Computing...\n");
 
