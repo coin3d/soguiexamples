@@ -441,7 +441,7 @@ fi
 # **************************************************************************
 # All files configure must automatically generate.
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
         Makefile
 
         components/Makefile
@@ -594,6 +594,22 @@ AC_OUTPUT([
         coin-competitions/SIM-20020503/flow.cpp
         coin-competitions/SIM-20020503/typeomatic.cpp
 ])
+
+# MKS will have "\c" as $ECHO_C, but that string in the config.status
+# substitution command will cause config.status to hang because it is
+# somehow translated to "&c".  We therefore blank it here, and restore
+# it further below, after AC_OUTPUT.
+
+sim_ac_ECHO_C=$ECHO_C
+case $build in
+*-mks ) ECHO_C="" ;;
+esac
+
+AC_OUTPUT
+
+ECHO_C=$sim_ac_ECHO_C
+
+# *******************************************************************
 
 SIM_AC_CONFIGURATION_SUMMARY
 
