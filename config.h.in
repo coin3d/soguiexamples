@@ -57,6 +57,9 @@
 /* Define to enable use of the Open Inventor SoPolygonOffset node */
 #undef HAVE_SOPOLYGONOFFSET
 
+/* Define to enable use of the Open Inventor SoTextureScalePolicy node */
+#undef HAVE_SOTEXTURESCALEPOLICY
+
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 

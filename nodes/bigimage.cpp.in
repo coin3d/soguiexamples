@@ -27,19 +27,20 @@
 #include <Inventor/nodes/SoShapeHints.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoTexture2.h>
-#include <Inventor/nodes/SoCube.h>
-#include <Inventor/sensors/SoTimerSensor.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoFaceSet.h>
+#include <Inventor/nodes/SoTextureScalePolicy.h>
 
 // Global constants
-const int texturewidth = 128;
-const int textureheight = 128;
+const int texturewidth = 5000;
+const int textureheight = 5000;
 
 // Global variables
-double cr = 0.33;
-double ci = 0.43;
+static double cr = 0.33;
+static double ci = 0.43;
 
 // Global pointer
-unsigned char * bitmap = new unsigned char[texturewidth*textureheight];
+static unsigned char * bitmap;
 
 // Function to generate a julia set
 // Parameters:
@@ -51,7 +52,7 @@ unsigned char * bitmap = new unsigned char[texturewidth*textureheight];
 //  int mult    - number to multiply each color by.
 //  unsigned char * bmp - pointer to the bitmap
 //  int n       - number of itterations 
-void
+static void
 julia(double crr, double cii, float zoom, int width, int height, int mult, 
       unsigned char * bmp, int n)
 {
@@ -67,8 +68,29 @@ julia(double crr, double cii, float zoom, int width, int height, int mult,
         zr = zr*zr - zi*zi + crr;
         zi = 2*zr_old*zi + cii;
       }
-      bmp[y*width+x] = 255-w*mult;
-      bmp[((height-y)*width)-(x+1)] = 255-w*mult;
+      
+      int c = (255-w*mult);
+
+      unsigned char r, g, b;
+
+      if (c < 128) {
+        c = 128 - c;
+        r = g = b = c * 2;
+      }
+      else {
+        c -= 128;
+        r = (255 * c) >> 7;
+        g = (102 * c) >> 7;
+        b = 0;
+      }
+
+      bmp[3*(y*width+x)] = r;;
+      bmp[3*(y*width+x)+1] = g;
+      bmp[3*(y*width+x)+2] = b;
+
+      bmp[3*(((height-y)*width)-(x+1))] = r;
+      bmp[3*(((height-y)*width)-(x+1))+1] = g;
+      bmp[3*(((height-y)*width)-(x+1))+2] = b;
     }
 }
 
@@ -76,51 +98,23 @@ julia(double crr, double cii, float zoom, int width, int height, int mult,
 // SoTexture2 node containing this texture..
 // Return:
 //  SoTexture2 *
-SoTexture2 *
-texture()
+static SoTexture2 *
+texture(void)
 {
   SoTexture2 * texture = new SoTexture2;
-  texture->image.setValue(SbVec2s(texturewidth, textureheight), 1, bitmap);
+  texture->image.setValue(SbVec2s(texturewidth, textureheight), 3, bitmap);
   texture->model = SoTexture2::MODULATE;
   texture->blendColor.setValue(1.0, 0.0, 0.0);
   return texture;
 }
 
-// This function is called 20 times each second. 
-static void
-timersensorcallback(void * data, SoSensor *)
-{
-  static SbBool direction = FALSE;
-
-  SoTexture2 * texnode = (SoTexture2*) data;
-
-  if (!direction) {
-    cr -= 0.0005;
-    ci += 0.0005;
-  }
-  else {
-    cr += 0.0005;
-    ci -= 0.0005;
-  }
-
-  if (ci<0.30)
-    direction = !direction;
-  else if (ci>0.83)
-    direction = !direction;
-
-  SbVec2s size;
-  int nc;
-  unsigned char * image = texnode->image.startEditing(size, nc);
-  // Generate a julia set to use as a texturemap
-  julia(cr, ci, 2.5, size[0], size[1], 4, image, 64);
-  texnode->image.finishEditing();
-}
-
 int
 main (int, char ** argv)
 {
-  (void)printf("This example shows how to use the SoTimerSensor.\n");
+  (void)printf("This example shows how to use the BigImage functionality in"
+               "Coin to render\nlarge textures. Please wait, generating texture\n");
 
+  bitmap = new unsigned char[texturewidth*textureheight*3];
   // Generate a julia set to use as a texturemap
   julia(cr, ci, 2.5, texturewidth, textureheight, 4, bitmap, 64);
 
@@ -136,18 +130,34 @@ main (int, char ** argv)
   hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   hints->shapeType = SoShapeHints::SOLID;
 
-  // Timer sensor
-  SoTimerSensor * texturetimer = new SoTimerSensor(timersensorcallback, texnode);
-  texturetimer->setInterval(0.05);
-  texturetimer->schedule();
-
   // Scene graph
   SoSeparator * root = new SoSeparator;
   root->ref();
 
+  // tell Coin to split the texture into several small textures, and
+  // stitch them back together when rendering
+  SoTextureScalePolicy * policy = new SoTextureScalePolicy;
+  policy->policy = SoTextureScalePolicy::FRACTURE;
+  root->addChild(policy);
+
   root->addChild(hints);
   root->addChild(texnode);
-  root->addChild(new SoCube);
+
+  SoCoordinate3 * c3 = new SoCoordinate3;
+  c3->point.setNum(4);
+  SbVec3f * p = c3->point.startEditing();
+  p[0] = SbVec3f(0.0f, 0.0, 0.0f);
+  p[1] = SbVec3f(1.0f, 0.0, 0.0f);
+  p[2] = SbVec3f(1.0f, 1.0, 0.0f);
+  p[3] = SbVec3f(0.0f, 1.0, 0.0f);
+  c3->point.finishEditing();
+
+  root->addChild(c3);
+
+  SoFaceSet * fs = new SoFaceSet;
+  fs->numVertices = 4;
+
+  root->addChild(fs);
 
   // Setting up the examiner viewer
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
