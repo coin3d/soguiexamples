@@ -229,6 +229,7 @@ AC_OUTPUT([
 	nodes/Makefile
 	sensors/Makefile
 	eyecandy/Makefile
+	coin-competitions/SIM-20010803/Makefile
 ])
 
 # **************************************************************************
