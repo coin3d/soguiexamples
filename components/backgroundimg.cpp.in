@@ -26,21 +26,28 @@
 
 // *************************************************************************
 
-#include <Inventor/@Gui@/So@Gui@.h>
-#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
-#include <Inventor/nodes/SoBaseColor.h>
-#include <Inventor/nodes/SoCone.h>
-#include <Inventor/nodes/SoCube.h>
-#include <Inventor/nodes/SoImage.h>
-#include <Inventor/nodes/SoLightModel.h>
-#include <Inventor/nodes/SoOrthographicCamera.h>
-#include <Inventor/nodes/SoRotationXYZ.h>
-#include <Inventor/nodes/SoSeparator.h>
-#include <Inventor/nodes/SoTranslation.h>
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoBaseColor.h>
+#include <Inventor/nodes/SoComplexity.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoLightModel.h>
+#include <Inventor/nodes/SoOrthographicCamera.h>
+#include <Inventor/nodes/SoQuadMesh.h>
+#include <Inventor/nodes/SoRotationXYZ.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoTranslation.h>
+
+#ifdef HAVE_SOIMAGE
+#include <Inventor/nodes/SoImage.h>
+#endif // HAVE_SOIMAGE
 
 #ifdef HAVE_WINDOWS_H
 /* on windows, headers usually do not include their dependencies, so
@@ -97,13 +104,49 @@ MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
   cam->nearDistance = 0.5;
   cam->farDistance = 1.5;
 
+  this->bckgroundroot->addChild(cam);
+
+#ifdef HAVE_SOIMAGE
+
   SoImage * img = new SoImage;
   img->vertAlignment = SoImage::HALF;
   img->horAlignment = SoImage::CENTER;
   img->filename = filename;
-
-  this->bckgroundroot->addChild(cam);
   this->bckgroundroot->addChild(img);
+
+#else // !HAVE_SOIMAGE
+  // SoImage only available in Coin (any version) or from TGS Inventor
+  // v2.5 and onwards, so if we're using SGI Inventor or an older TGS
+  // Inventor, map a texture on a polygon instead.
+
+  SoLightModel * imglm = new SoLightModel;
+  imglm->model = SoLightModel::BASE_COLOR;
+  this->bckgroundroot->addChild(imglm);
+
+  SoComplexity * complexity = new SoComplexity;
+  complexity->textureQuality = 0.1;
+  this->bckgroundroot->addChild(complexity);
+
+  SoTexture2 * img = new SoTexture2;
+  img->filename = filename;
+  this->bckgroundroot->addChild(img);
+
+  static float vertices[][3] = {
+    {0.5, 0.5, 0}, {0.5, -0.5, 0}, {-0.5, 0.5, 0}, {-0.5, -0.5, 0},
+  };
+  
+  SoCoordinate3 * coords = new SoCoordinate3;
+  coords->point.setValues(0, 4, vertices);
+  this->bckgroundroot->addChild(coords);
+    
+  // QuadMesh
+  SoQuadMesh * mesh = new SoQuadMesh;
+  mesh->verticesPerRow = 2;
+  mesh->verticesPerColumn = 2;
+  this->bckgroundroot->addChild(mesh);
+
+#endif // !HAVE_SOIMAGE
+
 
   // Set up foreground, overlayed scenegraph.
 
