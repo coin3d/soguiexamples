@@ -38,7 +38,7 @@
 // compass north, where 0° means the input vector points straight
 // north, 90° is east, 180° south and 270° is west.
 static float
-azimuth(SbVec3f north, SbVec3f east, SbVec3f directionvec)
+azimuth_angle(SbVec3f north, SbVec3f east, SbVec3f directionvec)
 {
   // Make compass plane.
   SbPlane compassplane(SbVec3f(0, 0, 0), north, east);
@@ -55,6 +55,34 @@ azimuth(SbVec3f north, SbVec3f east, SbVec3f directionvec)
   // Check if the input argument vector is pointing to the "west side"
   // of the north-south axis, and if so, correct the absolute angle.
   if (directionvec.dot(east) < 0.0f) { angle = M_PI + (M_PI - angle); }
+
+  return angle;
+}
+
+// *************************************************************************
+
+// Calculates elevation angle of the "directionvec" argument versus
+// the given ground plane. The angle returned is in the range [0,PI]
+// for a vector pointing "up" versus the plane, and in the range
+// <0,-PI> for a vector pointing into the ground (ie in the opposite
+// direction of the ground plane's normal vector).
+static float
+elevation_angle(SbPlane groundplane, SbVec3f directionvec)
+{
+  // Project input vector into a mirrored vector in the ground plane.
+  float d = groundplane.getDistance(directionvec);
+  SbVec3f groundvec = directionvec - (groundplane.getNormal() * d);
+
+  // Find absolute angle in the [0, PI] range versus the groundplane.
+  directionvec.normalize();
+  groundvec.normalize();
+  float angle = acos(groundvec.dot(directionvec));
+
+  // Check if the input argument vector is pointing into the ground,
+  // and if so, correct the absolute angle.
+  SbVec3f n = groundplane.getNormal();
+  n.normalize();
+  if (directionvec.dot(n) < 0.0f) { angle = -angle; }
 
   return angle;
 }
@@ -82,6 +110,8 @@ event_cb(void * ud, SoEventCallback * n)
 
     n->setHandled();
 
+    (void)fprintf(stdout, "\n");
+
     SbVec3f v = point->getPoint();
     SbVec3f nv = point->getNormal();
     (void)fprintf(stdout, "point=<%f, %f, %f>, normvec=<%f, %f, %f>\n",
@@ -94,8 +124,16 @@ event_cb(void * ud, SoEventCallback * n)
 
     // Find and print the azimuth angle of the vector from the camera
     // position to the point that was picked.
-    float azimuthangle = azimuth(SbVec3f(0, 0, -1), SbVec3f(1, 0, 0), hitvec);
-    (void)fprintf(stdout, "Azimuth angle: %f\n", azimuthangle * 180.0f / M_PI);
+    const SbVec3f NORTH(0, 0, -1);
+    const SbVec3f EAST(1, 0, 0);
+    float azimuth = azimuth_angle(NORTH, EAST, hitvec);
+    (void)fprintf(stdout, "Azimuth angle: %f\n", azimuth * 180.0f / M_PI);
+
+    // Find and print the elevation angle of the vector from the
+    // camera position to the point that was picked.
+    const SbPlane GROUNDPLANE(SbVec3f(0, 1, 0), 0);
+    float elevation = elevation_angle(GROUNDPLANE, hitvec);
+    (void)fprintf(stdout, "Elevation angle: %f\n", elevation * 180.0f / M_PI);
   }
 }
 
