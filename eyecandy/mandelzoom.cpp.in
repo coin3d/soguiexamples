@@ -1,0 +1,419 @@
+#include <assert.h>
+
+#include <Inventor/SbBasic.h>
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/nodes/SoComplexity.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoQuadMesh.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#define SMALL 0
+
+#if SMALL
+#include "stone42a.h"
+#include "sky10a.h"
+#else
+#include "stone42b.h"
+#include "sky10b.h"
+#endif
+
+#if SMALL
+const int landscapewidth = 64;
+const int landscapeheight = 64;
+#else
+const int landscapewidth = 128;
+const int landscapeheight = 128;
+#endif
+const int landscapexstep = 16;
+const int landscapeystep = 16;
+const int waterlevel = 30;
+
+// *************************************************************************
+
+class Landscape {
+public:
+  Landscape( const int, const int );
+  ~Landscape(void);
+  void createJulia( int iter );
+  void smooth(void);
+  SoSeparator * createScene(void);
+  void createCoords(void);
+  void createTexture(void);
+  SoCoordinate3 * getCoords(void);
+  SoTexture2 * getTexture(void);
+  void updateCoords(void);
+  void printFile(void);
+  void recalcY( float value );
+  void recalcX( float value );
+  void recalcZ( float value );
+  SbBool changed;
+
+private:
+  double centerr, centeri, zoom;
+  float * heightbuffer, * smoothbuffer;
+  int width, height;
+  float maxheight;
+  unsigned char * texturebuffer;
+  SoCoordinate3 * coords;
+  SoTexture2 * texture;
+  SoQuadMesh * mesh;
+
+}; // Landscape
+
+// *************************************************************************
+
+class FractalViewer : public So@Gui@ExaminerViewer {
+public:
+  FractalViewer(
+    @WIDGET@ parent = NULL,
+    const char * const name = NULL,
+    const SbBool embed = TRUE );
+
+  virtual void leftWheelMotion( float value );
+  virtual void bottomWheelMotion( float value );
+  virtual void rightWheelMotion( float value );
+
+  Landscape * landscape;
+
+}; // FractalViewer
+
+// *************************************************************************
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  @WINWIDGET@ window = So@Gui@::init(argv[0]);
+  if ( window == NULL )
+    exit( 1 );
+
+  Landscape * landscape = new Landscape( landscapewidth, landscapeheight );
+  landscape->createJulia( 32 ); 
+  landscape->smooth();
+  landscape->createCoords();
+  landscape->createTexture();
+  
+  SoSeparator * root = new SoSeparator;
+  root->addChild( landscape->createScene() );
+  
+  // Set up examinerviewer
+  FractalViewer * viewer = new FractalViewer(window);
+  viewer->landscape = landscape;
+  viewer->setTransparencyType(SoGLRenderAction::BLEND);
+  viewer->setSceneGraph(root);
+  viewer->setTitle( "Mandelbrot Landscape Zoom" );
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show( window );
+  So@Gui@::mainLoop();
+  delete viewer;
+  delete landscape;
+  return 0;
+} // main()
+
+static void
+timerSensorCallback(
+  void * data,
+  SoSensor * )
+{
+  Landscape * landscape = (Landscape *) data;
+  if ( landscape->changed ) {
+    landscape->updateCoords();
+    landscape->changed = FALSE;
+  }
+} // timerSensorCallback()
+
+// *************************************************************************
+
+Landscape::Landscape(
+  int w,
+  int h )
+: width(w), height(h)
+{
+  coords = new SoCoordinate3; 
+  texture = new SoTexture2;
+  mesh = NULL;
+  heightbuffer = new float[ w * h ]; 
+  smoothbuffer = new float[ w * h ];
+  texturebuffer = new unsigned char[ w * h * 4 ];
+  centerr = 0;
+  centeri = 0;
+  zoom = 1;
+  changed = TRUE;
+}
+
+Landscape::~Landscape(void)
+{
+  delete heightbuffer; 
+  delete smoothbuffer;
+  delete texturebuffer;
+}
+ 
+void
+Landscape::createJulia(int n) { 
+  register double zr, zr_old, zi, cr, ci; 
+  int w,minw=293284296;
+  static int oldw = 0;
+
+  int maxi = ((oldw+n)>=256?256:oldw+n);
+  for ( int y = 0; y <height; y++ ) {
+    for ( int x = 0; x <width; x++ ) { 
+      cr = zr = ((double)(x)/(double)width)*4/zoom+centerr-2/zoom; 
+      ci = zi = ((double)(y)/(double)height)*4/zoom+centeri-2/zoom; 
+      for (w=0;(w<maxi)&&(zr*zr+zi*zi)<4;w++) {
+        zr_old=zr;
+        zr=zr*zr-zi*zi+cr;
+        zi=2*zr_old*zi+ci;
+      }
+      heightbuffer[y*width+x] = (float)((w-oldw)<0?0:w-oldw)*2;
+      if (w<minw) minw=w;
+      //      heightbuffer[((height-y)*width-1)-x] = (float)w; 
+    } 
+  }
+  oldw=minw;
+} 
+
+void
+Landscape::smooth(void) {
+  int i;
+  memset((void*)smoothbuffer,0,width*height);
+  maxheight = 0.0;
+  for (int y = 1; y < height - 2; y++)
+    for (int x = 1; x < width - 2; x++) {
+      i = y*width + x;
+      smoothbuffer[i] = ( heightbuffer[i] * 2 +
+                          heightbuffer[i-1] +
+                          heightbuffer[i+1] + 
+                          heightbuffer[i-width-1] +
+                          heightbuffer[i-width] + 
+                          heightbuffer[i-width+1] +
+                          heightbuffer[i+width-1] + 
+                          heightbuffer[i+width] +
+                          heightbuffer[i+width+1])/10.0;
+      if (smoothbuffer[i] > maxheight)
+        maxheight = smoothbuffer[i];
+    }
+} 
+
+void
+Landscape::createCoords(void) {
+  int i,lx,ly,w = width - 1; 
+
+  static int first = 1;
+  if (first) {
+    coords->point.setNum(width*height);
+    first = 0;
+  }
+  SbVec3f * ptr = coords->point.startEditing();
+  
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < w; x++) { 
+      i = y * width + x; 
+      lx = x * landscapexstep; 
+      ly = y * landscapeystep;
+      ptr[i].setValue(lx,
+                      smoothbuffer[i] * 2,
+                      ly);
+      ptr[i+1].setValue(
+                        lx + landscapexstep,
+                        smoothbuffer[i+1] * 2,
+                        ly);
+    } 
+  }
+  coords->point.finishEditing();
+}
+
+void
+Landscape::createTexture(void)
+{
+  float elevation;
+  float elevation_limit_hi = 0.75 * maxheight;
+  int byte_width = width * 4;
+  int byte_height = height * 4;
+  int x,y,i,j;
+
+  memcpy(texturebuffer, stone42, width * height * 4 );
+  
+  for (y = 0; y < byte_height; y += 4) {
+      for (x = 0; x < byte_width; x += 4) {
+      i =  y * width + x;
+      j = x * height + y;
+      elevation = smoothbuffer[ j / 4 ];
+      
+      if(elevation >= elevation_limit_hi) {
+        texturebuffer[i] = 255;
+        texturebuffer[i+1] = 255;
+        texturebuffer[i+2] = 255;
+
+      }
+    }
+  }
+  texture->image.setValue(SbVec2s(width, height), 4, (UBYTE*)texturebuffer);
+}
+
+SoCoordinate3 *
+Landscape::getCoords(void) {
+  return coords;
+}
+
+SoTexture2 *
+Landscape::getTexture(void) {
+  return texture;
+}
+
+void
+Landscape::updateCoords(void) {
+  static SbBool direction = FALSE;
+  assert( mesh != NULL );
+
+#if SMALL
+  float add = 0.0001;
+#else
+  float add = 0.0005;
+#endif
+
+  SbVec3f * coordinates = coords->point.startEditing();
+  createJulia(32); 
+  smooth();
+  createCoords();
+  createTexture();
+  coords->point.finishEditing();
+}
+
+SoSeparator *
+Landscape::createScene(void) {
+  SoSeparator * sep = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+
+  SoComplexity * cmplx = new SoComplexity;
+  cmplx->textureQuality = 0.4f;
+  sep->addChild(cmplx);
+
+  hints->vertexOrdering = SoShapeHintsElement::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHintsElement::SOLID;
+
+  // add land
+  sep->addChild(hints);
+  sep->addChild(getTexture());
+  sep->addChild(getCoords());
+
+  mesh = new SoQuadMesh; 
+  mesh->verticesPerRow = landscapewidth; 
+  mesh->verticesPerColumn = landscapeheight; 
+  sep->addChild(mesh);
+
+  // add timer sensor
+  SoTimerSensor * landscapetimer = new SoTimerSensor(timerSensorCallback, this);
+  landscapetimer->setInterval(0.05);
+   landscapetimer->schedule();
+
+  // new separator
+  SoSeparator * sep2 = new SoSeparator;
+
+  // add sea
+  SoTexture2 * water_texture = new SoTexture2;
+  water_texture->image.setValue(SbVec2s(landscapewidth, landscapeheight), 4, (UBYTE*)sky10);
+  sep2->addChild(water_texture);
+
+  SoMaterial * water_material = new SoMaterial;
+  //water_material->diffuseColor.setValue(0.4f, 0.4f, 0.8f);
+  water_material->specularColor.setValue(1.0f, 1.0f, 1.0f);
+  water_material->emissiveColor.setValue(0.0f, 0.0f, 0.0f);
+  water_material->shininess = 0.7f;
+  water_material->transparency = 0.6f;
+
+  sep2->addChild(water_material);
+
+  SoQuadMesh * sea = new SoQuadMesh;
+  SoCoordinate3 * coordinates = new SoCoordinate3;
+  coordinates->point.set1Value( 0, landscapewidth * landscapexstep, 30.0f, landscapeheight * landscapeystep );
+  coordinates->point.set1Value( 1, 0.0f, waterlevel, landscapeheight * landscapeystep );
+  coordinates->point.set1Value( 2, landscapewidth * landscapexstep, 30.0f, 0.0f );
+  coordinates->point.set1Value( 3, 0.0f, waterlevel, 0.0f );
+  sep2->addChild(coordinates);
+  sea->verticesPerRow = 2; 
+  sea->verticesPerColumn = 2; 
+  sep2->addChild(sea);
+  sep->addChild(sep2);
+  return sep;
+} // createScene()
+
+void
+Landscape::recalcY(
+  float delta )
+{
+  centeri += delta/zoom;
+  changed = TRUE;
+} // recalcY()
+
+void
+Landscape::recalcX(
+  float delta )
+{
+  centerr += delta/zoom;
+  changed = TRUE;
+} // recalcX()
+
+void
+Landscape::recalcZ(
+  float delta )
+{
+  zoom *= 1+delta;
+  changed = TRUE;
+} // recalcZ()
+
+// *************************************************************************
+
+FractalViewer::FractalViewer(
+  @WIDGET@ parent,
+  const char * const name,
+  const SbBool embed )
+: So@Gui@ExaminerViewer( parent, name, embed,
+    So@Gui@FullViewer::BUILD_ALL, So@Gui@Viewer::BROWSER, TRUE )
+{
+  this->setLeftWheelString( "Move Center Y" );
+  this->setBottomWheelString( "Move Center X" );
+  this->setRightWheelString( "Zoom" );
+  this->landscape = NULL;
+}
+
+void
+FractalViewer::leftWheelMotion(
+  float val )
+{
+  float old = this->getLeftWheelValue();
+  So@Gui@FullViewer::leftWheelMotion( val );
+  if ( this->landscape )
+    this->landscape->recalcY( val - old );
+}
+
+void
+FractalViewer::bottomWheelMotion(
+  float val )
+{
+  float old = this->getBottomWheelValue();
+  So@Gui@FullViewer::bottomWheelMotion( val );
+  if ( this->landscape )
+    this->landscape->recalcX( val - old );
+}
+
+void
+FractalViewer::rightWheelMotion(
+  float val )
+{
+  float old = this->getRightWheelValue();
+  So@Gui@FullViewer::rightWheelMotion( val );
+  if ( this->landscape )
+    this->landscape->recalcZ( val - old );
+}
+
+// *************************************************************************

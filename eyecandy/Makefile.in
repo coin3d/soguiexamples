@@ -92,15 +92,24 @@ install_sh = @install_sh@
 soguiconfig = @soguiconfig@
 
 
-noinst_PROGRAMS = moirepatterns juliaanim
+noinst_PROGRAMS = \
+	moirepatterns \
+	juliaanim \
+	mandelzoom
+
 
 moirepatterns_SOURCES = moirepatterns.cpp
 
 juliaanim_SOURCES = juliaanim.cpp
+EXTRA_juliaanim_SOURCES = stone42a.h stone42b.h sky10a.h sky10b.h
+
+mandelzoom_SOURCES = mandelzoom.cpp
+EXTRA_mandelzoom_SOURCES = stone42a.h stone42b.h sky10a.h sky10b.h
 
 BUILT_SOURCES = \
 	moirepatterns.cpp \
-	juliaanim.cpp
+	juliaanim.cpp \
+	mandelzoom.cpp
 
 subdir = eyecandy
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -118,6 +127,11 @@ juliaanim_OBJECTS =  $(am_juliaanim_OBJECTS)
 juliaanim_LDADD = $(LDADD)
 juliaanim_DEPENDENCIES = 
 juliaanim_LDFLAGS = 
+am_mandelzoom_OBJECTS =  mandelzoom.o
+mandelzoom_OBJECTS =  $(am_mandelzoom_OBJECTS)
+mandelzoom_LDADD = $(LDADD)
+mandelzoom_DEPENDENCIES = 
+mandelzoom_LDFLAGS = 
 am_moirepatterns_OBJECTS =  moirepatterns.o
 moirepatterns_OBJECTS =  $(am_moirepatterns_OBJECTS)
 moirepatterns_LDADD = $(LDADD)
@@ -128,21 +142,29 @@ LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAG
 CXXFLAGS = @CXXFLAGS@
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES =  $(juliaanim_SOURCES) $(moirepatterns_SOURCES)
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES =  $(juliaanim_SOURCES) $(EXTRA_juliaanim_SOURCES) \
+$(mandelzoom_SOURCES) $(EXTRA_mandelzoom_SOURCES) \
+$(moirepatterns_SOURCES)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-DEP_FILES =  @AMDEP@ $(DEPDIR)/juliaanim.Po $(DEPDIR)/moirepatterns.Po
+DEP_FILES =  @AMDEP@ $(DEPDIR)/juliaanim.Po $(DEPDIR)/mandelzoom.Po \
+$(DEPDIR)/moirepatterns.Po
 DIST_COMMON =  README Makefile.am Makefile.in
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
-SOURCES = $(juliaanim_SOURCES) $(moirepatterns_SOURCES)
-OBJECTS = $(am_juliaanim_OBJECTS) $(am_moirepatterns_OBJECTS)
+SOURCES = $(juliaanim_SOURCES) $(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) $(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES)
+OBJECTS = $(am_juliaanim_OBJECTS) $(am_mandelzoom_OBJECTS) $(am_moirepatterns_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .cpp .lo .o
+.SUFFIXES: .c .cpp .h .lo .o
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --foreign eyecandy/Makefile
 
@@ -184,6 +206,10 @@ juliaanim: $(juliaanim_OBJECTS) $(juliaanim_DEPENDENCIES)
 	@rm -f juliaanim
 	$(CXXLINK) $(juliaanim_LDFLAGS) $(juliaanim_OBJECTS) $(juliaanim_LDADD) $(LIBS)
 
+mandelzoom: $(mandelzoom_OBJECTS) $(mandelzoom_DEPENDENCIES)
+	@rm -f mandelzoom
+	$(CXXLINK) $(mandelzoom_LDFLAGS) $(mandelzoom_OBJECTS) $(mandelzoom_LDADD) $(LIBS)
+
 moirepatterns: $(moirepatterns_OBJECTS) $(moirepatterns_DEPENDENCIES)
 	@rm -f moirepatterns
 	$(CXXLINK) $(moirepatterns_LDFLAGS) $(moirepatterns_OBJECTS) $(moirepatterns_LDADD) $(LIBS)
@@ -222,6 +248,7 @@ distclean-tags:
 maintainer-clean-tags:
 
 @AMDEP@include $(DEPDIR)/juliaanim.Po
+@AMDEP@include $(DEPDIR)/mandelzoom.Po
 @AMDEP@include $(DEPDIR)/moirepatterns.Po
 
 mostlyclean-depend:
