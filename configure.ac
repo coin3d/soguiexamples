@@ -274,6 +274,13 @@ SIM_AC_HAVE_INVENTOR_FEATURE(
   [HAVE_VIEWER_QUADBUFFER_STEREO])
 
 SIM_AC_HAVE_INVENTOR_FEATURE(
+  [for So${Gui}GLWidget::setAccumulationBuffer()],
+  [#include <Inventor/${Gui}/So${Gui}RenderArea.h>], [
+   So${Gui}RenderArea * viewer = (So${Gui}RenderArea *) 0;
+   viewer->setAccumulationBuffer(FALSE);],
+  [HAVE_SOGUIGLWIDGET_ACCUMULATIONBUFFER])
+
+SIM_AC_HAVE_INVENTOR_FEATURE(
   [for SoIntersectionDetectionAction class],
   [#include <Inventor/collision/SoIntersectionDetectionAction.h>], [
    SoIntersectionDetectionAction ida;
