@@ -1,0 +1,161 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoEnvironment.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoSelection.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+
+// Global constants
+const int texturewidth = 256;
+const int textureheight = 256;
+
+// Global pointer
+unsigned char * mandelbmp = new unsigned char[texturewidth*textureheight];
+
+// Function to generate a mandelbrot set.
+// Parameters:
+//  double sr           = real part of the start point
+//  double si           = imaginary part of the start point
+//  double width        = width of the mandelbrot
+//  double height       = height of the mandelbrot
+//  int bwidth          = width of the bitmap
+//  int height          = height of the bitmap
+//  int mult            = number to multiply each oolor by
+//  unsigned char * bmp = pointer to bitmap
+//  int n               = number of itterations.
+void
+mandel(double sr, double si, double width, double height, 
+       int bwidth, int bheight, int mult, unsigned char * bmp, int n)
+{
+  double zr, zr_old, zi, cr, ci;
+  int w;
+
+  for (int y=0; y<bheight; y++)
+    for (int x=0; x<bwidth; x++) {
+      cr = ((double)(x)/(double)(bwidth))*width+sr;
+      ci = ((double)(y)/(double)(bheight))*height+si;
+      zr = zi = 0.0;
+      for (w = 0; (w < n) && (zr*zr + zi*zi)<n; w++) {
+        zr_old = zr;
+        zr = zr*zr - zi*zi + cr;
+        zi = 2*zr_old*zi + ci;    
+      }
+      bmp[y*bwidth+x] = w*mult;
+    }
+}
+
+// Function to generate the scene graph
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene()
+{
+  SoSeparator * sep = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+  SoMaterial * material = new SoMaterial;
+  SoTexture2 * texture = new SoTexture2;
+  SoRotation * rotation = new SoRotation;
+
+  // Enable backface culling
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  // Set material color
+  material->diffuseColor.setValue(0.0, 1.0, 0.0);
+
+  // Set up cube rotation.
+  rotation->rotation.setValue(SbVec3f(0.71, 0.71, 0.0), M_PI/5);
+
+  // Enable the mandelbrot texture
+  texture->image.setValue(SbVec2s(texturewidth, textureheight), 1, mandelbmp);
+
+  sep->addChild(hints);
+  sep->addChild(material);
+  sep->addChild(texture);
+  sep->addChild(rotation);
+  sep->addChild(new SoCube);
+
+  return sep;
+}
+
+void
+myKeyPressCallback (void * userdata, SoEventCallback * keyboardCallback)
+{
+  SoEnvironment * env = (SoEnvironment *) userdata;
+  const SoEvent * event = keyboardCallback->getEvent();
+  
+  if (SO_KEY_PRESS_EVENT(event, N)) {
+    env->fogType = SoEnvironment::NONE;
+    keyboardCallback->setHandled();
+  }
+  else if (SO_KEY_PRESS_EVENT(event, H)) {
+    env->fogType = SoEnvironment::HAZE;
+    keyboardCallback->setHandled();
+  }
+  else if (SO_KEY_PRESS_EVENT(event, F)) {
+    env->fogType = SoEnvironment::FOG;
+    keyboardCallback->setHandled();
+  }
+  else if (SO_KEY_PRESS_EVENT(event, S)) {
+    env->fogType = SoEnvironment::SMOKE;
+    keyboardCallback->setHandled();
+  }
+}
+
+int
+main(int, char ** argv)
+{
+  (void)printf("This example shows how to use an SoEnvironment node to "
+               "visualize various \natmospheric effects\n");
+  (void)printf("Press 'f' for FOG\n");
+  (void)printf("Press 'h' for HAZE\n");
+  (void)printf("Press 's' for SMOKE\n");
+  (void)printf("Press 'n' to disable all atmospheric effects\n");
+
+  // Generate two mandelbrot sets to use a textures
+  mandel(-0.4975, 0.605, 0.010, 0.010, texturewidth, textureheight, 1, mandelbmp, 256);
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  // Environment, default = HAZE
+  SoEnvironment * env = new SoEnvironment;
+
+  env->fogVisibility = 15.0;
+  env->fogType = SoEnvironment::HAZE;
+
+  // A keyboard event node
+  SoSelection * selectionroot = new SoSelection;
+  selectionroot->ref();
+  SoEventCallback * myEventCallback = new SoEventCallback;
+  myEventCallback->addEventCallback(SoKeyboardEvent::getClassTypeId(),
+                                    myKeyPressCallback, env);
+  selectionroot->addChild(myEventCallback);
+
+  // Scene graph
+  selectionroot->addChild(env);
+  selectionroot->addChild(scene());
+
+  // Set up the examiner viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(selectionroot);
+  viewer->setBackgroundColor( SbColor( 1.0f, 1.0f, 1.0f )  );
+  viewer->setTitle("Atmospheric Effects");
+  viewer->setViewing( FALSE);
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;
+  selectionroot->unref();
+  return 0;
+}

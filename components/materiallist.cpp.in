@@ -1,0 +1,64 @@
+/**************************************************************************\
+ *
+ *  Copyright (C) 2000 by Systems in Motion.  All rights reserved.
+ *
+ *  This file is part of the Coin library.
+ *
+ *  This file may be distributed under the terms of the Q Public License
+ *  as defined by Troll Tech AS of Norway and appearing in the file
+ *  LICENSE.QPL included in the packaging of this file.
+ *
+ *  If you want to use Coin in applications not covered by licenses
+ *  compatible with the QPL, you can contact SIM to aquire a
+ *  Professional Edition license for Coin.
+ *
+ *  Systems in Motion AS, Prof. Brochs gate 6, N-7030 Trondheim, NORWAY
+ *  http://www.sim.no/ sales@sim.no Voice: +47 73540378 Fax: +47 73943861
+ *
+\**************************************************************************/
+
+#include <Inventor/errors/SoDebugError.h>
+#include <Inventor/SoOutput.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/actions/SoWriteAction.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/So@Gui@MaterialList.h>
+
+// *************************************************************************
+
+void
+materiallist_cb(
+  void * closure,
+  const SoMaterial * material )
+{
+  fprintf( stdout, "SELECTION: ==========================================\n" );
+  SoOutput  * out = new SoOutput;
+  out->setFilePointer( stdout );
+  SoWriteAction writer( out );
+  writer.apply( (SoNode *) material );
+  delete out;
+} // materiallist_cb()
+
+// *************************************************************************
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  @WINWIDGET@ window = So@Gui@::init( argv[0] );
+
+  So@Gui@MaterialList * materials = new So@Gui@MaterialList( window );
+  materials->addCallback( materiallist_cb );
+  materials->show();
+
+  So@Gui@::show( window );
+  So@Gui@::mainLoop();
+
+  delete materials;
+
+  return 0;
+} // main()
+
+// *************************************************************************

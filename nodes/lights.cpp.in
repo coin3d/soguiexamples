@@ -1,0 +1,184 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoLightModel.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoPointLight.h>
+#include <Inventor/nodes/SoSpotLight.h>
+
+// Function for putting a point light into a scene graph by using the
+// SoPointLight node.
+// Parameters:
+//  SbVec3f pos - position of the light source
+//  SbVec3f col - color of the light source
+// Return:
+//  SoGroup *
+SoGroup *
+pointlight(SbVec3f pos, SbVec3f col)
+{
+  SoGroup * group = new SoGroup;
+  SoSeparator * lsep = new SoSeparator;
+
+  SoTransform * trans = new SoTransform;
+  SoLightModel * lm = new SoLightModel;
+  SoMaterial * material = new SoMaterial;
+  SoPointLight * light = new SoPointLight;
+
+  trans->translation.setValue(pos);
+  lm->model = SoLightModel::BASE_COLOR;
+  material->diffuseColor.setValue(col);
+
+  light->location.setValue(pos);
+  light->color.setValue(col);
+  lsep->addChild(lm);
+  lsep->addChild(trans);
+  lsep->addChild(material);
+  lsep->addChild(new SoSphere);
+
+  group->addChild(light);
+  group->addChild(lsep);
+  return group;
+}
+
+// Function for putting a spotlight into a scene graph by using the
+// SoPointLight node.
+// Parameters:
+//  SbVec3f pos - position of the light source
+//  SbVec3f dir - direction of the light source
+//  SbVec3f col - color of the light source
+// Return:
+//  SoGroup * 
+SoGroup *
+spotlight(SbVec3f pos, SbVec3f dir, SbVec3f col)
+{
+  SoGroup * group = new SoGroup;
+  SoSeparator * lsep = new SoSeparator;
+
+  SoTransform * trans = new SoTransform;
+  SoLightModel * lm = new SoLightModel;
+  SoMaterial * material = new SoMaterial;
+  SoSpotLight * light = new SoSpotLight;
+
+  trans->translation.setValue(pos);
+  trans->rotation.setValue(SbRotation(SbVec3f(0,-1,0), dir));
+  lm->model = SoLightModel::BASE_COLOR;
+  material->diffuseColor.setValue(col);
+
+  light->location.setValue(pos);
+  light->direction.setValue(dir);
+  light->color.setValue(col);
+  
+  lsep->addChild(lm);
+  lsep->addChild(trans);
+  lsep->addChild(material);
+  lsep->addChild(new SoCone);
+
+  group->addChild(light);
+  group->addChild(lsep);
+  return group;
+}
+
+// Function for generating the scenegraph using only the SoRotation,
+// SoTranslation and SoCube nodes.
+// The cubes placed in the x-direction will be rotated about the 
+// z-axis, while the cubes in the y and z directions will be rotated 
+// about the x-axis.
+// Parameters:
+//  float x   : translation between each cube in the x-direction
+//  float y   : translation between each cube in the y-direction
+//  float z   : translation between each cube in the z-direction
+//  float rot : rotation angle
+//  int n     : number of itterations
+//  int flag  : 0 = x-direction
+//              1 = y-direction
+//              2.= z-direction 
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene(float x, float y, float z, float rot, int n, int flag)
+{
+  SoSeparator * tg = new SoSeparator;
+
+  if (n>0) {
+    if (flag==0) {
+      SoTransform * tx = new SoTransform;
+      tx->translation.setValue(x, 0, 0);
+      tx->rotation.setValue(SbVec3f(0, 0, 1), -rot);
+      tg->addChild(tx);
+      tg->addChild(new SoCube);
+      tg->addChild(scene(x, y, z, rot, n, 2));
+      tg->addChild(scene(x, y, z, rot, n-1, 1));
+      tg->addChild(scene(x, y, z, rot, n-1, 0));
+    }
+    else if (flag==1) {
+      SoTransform * ty = new SoTransform;
+      ty->translation.setValue(0, y, 0);
+      ty->rotation.setValue(SbVec3f(1, 0, 0), rot);
+      tg->addChild(ty);
+      tg->addChild(new SoCube);
+      tg->addChild(scene(x, y, z, rot, n-1, 1));
+    }
+    else {
+      SoTransform * tz = new SoTransform;
+      tz->translation.setValue(0, 0, z);
+      tz->rotation.setValue(SbVec3f(1, 0, 0), -rot);
+      tg->addChild(new SoCube);
+      tg->addChild(tz);
+      tg->addChild(scene(x, y, z, rot, n-1, 2));
+    }
+  }
+  return tg;
+}
+
+int
+main (int, char ** argv)
+{
+  (void)printf("This example shows how to use multiple light sources.\n");
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+
+  // Set up the scene graph
+  SoSeparator * root = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+
+  // Enable backface culling
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  root->ref(); // increments the root's reference counter
+  root->addChild(hints);
+  root->addChild(pointlight(SbVec3f(10, 15, 15), 
+                            SbVec3f(1.0, 0.0, 0.0)));
+  root->addChild(spotlight(SbVec3f(-10, 0, 30), 
+                           SbVec3f(0.7171, 0.0, -0.7171),
+                           SbVec3f(0.0, 0.0, 1.0)));
+  root->addChild(spotlight(SbVec3f(10, -20, 0),
+                           SbVec3f(0.0, 1.0, 0.0),
+                           SbVec3f(0.0, 1.0, 0.0)));
+  root->addChild(spotlight(SbVec3f(0, 10, -15),
+                           SbVec3f(0.5573, 0.5573, 0.5573),
+                           SbVec3f(1.0, 1.0, 0.5)));
+  root->addChild(scene(2.5, 2.5, 3.0, M_PI/27, 12, 0));
+
+  // Set up Examiner Viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Lights");
+  viewer->setHeadlight(FALSE);
+  viewer->viewAll();
+  viewer->show();
+  
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // free up the resources occupied by the viewer
+  root->unref();      // decrements the root's reference counter
+  return 0;
+}

@@ -1,0 +1,111 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoAnnotation.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoDrawStyle.h>
+#include <Inventor/nodes/SoComplexity.h>
+#include <Inventor/nodes/SoShuttle.h>
+#include <Inventor/nodes/SoTranslation.h>
+
+// Function to set up a solid sphere, and a line sphere 
+//  with a complexity node.
+// Parameter
+//  int type  = type of complexity
+//              SoComplexity::OBJECT_SPACE
+//              SoCOmplexity::SCREEN_SPACE
+// Return:
+//  SoSeparator *
+SoSeparator *
+complexity(int type, SbVec3f col1, SbVec3f col2)
+{
+  SoSeparator * sep = new SoSeparator;
+  SoAnnotation * annotation = new SoAnnotation; // disable the z-buffer
+  SoComplexity * complexity = new SoComplexity;
+  SoDrawStyle * dstyle = new SoDrawStyle;
+  SoMaterial * mat1 = new SoMaterial;
+  SoMaterial * mat2 = new SoMaterial;
+  SoSphere * sphere = new SoSphere;
+
+  complexity->type.setValue(type);
+  if (type==SoComplexity::SCREEN_SPACE)
+    complexity->value.setValue(0.11);
+  else
+    complexity->value.setValue(0.5);
+  dstyle->style = SoDrawStyle::LINES;
+  mat1->diffuseColor.setValue(col1);
+  mat2->diffuseColor.setValue(col2);
+
+  sep->addChild(complexity);
+  sep->addChild(mat1);
+  sep->addChild(sphere);
+  sep->addChild(annotation);
+  annotation->addChild(dstyle);
+  annotation->addChild(mat2);
+  annotation->addChild(sphere);
+  return sep;
+}
+
+// Function that generates the Scene Graph
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene()
+{
+  SoSeparator * sep = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+  SoShuttle * shuttle = new SoShuttle;
+  SoTranslation * t1 = new SoTranslation;
+  SoTranslation * t2 = new SoTranslation;
+
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+  t1->translation.setValue(-1.0, 0.0, 0.0);
+  t2->translation.setValue(2.0, 0.0, 0.0);
+  shuttle->translation0.setValue(0.0, 0.0, 5.0);
+  shuttle->translation0.setValue(0.0, 0.0, -5.0);
+  shuttle->speed = 0.5;
+
+  sep->addChild(hints);
+  sep->addChild(shuttle);
+  sep->addChild(t1);
+  sep->addChild(complexity(SoComplexity::OBJECT_SPACE, 
+                           SbVec3f(1.0, 0.0, 0.0),
+                           SbVec3f(0.0, 0.0, 1.0)));
+  sep->addChild(t2);
+  sep->addChild(complexity(SoComplexity::SCREEN_SPACE,
+                           SbVec3f(0.0, 0.0, 1.0),
+                           SbVec3f(1.0, 0.0, 0.0)));
+  return sep;
+}
+
+int
+main (int, char ** argv)
+{
+  (void)printf("This example shows how to use the SoComplexity node.\n");
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+
+  // Scene graph
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  root->addChild(scene());
+  // Set up the examiner viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Complexity (Object VS Screen space)");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;
+  root->unref();
+  return 0;
+}

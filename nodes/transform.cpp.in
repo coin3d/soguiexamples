@@ -1,0 +1,112 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoShapeHints.h>
+
+// Function for generating the scene graph by using the SoTransform
+// and SoCube nodes.
+// Parameters:
+//  float t : translation steps
+//  float r : rotation steps
+//  float s : scaleFactor steps
+//  int n   : number of itterations
+//  int flag: direction (must be 0)
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene(float t, float r, float s, int n, int flag)
+{
+  SoSeparator * tg = new SoSeparator;
+
+  SoTransform * transf = new SoTransform;
+  tg->addChild(transf);
+  tg->addChild(new SoCube);
+
+  if (n>0) {
+    if (flag==0) {
+      tg->addChild(scene(t, r, s, n-1, 1));
+      tg->addChild(scene(t, r, s, n-1, 2));
+      tg->addChild(scene(t, r, s, n-1, 3));
+      tg->addChild(scene(t, r, s, n-1, 4));
+      tg->addChild(scene(t, r, s, n-1, 5));
+      tg->addChild(scene(t, r, s, n-1, 6));
+    }
+    else if (flag==1) {
+      transf->translation.setValue(t, 0.0, 0.0);
+      transf->rotation.setValue(SbVec3f(1, 0, 0), r);
+      transf->scaleFactor.setValue(s, s, s);
+      tg->addChild(scene(t, r, s, n-1, 1));
+    }
+    else if (flag==2) {
+      transf->translation.setValue(-t, 0.0, 0.0);
+      transf->rotation.setValue(SbVec3f(1, 0, 0), -r);
+      transf->scaleFactor.setValue(s, s, s);
+      tg->addChild(scene(t, r, s, n-1, 2));
+    }
+    else if (flag==3) {
+      transf->translation.setValue(0.0, t, 0.0);
+      transf->rotation.setValue(SbVec3f(0, 1, 0), r);
+      transf->scaleFactor.setValue(s, s, s);
+      tg->addChild(scene(t, r, s, n-1, 3));
+    }
+    else if (flag==4) {
+      transf->translation.setValue(0.0, -t, 0.0);
+      transf->rotation.setValue(SbVec3f(0, 1, 0), -r);
+      transf->scaleFactor.setValue(s, s, s);
+      tg->addChild(scene(t, r, s, n-1, 4));
+    }
+    else if (flag==5) {
+      transf->translation.setValue(0.0, 0.0, t);
+      transf->rotation.setValue(SbVec3f(0, 0, 1), r);
+      transf->scaleFactor.setValue(s, s, s);
+      tg->addChild(scene(t, r, s, n-1, 5));
+    }
+    else {
+      transf->translation.setValue(0.0, 0.0, -t);
+      transf->rotation.setValue(SbVec3f(0, 0, 1), -r);
+      transf->scaleFactor.setValue(s, s, s);
+      tg->addChild(scene(t, r, s, n-1, 6));
+    }
+  }
+
+  return tg;
+}
+
+int
+main(int, char ** argv)
+{
+  (void)printf("This example shows how to use the SoTransform node's translation, rotation and scaleFactor\n");
+
+  // Initialize Coin, and return a main window to use
+  // If unsuccessful, exit
+  @WIDGET@ window = So@Gui@::init(argv[0]); // pass the application name
+  if (window==NULL) exit(1);
+
+  // Create scene graph
+  SoSeparator * root = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+
+  // Enable backface culling
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  root->ref();                // Increments the reference counter
+  root->addChild(hints);
+  root->addChild(scene(3.0, M_PI/8, 0.8, 10, 0));
+
+  // Set up ExaminerViewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Transform");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // remove the viewer from memory
+  root->unref();      // Decrements the reference counter
+  return 0;
+}

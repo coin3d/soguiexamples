@@ -1,0 +1,96 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoShapeHints.h>
+
+// Function for generating the scenegraph using only the SoScale
+// and SoTranslation nodes
+// Parameters:
+//  float x   : translation between each cube in the x-direction
+//  float y   : translation between each cube in the y-direction
+//  float z   : translation between each cube in the z-direction
+//  float s     scale factor
+//  int n     : number of itterations
+//  int flag  : 0 = x-direction
+//              1 = y-direction
+//              2... = z-direction 
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene(float x, float y, float z, float s, int n, int flag)
+{
+  SoSeparator * tg = new SoSeparator;
+
+  SoScale * scale = new SoScale;
+  scale->scaleFactor.setValue(s, s, s);
+
+  if (n>0) {
+    if (flag==0) {
+      SoTranslation * tx = new SoTranslation;
+      tx->translation.setValue(x, 0, 0);
+      tg->addChild(tx);
+      tg->addChild(scale);
+      tg->addChild(new SoCube);
+      tg->addChild(scene(x, y, z, s, n, 2));
+      tg->addChild(scene(x, y, z, s, n-1, 1));
+      tg->addChild(scene(x, y, z, s, n-1, 0));
+    }
+    else if (flag==1) {
+      SoTranslation * ty = new SoTranslation;
+      ty->translation.setValue(0, y, 0);
+      tg->addChild(ty);
+      tg->addChild(scale);
+      tg->addChild(new SoCube);
+      tg->addChild(scene(x, y, z, s, n-1, 1));
+    }
+    else {
+      SoTranslation * tz = new SoTranslation;
+      tz->translation.setValue(0, 0, z);
+      tg->addChild(new SoCube);
+      tg->addChild(tz);
+      tg->addChild(scale);
+      tg->addChild(scene(x, y, z, s, n-1, 2));
+    }
+  }
+
+  return tg;
+}
+
+int
+main(int, char ** argv) 
+{
+  (void)printf("This example shows how to use the SoScale node\n");
+  
+  // Initialize Coin, and return a main window to use
+  // If unsuccessful, exit
+  @WIDGET@ window = So@Gui@::init(argv[0]); // pass the application name
+  if (window==NULL) exit(1);
+  
+  // Create scene graph
+  SoSeparator * root = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+
+  // Enable backface culling
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  root->ref();                   // Increments the reference counter
+  root->addChild(hints);
+  root->addChild(scene(3.0, 3.0, 3.0, 0.8, 10, 0));
+  
+  // Set up ExaminerViewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Scale");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // remove the viewer from memory
+  root->unref();      // Decrements the reference counter
+  return 0;
+}

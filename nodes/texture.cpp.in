@@ -1,0 +1,96 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoShapeHints.h>
+
+// Global constants
+const int texturewidth = 256;
+const int textureheight = 256;
+
+// Global pointer
+unsigned char * bitmap = new unsigned char[texturewidth*textureheight];
+
+// Function to generate a julia set
+// Parameters:
+//  double cr   - r julia set point
+//  double ci   - i julia set point
+//  float zoon  - lenth of the square to display (zoom*zoom), center (0,0)
+//  int width   - width of the bitmap
+//  int height  - height of the bitmap
+//  int mult    - value to multiply each color by (remember (mult*n)<=256).
+//  unsigned char * bmp - pointer to the bitmap
+//  int n       - number of itterations 
+void
+julia(double cr, double ci, float zoom, int width, int height, int mult, 
+      unsigned char * bmp, int n)
+{
+  double zr, zr_old, zi;
+  int w;
+
+  for (int y=0; y<height/2; y++)
+    for (int x=0; x<width; x++) {
+      zr = ((double)(x)/(double)width)*zoom-zoom/2;
+      zi = ((double)(y)/(double)height)*zoom-zoom/2;
+      for (w = 0; (w < n) && (zr*zr+zi*zi)<n; w++) {
+        zr_old = zr;
+        zr = zr*zr - zi*zi + cr;
+        zi = 2*zr_old*zi + ci;
+      }
+      bmp[y*width+x] = w*mult;
+      bmp[((height-y)*width-1)-x] = w*mult;
+    }
+}
+
+// Function that loads a texture from memory, and return a pointer to a
+// SoTexture2 node containing this texture..
+// Return:
+//  SoTexture2 *
+SoTexture2 *
+texture()
+{
+  SoTexture2 * texture = new SoTexture2;
+  texture->image.setValue(SbVec2s(texturewidth, textureheight), 1, bitmap);
+  texture->model = SoTexture2::BLEND;
+  texture->blendColor.setValue(1.0, 0.0, 0.0);
+  return texture;
+}
+
+int 
+main (int, char ** argv) 
+{
+  (void)fprintf(stdout, "This example shows how to use the SoTexture2 node.\n");
+  // Generate a julia set to use as a texturemap
+  julia(0.33, 0.43, 2.5, texturewidth, textureheight, 2, bitmap, 128);
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+
+  // Create scene graph
+  SoSeparator * root = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+
+  // Enable backface culling
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  root->ref();  // increments the root's reference counter
+  root->addChild(hints);
+  root->addChild(texture());
+  root->addChild(new SoCube);
+
+  // Setting up the ExaminerViewer
+  So@Gui@ExaminerViewer *viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Texture Map");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // free up all the viewer's resources
+  root->unref();      // decrements the root's reference counter
+  return 0;
+}

@@ -1,0 +1,115 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoIndexedFaceSet.h>
+#include <Inventor/nodes/SoShapeHints.h>
+
+// Global pointers
+SbVec3f * vertices;
+int32_t * con;
+
+// Function that generats the object's vertices and connections
+// Parameters
+//  float w - width
+//  float h - height
+//  float d - depth
+void
+makeObject(float w, float h, float d)
+{
+  vertices = new SbVec3f[10];
+  con = new int32_t[52];
+
+  vertices[0].setValue(-w/2.0, -h/4.0,  d/2.0);
+  vertices[1].setValue( w/2.0, -h/4.0,  d/2.0);
+  vertices[2].setValue( w/2.0,  h/4.0,  d/2.0);
+  vertices[3].setValue(-w/2.0,  h/4.0,  d/2.0);
+  vertices[4].setValue(-w/2.0, -h/4.0, -d/2.0);
+  vertices[5].setValue( w/2.0, -h/4.0, -d/2.0);
+  vertices[6].setValue( w/2.0,  h/4.0, -d/2.0);
+  vertices[7].setValue(-w/2.0,  h/4.0, -d/2.0);
+  vertices[8].setValue(   0.0,  h/2.0,    0.0);
+  vertices[9].setValue(   0.0, -h/2.0,    0.0);
+
+  con[0] = 0; con[1] = 1; con[2] = 2; con[3] = 3; con[4] = SO_END_FACE_INDEX;
+  con[5] = 1; con[6] = 5; con[7] = 6; con[8] = 2; con[9] = SO_END_FACE_INDEX;
+  con[10] = 5; con[11] = 4; con[12] = 7; con[13] = 6; con[14] = SO_END_FACE_INDEX;
+  con[15] = 4; con[16] = 0; con[17] = 3; con[18] = 7; con[19] = SO_END_FACE_INDEX;
+  con[20] = 6; con[21] = 7; con[22] = 8; con[23] = SO_END_FACE_INDEX;  
+  con[24] = 3; con[25] = 2; con[26] = 8; con[27] = SO_END_FACE_INDEX;
+  con[28] = 7; con[29] = 3; con[30] = 8; con[31] = SO_END_FACE_INDEX;
+  con[32] = 2; con[33] = 6; con[34] = 8; con[35] = SO_END_FACE_INDEX;
+
+  con[36] = 9; con[37] = 1; con[38] = 0; con[39] = SO_END_FACE_INDEX;
+  con[40] = 9; con[41] = 5; con[42] = 1; con[43] = SO_END_FACE_INDEX;
+  con[44] = 9; con[45] = 4; con[46] = 5; con[47] = SO_END_FACE_INDEX;
+  con[48] = 9; con[49] = 0; con[50] = 4; con[51] = SO_END_FACE_INDEX;
+}
+
+// Function to put the object in the scene graph
+// Parameters
+//  SbVec3f * verts  - vertices
+//  int32_t * cons   - connections
+//  int ncoord       - number of vertices
+//  int nconnections - number of connections
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene(SbVec3f * verts,
+      int32_t * cons,
+      int ncoord,
+      int nconnections)
+{
+  SoSeparator * sep = new SoSeparator;
+  
+  // Turns on backface culling
+  SoShapeHints * hints = new SoShapeHints;
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+  sep->addChild(hints);
+
+  // define vertices
+  SoCoordinate3 * coords = new SoCoordinate3;
+  coords->point.setValues(0, ncoord, verts);
+  sep->addChild(coords);
+  
+  // define the indexed face set
+  SoIndexedFaceSet * faceset = new SoIndexedFaceSet;
+  faceset->coordIndex.setValues(0, nconnections, cons);
+  sep->addChild(faceset);
+
+  return sep;
+}
+
+
+int
+main (int, char ** argv)
+{
+  (void)printf("This example shows how to use the SoIndexedFaceSet.\n");
+
+  // Create test object's coordinates, normals and number 
+  (void)makeObject(1, 3, 2);
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+
+  // Scene graph
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+  root->addChild(scene(vertices, con, 10, 52));
+
+  // Set up the examiner viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Indexed Face Set");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // free up the viewer's resources
+  root->unref();      // decrements the root's reference counter
+  return 0;
+}

@@ -1,0 +1,237 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+#include <Inventor/nodes/SoText3.h>
+#include <Inventor/nodes/SoClipPlane.h>
+
+// Global constants
+const int scrollbuffersize = 20;
+const float scrolldist = 8.0;
+const float scrollstep = 1.75;
+const float ymult = 50;
+const float zmult = 50;
+const float yradstep1 = M_PI/40;
+const float yradstep2 = M_PI/25;
+const float zradstep1 = M_PI/50;
+const float zradstep2 = M_PI/20;
+const float depth = 3.0;
+const int ncolors = 7;
+
+// Global stucture/misc
+struct scrollstruct {
+  float position;
+  int textposition;
+  char buffer[scrollbuffersize];
+  SoTranslation * translation;
+  SoText3 * textnodes[scrollbuffersize];
+  SoMaterial * materialnodes[scrollbuffersize];
+  SoTransform * transformnodes[scrollbuffersize];
+};
+
+float yrad1[scrollbuffersize];
+float yrad2[scrollbuffersize];
+float zrad1[scrollbuffersize];
+float zrad2[scrollbuffersize];
+SbVec3f colorbuffer[scrollbuffersize];
+scrollstruct scroll;
+SbVec3f colors[]={SbVec3f(1.0, 0.0, 0.0),
+                  SbVec3f(1.0, 1.0, 0.0),
+                  SbVec3f(0.0, 1.0, 0.0),
+                  SbVec3f(0.0, 1.0, 1.0),
+                  SbVec3f(1.0, 1.0, 1.0),
+                  SbVec3f(0.0, 0.0, 1.0),
+                  SbVec3f(1.0, 1.0, 0.5)};
+char scrolltext[]={"Welcome to a new example that "
+                   "shows how to use the SoText3 node. Just another great "
+                   "example to the Open Inventor killer Coin from "
+                   "Systems in Motion......  "};
+
+// Function to change one specific SoText3 node.
+// Parameter:
+//  int n : which SoText3 to change
+void
+char3d(int n)
+{
+  char buffer[2];
+  buffer[0] = scroll.buffer[n];
+  buffer[1] = '\0';
+
+  scroll.textnodes[n]->string.setValue(buffer);
+  scroll.textnodes[n]->parts.setValue(SoText3::ALL);
+}
+
+// Add char3dnode to the scene graph with its transform node and text3 node
+// Parameter:
+//  int n : which SoText3 node to add
+// Return:
+//  SoSeparator *
+SoSeparator *
+char3dnode(int n)
+{
+  SoSeparator * sep = new SoSeparator;
+  char3d(n);
+  sep->addChild(scroll.transformnodes[n]);
+  sep->addChild(scroll.materialnodes[n]);
+  sep->addChild(scroll.textnodes[n]);
+  return sep;
+}
+
+// Scroll function
+// Return:
+//  SoSeparator *
+SoSeparator *
+scrollfunction( )
+{
+  SoSeparator * sep = new SoSeparator;
+  SoTranslation * transl = new SoTranslation;
+
+  sep->addChild(scroll.translation);
+
+  transl->translation.setValue(scrolldist, 0.0, 0.0);
+  for (int n = 0; n < scrollbuffersize; n++) {
+    sep->addChild(char3dnode(n));
+    sep->addChild(transl);
+  }
+
+  return sep;
+}
+
+// Scene generator function
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene( )
+{
+  SoSeparator * sep = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+  SoClipPlane * leftclip = new SoClipPlane;
+  SoClipPlane * rightclip = new SoClipPlane;
+
+  // Enable backface culling
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->faceType = SoShapeHints::SOLID;
+
+  leftclip->plane.setValue(SbPlane(SbVec3f(1.0, 0.0, 0.0), 1.0));
+  rightclip->plane.setValue(SbPlane(SbVec3f(-1.0, 0.0, 0.0),
+                                    -(scrollbuffersize-2)*scrolldist));
+
+  sep->addChild(hints);
+  sep->addChild(leftclip);
+  sep->addChild(rightclip);
+  sep->addChild(scrollfunction());
+
+  return sep;
+}
+
+// Timer function
+static void
+timersensorcallback(void * data, SoSensor *)
+{
+  scrollstruct * ss = (scrollstruct *) data;
+  SoTranslation * transl = (SoTranslation *) ss->translation;
+  SoTransform ** transf = (SoTransform **) ss->transformnodes;
+  SoMaterial ** material = (SoMaterial **) ss->materialnodes;
+  float dy1, dy2, dz1, dz2;
+  static int colorcounter = 0;
+
+  scroll.position -= scrollstep;
+  if (scroll.position < (-scrolldist)) {
+    scroll.position += scrolldist;
+    colorbuffer[scrollbuffersize-1]=colors[colorcounter];
+    dy1 = yrad1[scrollbuffersize-1]-yrad1[scrollbuffersize-2];
+    dy2 = yrad2[scrollbuffersize-1]-yrad2[scrollbuffersize-2];
+    dz1 = zrad1[scrollbuffersize-1]-zrad1[scrollbuffersize-2];
+    dz2 = zrad2[scrollbuffersize-1]-zrad2[scrollbuffersize-2];
+    int n;
+    for (n = 0; n < scrollbuffersize-1; n++) {
+      scroll.buffer[n] = scroll.buffer[n+1];
+      char3d(n);
+      yrad1[n] = yrad1[n+1];
+      yrad2[n] = yrad2[n+1];
+      zrad1[n] = zrad1[n+1];
+      zrad2[n] = zrad2[n+1];
+      colorbuffer[n] = colorbuffer[n+1];
+    }
+    for (n = 0; n < scrollbuffersize; n++) {
+      material[n]->diffuseColor.setValue(colorbuffer[n]);
+    }
+    scroll.buffer[scrollbuffersize-1] = scrolltext[scroll.textposition];
+    yrad1[scrollbuffersize-1] = yrad1[scrollbuffersize-2]+dy1;
+    yrad2[scrollbuffersize-1] = yrad2[scrollbuffersize-2]+dy2;    
+    zrad1[scrollbuffersize-1] = zrad1[scrollbuffersize-2]+dz1;
+    zrad2[scrollbuffersize-1] = zrad2[scrollbuffersize-2]+dz2;    
+    if ((scrolltext[scroll.textposition] == ' ') ||
+        (scrolltext[scroll.textposition] == '.'))
+      colorcounter++;
+    if (colorcounter >= ncolors)
+      colorcounter = 0;
+    scroll.textposition++;
+    if (scroll.textposition >= ((int)(sizeof(scrolltext)-1)))
+      scroll.textposition = 0;
+  }
+  for (int n = 0; n < scrollbuffersize; n++) {
+    yrad1[n]+=yradstep1;
+    yrad2[n]+=yradstep2;
+    zrad1[n]+=zradstep1;
+    zrad2[n]+=zradstep2;
+    transf[n]->translation.setValue(0.0, 
+                                    ymult*sin(yrad1[n])*sin(yrad2[n]), 
+                                    zmult*cos(zrad1[n])*cos(zrad2[n]));
+    transf[n]->scaleFactor.setValue(0.85, 1.0, depth);
+  }
+  transl->translation.setValue(scroll.position, 0.0, 0.0);
+}
+
+int
+main (int, char ** argv)
+{ 
+  (void)printf("This example shows how the SoText3 node can be used.\n");
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  for (int n = 0; n < scrollbuffersize; n++) {
+    scroll.buffer[n] = ' ';
+    scroll.textnodes[n] = new SoText3;
+    scroll.materialnodes[n] = new SoMaterial;
+    scroll.transformnodes[n] = new SoTransform; 
+    yrad1[n] = (float)n/(1.5*M_PI);
+    yrad2[n] = (float)n/(2.5*M_PI);
+    zrad1[n] = (float)n/(1.0*M_PI);
+    zrad2[n] = (float)n/(2.0*M_PI);
+  }
+
+  scroll.translation = new SoTranslation;
+  scroll.position = 0.0;
+  scroll.textposition = 0;
+
+  // Timer sensor
+  SoTimerSensor * timer = new SoTimerSensor(timersensorcallback, &scroll);
+  timer->setInterval(0.05);
+  timer->schedule();
+
+ // Scene graph
+  SoSeparator * root = new SoSeparator;
+
+  root->ref();
+  root->addChild(scene());
+
+  // Set up examinerviewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Text3");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete(viewer);
+  root->unref();
+  return 0;
+}

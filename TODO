@@ -1,0 +1,33 @@
+Ideas for example programs:
+===========================
+
+*** Novice *************************************************************
+
+        - animate transparency settings with engines
+
+
+*** Intermediate *******************************************************
+
+        - SoInterpolateFloat example-app: control the "value" field on
+          an SoComplexity node controlling an SoSphere, connect the
+          engine to the realTime global field
+
+        - 3 So[Spot|Point|Directional]LightManips in a scene, each of
+          them a separate R, G or B color, lighting up a simple scene
+          with basic shapes (or a tiled polygon floor?)
+
+        - all the transformation style manipulators in a scene, each
+          attached to the same (complex) shape?
+
+        - SoCallbackAction:
+                - simple exporter for the geometry (to Povray?)
+                - "explode" shapes into individual polygons and
+                  animate them somehow
+
+*** Expert *************************************************************
+
+	- make a "billboard" nodetype ("SoBillboard"?) to show off the
+          creation of new nodes
+
+	- make an SoDisc or SoCircle nodetype to show off the creation
+          of new nodes

@@ -1,0 +1,8 @@
+NEWS
+====
+
+* 2000-07-11 larsa:
+	SoGuiExamples module was separated into an independent CVS module,
+	so the sources didn't have to be included in every SoGui module
+	and slow down the building of those modules.
+

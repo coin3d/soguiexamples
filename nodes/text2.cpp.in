@@ -1,0 +1,106 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoFont.h>
+#include <Inventor/nodes/SoText2.h>
+#include <Inventor/nodes/SoShuttle.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoMaterial.h>
+
+// Function to display a Text2 node with a SoShuttle node movement
+// and color.
+// Parameters:
+//  char * txtstring = text to be displayed
+//  SbVec2f pos1     = start position (for the SoShuttle node)
+//  SbVec2f pos2     = end position (for the SoShuttle node)
+//  float speed      = speed of the movement
+//  SbVec3f col      = text color
+// Return:
+//  SoSeparator *
+SoSeparator *
+text(char * txtstring, SbVec2f pos1, SbVec2f pos2, float speed, SbVec3f col)
+{
+  SoSeparator * sep = new SoSeparator;
+  SoShuttle * shuttle = new SoShuttle;
+  SoMaterial * material = new SoMaterial;
+  SoText2 * txt = new SoText2;
+
+  float x, y;
+
+  txt->string.setValue(txtstring);
+  pos1.getValue(x, y);
+  shuttle->translation0.setValue(x, y, 0.0);
+  pos2.getValue(x, y);
+  shuttle->translation1.setValue(x, y, 0.0);
+  shuttle->speed = speed;
+  material->diffuseColor.setValue(col);
+
+  sep->addChild(shuttle);
+  sep->addChild(material);
+  sep->addChild(txt);
+
+  return sep;
+}
+
+// Function to generate the scene graph
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene( )
+{
+  SoSeparator * sep = new SoSeparator;
+  SoFont * font = new SoFont;
+  SoCube * cube = new SoCube;
+  
+  cube->width = 30.0;
+  cube->height = 20.0;
+  cube->depth = 1.0;
+  font->name.setValue("Courier");
+  font->size.setValue(48.0);
+
+  sep->addChild(font);
+  sep->addChild(text("Coin", SbVec2f(-5.0, 5.0), SbVec2f(5.0, 5.0), 0.2,
+                SbVec3f(1.0, 0.0, 0.0)));
+  sep->addChild(text("by", SbVec2f(1.0, 2.5), SbVec2f(1.0, -2.5), 0.25,
+                SbVec3f(0.0, 0.0, 1.0)));
+  sep->addChild(text("SIM", SbVec2f(5.0, -5.0), SbVec2f(-5.0, -5.0), 0.3,
+                SbVec3f(0.0, 1.0, 0.0))); 
+
+  return sep;
+}
+
+int
+main (int, char ** argv)
+{
+  (void)printf("This example shows how to use the SoText2 node.\n");
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+
+  // Scene graph
+  SoSeparator * root = new SoSeparator;
+  SoPerspectiveCamera * camera = new SoPerspectiveCamera;
+  
+  camera->position.setValue(2.5, 0.0, 20.0);
+
+  root->ref();
+  root->addChild(camera);
+  root->addChild(scene());
+
+  // Set up the examinerviewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Text2");
+  viewer->setViewing( FALSE );
+  viewer->show();
+  
+  So@Gui@::show(window); // display main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;
+  root->unref();
+  return 0;
+}

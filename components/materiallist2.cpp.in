@@ -1,0 +1,119 @@
+/**************************************************************************\
+ *
+ *  Copyright (C) 2000 by Systems in Motion.  All rights reserved.
+ *
+ *  This file is part of the Coin library.
+ *
+ *  This file may be distributed under the terms of the Q Public License
+ *  as defined by Troll Tech AS of Norway and appearing in the file
+ *  LICENSE.QPL included in the packaging of this file.
+ *
+ *  If you want to use Coin in applications not covered by licenses
+ *  compatible with the QPL, you can contact SIM to aquire a
+ *  Professional Edition license for Coin.
+ *
+ *  Systems in Motion AS, Prof. Brochs gate 6, N-7030 Trondheim, NORWAY
+ *  http://www.sim.no/ sales@sim.no Voice: +47 73540378 Fax: +47 73943861
+ *
+\**************************************************************************/
+
+#include <Inventor/SbBasic.h>
+#include <Inventor/errors/SoDebugError.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoComplexity.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoRotation.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/@Gui@/So@Gui@MaterialList.h>
+
+// *************************************************************************
+
+SoMaterial * materialNode;
+
+void
+materiallist_cb(
+  void * closure,
+  const SoMaterial * material )
+{
+  materialNode->ambientColor  = material->ambientColor;
+  materialNode->diffuseColor  = material->diffuseColor;
+  materialNode->specularColor = material->specularColor;
+  materialNode->emissiveColor = material->emissiveColor;
+  materialNode->shininess     = material->shininess;
+  materialNode->transparency  = material->transparency;
+} // materiallist_cb()
+
+// *************************************************************************
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  @WINWIDGET@ window = So@Gui@::init( argv[0] );
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
+  viewer->setTransparencyType(SoGLRenderAction::DELAYED_BLEND);
+  viewer->setDecoration( FALSE );
+  SoSeparator * root = new SoSeparator;
+
+  // turn on backface culling
+  SoShapeHints * sh = new SoShapeHints;
+  sh->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  sh->shapeType = SoShapeHints::SOLID;
+  root->addChild(sh);
+
+  // maximum resolution on cylinders, turn off texture filtering
+  SoComplexity * cmplx = new SoComplexity;
+  cmplx->textureQuality = 0.01f;
+  cmplx->type = SoComplexity::OBJECT_SPACE;
+  cmplx->value = 1.0f;
+  root->addChild(cmplx);
+
+  // make textured cube
+  SoSeparator * sep = new SoSeparator;
+  SoCube * cube = new SoCube;
+  SoTexture2 * tex2 = new SoTexture2;
+  unsigned char mytex[4] = {0xff, 0x88,0x88, 0xff}; 
+  tex2->image.setValue(SbVec2s(2,2), 1, mytex);
+  sep->addChild(tex2);
+  sep->addChild(cube);
+  root->addChild(sep);
+
+  // add the material node
+  root->addChild( (materialNode = new SoMaterial) );
+
+  // add a cylinder
+  SoCylinder * cyl = new SoCylinder;
+  cyl->height = 1.7f;
+  cyl->radius = 1.33f;
+  root->addChild( cyl );
+
+  // rotate and add cylinder again
+  SoRotation * rot1 = new SoRotation;
+  rot1->rotation = SbRotation(SbVec3f(1,0,0), M_PI/2.0); 
+  root->addChild(rot1);
+  root->addChild(cyl);
+  
+  viewer->setSceneGraph( root );
+  viewer->show();
+
+  So@Gui@MaterialList * materials = new So@Gui@MaterialList();
+  materials->addCallback( materiallist_cb );
+  materials->show();
+  
+  So@Gui@::show( window );
+  So@Gui@::mainLoop();
+
+  delete materials;
+
+  return 0;
+} // main()
+
+// *************************************************************************

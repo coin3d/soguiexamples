@@ -1,0 +1,119 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoBlinker.h>
+
+// Global constants
+const int texturewidth = 256;
+const int textureheight = 256;
+
+// Global pointer
+unsigned char * mandel2bmp = new unsigned char[texturewidth*textureheight];
+unsigned char * mandelbmp = new unsigned char[texturewidth*textureheight];
+
+// Function to generate a mandelbrot set.
+// Parameters:
+//  double sr           = real part of the start point
+//  double si           = imaginary part of the start point
+//  double width        = width of the mandelbrot
+//  double height       = height of the mandelbrot
+//  int bwidth          = width of the bitmap
+//  int height          = height of the bitmap
+//  int mult            = number to multiply each oolor by
+//  unsigned char * bmp = pointer to bitmap
+//  int n               = number of itterations.
+void
+mandel(double sr, double si, double width, double height, 
+       int bwidth, int bheight, int mult, unsigned char * bmp, int n)
+{
+  double zr, zr_old, zi, cr, ci;
+  int w;
+
+  for (int y=0; y<bheight; y++)
+    for (int x=0; x<bwidth; x++) {
+      cr = ((double)(x)/(double)(bwidth))*width+sr;
+      ci = ((double)(y)/(double)(bheight))*height+si;
+      zr = zi = 0.0;
+      for (w = 0; (w < n) && (zr*zr + zi*zi)<n; w++) {
+        zr_old = zr;
+        zr = zr*zr - zi*zi + cr;
+        zi = 2*zr_old*zi + ci;    
+      }
+      bmp[y*bwidth+x] = w*mult;
+    }
+}
+
+// Function that loads a texture from memory, and return a pointer to a
+// SoTexture2 node containing this texture..
+// Parameters:
+//  unsigned char * bmp = pointer to bitmap (one byte for each pixel)
+//  SbVec3f bcolor      = blend color
+// Return:
+//  SoTexture2 *
+SoTexture2 *
+texture(unsigned char * bmp, SbVec3f bcolor)
+{
+  SoTexture2 * texture = new SoTexture2;
+  texture->image.setValue(SbVec2s(texturewidth, textureheight), 1, bmp);
+  texture->model = SoTexture2::BLEND;
+  texture->blendColor.setValue(bcolor);
+  return texture;
+}
+
+// Function to generate a scene graph
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene()
+{
+  SoSeparator * sep = new SoSeparator;
+
+  SoBlinker * blinker = new SoBlinker;
+  blinker->speed = 0.5;
+  blinker->addChild(texture(mandelbmp, SbVec3f(0.0, 0.0, 1.0)));
+  blinker->addChild(texture(mandel2bmp, SbVec3f(1.0, 0.0, 0.0)));
+ 
+  sep->addChild(blinker);
+  sep->addChild(new SoCube);
+  return sep;
+}
+
+int
+main (int, char ** argv)
+{
+  // Generate two mandelbrot sets to use a textures
+  mandel(-0.5, 0.6, 0.025, 0.025, texturewidth, textureheight, 1, mandelbmp, 256);
+  mandel(-0.5, 0.6015, 0.0025, 0.0025, texturewidth, textureheight, 1, mandel2bmp, 256);
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+  
+  // Enable backface culling
+  SoShapeHints * hints = new SoShapeHints;
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  // Scene graph
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  root->addChild(hints);
+  root->addChild(scene());
+
+  // Setting up the examiner viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Blinker");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;
+  root->unref();
+  return 0;
+}

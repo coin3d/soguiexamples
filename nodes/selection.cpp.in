@@ -1,0 +1,139 @@
+/**************************************************************************\
+ *
+ *  Copyright (C) 2000 by Systems in Motion.  All rights reserved.
+ *
+ *  This file is part of the Coin library.
+ *
+ *  This file may be distributed under the terms of the Q Public License
+ *  as defined by Troll Tech AS of Norway and appearing in the file
+ *  LICENSE.QPL included in the packaging of this file.
+ *
+ *  If you want to use Coin in applications not covered by licenses
+ *  compatible with the QPL, you can contact SIM to aquire a
+ *  Professional Edition license for Coin.
+ *
+ *  Systems in Motion AS, Prof. Brochs gate 6, N-7030 Trondheim, NORWAY
+ *  http://www.sim.no/ sales@sim.no Voice: +47 73540378 Fax: +47 73943861
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/actions/SoBoxHighlightRenderAction.h>
+#include <Inventor/nodes/SoBaseColor.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoSelection.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoTranslation.h>
+
+// *************************************************************************
+
+// Global data.
+static SoSelection * selection = NULL;
+
+// *************************************************************************
+
+// Callback function triggered for selection / deselection.
+void
+made_selection( void * userdata, SoPath * path )
+{
+  (void)fprintf( stdout, "%sselected %s\n",
+                 userdata == (void *)1L ? "" : "de",
+                 path->getTail()->getTypeId().getName().getString() );
+
+  selection->touch(); // to redraw
+}
+
+// *************************************************************************
+
+// Construct a scene graph by setting up a "cube" matrix of random
+// complex shapes.
+SoNode *
+make_shapes_cube( void )
+{
+  srand( (unsigned int) time(NULL) );
+
+  SoSeparator * topsep = new SoSeparator;
+
+  for ( int x = 0; x < 3; x++ ) {
+    for ( int y = 0; y < 3; y++ ) {
+      for ( int z = 0; z < 3; z++ ) {
+        SoSeparator * sep = new SoSeparator;
+        topsep->addChild( sep );
+
+        SoBaseColor * basecol = new SoBaseColor;
+        basecol->rgb.setValue( float(rand())/float(RAND_MAX),
+                               float(rand())/float(RAND_MAX),
+                               float(rand())/float(RAND_MAX) );
+        sep->addChild( basecol );
+
+        SoTranslation * trans = new SoTranslation;
+        trans->translation.setValue( x * 5.0f, y * 5.0f, z * 5.0f );
+        sep->addChild( trans );
+
+        const SoType shapes[] = { SoCube::getClassTypeId(),
+                                  SoCone::getClassTypeId(),
+                                  SoCylinder::getClassTypeId(),
+                                  SoSphere::getClassTypeId() };
+
+        int shapeidx = rand() % 4;
+        sep->addChild( (SoNode *)shapes[shapeidx].createInstance() );
+      }
+    }
+  }
+
+  return topsep;
+}
+
+// *************************************************************************
+
+// Print a quick instructions notice on stdout.
+void
+show_instructions( void )
+{
+  (void)fprintf( stdout, "\nThis example program demonstrates the use of the SoSelection node type.\n" );
+  (void)fprintf( stdout, "\nQuick instructions:\n\n" );
+  (void)fprintf( stdout, "  * pick with left mouse button\n" );
+  (void)fprintf( stdout, "  * hold SHIFT to select multiple objects\n" );
+  (void)fprintf( stdout, "  * hit ESC to toggle back and forth to view mode\n" );
+  (void)fprintf( stdout, "\n" );
+}
+
+// *************************************************************************
+
+int
+main(
+  int /* argc */,
+  char ** argv )
+{
+  @WINWIDGET@ window = So@Gui@::init( argv[0] );
+
+  show_instructions();
+
+  selection = new SoSelection;
+  selection->policy = SoSelection::SHIFT;
+  selection->ref();
+
+  selection->addChild( make_shapes_cube() );
+  selection->addSelectionCallback( made_selection, (void *)1L );
+  selection->addDeselectionCallback( made_selection, (void *)0L );
+
+
+  So@Gui@ExaminerViewer * examinerviewer = new So@Gui@ExaminerViewer( window );
+  examinerviewer->setSceneGraph( selection );
+  examinerviewer->setGLRenderAction( new SoBoxHighlightRenderAction );
+  examinerviewer->setViewing( FALSE );
+  examinerviewer->show();
+
+  So@Gui@::show( window );
+  So@Gui@::mainLoop();
+
+  delete examinerviewer;
+  selection->unref();
+
+  return 0;
+} // main()
+
+// *************************************************************************

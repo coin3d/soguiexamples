@@ -1,0 +1,103 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoShapeHints.h>
+
+// Function for generating the scenegraph using only the SoRotation,
+// SoTranslation and SoCube nodes.
+// The cubes placed in the x-direction will be rotated about the 
+// z-axis, while the cubes in the y and z directions will be rotated 
+// about the x-axis.
+// Parameters:
+//  float x   : translation between each cube in the x-direction
+//  float y   : translation between each cube in the y-direction
+//  float z   : translation between each cube in the z-direction
+//  float rot : rotation angle
+//  int n     : number of itterations
+//  int flag  : 0 = x-direction
+//              1 = y-direction
+//              2.= z-direction 
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene(float x, float y, float z, float rot, int n, int flag)
+{
+  SoSeparator * tg = new SoSeparator;
+
+  if (n>0) {
+    if (flag==0) {
+      SoTranslation * tx = new SoTranslation;
+      SoRotation * rx = new SoRotation;
+      tx->translation.setValue(x, 0, 0);
+      rx->rotation.setValue(SbVec3f(0, 0, 1), -rot);
+      tg->addChild(tx);
+      tg->addChild(rx);
+      tg->addChild(new SoCube);
+      tg->addChild(scene(x, y, z, rot, n, 2));
+      tg->addChild(scene(x, y, z, rot, n-1, 1));
+      tg->addChild(scene(x, y, z, rot, n-1, 0));
+    }
+    else if (flag==1) {
+      SoTranslation * ty = new SoTranslation;
+      SoRotation * ry = new SoRotation;
+      ty->translation.setValue(0, y, 0);
+      ry->rotation.setValue(SbVec3f(1, 0, 0), rot);
+      tg->addChild(ty);
+      tg->addChild(ry);
+      tg->addChild(new SoCube);
+      tg->addChild(scene(x, y, z, rot, n-1, 1));
+    }
+    else {
+      SoTranslation * tz = new SoTranslation;
+      SoRotation * rz = new SoRotation;
+      tz->translation.setValue(0, 0, z);
+      rz->rotation.setValue(SbVec3f(1, 0, 0), -rot);
+      tg->addChild(new SoCube);
+      tg->addChild(tz);
+      tg->addChild(rz);
+      tg->addChild(scene(x, y, z, rot, n-1, 2));
+    }
+  }
+
+  return tg;
+}
+
+int
+main(int, char ** argv) 
+{
+  (void)printf("This example shows how to use the SoRotation node\n");
+  
+  // Initialize Coin, and return a main window to use
+  // If unsuccessful, exit
+  @WIDGET@ window = So@Gui@::init(argv[0]); // pass the application name
+  if (window==NULL) exit(1);
+  
+  // Create scene graph
+  SoSeparator * root = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+
+  // Enable backface culling
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  root->ref();                   // Increments the reference counter
+  root->addChild(hints);
+  root->addChild(scene(3.0, 3.0, 3.0, M_PI/30, 12, 0));
+  
+  // Set up ExaminerViewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Rotation");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // remove the viewer from memory
+  root->unref();      // Decrements the reference counter
+  return 0;
+}

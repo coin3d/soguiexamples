@@ -1,0 +1,157 @@
+/**************************************************************************\
+ *
+ *  Copyright (C) 2000 by Systems in Motion.  All rights reserved.
+ *
+ *  This file is part of the Coin library.
+ *
+ *  This file may be distributed under the terms of the Q Public License
+ *  as defined by Troll Tech AS of Norway and appearing in the file
+ *  LICENSE.QPL included in the packaging of this file.
+ *
+ *  If you want to use Coin in applications not covered by licenses
+ *  compatible with the QPL, you can contact SIM to aquire a
+ *  Professional Edition license for Coin.
+ *
+ *  Systems in Motion AS, Prof. Brochs gate 6, N-7030 Trondheim, NORWAY
+ *  http://www.sim.no/ sales@sim.no Voice: +47 73540378 Fax: +47 73943861
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/So@Gui@RenderArea.h>
+#include <Inventor/engines/SoCompose.h>
+#include <Inventor/engines/SoElapsedTime.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoFile.h>
+#include <Inventor/nodes/SoGroup.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoResetTransform.h>
+#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/sensors/SoAlarmSensor.h>
+
+
+// *************************************************************************
+
+// Print a quick instructions notice on stdout.
+void
+show_instructions( void )
+{
+  (void)fprintf( stdout, "\n" );
+  (void)fprintf( stdout,
+                 "  This example program demonstrates model loading through the\n"
+                 "  SoFile node. All model files you specify as arguments will\n"
+                 "  be loaded and displayed in turn in intervals of 10 seconds.\n" );
+  (void)fprintf( stdout, "\n" );
+}
+
+// *************************************************************************
+
+// Globals
+
+static So@Gui@RenderArea * renderarea = NULL;
+static SoGroup * root = NULL;
+static SoCamera * camera = NULL;
+static SoFile * filenode = NULL;
+static int argcount = 0, argposition = 1;
+static char ** argptr = NULL;
+
+// *************************************************************************
+
+static void
+alarm_trigger( void * userdata, SoSensor * sensor )
+{
+  (void)fprintf( stdout, "Loading '%s'...\n", argptr[argposition] );
+  filenode->name.setValue( argptr[argposition] );
+
+  camera->viewAll( root, renderarea->getViewportRegion() );
+  // Lots of slack for models which are not centered in (0,0,0).
+  camera->nearDistance = camera->nearDistance.getValue() * 0.1;
+  camera->farDistance = (camera->farDistance.getValue() + 1.0 ) * 10.0;
+
+  argposition = ( argposition + 1 ) % argcount;
+  if ( argposition == 0 ) argposition++;
+
+  // Reschedule alarm.
+  SoAlarmSensor * alarm = (SoAlarmSensor *)sensor;
+  alarm->setTimeFromNow(10.0); // 10 seconds
+  alarm->schedule();
+}
+
+// *************************************************************************
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  @WINWIDGET@ window = So@Gui@::init( argv[0] );
+
+  show_instructions();
+  if ( argc < 2 ) {
+    (void)fprintf( stderr,
+                   "\nError: no model files specified as arguments!\n\n" );
+    exit( 1 );
+  }
+
+  argcount = argc;
+  argptr = argv;
+
+
+  // Set up scene graph.
+
+  root = new SoGroup;
+  root->ref();
+
+  camera = new SoPerspectiveCamera;
+  root->addChild( camera );
+
+  SoRotation * rotlight = new SoRotation;
+  root->addChild( rotlight );
+  rotlight->rotation.connectFrom( & camera->orientation );
+
+  SoDirectionalLight * headlight = new SoDirectionalLight;
+  root->addChild( headlight );
+  headlight->direction.setValue( 1, -1, -10 );
+
+  SoResetTransform * reset = new SoResetTransform;
+  root->addChild( reset );
+
+  SoRotation * objectrotation = new SoRotation;
+  root->addChild( objectrotation );
+
+  SoElapsedTime * timeengine = new SoElapsedTime;
+  SoComposeRotation * rotationengine = new SoComposeRotation;
+  rotationengine->axis.setValue( 0.2, 1, 0.5 );
+  rotationengine->angle.connectFrom( & timeengine->timeOut );
+  objectrotation->rotation.connectFrom( & rotationengine->rotation );
+
+  filenode = new SoFile;
+  root->addChild( filenode );
+
+
+  // Instantiate renderarea.
+
+  renderarea = new So@Gui@RenderArea( window );
+  renderarea->setSceneGraph( root );
+  renderarea->show();
+
+
+  // Configure alarm sensor.
+
+  SoAlarmSensor * alarm = new SoAlarmSensor(alarm_trigger, NULL);
+  alarm_trigger(NULL, alarm);
+
+
+  // Map widgets to display.
+
+  So@Gui@::show( window );
+  So@Gui@::mainLoop();
+
+  delete alarm;
+  delete renderarea;
+  root->unref();
+
+  return 0;
+} // main()
+
+// *************************************************************************

@@ -1,0 +1,130 @@
+/**************************************************************************\
+ *
+ *  Copyright (C) 2000 by Systems in Motion.  All rights reserved.
+ *
+ *  This file is part of the Coin library.
+ *
+ *  This file may be distributed under the terms of the Q Public License
+ *  as defined by Troll Tech AS of Norway and appearing in the file
+ *  LICENSE.QPL included in the packaging of this file.
+ *
+ *  If you want to use Coin in applications not covered by licenses
+ *  compatible with the QPL, you can contact SIM to aquire a
+ *  Professional Edition license for Coin.
+ *
+ *  Systems in Motion AS, Prof. Brochs gate 6, N-7030 Trondheim, NORWAY
+ *  http://www.sim.no/ sales@sim.no Voice: +47 73540378 Fax: +47 73943861
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/draggers/SoTranslate2Dragger.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoFaceSet.h>
+#include <Inventor/nodes/SoGroup.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoPickStyle.h>
+#include <Inventor/nodes/SoRotationXYZ.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTranslation.h>
+
+// *************************************************************************
+
+// Print instructions on stdout.
+void
+show_instructions(void)
+{
+  (void)fprintf(stdout, "\nThis example program shows off the simple \"translate2\" dragger.\n");
+  (void)fprintf(stdout, "\nQuick instructions:\n\n");
+  (void)fprintf(stdout, "  * pick and drag with left mouse button\n");
+  (void)fprintf(stdout, "  * hold SHIFT while dragging to constrain to a single axis\n");
+  (void)fprintf(stdout, "  * hit ESC to toggle back and forth to view mode\n");
+  (void)fprintf(stdout, "\n");
+}
+
+// *************************************************************************
+
+// Construct a transparent plane with position controlled by the
+// translation field of a SoTranslate2Dragger.
+
+SoSeparator *
+make_transparent_plane(SbColor color, SoSFVec3f * draggerfield)
+{
+  SoSeparator * sub = new SoSeparator;
+
+  SoMaterial * mat = new SoMaterial;
+  sub->addChild(mat);
+  mat->transparency = 0.1;
+  mat->diffuseColor.setValue(color);
+  mat->emissiveColor.setValue(color / 2);
+
+  SoTranslation * trans = new SoTranslation;
+  sub->addChild(trans);
+  trans->translation.connectFrom(draggerfield);
+
+  SoCoordinate3 * coords = new SoCoordinate3;
+  sub->addChild(coords);
+  coords->point.set1Value(0, SbVec3f(-3, -3, 0));
+  coords->point.set1Value(1, SbVec3f(3, -3, 0));
+  coords->point.set1Value(2, SbVec3f(3, 3, 0));
+  coords->point.set1Value(3, SbVec3f(-3, 3, 0));
+
+  SoPickStyle * pickstyle = new SoPickStyle;
+  sub->addChild(pickstyle);
+  pickstyle->style = SoPickStyle::UNPICKABLE;
+
+  SoFaceSet * face = new SoFaceSet;
+  sub->addChild(face);
+  face->numVertices.setValue(4);
+
+  return sub;
+}
+
+// *************************************************************************
+
+int
+main(
+  int /* argc */,
+  char ** argv)
+{
+  @WINWIDGET@ window = So@Gui@::init(argv[0]);
+
+  show_instructions();
+
+
+  // Build scene graph with SoTranslate2Draggers.
+
+  SoGroup * root = new SoGroup;
+  root->ref();
+
+  const SbVec3f startpos[] = {
+    SbVec3f(0, 0, 0), SbVec3f(10, 0, 2), SbVec3f(5, 10, 4)
+  };
+  const SbColor colors[] = {
+    SbColor(1, 0, 0), SbColor(0, 1, 0), SbColor(0, 0, 1)
+  };
+
+  for (int i = 0; i < 3; i++) {
+    SoTranslate2Dragger * dragger = new SoTranslate2Dragger;
+    root->addChild(dragger);
+    dragger->translation.setValue(startpos[i]);
+    root->addChild(make_transparent_plane(colors[i], &dragger->translation));
+  }
+
+  So@Gui@ExaminerViewer * examinerviewer = new So@Gui@ExaminerViewer(window);
+  examinerviewer->setSceneGraph(root);
+  examinerviewer->setViewing(FALSE);
+  examinerviewer->setTransparencyType(SoGLRenderAction::ADD);
+  examinerviewer->show(); // SoXt needs this to map the window.
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete examinerviewer;
+  root->unref();
+
+  return 0;
+} // main()
+
+// *************************************************************************

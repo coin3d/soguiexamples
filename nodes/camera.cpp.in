@@ -1,0 +1,118 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/So@Gui@RenderArea.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoRotor.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoOrthographicCamera.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoCube.h>
+
+// Function to generate a red cube at x-positon t which rotates about the 
+// x and y axis' and is viewed at with a perspective camera.
+// Parameters:
+//  float t - x translation
+// Return:
+//  SoSeparator *
+SoSeparator *
+perspective(float t)
+{
+  SoSeparator * sep = new SoSeparator;
+  SoPerspectiveCamera * camera = new SoPerspectiveCamera;
+  SoRotor * xrot = new SoRotor;
+  SoRotor * yrot = new SoRotor;
+  SoMaterial *material = new SoMaterial;
+
+  camera->position.setValue(SbVec3f(-t, 0.0, 10.0));
+  camera->nearDistance = 8.0;
+  camera->farDistance = 12.0;
+
+  xrot->speed = 0.1;
+  xrot->rotation.setValue(SbVec3f(1, 0, 0), 0.1);
+  yrot->speed = 0.09;
+  yrot->rotation.setValue(SbVec3f(0, 1, 0), -0.1);
+  material->diffuseColor.setValue(1.0, 0.0, 0.0);
+
+  sep->addChild(camera);
+  sep->addChild(new SoDirectionalLight);
+  sep->addChild(xrot);
+  sep->addChild(yrot);
+  sep->addChild(material);
+  sep->addChild(new SoCube);
+
+  return sep;
+}
+
+// Function to generate a blue cube a x-position t. The cube is viewed on
+// with the orthographic camera, and is scaled [s, s, s]. The cube is
+// also rotated about the the x and y axis'
+// Parameters:
+//  float t - x translation
+//  float s - xyz scaling
+// Return:
+//  SoSeparator *
+SoSeparator *
+orthographic(float t, float s)
+{
+  SoSeparator * sep = new SoSeparator;
+  SoOrthographicCamera * camera = new SoOrthographicCamera;
+  SoTranslation * transl = new SoTranslation;
+  SoScale * scale = new SoScale;
+  SoRotor * xrot = new SoRotor;
+  SoRotor * yrot = new SoRotor;
+  SoMaterial * material = new SoMaterial;
+
+  camera->position.setValue(SbVec3f(0.0, 0.0, 10.0));
+  camera->nearDistance = 8.0;
+  camera->farDistance = 12.0;
+
+  transl->translation.setValue(t, 0.0, 0.0);
+  scale->scaleFactor.setValue(SbVec3f(s, s, s));
+  xrot->speed = 0.1;
+  xrot->rotation.setValue(SbVec3f(1, 0, 0), 0.1);
+  yrot->speed = 0.09;
+  yrot->rotation.setValue(SbVec3f(0, 1, 0), -0.1);
+  material->diffuseColor.setValue(0.0, 0.0, 1.0);
+
+  sep->addChild(camera);
+  sep->addChild(transl);
+  sep->addChild(new SoDirectionalLight);
+  sep->addChild(xrot);
+  sep->addChild(yrot);
+  sep->addChild(scale);
+  sep->addChild(material);
+  sep->addChild(new SoCube);
+
+  return sep;
+}
+
+int
+main (int, char ** argv) {
+  (void)printf("This example shows how to use the two different camera nodes SoPerspectiveCamera (red) and SoOrthographicCamera (blue)\n");
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+
+  // Create scene graph
+  SoSeparator * root = new SoSeparator;
+
+  root->ref();  // increments the root's reference counter
+  root->addChild(perspective(-2.0));
+  root->addChild(orthographic(0.5, 0.25));
+
+  // Display the scene in our renderArea and change the title
+  So@Gui@RenderArea *renderArea = new So@Gui@RenderArea(window);
+  renderArea->setSceneGraph(root);
+  renderArea->setTitle("Camera [perspective vs orthographic]");
+  renderArea->show();
+
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete renderArea;  // free up renderArea's resources
+  root->unref();      // decrements the root's reference counter
+  return 0;
+}

@@ -1,0 +1,57 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoClipPlane.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoCube.h>
+
+SoSeparator *
+scene( )
+{
+  SoSeparator * sep = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+  SoClipPlane * clipright = new SoClipPlane;
+  SoClipPlane * clipleft = new SoClipPlane;
+
+  // Enable double-sided lighting
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+
+  // Setting up the two clip plane nodes.
+  clipright->plane.setValue(SbPlane(SbVec3f(-1.0, 0.0, 0.0), -0.5));
+  clipleft->plane.setValue(SbPlane(SbVec3f(1.0, 0.0, 0.0), -0.5));
+
+  sep->addChild(hints);
+  sep->addChild(clipright);
+  sep->addChild(clipleft);
+  sep->addChild(new SoCube);
+
+  return sep;
+}
+
+int
+main(int, char ** argv)
+{
+  (void)printf("This example shows how to use the SoClipPlane node.\n");
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  // Scene graph
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+  root->addChild(scene());
+
+  // Set up the examinerviewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Clip Plane");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;
+  root->unref();
+  return 0;
+}

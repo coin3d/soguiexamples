@@ -1,0 +1,120 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoLevelOfDetail.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoCube.h>
+
+// Globals
+float levelofdetailvalues[] = { 150*150,
+                                100*100, 
+                                50*50,
+                                25*25 };
+
+// Function that generates a cube of cubes.
+// Parameters:
+//  float t - translation steps
+//  float s - scalefactor
+//  int n   - number of cubes in XYZ directions.
+// Return:
+//  SoSeparator *
+SoSeparator *
+cubeOfCubes(float t, float s, int n)
+{
+  SoSeparator * sep = new SoSeparator;
+  SoSeparator * lsep = new SoSeparator;
+  SoTranslation * ti = new SoTranslation;
+  SoTranslation * tx = new SoTranslation;
+  SoTranslation * ty = new SoTranslation;
+  SoTranslation * tz = new SoTranslation;
+  SoScale * sc = new SoScale;
+
+  ti->translation.setValue(-t*((float)n/2.0), 
+                           -t*((float)n/2.0),  
+                           -t*((float)n/2.0));
+  tx->translation.setValue(t, 0.0, 0.0);
+  ty->translation.setValue(-t*(float)n, t, 0.0);
+  tz->translation.setValue(0, -t*(float)n, t);
+  sc->scaleFactor.setValue(s, s, s);
+
+  lsep->addChild(sc);
+  lsep->addChild(new SoCube);
+
+  sep->addChild(ti);
+  for (int z = 0; z < n; z++) {
+    for (int y = 0; y < n; y++) {
+      for (int x = 0; x < n; x++) {
+        sep->addChild(lsep);
+        sep->addChild(tx);
+      }
+      sep->addChild(ty);
+    }
+    sep->addChild(tz);
+  }
+  return sep;
+}
+
+// Function for generating the scene graph
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene( )
+{
+  SoSeparator * sep = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+  SoMaterial * material = new SoMaterial;
+  SoLevelOfDetail * detail = new SoLevelOfDetail;
+
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+  material->diffuseColor.setValue(1.0, 1.0, 0.5);
+
+  detail->addChild(cubeOfCubes(3.0, 1.0, 6));
+  detail->addChild(cubeOfCubes(3.6, 1.2, 5));
+  detail->addChild(cubeOfCubes(4.5, 1.5, 4));
+  detail->addChild(cubeOfCubes(6.0, 2.0, 3));
+  detail->addChild(cubeOfCubes(9.0, 3.0, 2));
+  detail->screenArea.setValues(0, 4, levelofdetailvalues);
+
+  sep->addChild(hints);
+  sep->addChild(material);
+  sep->addChild(detail);
+
+  return sep;
+}
+
+int
+main (int, char ** argv)
+{
+  (void)printf("This example shows how to use the SoLevelOfDetail node.\n"
+               "This node is supposed to be used to remove all unnecessary\n"
+               "details from the object when it is viewed at from\n"
+               "different distances. This object was made for demonstration\n"
+               "purposes only.\n\n"
+               "Use the examinerviewer's dolly wheel to see the effect.\n");
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  // Scene graph
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  root->addChild(scene());
+  
+  // Set up the examinerviewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Level of Detail");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;
+  root->unref();
+  return 0;
+}

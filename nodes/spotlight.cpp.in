@@ -1,0 +1,108 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoSpotLight.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoLightModel.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoShapeHints.h>
+
+// lightsource constants
+const float light_xp = 0.0;
+const float light_yp = -20.0;
+const float light_zp = 10.0;
+const float light_color[] = {1.0, 1.0, 0.5};
+const SbVec3f light_direction(0.0, 1.0, 0.0);
+// Recursive function that generates a scene graph with spheres
+// Parameters:
+//  float xt - translation in x-direction for each sphere
+//  float yt - translation in y-direction for each sphere
+//  float zt - translation in z-direction for each sphere
+//  int n    - number of spheres 
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene(float xt, float yt, float zt, int n)
+{
+  SoSeparator * sep = new SoSeparator;
+  SoTransform * transf = new SoTransform;
+  sep->ref();
+
+  if (n>0) {
+    transf->translation.setValue(xt, yt, zt);
+    transf->rotation.setValue(SbVec3f(0, 0, 1), M_PI/(float)(n+1));
+    sep->addChild(transf);
+    sep->addChild(new SoSphere);
+    sep->addChild(scene(xt, yt, zt, n-1));
+  }
+  
+  sep->unrefNoDelete();
+  return sep;
+}
+
+int
+main(int, char ** argv) {
+  (void)printf("This example shows how to use the SoSpotLight node\n");
+  
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+
+  // Enable backface culling
+  SoShapeHints * hints = new SoShapeHints;
+
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+  
+  // Create scene graph
+  SoSeparator * root = new SoSeparator;
+  SoSpotLight * light = new SoSpotLight;
+  root->ref();
+  root->addChild(hints);
+
+  // Setting up the spotlight
+  light->color.setValue(light_color[0], light_color[1], light_color[2]);
+  light->intensity.setValue(0.95);
+  light->location.setValue(light_xp, light_yp, light_zp);
+  light->direction.setValue(light_direction);
+  light->dropOffRate.setValue(0.20);
+  light->cutOffAngle.setValue(M_PI/6);
+  
+  root->addChild(light);
+  root->addChild(scene(2.0, 3.0, 2.5, 10));
+  
+  // Set up an object to represent the lightsource
+  SoLightModel * lmodel = new SoLightModel;
+  SoMaterial * lmaterial = new SoMaterial;
+  SoTransform * ltransform = new SoTransform;
+  SoCone * lobj = new SoCone;
+  
+  lmodel->model = SoLightModel::BASE_COLOR;
+  lmaterial->diffuseColor.setValue(light_color[0], 
+                                   light_color[1], 
+                                   light_color[2]);
+  ltransform->translation.setValue(light_xp, light_yp, light_zp);
+  ltransform->rotation.setValue(SbVec3f(1.0, 0.0, 0.0), M_PI);
+
+  root->addChild(lmodel);
+  root->addChild(lmaterial);
+  root->addChild(ltransform);
+  root->addChild(lobj);
+
+  // Set up the ExaminerViewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setHeadlight(FALSE);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Spot Light");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window);  // display the main window
+  So@Gui@::mainLoop();    // main Coin event loop
+  delete viewer;       // free up the viewer's resources
+  root->unref();       // decrements the root's reference counter
+  return 0;
+}

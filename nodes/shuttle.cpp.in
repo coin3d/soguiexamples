@@ -1,0 +1,80 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoShuttle.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoShapeHints.h>
+
+// Function that generates a scene graph
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene()
+{
+  SoSeparator * sep = new SoSeparator;
+  SoSeparator * cubesep = new SoSeparator;
+  SoSeparator * conesep = new SoSeparator;
+  
+  SoShuttle * cubeshuttle = new SoShuttle;
+  cubeshuttle->translation0.setValue(-2.0, 2.0, -4.0);
+  cubeshuttle->translation1.setValue(2.0, -2.0, 5.0);
+  cubeshuttle->speed = 0.1;
+  
+  SoMaterial * cubematerial = new SoMaterial;
+  cubematerial->diffuseColor.setValue(1.0, 0.0, 0.0);
+
+  SoShuttle * coneshuttle = new SoShuttle;
+  coneshuttle->translation0.setValue(2.0, -2.0, 3.0);
+  coneshuttle->translation1.setValue(-2.0, 2.0, -3.0);
+  coneshuttle->speed = 0.1;
+
+  SoMaterial * conematerial = new SoMaterial;
+  conematerial->diffuseColor.setValue(0.0, 0.0, 1.0);
+
+  cubesep->addChild(cubeshuttle);
+  cubesep->addChild(cubematerial);
+  cubesep->addChild(new SoCube);
+  conesep->addChild(coneshuttle);
+  conesep->addChild(conematerial);
+  conesep->addChild(new SoCone);
+
+  sep->addChild(cubesep);
+  sep->addChild(conesep);
+
+  return sep;
+}
+
+int
+main (int, char ** argv)
+{
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+
+  // Enable backface culling
+  SoShapeHints * hints = new SoShapeHints;
+  
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  // Scene graph
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+  root->addChild(hints);
+  root->addChild(scene());
+
+  // Set up the examiner viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Shuttle");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;
+  root->unref();
+  return 0;
+}

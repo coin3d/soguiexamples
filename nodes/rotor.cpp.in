@@ -1,0 +1,84 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoRotor.h>
+#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoShapeHints.h>
+
+// Recursive function for generating a scene graph using the SoRotor,
+// SoRotator, SoCylinder and SoMaterial nodes.
+// Parameters:
+//  float h  - height of the cylinder
+//  float r  - radius of the cylinder
+//  float c  - init color intensity
+//  float cs - color step
+//  int n    - number of cylinders
+SoSeparator *
+scene(float h, float r, float c, float cs, int n)
+{
+  SoSeparator * sep = new SoSeparator;
+
+  if (n>0) {
+    SoCylinder * cyl = new SoCylinder;
+    SoMaterial * mat = new SoMaterial;
+    SoRotor * rotor = new SoRotor;
+    SoRotation * rot = new SoRotation;
+
+    cyl->height = h;
+    cyl->radius = r;
+    mat->diffuseColor.setValue(c, 0.5, -c+1.0);
+    rotor->speed = (float)n/100.0;
+    if ((n%2)==0)
+      rotor->rotation.setValue(SbVec3f(0, 0, 1), 0.1); // counterclockwise
+    else
+      rotor->rotation.setValue(SbVec3f(0, 0, 1), -0.1);// clockwise
+    rot->rotation.setValue(SbVec3f(1, 0, 0), M_PI/5);
+
+    sep->addChild(rotor);
+    sep->addChild(mat);
+    sep->addChild(cyl);
+    sep->addChild(rot);
+    sep->addChild(scene(h, r, c-cs, cs, n-1));
+  }
+
+  return sep;
+}
+
+int
+main (int, char ** argv)
+{
+  (void)printf("This example shows how to use the SoRotor node\n");
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+
+  // Enable backface culling
+  SoShapeHints * hints = new SoShapeHints;
+  
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  // Create scene graph
+  SoSeparator * root = new SoSeparator;
+
+  root->ref();  // increments the reference counter
+  root->addChild(hints);
+  root->addChild(scene(10.0, 0.3, 1.0, 0.1, 8));
+
+  // Set up Examiner Viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Rotor");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // free up the viewer's resources
+  root->unref();      // decrements the reference counter
+  return 0;
+}

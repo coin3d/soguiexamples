@@ -1,0 +1,85 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoTriangleStripSet.h>
+#include <Inventor/nodes/SoNormal.h>
+#include <Inventor/nodes/SoNormalBinding.h>
+
+// Coordinates
+static float vertices[8][3] = {
+  {  1, -1,  1},
+  {  0,  1,  0},
+  { -1, -1,  1},
+  { -1, -1, -1},
+  {  1, -1,  1},
+  {  1, -1, -1},
+  {  0,  1,  0},
+  { -1, -1, -1}
+};
+
+static float norms[6][3] = {
+  {  0,  0.7071,  0.7071},
+  { -0.7071, 0.7071,  0},
+  {  0, -1, 0},
+  {  0, -1, 0},
+  { 0.7071, 0.7071, 0},
+  {  0, 0.7071, -0.7071}
+};
+
+// Function that sets up an object using the SoTriangleStripSet node.
+// Return:
+//  SoSeparator *
+SoSeparator * 
+triangleStrip() 
+{
+  SoSeparator * ts = new SoSeparator;
+  
+ // Define the normals used
+  SoNormal * normals = new SoNormal;
+  normals->vector.setValues(0, 6, norms);
+  ts->addChild(normals);
+  SoNormalBinding *normalBinding = new SoNormalBinding;
+  normalBinding->value = SoNormalBinding::PER_FACE;
+  ts->addChild(normalBinding);
+
+  // Define Coordinates
+  SoCoordinate3 * coords = new SoCoordinate3;
+  coords->point.setValues(0, 8, vertices);
+  ts->addChild(coords);
+  
+  // Define TriangleStripSet
+  SoTriangleStripSet * strip = new SoTriangleStripSet;
+  strip->numVertices.setValue(8);
+  ts->addChild(strip);
+
+  return ts;
+}
+
+int
+main(int, char ** argv) 
+{
+  (void)printf("This example shows how to use the SoTriangleStripSet node.\n");
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+
+  // Create scene graph
+  SoSeparator * root = new SoSeparator;
+  root->ref();  // increments the root's reference counter
+  root->addChild(triangleStrip());
+
+  // Set up the ExaminerViewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Triangle Strip Set");
+  viewer->viewAll();
+  viewer->show();
+  
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // free up alle resources occupied by viewer
+  root->unref();      // decrements the root's reference counter
+  return 0;
+}

@@ -1,0 +1,68 @@
+/**************************************************************************\
+ *
+ *  Copyright (C) 2000 by Systems in Motion.  All rights reserved.
+ *
+ *  This file is part of the Coin library.
+ *
+ *  This file may be distributed under the terms of the Q Public License
+ *  as defined by Troll Tech AS of Norway and appearing in the file
+ *  LICENSE.QPL included in the packaging of this file.
+ *
+ *  If you want to use Coin in applications not covered by licenses
+ *  compatible with the QPL, you can contact SIM to aquire a
+ *  Professional Edition license for Coin.
+ *
+ *  Systems in Motion AS, Prof. Brochs gate 6, N-7030 Trondheim, NORWAY
+ *  http://www.sim.no/ sales@sim.no Voice: +47 73540378 Fax: +47 73943861
+ *
+\**************************************************************************/
+
+#include <Inventor/SoDB.h>
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/engines/SoCalculator.h>
+#include <Inventor/engines/SoElapsedTime.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTranslation.h>
+
+
+int
+main(int argc, char ** argv)
+{
+  @WINWIDGET@ mainwin = So@Gui@::init(argv[0]); 
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  SoTranslation * trans = new SoTranslation;
+  root->addChild(trans);
+
+  SoCube * cube = new SoCube;
+  root->addChild(cube);
+
+  SoCalculator * calc = new SoCalculator; 
+  SoElapsedTime * elapsed = new SoElapsedTime;
+
+  elapsed->on = TRUE;
+  elapsed->speed = 50.0f;
+
+  calc->a.connectFrom(&elapsed->timeOut); 
+  calc->expression.set1Value(0, "ta = a / 180.0 * M_PI"); // to radians
+  calc->expression.set1Value(1, "tb = sin(ta)");
+  calc->expression.set1Value(2, "tc = cos(ta)");
+  calc->expression.set1Value(3, "td = tan(ta)");
+  calc->expression.set1Value(4, "oA = vec3f(tb, tc, td)"); 
+  trans->translation.connectFrom(&calc->oA);
+
+  So@Gui@ExaminerViewer * examinerviewer = new So@Gui@ExaminerViewer(mainwin);
+  examinerviewer->setSceneGraph(root);
+
+  So@Gui@::show(mainwin);
+  So@Gui@::mainLoop();
+
+  delete examinerviewer;
+  root->unref();
+
+  return 0;
+}

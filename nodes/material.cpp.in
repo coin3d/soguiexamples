@@ -1,0 +1,106 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoShapeHints.h>
+
+#ifndef M_PI
+#define M_PI 3.141592653579f
+#endif // ! M_PI
+
+// Recursive function for generating the scene graph
+// Parameters:
+//  float t   : translation step
+//  float r   : rotation step
+//  float s   : scaleFactor step
+//  float ci  : init color strength
+//  float cs  : color step
+//  float tri : init transparancy
+//  float trs : transparancy step
+//  int n     : number of itterations
+//  int flag  : Must be 0 when initialize 
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene(float t, float r, float s, float ci, float cs, float tri, float trs, int n, int flag)
+{
+  SoSeparator * tg = new SoSeparator;
+  tg->ref();
+
+  if (n>0) {
+    SoTransform * transf = new SoTransform;
+    SoMaterial * material = new SoMaterial;
+    tg->addChild(transf);
+    tg->addChild(material);
+    tg->addChild(new SoCylinder);
+
+    material->diffuseColor.setValue(ci*1.0, 0.5, -ci+1.0);
+    material->specularColor.setValue(ci*0.5, ci*0.5, ci*0.5);
+    material->emissiveColor.setValue(ci*0.1, ci*0.1, 0.0);
+    material->shininess = ci*0.5;
+    material->transparency = tri;
+
+    if (flag==0) {
+      transf->translation.setValue(t, 0, 0);
+      transf->rotation.setValue(SbVec3f(0, 0, 1), r);
+      transf->scaleFactor.setValue(s,s,s);
+      tg->addChild(scene(t, r, s, ci-cs, cs, tri+trs, trs, n-1, 2));
+      tg->addChild(scene(t, r, s, ci-cs, cs, tri+trs, trs, n-1, 1));
+      tg->addChild(scene(t, r, s, ci-cs, cs, tri+trs, trs, n-1, 0));
+    }
+    else if (flag==1) {
+      transf->translation.setValue(0, t, 0);
+      transf->rotation.setValue(SbVec3f(1, 0, 0), r);
+      transf->scaleFactor.setValue(s,s,s);
+      tg->addChild(scene(t, r, s, ci-cs, cs, tri+trs, trs, n-1, 1));
+    }
+    else {
+      transf->translation.setValue(0, 0, t);
+      transf->rotation.setValue(SbVec3f(1, 0, 0), r);
+      transf->scaleFactor.setValue(s,s,s);
+      tg->addChild(scene(t, r, s, ci-cs, cs, tri+trs, trs, n-1, 2));
+    }
+  }
+
+  tg->unrefNoDelete();
+  return tg;
+}
+
+int
+main(int, char ** argv) 
+{
+  (void)printf("This example shows how to use the SoMaterial node\n");
+  
+  // Initialize Coin, and return a main window to use
+  // If unsuccessful, exit
+  @WIDGET@ window = So@Gui@::init(argv[0]); // pass the application name
+  if (window==NULL) exit(1);
+  
+  // Create scene graph
+  SoSeparator * root = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  root->ref();                   // Increments the reference counter
+  root->addChild(hints);
+  root->addChild(scene(2.5, M_PI/15, 0.80, 1.0, 0.06, 0.0, 0.02, 10, 0));
+  
+  // Set up ExaminerViewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTransparencyType(SoGLRenderAction::SORTED_OBJECT_BLEND);
+  viewer->setTitle("Material");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // remove the viewer from memory
+  root->unref();      // Decrements the reference counter
+  return 0;
+}

@@ -1,0 +1,129 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoTextureCoordinateEnvironment.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoTransform.h>
+
+// Global constants
+const int texturewidth = 256;
+const int textureheight = 256;
+
+// Global pointer
+unsigned char * bitmap = new unsigned char[texturewidth*textureheight];
+
+// Function to generate a julia set
+// Parameters:
+//  double cr   - r julia set point
+//  double ci   - i julia set point
+//  float zoon  - lenth of the square to display (zoom*zoom), center (0,0)
+//  int width   - width of the bitmap
+//  int height  - height of the bitmap
+//  int mult    - number to multiply each color by.
+//  unsigned char * bmp - pointer to the bitmap
+//  int n       - number of itterations 
+void
+julia(double cr, double ci, float zoom, int width, int height, int mult, 
+      unsigned char * bmp, int n)
+{
+  double zr, zr_old, zi;
+  int w;
+
+  for (int y=0; y<height/2; y++)
+    for (int x=0; x<width; x++) {
+      zr = ((double)(x)/(double)width)*zoom-zoom/2;
+      zi = ((double)(y)/(double)height)*zoom-zoom/2;
+      for (w = 0; (w < n) && (zr*zr+zi*zi)<n; w++) {
+        zr_old = zr;
+        zr = zr*zr - zi*zi + cr;
+        zi = 2*zr_old*zi + ci;
+      }
+      bmp[y*width+x] = w*mult;
+      bmp[((height-y)*width-1)-x] = w*mult;
+    }
+}
+
+// Function that loads a texture from memory, and return a pointer to a
+// SoTexture2 node containing this texture..
+// Return:
+//  SoTexture2 *
+SoTexture2 *
+texture()
+{
+  SoTexture2 * texture = new SoTexture2;
+  texture->image.setValue(SbVec2s(texturewidth, textureheight), 1, bitmap);
+  texture->model = SoTexture2::BLEND;
+  texture->blendColor.setValue(0.2, 0.0, 1.0);
+  return texture;
+}
+// Function that sets up the object in the scene
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene()
+{
+  SoSeparator * sep = new SoSeparator;
+  SoTransform * t1 = new SoTransform;
+  SoTransform * t2 = new SoTransform;
+  t1->translation.setValue(0.5, 1.0, 0.0);
+  t1->scaleFactor.setValue(0.5, 1.5, 1.11);
+  t2->translation.setValue(-1.0, 0.0, 0.0);
+  t2->scaleFactor.setValue(1.5, 0.4, 1.2);
+  sep->addChild(t1);
+  sep->addChild(new SoSphere);
+  sep->addChild(t2);
+  sep->addChild(new SoSphere);
+  return sep;
+}
+
+// Function that setup up and returns a SoTextureCoordinateEnvironment node.
+// Return:
+//  SoTextureCoordinateEnvironment *
+SoTextureCoordinateEnvironment *
+environment()
+{
+  SoTextureCoordinateEnvironment * env = new SoTextureCoordinateEnvironment;
+  return env;
+}
+
+int 
+main (int, char ** argv) 
+{
+  (void)printf("This example shows how to use the SoTextureCoordinateEnvironment node.\n");
+  // Generate a julia set to use as a texturemap
+  julia(0.0, 0.75, 2.0, texturewidth, textureheight, 2, bitmap, 128);
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+
+  // Enable backface culling
+  SoShapeHints * hints = new SoShapeHints;
+
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  // Create scene graph
+  SoSeparator * root = new SoSeparator;
+
+  root->ref();  // increments the root's reference counter
+  root->addChild(hints);
+  root->addChild(environment());
+  root->addChild(texture());
+  root->addChild(scene());
+
+  // Setting up the ExaminerViewer
+  So@Gui@ExaminerViewer *viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Environmentmapping");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // free up all the viewer's resources
+  root->unref();      // decrements the root's reference counter
+  return 0;
+}

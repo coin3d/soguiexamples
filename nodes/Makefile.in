@@ -1,0 +1,743 @@
+# Makefile.in generated automatically by automake 1.4a from Makefile.am
+
+# Copyright (C) 1994, 1995-9, 2000 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_STRIP_FLAG =
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+
+@SET_MAKE@
+build_alias = @build_alias@
+build_triplet = @build@
+host_alias = @host_alias@
+host_triplet = @host@
+target_alias = @target_alias@
+target_triplet = @target@
+AMDEP = @AMDEP@
+AMTAR = @AMTAR@
+AS = @AS@
+AWK = @AWK@
+CC = @CC@
+COMPONENTHEADER = @COMPONENTHEADER@
+CPP = @CPP@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
+EVENT = @EVENT@
+GUI = @GUI@
+Gui = @Gui@
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
+MAINT = @MAINT@
+MAKEINFO = @MAKEINFO@
+OBJDUMP = @OBJDUMP@
+PACKAGE = @PACKAGE@
+RANLIB = @RANLIB@
+VERSION = @VERSION@
+WIDGET = @WIDGET@
+WINWIDGET = @WINWIDGET@
+gui = @gui@
+install_sh = @install_sh@
+soguiconfig = @soguiconfig@
+
+############################################################################
+
+
+INCLUDES = -I$(top_builddir)/../src -I$(top_srcdir)/../src
+
+BUILT_SOURCES = \
+	drawstyle.cpp \
+	material.cpp \
+	selection.cpp \
+	slideshow.cpp \
+	sphere.cpp \
+	spherecolor.cpp \
+	rotation.cpp \
+	scale.cpp \
+	translation.cpp \
+	transform.cpp \
+	rotor.cpp \
+	directionallight.cpp \
+	pointlight.cpp \
+	spotlight.cpp \
+	lights.cpp \
+	faceset.cpp \
+	facesetindexed.cpp \
+	quadmesh.cpp \
+	trianglestripset.cpp \
+	camera.cpp \
+	blinker.cpp \
+	texture.cpp \
+	environment.cpp \
+	atmospheric.cpp \
+	shuttle.cpp \
+	complexity.cpp \
+	text2.cpp \
+	text3.cpp \
+	clipplane.cpp \
+	levelofdetail.cpp
+
+
+noinst_PROGRAMS = \
+        drawstyle material selection slideshow sphere spherecolor \
+        rotation scale translation transform rotor \
+        directionallight pointlight spotlight lights \
+        faceset facesetindexed quadmesh trianglestripset \
+        camera blinker texture environment atmospheric shuttle \
+        complexity text2 text3 clipplane levelofdetail
+
+
+drawstyle_SOURCES = drawstyle.cpp
+
+material_SOURCES = material.cpp
+
+selection_SOURCES = selection.cpp
+
+slideshow_SOURCES = slideshow.cpp
+
+sphere_SOURCES = sphere.cpp
+
+spherecolor_SOURCES = spherecolor.cpp
+
+rotation_SOURCES = rotation.cpp
+
+scale_SOURCES = scale.cpp
+
+translation_SOURCES = translation.cpp
+
+transform_SOURCES = transform.cpp
+
+rotor_SOURCES = rotor.cpp
+
+directionallight_SOURCES = directionallight.cpp
+
+pointlight_SOURCES = pointlight.cpp
+
+spotlight_SOURCES = spotlight.cpp
+
+lights_SOURCES = lights.cpp
+
+faceset_SOURCES = faceset.cpp
+
+facesetindexed_SOURCES = facesetindexed.cpp
+
+quadmesh_SOURCES = quadmesh.cpp
+
+trianglestripset_SOURCES = trianglestripset.cpp
+
+camera_SOURCES = camera.cpp
+
+blinker_SOURCES = blinker.cpp
+
+texture_SOURCES = texture.cpp
+
+environment_SOURCES = environment.cpp
+
+atmospheric_SOURCES = atmospheric.cpp
+
+shuttle_SOURCES = shuttle.cpp
+
+complexity_SOURCES = complexity.cpp
+
+text2_SOURCES = text2.cpp
+
+text3_SOURCES = text3.cpp
+
+clipplane_SOURCES = clipplane.cpp
+
+levelofdetail_SOURCES = levelofdetail.cpp
+subdir = nodes
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = ../config.h
+CONFIG_CLEAN_FILES = 
+PROGRAMS =  $(noinst_PROGRAMS)
+
+
+DEFS = @DEFS@ -I. -I$(srcdir) -I..
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+am_atmospheric_OBJECTS =  atmospheric.o
+atmospheric_OBJECTS =  $(am_atmospheric_OBJECTS)
+atmospheric_LDADD = $(LDADD)
+atmospheric_DEPENDENCIES = 
+atmospheric_LDFLAGS = 
+am_blinker_OBJECTS =  blinker.o
+blinker_OBJECTS =  $(am_blinker_OBJECTS)
+blinker_LDADD = $(LDADD)
+blinker_DEPENDENCIES = 
+blinker_LDFLAGS = 
+am_camera_OBJECTS =  camera.o
+camera_OBJECTS =  $(am_camera_OBJECTS)
+camera_LDADD = $(LDADD)
+camera_DEPENDENCIES = 
+camera_LDFLAGS = 
+am_clipplane_OBJECTS =  clipplane.o
+clipplane_OBJECTS =  $(am_clipplane_OBJECTS)
+clipplane_LDADD = $(LDADD)
+clipplane_DEPENDENCIES = 
+clipplane_LDFLAGS = 
+am_complexity_OBJECTS =  complexity.o
+complexity_OBJECTS =  $(am_complexity_OBJECTS)
+complexity_LDADD = $(LDADD)
+complexity_DEPENDENCIES = 
+complexity_LDFLAGS = 
+am_directionallight_OBJECTS =  directionallight.o
+directionallight_OBJECTS =  $(am_directionallight_OBJECTS)
+directionallight_LDADD = $(LDADD)
+directionallight_DEPENDENCIES = 
+directionallight_LDFLAGS = 
+am_drawstyle_OBJECTS =  drawstyle.o
+drawstyle_OBJECTS =  $(am_drawstyle_OBJECTS)
+drawstyle_LDADD = $(LDADD)
+drawstyle_DEPENDENCIES = 
+drawstyle_LDFLAGS = 
+am_environment_OBJECTS =  environment.o
+environment_OBJECTS =  $(am_environment_OBJECTS)
+environment_LDADD = $(LDADD)
+environment_DEPENDENCIES = 
+environment_LDFLAGS = 
+am_faceset_OBJECTS =  faceset.o
+faceset_OBJECTS =  $(am_faceset_OBJECTS)
+faceset_LDADD = $(LDADD)
+faceset_DEPENDENCIES = 
+faceset_LDFLAGS = 
+am_facesetindexed_OBJECTS =  facesetindexed.o
+facesetindexed_OBJECTS =  $(am_facesetindexed_OBJECTS)
+facesetindexed_LDADD = $(LDADD)
+facesetindexed_DEPENDENCIES = 
+facesetindexed_LDFLAGS = 
+am_levelofdetail_OBJECTS =  levelofdetail.o
+levelofdetail_OBJECTS =  $(am_levelofdetail_OBJECTS)
+levelofdetail_LDADD = $(LDADD)
+levelofdetail_DEPENDENCIES = 
+levelofdetail_LDFLAGS = 
+am_lights_OBJECTS =  lights.o
+lights_OBJECTS =  $(am_lights_OBJECTS)
+lights_LDADD = $(LDADD)
+lights_DEPENDENCIES = 
+lights_LDFLAGS = 
+am_material_OBJECTS =  material.o
+material_OBJECTS =  $(am_material_OBJECTS)
+material_LDADD = $(LDADD)
+material_DEPENDENCIES = 
+material_LDFLAGS = 
+am_pointlight_OBJECTS =  pointlight.o
+pointlight_OBJECTS =  $(am_pointlight_OBJECTS)
+pointlight_LDADD = $(LDADD)
+pointlight_DEPENDENCIES = 
+pointlight_LDFLAGS = 
+am_quadmesh_OBJECTS =  quadmesh.o
+quadmesh_OBJECTS =  $(am_quadmesh_OBJECTS)
+quadmesh_LDADD = $(LDADD)
+quadmesh_DEPENDENCIES = 
+quadmesh_LDFLAGS = 
+am_rotation_OBJECTS =  rotation.o
+rotation_OBJECTS =  $(am_rotation_OBJECTS)
+rotation_LDADD = $(LDADD)
+rotation_DEPENDENCIES = 
+rotation_LDFLAGS = 
+am_rotor_OBJECTS =  rotor.o
+rotor_OBJECTS =  $(am_rotor_OBJECTS)
+rotor_LDADD = $(LDADD)
+rotor_DEPENDENCIES = 
+rotor_LDFLAGS = 
+am_scale_OBJECTS =  scale.o
+scale_OBJECTS =  $(am_scale_OBJECTS)
+scale_LDADD = $(LDADD)
+scale_DEPENDENCIES = 
+scale_LDFLAGS = 
+am_selection_OBJECTS =  selection.o
+selection_OBJECTS =  $(am_selection_OBJECTS)
+selection_LDADD = $(LDADD)
+selection_DEPENDENCIES = 
+selection_LDFLAGS = 
+am_shuttle_OBJECTS =  shuttle.o
+shuttle_OBJECTS =  $(am_shuttle_OBJECTS)
+shuttle_LDADD = $(LDADD)
+shuttle_DEPENDENCIES = 
+shuttle_LDFLAGS = 
+am_slideshow_OBJECTS =  slideshow.o
+slideshow_OBJECTS =  $(am_slideshow_OBJECTS)
+slideshow_LDADD = $(LDADD)
+slideshow_DEPENDENCIES = 
+slideshow_LDFLAGS = 
+am_sphere_OBJECTS =  sphere.o
+sphere_OBJECTS =  $(am_sphere_OBJECTS)
+sphere_LDADD = $(LDADD)
+sphere_DEPENDENCIES = 
+sphere_LDFLAGS = 
+am_spherecolor_OBJECTS =  spherecolor.o
+spherecolor_OBJECTS =  $(am_spherecolor_OBJECTS)
+spherecolor_LDADD = $(LDADD)
+spherecolor_DEPENDENCIES = 
+spherecolor_LDFLAGS = 
+am_spotlight_OBJECTS =  spotlight.o
+spotlight_OBJECTS =  $(am_spotlight_OBJECTS)
+spotlight_LDADD = $(LDADD)
+spotlight_DEPENDENCIES = 
+spotlight_LDFLAGS = 
+am_text2_OBJECTS =  text2.o
+text2_OBJECTS =  $(am_text2_OBJECTS)
+text2_LDADD = $(LDADD)
+text2_DEPENDENCIES = 
+text2_LDFLAGS = 
+am_text3_OBJECTS =  text3.o
+text3_OBJECTS =  $(am_text3_OBJECTS)
+text3_LDADD = $(LDADD)
+text3_DEPENDENCIES = 
+text3_LDFLAGS = 
+am_texture_OBJECTS =  texture.o
+texture_OBJECTS =  $(am_texture_OBJECTS)
+texture_LDADD = $(LDADD)
+texture_DEPENDENCIES = 
+texture_LDFLAGS = 
+am_transform_OBJECTS =  transform.o
+transform_OBJECTS =  $(am_transform_OBJECTS)
+transform_LDADD = $(LDADD)
+transform_DEPENDENCIES = 
+transform_LDFLAGS = 
+am_translation_OBJECTS =  translation.o
+translation_OBJECTS =  $(am_translation_OBJECTS)
+translation_LDADD = $(LDADD)
+translation_DEPENDENCIES = 
+translation_LDFLAGS = 
+am_trianglestripset_OBJECTS =  trianglestripset.o
+trianglestripset_OBJECTS =  $(am_trianglestripset_OBJECTS)
+trianglestripset_LDADD = $(LDADD)
+trianglestripset_DEPENDENCIES = 
+trianglestripset_LDFLAGS = 
+CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+CXXFLAGS = @CXXFLAGS@
+CXXLD = $(CXX)
+CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES =  $(atmospheric_SOURCES) $(blinker_SOURCES) \
+$(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) \
+$(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) \
+$(faceset_SOURCES) $(facesetindexed_SOURCES) $(levelofdetail_SOURCES) \
+$(lights_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) \
+$(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) \
+$(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) \
+$(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) \
+$(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) \
+$(texture_SOURCES) $(transform_SOURCES) $(translation_SOURCES) \
+$(trianglestripset_SOURCES)
+depcomp = $(SHELL) $(top_srcdir)/depcomp
+DEP_FILES =  @AMDEP@ $(DEPDIR)/atmospheric.Po $(DEPDIR)/blinker.Po \
+$(DEPDIR)/camera.Po $(DEPDIR)/clipplane.Po $(DEPDIR)/complexity.Po \
+$(DEPDIR)/directionallight.Po $(DEPDIR)/drawstyle.Po \
+$(DEPDIR)/environment.Po $(DEPDIR)/faceset.Po \
+$(DEPDIR)/facesetindexed.Po $(DEPDIR)/levelofdetail.Po \
+$(DEPDIR)/lights.Po $(DEPDIR)/material.Po $(DEPDIR)/pointlight.Po \
+$(DEPDIR)/quadmesh.Po $(DEPDIR)/rotation.Po $(DEPDIR)/rotor.Po \
+$(DEPDIR)/scale.Po $(DEPDIR)/selection.Po $(DEPDIR)/shuttle.Po \
+$(DEPDIR)/slideshow.Po $(DEPDIR)/sphere.Po $(DEPDIR)/spherecolor.Po \
+$(DEPDIR)/spotlight.Po $(DEPDIR)/text2.Po $(DEPDIR)/text3.Po \
+$(DEPDIR)/texture.Po $(DEPDIR)/transform.Po $(DEPDIR)/translation.Po \
+$(DEPDIR)/trianglestripset.Po
+DIST_COMMON =  Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+
+GZIP_ENV = --best
+SOURCES = $(atmospheric_SOURCES) $(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
+OBJECTS = $(am_atmospheric_OBJECTS) $(am_blinker_OBJECTS) $(am_camera_OBJECTS) $(am_clipplane_OBJECTS) $(am_complexity_OBJECTS) $(am_directionallight_OBJECTS) $(am_drawstyle_OBJECTS) $(am_environment_OBJECTS) $(am_faceset_OBJECTS) $(am_facesetindexed_OBJECTS) $(am_levelofdetail_OBJECTS) $(am_lights_OBJECTS) $(am_material_OBJECTS) $(am_pointlight_OBJECTS) $(am_quadmesh_OBJECTS) $(am_rotation_OBJECTS) $(am_rotor_OBJECTS) $(am_scale_OBJECTS) $(am_selection_OBJECTS) $(am_shuttle_OBJECTS) $(am_slideshow_OBJECTS) $(am_sphere_OBJECTS) $(am_spherecolor_OBJECTS) $(am_spotlight_OBJECTS) $(am_text2_OBJECTS) $(am_text3_OBJECTS) $(am_texture_OBJECTS) $(am_transform_OBJECTS) $(am_translation_OBJECTS) $(am_trianglestripset_OBJECTS)
+
+all: all-redirect
+.SUFFIXES:
+.SUFFIXES: .c .cpp .lo .o
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --foreign nodes/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+mostlyclean-noinstPROGRAMS:
+
+clean-noinstPROGRAMS:
+	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
+
+distclean-noinstPROGRAMS:
+
+maintainer-clean-noinstPROGRAMS:
+
+mostlyclean-compile:
+	-rm -f *.o core *.core
+
+clean-compile:
+
+distclean-compile:
+	-rm -f *.tab.c
+
+maintainer-clean-compile:
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+
+maintainer-clean-libtool:
+
+atmospheric: $(atmospheric_OBJECTS) $(atmospheric_DEPENDENCIES)
+	@rm -f atmospheric
+	$(CXXLINK) $(atmospheric_LDFLAGS) $(atmospheric_OBJECTS) $(atmospheric_LDADD) $(LIBS)
+
+blinker: $(blinker_OBJECTS) $(blinker_DEPENDENCIES)
+	@rm -f blinker
+	$(CXXLINK) $(blinker_LDFLAGS) $(blinker_OBJECTS) $(blinker_LDADD) $(LIBS)
+
+camera: $(camera_OBJECTS) $(camera_DEPENDENCIES)
+	@rm -f camera
+	$(CXXLINK) $(camera_LDFLAGS) $(camera_OBJECTS) $(camera_LDADD) $(LIBS)
+
+clipplane: $(clipplane_OBJECTS) $(clipplane_DEPENDENCIES)
+	@rm -f clipplane
+	$(CXXLINK) $(clipplane_LDFLAGS) $(clipplane_OBJECTS) $(clipplane_LDADD) $(LIBS)
+
+complexity: $(complexity_OBJECTS) $(complexity_DEPENDENCIES)
+	@rm -f complexity
+	$(CXXLINK) $(complexity_LDFLAGS) $(complexity_OBJECTS) $(complexity_LDADD) $(LIBS)
+
+directionallight: $(directionallight_OBJECTS) $(directionallight_DEPENDENCIES)
+	@rm -f directionallight
+	$(CXXLINK) $(directionallight_LDFLAGS) $(directionallight_OBJECTS) $(directionallight_LDADD) $(LIBS)
+
+drawstyle: $(drawstyle_OBJECTS) $(drawstyle_DEPENDENCIES)
+	@rm -f drawstyle
+	$(CXXLINK) $(drawstyle_LDFLAGS) $(drawstyle_OBJECTS) $(drawstyle_LDADD) $(LIBS)
+
+environment: $(environment_OBJECTS) $(environment_DEPENDENCIES)
+	@rm -f environment
+	$(CXXLINK) $(environment_LDFLAGS) $(environment_OBJECTS) $(environment_LDADD) $(LIBS)
+
+faceset: $(faceset_OBJECTS) $(faceset_DEPENDENCIES)
+	@rm -f faceset
+	$(CXXLINK) $(faceset_LDFLAGS) $(faceset_OBJECTS) $(faceset_LDADD) $(LIBS)
+
+facesetindexed: $(facesetindexed_OBJECTS) $(facesetindexed_DEPENDENCIES)
+	@rm -f facesetindexed
+	$(CXXLINK) $(facesetindexed_LDFLAGS) $(facesetindexed_OBJECTS) $(facesetindexed_LDADD) $(LIBS)
+
+levelofdetail: $(levelofdetail_OBJECTS) $(levelofdetail_DEPENDENCIES)
+	@rm -f levelofdetail
+	$(CXXLINK) $(levelofdetail_LDFLAGS) $(levelofdetail_OBJECTS) $(levelofdetail_LDADD) $(LIBS)
+
+lights: $(lights_OBJECTS) $(lights_DEPENDENCIES)
+	@rm -f lights
+	$(CXXLINK) $(lights_LDFLAGS) $(lights_OBJECTS) $(lights_LDADD) $(LIBS)
+
+material: $(material_OBJECTS) $(material_DEPENDENCIES)
+	@rm -f material
+	$(CXXLINK) $(material_LDFLAGS) $(material_OBJECTS) $(material_LDADD) $(LIBS)
+
+pointlight: $(pointlight_OBJECTS) $(pointlight_DEPENDENCIES)
+	@rm -f pointlight
+	$(CXXLINK) $(pointlight_LDFLAGS) $(pointlight_OBJECTS) $(pointlight_LDADD) $(LIBS)
+
+quadmesh: $(quadmesh_OBJECTS) $(quadmesh_DEPENDENCIES)
+	@rm -f quadmesh
+	$(CXXLINK) $(quadmesh_LDFLAGS) $(quadmesh_OBJECTS) $(quadmesh_LDADD) $(LIBS)
+
+rotation: $(rotation_OBJECTS) $(rotation_DEPENDENCIES)
+	@rm -f rotation
+	$(CXXLINK) $(rotation_LDFLAGS) $(rotation_OBJECTS) $(rotation_LDADD) $(LIBS)
+
+rotor: $(rotor_OBJECTS) $(rotor_DEPENDENCIES)
+	@rm -f rotor
+	$(CXXLINK) $(rotor_LDFLAGS) $(rotor_OBJECTS) $(rotor_LDADD) $(LIBS)
+
+scale: $(scale_OBJECTS) $(scale_DEPENDENCIES)
+	@rm -f scale
+	$(CXXLINK) $(scale_LDFLAGS) $(scale_OBJECTS) $(scale_LDADD) $(LIBS)
+
+selection: $(selection_OBJECTS) $(selection_DEPENDENCIES)
+	@rm -f selection
+	$(CXXLINK) $(selection_LDFLAGS) $(selection_OBJECTS) $(selection_LDADD) $(LIBS)
+
+shuttle: $(shuttle_OBJECTS) $(shuttle_DEPENDENCIES)
+	@rm -f shuttle
+	$(CXXLINK) $(shuttle_LDFLAGS) $(shuttle_OBJECTS) $(shuttle_LDADD) $(LIBS)
+
+slideshow: $(slideshow_OBJECTS) $(slideshow_DEPENDENCIES)
+	@rm -f slideshow
+	$(CXXLINK) $(slideshow_LDFLAGS) $(slideshow_OBJECTS) $(slideshow_LDADD) $(LIBS)
+
+sphere: $(sphere_OBJECTS) $(sphere_DEPENDENCIES)
+	@rm -f sphere
+	$(CXXLINK) $(sphere_LDFLAGS) $(sphere_OBJECTS) $(sphere_LDADD) $(LIBS)
+
+spherecolor: $(spherecolor_OBJECTS) $(spherecolor_DEPENDENCIES)
+	@rm -f spherecolor
+	$(CXXLINK) $(spherecolor_LDFLAGS) $(spherecolor_OBJECTS) $(spherecolor_LDADD) $(LIBS)
+
+spotlight: $(spotlight_OBJECTS) $(spotlight_DEPENDENCIES)
+	@rm -f spotlight
+	$(CXXLINK) $(spotlight_LDFLAGS) $(spotlight_OBJECTS) $(spotlight_LDADD) $(LIBS)
+
+text2: $(text2_OBJECTS) $(text2_DEPENDENCIES)
+	@rm -f text2
+	$(CXXLINK) $(text2_LDFLAGS) $(text2_OBJECTS) $(text2_LDADD) $(LIBS)
+
+text3: $(text3_OBJECTS) $(text3_DEPENDENCIES)
+	@rm -f text3
+	$(CXXLINK) $(text3_LDFLAGS) $(text3_OBJECTS) $(text3_LDADD) $(LIBS)
+
+texture: $(texture_OBJECTS) $(texture_DEPENDENCIES)
+	@rm -f texture
+	$(CXXLINK) $(texture_LDFLAGS) $(texture_OBJECTS) $(texture_LDADD) $(LIBS)
+
+transform: $(transform_OBJECTS) $(transform_DEPENDENCIES)
+	@rm -f transform
+	$(CXXLINK) $(transform_LDFLAGS) $(transform_OBJECTS) $(transform_LDADD) $(LIBS)
+
+translation: $(translation_OBJECTS) $(translation_DEPENDENCIES)
+	@rm -f translation
+	$(CXXLINK) $(translation_LDFLAGS) $(translation_OBJECTS) $(translation_LDADD) $(LIBS)
+
+trianglestripset: $(trianglestripset_OBJECTS) $(trianglestripset_DEPENDENCIES)
+	@rm -f trianglestripset
+	$(CXXLINK) $(trianglestripset_LDFLAGS) $(trianglestripset_OBJECTS) $(trianglestripset_LDADD) $(LIBS)
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	mkid -fID $$unique $(LISP)
+
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
+
+mostlyclean-tags:
+
+clean-tags:
+
+distclean-tags:
+	-rm -f TAGS ID
+
+maintainer-clean-tags:
+
+@AMDEP@include $(DEPDIR)/atmospheric.Po
+@AMDEP@include $(DEPDIR)/blinker.Po
+@AMDEP@include $(DEPDIR)/camera.Po
+@AMDEP@include $(DEPDIR)/clipplane.Po
+@AMDEP@include $(DEPDIR)/complexity.Po
+@AMDEP@include $(DEPDIR)/directionallight.Po
+@AMDEP@include $(DEPDIR)/drawstyle.Po
+@AMDEP@include $(DEPDIR)/environment.Po
+@AMDEP@include $(DEPDIR)/faceset.Po
+@AMDEP@include $(DEPDIR)/facesetindexed.Po
+@AMDEP@include $(DEPDIR)/levelofdetail.Po
+@AMDEP@include $(DEPDIR)/lights.Po
+@AMDEP@include $(DEPDIR)/material.Po
+@AMDEP@include $(DEPDIR)/pointlight.Po
+@AMDEP@include $(DEPDIR)/quadmesh.Po
+@AMDEP@include $(DEPDIR)/rotation.Po
+@AMDEP@include $(DEPDIR)/rotor.Po
+@AMDEP@include $(DEPDIR)/scale.Po
+@AMDEP@include $(DEPDIR)/selection.Po
+@AMDEP@include $(DEPDIR)/shuttle.Po
+@AMDEP@include $(DEPDIR)/slideshow.Po
+@AMDEP@include $(DEPDIR)/sphere.Po
+@AMDEP@include $(DEPDIR)/spherecolor.Po
+@AMDEP@include $(DEPDIR)/spotlight.Po
+@AMDEP@include $(DEPDIR)/text2.Po
+@AMDEP@include $(DEPDIR)/text3.Po
+@AMDEP@include $(DEPDIR)/texture.Po
+@AMDEP@include $(DEPDIR)/transform.Po
+@AMDEP@include $(DEPDIR)/translation.Po
+@AMDEP@include $(DEPDIR)/trianglestripset.Po
+
+mostlyclean-depend:
+
+clean-depend:
+
+distclean-depend:
+	-rm -rf $(DEPDIR)
+
+maintainer-clean-depend:
+
+@AMDEP@CXXDEPMODE = @CXXDEPMODE@
+
+.cpp.o:
+@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+
+.cpp.lo:
+@AMDEP@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LTCXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pR $$d/$$file $(distdir) \
+	    || exit 1; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am:
+install-exec: install-exec-am
+
+install-data-am:
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am:
+uninstall: uninstall-am
+all-am: Makefile $(PROGRAMS)
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+installdirs:
+
+
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+	-rm -f Makefile.in
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
+mostlyclean-am:  mostlyclean-noinstPROGRAMS mostlyclean-compile \
+		mostlyclean-libtool mostlyclean-tags mostlyclean-depend \
+		mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-noinstPROGRAMS clean-compile clean-libtool clean-tags \
+		clean-depend clean-generic mostlyclean-am
+
+clean: clean-am
+
+distclean-am:  distclean-noinstPROGRAMS distclean-compile \
+		distclean-libtool distclean-tags distclean-depend \
+		distclean-generic clean-am
+	-rm -f libtool
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-noinstPROGRAMS \
+		maintainer-clean-compile maintainer-clean-libtool \
+		maintainer-clean-tags maintainer-clean-depend \
+		maintainer-clean-generic distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: mostlyclean-noinstPROGRAMS distclean-noinstPROGRAMS \
+clean-noinstPROGRAMS maintainer-clean-noinstPROGRAMS \
+mostlyclean-compile distclean-compile clean-compile \
+maintainer-clean-compile mostlyclean-libtool distclean-libtool \
+clean-libtool maintainer-clean-libtool tags mostlyclean-tags \
+distclean-tags clean-tags maintainer-clean-tags mostlyclean-depend \
+distclean-depend clean-depend maintainer-clean-depend distdir info-am \
+info dvi-am dvi check check-am installcheck-am installcheck \
+install-exec-am install-exec install-data-am install-data install-am \
+install uninstall-am uninstall all-redirect all-am all install-strip \
+installdirs mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+
+
+############################################################################
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

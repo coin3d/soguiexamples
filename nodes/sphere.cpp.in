@@ -1,0 +1,53 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/So@Gui@RenderArea.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoSphere.h>
+
+int
+main(int, char ** argv)
+{
+  (void)printf("This example shows how to use the shape node class SoSphere\n");
+
+  // Initialize Coin, and return a main window to use
+  // If unsuccessful, exit
+  @WIDGET@ window = So@Gui@::init(argv[0]); // pass the application name
+  if (window==NULL) exit(1);
+
+  // Create a scene cointaining a sphere
+  SoSeparator * root = new SoSeparator;
+  SoPerspectiveCamera * camera = new SoPerspectiveCamera;
+  SoDirectionalLight * light = new SoDirectionalLight;
+  SoMaterial * material = new SoMaterial;
+
+  SoSphere * sphere = new SoSphere;
+  sphere->radius.setValue(2.0); // default radius is 1.0
+
+  root->ref();             // increment the root's reference counter
+  root->addChild(camera);  // add camera node to the scene graph
+  root->addChild(light);   // add directional light to the scene
+  root->addChild(material);// add material (with default settings)
+  root->addChild(sphere);  // add sphere node to the scene graph
+  
+  // Create a renderingarea which will be used to display the
+  // scene graph in the main window
+  So@Gui@RenderArea * renderarea = new So@Gui@RenderArea(window);
+  
+  // Make the camera able to see the whole scene
+  camera->viewAll(root, renderarea->getViewportRegion());
+  
+  // Display the scene in our renderarea and change the title
+  renderarea->setSceneGraph(root);
+  renderarea->setTitle("Sphere");
+  renderarea->show();
+  
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete renderarea;  // free up the resources occupied by the renderarea
+  root->unref();      // decrement the root's reference counter
+  return 0;
+}
+
+

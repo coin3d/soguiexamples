@@ -1,0 +1,92 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoDrawStyle.h>
+#include <Inventor/nodes/SoLightModel.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoTranslation.h>
+
+// Recursive function for generating the scene graph
+// Parameters:
+//  float t    - translation step
+//  int n      - number of itterations
+//  short flag - must be 0 when calling this function
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene(float t, int n, short flag) 
+{
+  SoSeparator * sep = new SoSeparator;
+  sep->ref();
+  
+  if (n>0) {
+    SoTranslation * transl = new SoTranslation;
+    SoDrawStyle * style = new SoDrawStyle;
+    SoLightModel * lightm = new SoLightModel;
+    SoMaterial * material = new SoMaterial;
+    sep->addChild(transl);
+    sep->addChild(style);
+    sep->addChild(lightm);
+    sep->addChild(material);
+    sep->addChild(new SoCube);
+
+    // Switch between drawing filled and lines 
+    if ((n%2)==0) {
+      style->style.setValue(SoDrawStyle::LINES);
+      lightm->model = SoLightModel::BASE_COLOR; // disable light on line-cubes
+      material->diffuseColor.setValue(0.0, 0.5, 1.0);
+    }
+    else {
+      material->diffuseColor.setValue(1.0, 0.5, 0.0);
+    }
+
+    if (flag==0) {
+      transl->translation.setValue(t, 0.0, 0.0);
+      sep->addChild(scene(t, n-1, 2));
+      sep->addChild(scene(t, n-1, 1));
+      sep->addChild(scene(t, n-1, 0));
+    }
+    else if (flag==1) {
+      transl->translation.setValue(0.0, t, 0.0);
+      sep->addChild(scene(t, n-1, 1));
+    }
+    else {
+      transl->translation.setValue(0.0, 0.0, t);
+      sep->addChild(scene(t, n-1, 2));
+    }
+  }
+
+  sep->unrefNoDelete();
+  return sep;
+}
+
+int
+main (int, char ** argv)
+{
+  (void)printf("This example shows how to use the SoDrawStyle node\n");
+
+  // Initialize Coin, and return a main window to use
+  // If unsuccessful, exit
+  @WIDGET@ window = So@Gui@::init(argv[0]); 
+  if (window==NULL) exit(1);
+
+  // Create a scene graph with 3 spheres (solid, lines and points)
+  SoSeparator * root = new SoSeparator;
+
+  root->ref();                   //increments the reference counter
+  root->addChild(scene(5.0, 10, 0));
+
+  // Set up the ExaminerViewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Draw Style");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // free all the viewers resources
+  root->unref();      // decrements the reference counter
+  return 0;
+}

@@ -1,0 +1,129 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoQuadMesh.h>
+#include <Inventor/nodes/SoShapeHints.h>
+
+// Vertices for the Quad mesh.
+static float vertices[25][3] = {
+  // Row 1
+  {-11,0,1},
+  {0,11,1},
+  {11,0,1},
+  {0,-11,1},
+  {-11,0,1},
+
+  // Row 2
+  {-9,0,1},
+  {0,9,1},
+  {9,0,1},
+  {0,-9,1},
+  {-9,0,1},
+
+  // Row 3
+  {-9,0,-1},
+  {0,9,-1},
+  {9,0,-1},
+  {0,-9,-1},
+  {-9,0,-1},
+
+  // Row 4
+  {-11,0,-1},
+  {0,11,-1},
+  {11,0,-1},
+  {0,-11,-1},
+  {-11,0,-1},
+
+  // Row 5
+  {-11,0,1},
+  {0,11,1},
+  {11,0,1},
+  {0,-11,1},
+  {-11,0,1}
+};
+
+// This function generate an object by using the SoQuadMesh node
+// Return:
+//  SoSeparator *
+SoSeparator *
+quadMesh() 
+{
+  SoSeparator * qm = new SoSeparator;
+  
+  // Define coordinates
+  SoCoordinate3 * coords = new SoCoordinate3;
+  coords->point.setValues(0, 30, vertices);
+  qm->addChild(coords);
+  
+  // QuadMesh
+  SoQuadMesh * mesh = new SoQuadMesh;
+  mesh->verticesPerRow = 5;
+  mesh->verticesPerColumn = 5;
+  qm->addChild(mesh);
+
+  return qm;
+}
+
+// Recursive function that generates the scene graph using the
+// quadMesh() function.
+// Parameters:
+//  SbVec3f sinit - scale init value
+//  SbVec3f sstep - scale step (added to sinit for each itteration)
+//  SBVec3f rvec  - Rotation axis
+//  float rang    - Rotation angle
+//  float n       - number of itterations
+// Return:
+//  SoSeparator *
+SoSeparator *
+scene(SbVec3f sinit, SbVec3f sstep, SbVec3f rvec, float rang, int n)
+{
+  SoSeparator * sep = new SoSeparator;
+  if (n>0) {
+    SoTransform * transf = new SoTransform;
+    transf->scaleFactor.setValue(sinit);
+    transf->rotation.setValue(rvec,rang);
+    sep->addChild(transf);
+    sep->addChild(quadMesh());
+    sep->addChild(scene(sinit+sstep,sstep,rvec, rang, n-1));
+  }
+  return sep;
+}
+
+int 
+main(int ,char ** argv) 
+{
+  (void)printf("This example shows how to use the SoQuadMesh node.\n");
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+  
+  // Create scene graph
+  SoSeparator * root = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+
+  // Enable backface culling
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  root->ref(); // increments the root's reference counter
+  root->addChild(hints);
+  root->addChild(scene(SbVec3f(1,1,1),SbVec3f(0.3, 0.3, 0.3),
+                       SbVec3f(1, 0, 0), M_PI/5, 5));
+ 
+  // Set up the ExaminerViewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Quad Mesh");
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window); // display the main window
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;      // free up all resources occupied by viewer
+  root->unref();      // decrements the root's reference counter
+  return 0;
+}

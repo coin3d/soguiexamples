@@ -1,0 +1,118 @@
+/**************************************************************************\
+ *
+ *  Copyright (C) 2000 by Systems in Motion.  All rights reserved.
+ *
+ *  This file is part of the Coin library.
+ *
+ *  This file may be distributed under the terms of the Q Public License
+ *  as defined by Troll Tech AS of Norway and appearing in the file
+ *  LICENSE.QPL included in the packaging of this file.
+ *
+ *  If you want to use Coin in applications not covered by licenses
+ *  compatible with the QPL, you can contact SIM to aquire a
+ *  Professional Edition license for Coin.
+ *
+ *  Systems in Motion AS, Prof. Brochs gate 6, N-7030 Trondheim, NORWAY
+ *  http://www.sim.no/ sales@sim.no Voice: +47 73540378 Fax: +47 73943861
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/draggers/SoTranslate1Dragger.h>
+#include <Inventor/nodes/SoGroup.h>
+#include <Inventor/nodes/SoRotationXYZ.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTranslation.h>
+
+#ifndef M_PI
+#define M_PI 3.1415926535f
+#endif // ! M_PI
+
+// *************************************************************************
+
+// Coordinate triplets are ( x-position, y-position, z-rotation).
+
+SbVec3f coordinates[] = {
+  // C
+  SbVec3f(0, 0, 90), SbVec3f(1, 1, 0), SbVec3f(1, -1, 0),
+  // O
+  SbVec3f(4, 0, 90), SbVec3f(5, 1, 0), SbVec3f(5, -1, 0), SbVec3f(6, 0, 90),
+  // I
+  SbVec3f(8, 0, 90),
+  // N
+  SbVec3f(10, 0, 90), SbVec3f(11, 0, -45), SbVec3f(12, 0, 90)
+};
+
+// *************************************************************************
+
+// Construct "dragger subgraphs", with dragger translated and rotated
+// to correct position and orientation.
+SoSeparator *
+construct_positioned_dragger(const SbVec3f & posvec)
+{
+  SoSeparator * root = new SoSeparator;
+
+  SoTranslation * trans = new SoTranslation;
+  root->addChild(trans);
+  trans->translation.setValue(posvec[0], posvec[1], 0.0f);
+
+  SoRotationXYZ * rotate = new SoRotationXYZ;
+  root->addChild(rotate);
+  rotate->axis = SoRotationXYZ::Z;
+  rotate->angle = posvec[2] * M_PI / 180.0f;
+
+  root->addChild(new SoTranslate1Dragger);
+  
+  return root;
+}
+
+// *************************************************************************
+
+// Print instructions on stdout.
+void
+show_instructions(void)
+{
+  (void)fprintf(stdout, "\nThis example program shows off the simple \"translate1\" dragger.\n");
+  (void)fprintf(stdout, "\nQuick instructions:\n\n");
+  (void)fprintf(stdout, "  * pick and drag with left mouse button\n");
+  (void)fprintf(stdout, "  * hit ESC to toggle back and forth to view mode\n");
+  (void)fprintf(stdout, "\n");
+}
+
+// *************************************************************************
+
+int
+main(
+  int /* argc */,
+  char ** argv)
+{
+  @WINWIDGET@ window = So@Gui@::init(argv[0]);
+
+  show_instructions();
+
+
+  // Build scene graph with SoTranslate1Draggers.
+
+  SoGroup * root = new SoGroup;
+  root->ref();
+
+  for (unsigned int i = 0; i < sizeof(coordinates)/sizeof(SbVec3f); i++) {
+    root->addChild(construct_positioned_dragger(coordinates[i]));
+  }
+
+  So@Gui@ExaminerViewer * examinerviewer = new So@Gui@ExaminerViewer(window);
+  examinerviewer->setSceneGraph(root);
+  examinerviewer->setViewing(FALSE);
+  examinerviewer->show(); // SoXt needs this to map the window.
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete examinerviewer;
+  root->unref();
+
+  return 0;
+} // main()
+
+// *************************************************************************
