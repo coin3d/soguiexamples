@@ -1,5 +1,15 @@
 ############################################################################
 
+## So@Gui@Roster component
+if HAVE_ROSTER
+ROSTER = roster
+else
+ROSTER =
+endif
+
+roster_SOURCES = \
+	roster.cpp
+
 ## So@Gui@RenderArea component
 if HAVE_RENDERAREA
 RENDERAREA = renderarea
@@ -57,6 +67,18 @@ endif
 
 flyviewer_SOURCES = \
 	flyviewer.cpp \
+	computils.cpp \
+	computils.h
+
+## So@Gui@CustomViewer component
+if HAVE_CUSTOMVIEWER
+CUSTOMVIEWER = customviewer
+else
+CUSTOMVIEWER =
+endif
+
+customviewer_SOURCES = \
+	customviewer.cpp \
 	computils.cpp \
 	computils.h
 
@@ -132,28 +154,42 @@ endif
 printdialog_SOURCES = \
 	printdialog.cpp
 
+## So@Gui@GraphEditor component
+if HAVE_GRAPHEDITOR
+GRAPHEDITOR = grapheditor
+else
+GRAPHEDITOR =
+endif
+
+grapheditor_SOURCES = grapheditor.cpp \
+	computils.cpp \
+	computils.h
+
 ############################################################################
 
 BUILT_SOURCES = \
 	computils.cpp \
 	computils.h \
+	roster.cpp \
 	renderarea.cpp \
 	examinerviewer.cpp \
 	planeviewer.cpp \
 	walkviewer.cpp \
 	flyviewer.cpp \
+	customviewer.cpp \
 	lightsliderset.cpp \
 	materialsliderset.cpp \
 	materialsliderset2.cpp \
 	transformsliderset.cpp \
 	materiallist.cpp \
-	materiallist2.cpp
+	materiallist2.cpp \
+	grapheditor.cpp
 
-noinst_PROGRAMS = $(RENDERAREA) $(EXAMINERVIEWER) \
-	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) \
+noinst_PROGRAMS = $(ROSTER) $(RENDERAREA) $(EXAMINERVIEWER) \
+	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) $(CUSTOMVIEWER) \
 	$(LIGHTSLIDERSET) $(MATERIALSLIDERSET) $(TRANSFORMSLIDERSET) \
 	$(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
-	$(MATERIALLIST) $(PRINTDIALOG)
+	$(MATERIALLIST) $(PRINTDIALOG) $(GRAPHEDITOR)
 
 ############################################################################
 
@@ -178,6 +214,9 @@ walkviewer.cpp: $(srcdir)/walkviewer.cpp.in
 flyviewer.cpp: $(srcdir)/flyviewer.cpp.in
 	@( cd ..; $(MAKE) built-sources )
 
+customviewer.cpp: $(srcdir)/customviewer.cpp.in
+	@( cd ..; $(MAKE) built-sources )
+
 lightsliderset.cpp: $(srcdir)/lightsliderset.cpp.in
 	@( cd ..; $(MAKE) built-sources )
 
@@ -194,6 +233,9 @@ materiallist.cpp: $(srcdir)/materiallist.cpp.in
 	@( cd ..; $(MAKE) built-sources )
 
 materiallist2.cpp: $(srcdir)/materiallist2.cpp.in
+	@( cd ..; $(MAKE) built-sources )
+
+grapheditor.cpp: $(srcdir)/grapheditor.cpp.in
 	@( cd ..; $(MAKE) built-sources )
 
 ############################################################################

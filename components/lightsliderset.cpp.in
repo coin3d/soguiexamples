@@ -27,7 +27,7 @@ main(
   int argc,
   char ** argv )
 {
-  @WINWIDGET@ window = So@Gui@::init( argv[0] );
+  @WIDGET@ window = So@Gui@::init( argv[0] );
 
   So@Gui@LightSliderSet * sliders = new So@Gui@LightSliderSet( window );
   sliders->show();

@@ -84,7 +84,7 @@ main(
   int argc,
   char ** argv )
 {
-  @WINWIDGET@ window = So@Gui@::init( argv[0] );
+  @WIDGET@ window = So@Gui@::init( argv[0] );
 
   show_instructions();
   if ( argc < 2 ) {

@@ -56,7 +56,7 @@ main(
   int argc,
   char ** argv )
 {
-  @WINWIDGET@ window = So@Gui@::init( argv[0] );
+  @WIDGET@ window = So@Gui@::init( argv[0] );
 
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
   viewer->setTransparencyType(SoGLRenderAction::DELAYED_BLEND);

@@ -30,7 +30,7 @@
 int
 main(int argc, char ** argv)
 {
-  @WINWIDGET@ mainwin = So@Gui@::init(argv[0]); 
+  @WIDGET@ mainwin = So@Gui@::init(argv[0]); 
 
   SoSeparator * root = new SoSeparator;
   root->ref();

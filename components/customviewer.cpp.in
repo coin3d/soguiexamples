@@ -18,7 +18,9 @@
 \**************************************************************************/
 
 #include <Inventor/@Gui@/So@Gui@.h>
-#include <Inventor/@Gui@/So@Gui@PrintDialog.h>
+#include <Inventor/@Gui@/viewers/So@Gui@CustomViewer.h>
+
+#include "computils.h"
 
 // *************************************************************************
 
@@ -29,14 +31,18 @@ main(
 {
   @WIDGET@ window = So@Gui@::init( argv[0] );
 
-  So@Gui@PrintDialog * dialog = new So@Gui@PrintDialog( window );
-  dialog->show();
+  SoNode * root = get_scene_graph( argc, argv );
+  if ( ! root )
+    return -1;
 
+  So@Gui@CustomViewer * viewer = new So@Gui@CustomViewer( window );
+  viewer->setSceneGraph( root );
+  viewer->show();
   So@Gui@::show( window );
+
   So@Gui@::mainLoop();
 
-  delete dialog;
-
+  delete viewer;
   return 0;
 } // main()
 

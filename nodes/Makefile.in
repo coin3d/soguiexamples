@@ -86,7 +86,6 @@ PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
-WINWIDGET = @WINWIDGET@
 gui = @gui@
 install_sh = @install_sh@
 soguiconfig = @soguiconfig@

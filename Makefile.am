@@ -9,6 +9,7 @@ SUBDIRS = \
 BUILT_SOURCES = \
 	components/computils.cpp \
 	components/computils.h \
+	components/customviewer.cpp \
 	components/directionallighteditor.cpp \
 	components/examinerviewer.cpp \
 	components/flyviewer.cpp \
@@ -21,8 +22,10 @@ BUILT_SOURCES = \
 	components/planeviewer.cpp \
 	components/printdialog.cpp \
 	components/renderarea.cpp \
+	components/roster.cpp \
 	components/transformsliderset.cpp \
 	components/walkviewer.cpp \
+	components/grapheditor.cpp \
 	actions/search.cpp \
 	draggers/dragpoint.cpp \
 	draggers/translate1.cpp \
@@ -63,7 +66,8 @@ BUILT_SOURCES = \
 	eyecandy/moirepatterns.cpp \
 	eyecandy/juliaanim.cpp \
 	eyecandy/mandelzoom.cpp \
-	eyecandy/blob.cpp
+	eyecandy/blob.cpp \
+	eyecandy/simbuoy.cpp
 
 noinst_DATA = $(BUILT_SOURCES)
 
@@ -78,11 +82,17 @@ components/computils.cpp: $(srcdir)/components/computils.cpp.in
 components/computils.h: $(srcdir)/components/computils.h.in
 	@./config.status --file=$@
 
+components/customviewer.cpp: $(srcdir)/components/customviewer.cpp.in
+	@./config.status --file=$@
+
 components/directionallighteditor.cpp: \
   $(srcdir)/components/directionallighteditor.cpp.in
 	@./config.status --file=$@
 
 components/examinerviewer.cpp: $(srcdir)/components/examinerviewer.cpp.in
+	@./config.status --file=$@
+
+components/grapheditor.cpp: $(srcdir)/components/grapheditor.cpp.in
 	@./config.status --file=$@
 
 components/flyviewer.cpp: $(srcdir)/components/flyviewer.cpp.in
@@ -117,13 +127,15 @@ components/printdialog.cpp: $(srcdir)/components/printdialog.cpp.in
 components/renderarea.cpp: $(srcdir)/components/renderarea.cpp.in
 	@./config.status --file=$@
 
+components/roster.cpp: $(srcdir)/components/roster.cpp.in
+	@./config.status --file=$@
+
 components/transformsliderset.cpp: \
   $(srcdir)/components/transformsliderset.cpp.in
 	@./config.status --file=$@
 
 components/walkviewer.cpp: $(srcdir)/components/walkviewer.cpp.in
 	@./config.status --file=$@
-
 
 ############################################################################
 ## sources in actions/

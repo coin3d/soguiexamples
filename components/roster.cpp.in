@@ -18,7 +18,7 @@
 \**************************************************************************/
 
 #include <Inventor/@Gui@/So@Gui@.h>
-#include <Inventor/@Gui@/So@Gui@PrintDialog.h>
+#include <Inventor/@Gui@/So@Gui@Roster.h>
 
 // *************************************************************************
 
@@ -29,13 +29,13 @@ main(
 {
   @WIDGET@ window = So@Gui@::init( argv[0] );
 
-  So@Gui@PrintDialog * dialog = new So@Gui@PrintDialog( window );
-  dialog->show();
-
+  So@Gui@Roster * roster = new So@Gui@Roster( window );
+  roster->show();
   So@Gui@::show( window );
+
   So@Gui@::mainLoop();
 
-  delete dialog;
+  delete roster;
 
   return 0;
 } // main()

@@ -86,12 +86,17 @@ PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
-WINWIDGET = @WINWIDGET@
 gui = @gui@
 install_sh = @install_sh@
 soguiconfig = @soguiconfig@
 
 ############################################################################
+
+@HAVE_ROSTER_TRUE@ROSTER = @HAVE_ROSTER_TRUE@roster
+@HAVE_ROSTER_FALSE@ROSTER = 
+
+roster_SOURCES = \
+	roster.cpp
 
 @HAVE_RENDERAREA_TRUE@RENDERAREA = @HAVE_RENDERAREA_TRUE@renderarea
 @HAVE_RENDERAREA_FALSE@RENDERAREA = 
@@ -130,6 +135,14 @@ walkviewer_SOURCES = \
 
 flyviewer_SOURCES = \
 	flyviewer.cpp \
+	computils.cpp \
+	computils.h
+
+@HAVE_CUSTOMVIEWER_TRUE@CUSTOMVIEWER = @HAVE_CUSTOMVIEWER_TRUE@customviewer
+@HAVE_CUSTOMVIEWER_FALSE@CUSTOMVIEWER = 
+
+customviewer_SOURCES = \
+	customviewer.cpp \
 	computils.cpp \
 	computils.h
 
@@ -177,30 +190,40 @@ materiallist2_SOURCES = materiallist2.cpp
 printdialog_SOURCES = \
 	printdialog.cpp
 
+@HAVE_GRAPHEDITOR_TRUE@GRAPHEDITOR = @HAVE_GRAPHEDITOR_TRUE@grapheditor
+@HAVE_GRAPHEDITOR_FALSE@GRAPHEDITOR = 
+
+grapheditor_SOURCES = grapheditor.cpp \
+	computils.cpp \
+	computils.h
+
 
 ############################################################################
 
 BUILT_SOURCES = \
 	computils.cpp \
 	computils.h \
+	roster.cpp \
 	renderarea.cpp \
 	examinerviewer.cpp \
 	planeviewer.cpp \
 	walkviewer.cpp \
 	flyviewer.cpp \
+	customviewer.cpp \
 	lightsliderset.cpp \
 	materialsliderset.cpp \
 	materialsliderset2.cpp \
 	transformsliderset.cpp \
 	materiallist.cpp \
-	materiallist2.cpp
+	materiallist2.cpp \
+	grapheditor.cpp
 
 
-noinst_PROGRAMS = $(RENDERAREA) $(EXAMINERVIEWER) \
-	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) \
+noinst_PROGRAMS = $(ROSTER) $(RENDERAREA) $(EXAMINERVIEWER) \
+	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) $(CUSTOMVIEWER) \
 	$(LIGHTSLIDERSET) $(MATERIALSLIDERSET) $(TRANSFORMSLIDERSET) \
 	$(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
-	$(MATERIALLIST) $(PRINTDIALOG)
+	$(MATERIALLIST) $(PRINTDIALOG) $(GRAPHEDITOR)
 
 subdir = components
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
@@ -213,6 +236,11 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
+am_customviewer_OBJECTS =  customviewer.o computils.o
+customviewer_OBJECTS =  $(am_customviewer_OBJECTS)
+customviewer_LDADD = $(LDADD)
+customviewer_DEPENDENCIES = 
+customviewer_LDFLAGS = 
 am_directionallighteditor_OBJECTS =  directionallighteditor.o
 directionallighteditor_OBJECTS =  $(am_directionallighteditor_OBJECTS)
 directionallighteditor_LDADD = $(LDADD)
@@ -228,6 +256,11 @@ flyviewer_OBJECTS =  $(am_flyviewer_OBJECTS)
 flyviewer_LDADD = $(LDADD)
 flyviewer_DEPENDENCIES = 
 flyviewer_LDFLAGS = 
+am_grapheditor_OBJECTS =  grapheditor.o computils.o
+grapheditor_OBJECTS =  $(am_grapheditor_OBJECTS)
+grapheditor_LDADD = $(LDADD)
+grapheditor_DEPENDENCIES = 
+grapheditor_LDFLAGS = 
 am_lightsliderset_OBJECTS =  lightsliderset.o
 lightsliderset_OBJECTS =  $(am_lightsliderset_OBJECTS)
 lightsliderset_LDADD = $(LDADD)
@@ -273,6 +306,11 @@ renderarea_OBJECTS =  $(am_renderarea_OBJECTS)
 renderarea_LDADD = $(LDADD)
 renderarea_DEPENDENCIES = 
 renderarea_LDFLAGS = 
+am_roster_OBJECTS =  roster.o
+roster_OBJECTS =  $(am_roster_OBJECTS)
+roster_LDADD = $(LDADD)
+roster_DEPENDENCIES = 
+roster_LDFLAGS = 
 am_transformsliderset_OBJECTS =  transformsliderset.o
 transformsliderset_OBJECTS =  $(am_transformsliderset_OBJECTS)
 transformsliderset_LDADD = $(LDADD)
@@ -293,21 +331,23 @@ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CF
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES =  $(directionallighteditor_SOURCES) \
-$(examinerviewer_SOURCES) $(flyviewer_SOURCES) \
-$(lightsliderset_SOURCES) $(materialeditor_SOURCES) \
-$(materiallist_SOURCES) $(materiallist2_SOURCES) \
-$(materialsliderset_SOURCES) $(materialsliderset2_SOURCES) \
-$(planeviewer_SOURCES) $(printdialog_SOURCES) $(renderarea_SOURCES) \
+DIST_SOURCES =  $(customviewer_SOURCES) \
+$(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) \
+$(flyviewer_SOURCES) $(grapheditor_SOURCES) $(lightsliderset_SOURCES) \
+$(materialeditor_SOURCES) $(materiallist_SOURCES) \
+$(materiallist2_SOURCES) $(materialsliderset_SOURCES) \
+$(materialsliderset2_SOURCES) $(planeviewer_SOURCES) \
+$(printdialog_SOURCES) $(renderarea_SOURCES) $(roster_SOURCES) \
 $(transformsliderset_SOURCES) $(walkviewer_SOURCES)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-DEP_FILES =  @AMDEP@ $(DEPDIR)/computils.Po \
+DEP_FILES =  @AMDEP@ $(DEPDIR)/computils.Po $(DEPDIR)/customviewer.Po \
 $(DEPDIR)/directionallighteditor.Po $(DEPDIR)/examinerviewer.Po \
-$(DEPDIR)/flyviewer.Po $(DEPDIR)/lightsliderset.Po \
-$(DEPDIR)/materialeditor.Po $(DEPDIR)/materiallist.Po \
-$(DEPDIR)/materiallist2.Po $(DEPDIR)/materialsliderset.Po \
-$(DEPDIR)/materialsliderset2.Po $(DEPDIR)/planeviewer.Po \
-$(DEPDIR)/printdialog.Po $(DEPDIR)/renderarea.Po \
+$(DEPDIR)/flyviewer.Po $(DEPDIR)/grapheditor.Po \
+$(DEPDIR)/lightsliderset.Po $(DEPDIR)/materialeditor.Po \
+$(DEPDIR)/materiallist.Po $(DEPDIR)/materiallist2.Po \
+$(DEPDIR)/materialsliderset.Po $(DEPDIR)/materialsliderset2.Po \
+$(DEPDIR)/planeviewer.Po $(DEPDIR)/printdialog.Po \
+$(DEPDIR)/renderarea.Po $(DEPDIR)/roster.Po \
 $(DEPDIR)/transformsliderset.Po $(DEPDIR)/walkviewer.Po
 DIST_COMMON =  README Makefile.am Makefile.in
 
@@ -315,8 +355,8 @@ DIST_COMMON =  README Makefile.am Makefile.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
-SOURCES = $(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) $(flyviewer_SOURCES) $(lightsliderset_SOURCES) $(materialeditor_SOURCES) $(materiallist_SOURCES) $(materiallist2_SOURCES) $(materialsliderset_SOURCES) $(materialsliderset2_SOURCES) $(planeviewer_SOURCES) $(printdialog_SOURCES) $(renderarea_SOURCES) $(transformsliderset_SOURCES) $(walkviewer_SOURCES)
-OBJECTS = $(am_directionallighteditor_OBJECTS) $(am_examinerviewer_OBJECTS) $(am_flyviewer_OBJECTS) $(am_lightsliderset_OBJECTS) $(am_materialeditor_OBJECTS) $(am_materiallist_OBJECTS) $(am_materiallist2_OBJECTS) $(am_materialsliderset_OBJECTS) $(am_materialsliderset2_OBJECTS) $(am_planeviewer_OBJECTS) $(am_printdialog_OBJECTS) $(am_renderarea_OBJECTS) $(am_transformsliderset_OBJECTS) $(am_walkviewer_OBJECTS)
+SOURCES = $(customviewer_SOURCES) $(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) $(flyviewer_SOURCES) $(grapheditor_SOURCES) $(lightsliderset_SOURCES) $(materialeditor_SOURCES) $(materiallist_SOURCES) $(materiallist2_SOURCES) $(materialsliderset_SOURCES) $(materialsliderset2_SOURCES) $(planeviewer_SOURCES) $(printdialog_SOURCES) $(renderarea_SOURCES) $(roster_SOURCES) $(transformsliderset_SOURCES) $(walkviewer_SOURCES)
+OBJECTS = $(am_customviewer_OBJECTS) $(am_directionallighteditor_OBJECTS) $(am_examinerviewer_OBJECTS) $(am_flyviewer_OBJECTS) $(am_grapheditor_OBJECTS) $(am_lightsliderset_OBJECTS) $(am_materialeditor_OBJECTS) $(am_materiallist_OBJECTS) $(am_materiallist2_OBJECTS) $(am_materialsliderset_OBJECTS) $(am_materialsliderset2_OBJECTS) $(am_planeviewer_OBJECTS) $(am_printdialog_OBJECTS) $(am_renderarea_OBJECTS) $(am_roster_OBJECTS) $(am_transformsliderset_OBJECTS) $(am_walkviewer_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -358,6 +398,10 @@ distclean-libtool:
 
 maintainer-clean-libtool:
 
+customviewer: $(customviewer_OBJECTS) $(customviewer_DEPENDENCIES)
+	@rm -f customviewer
+	$(CXXLINK) $(customviewer_LDFLAGS) $(customviewer_OBJECTS) $(customviewer_LDADD) $(LIBS)
+
 directionallighteditor: $(directionallighteditor_OBJECTS) $(directionallighteditor_DEPENDENCIES)
 	@rm -f directionallighteditor
 	$(CXXLINK) $(directionallighteditor_LDFLAGS) $(directionallighteditor_OBJECTS) $(directionallighteditor_LDADD) $(LIBS)
@@ -369,6 +413,10 @@ examinerviewer: $(examinerviewer_OBJECTS) $(examinerviewer_DEPENDENCIES)
 flyviewer: $(flyviewer_OBJECTS) $(flyviewer_DEPENDENCIES)
 	@rm -f flyviewer
 	$(CXXLINK) $(flyviewer_LDFLAGS) $(flyviewer_OBJECTS) $(flyviewer_LDADD) $(LIBS)
+
+grapheditor: $(grapheditor_OBJECTS) $(grapheditor_DEPENDENCIES)
+	@rm -f grapheditor
+	$(CXXLINK) $(grapheditor_LDFLAGS) $(grapheditor_OBJECTS) $(grapheditor_LDADD) $(LIBS)
 
 lightsliderset: $(lightsliderset_OBJECTS) $(lightsliderset_DEPENDENCIES)
 	@rm -f lightsliderset
@@ -405,6 +453,10 @@ printdialog: $(printdialog_OBJECTS) $(printdialog_DEPENDENCIES)
 renderarea: $(renderarea_OBJECTS) $(renderarea_DEPENDENCIES)
 	@rm -f renderarea
 	$(CXXLINK) $(renderarea_LDFLAGS) $(renderarea_OBJECTS) $(renderarea_LDADD) $(LIBS)
+
+roster: $(roster_OBJECTS) $(roster_DEPENDENCIES)
+	@rm -f roster
+	$(CXXLINK) $(roster_LDFLAGS) $(roster_OBJECTS) $(roster_LDADD) $(LIBS)
 
 transformsliderset: $(transformsliderset_OBJECTS) $(transformsliderset_DEPENDENCIES)
 	@rm -f transformsliderset
@@ -448,9 +500,11 @@ distclean-tags:
 maintainer-clean-tags:
 
 @AMDEP@include $(DEPDIR)/computils.Po
+@AMDEP@include $(DEPDIR)/customviewer.Po
 @AMDEP@include $(DEPDIR)/directionallighteditor.Po
 @AMDEP@include $(DEPDIR)/examinerviewer.Po
 @AMDEP@include $(DEPDIR)/flyviewer.Po
+@AMDEP@include $(DEPDIR)/grapheditor.Po
 @AMDEP@include $(DEPDIR)/lightsliderset.Po
 @AMDEP@include $(DEPDIR)/materialeditor.Po
 @AMDEP@include $(DEPDIR)/materiallist.Po
@@ -460,6 +514,7 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/planeviewer.Po
 @AMDEP@include $(DEPDIR)/printdialog.Po
 @AMDEP@include $(DEPDIR)/renderarea.Po
+@AMDEP@include $(DEPDIR)/roster.Po
 @AMDEP@include $(DEPDIR)/transformsliderset.Po
 @AMDEP@include $(DEPDIR)/walkviewer.Po
 
@@ -602,6 +657,9 @@ walkviewer.cpp: $(srcdir)/walkviewer.cpp.in
 flyviewer.cpp: $(srcdir)/flyviewer.cpp.in
 	@( cd ..; $(MAKE) built-sources )
 
+customviewer.cpp: $(srcdir)/customviewer.cpp.in
+	@( cd ..; $(MAKE) built-sources )
+
 lightsliderset.cpp: $(srcdir)/lightsliderset.cpp.in
 	@( cd ..; $(MAKE) built-sources )
 
@@ -618,6 +676,9 @@ materiallist.cpp: $(srcdir)/materiallist.cpp.in
 	@( cd ..; $(MAKE) built-sources )
 
 materiallist2.cpp: $(srcdir)/materiallist2.cpp.in
+	@( cd ..; $(MAKE) built-sources )
+
+grapheditor.cpp: $(srcdir)/grapheditor.cpp.in
 	@( cd ..; $(MAKE) built-sources )
 
 ############################################################################

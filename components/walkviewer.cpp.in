@@ -31,23 +31,19 @@ main(
   int argc,
   char ** argv )
 {
-  @WINWIDGET@ window = So@Gui@::init( argv[0] );
+  @WIDGET@ window = So@Gui@::init( argv[0] );
 
   SoNode * root = get_scene_graph( argc, argv );
   if ( ! root ) return -1;
 
-  root->ref();
-
-  So@Gui@WalkViewer * walkviewer = new So@Gui@WalkViewer( window );
-  walkviewer->setSceneGraph( root );
-  walkviewer->show();
-
+  So@Gui@WalkViewer * viewer = new So@Gui@WalkViewer( window );
+  viewer->setSceneGraph( root );
+  viewer->show();
   So@Gui@::show( window );
+
   So@Gui@::mainLoop();
 
-  delete walkviewer;
-  root->unref();
-
+  delete viewer;
   return 0;
 } // main()
 

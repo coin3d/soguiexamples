@@ -29,20 +29,19 @@ main(
   int argc,
   char ** argv )
 {
-  @WINWIDGET@ window = So@Gui@::init( argv[0] );
+  @WIDGET@ window = So@Gui@::init( argv[0] );
 
   SoNode * root = get_scene_graph( argc, argv );
   if ( ! root ) return -1;
 
-  So@Gui@PlaneViewer * planeviewer = new So@Gui@PlaneViewer( window );
-  planeviewer->setSceneGraph( root );
-  planeviewer->show();
-
+  So@Gui@PlaneViewer * viewer = new So@Gui@PlaneViewer( window );
+  viewer->setSceneGraph( root );
+  viewer->show();
   So@Gui@::show( window );
+
   So@Gui@::mainLoop();
 
-  delete planeviewer;
-
+  delete viewer;
   return 0;
 } // main()
 

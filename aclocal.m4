@@ -854,7 +854,7 @@ AC_PREREQ([2.13])
 
 AC_ARG_ENABLE(
   [debug],
-  AC_HELP_STRING([--enable-debug], [compile in debug mode [default=yes]]),
+  AC_HELP_STRING([--enable-debug], [compile in debug mode [[default=yes]]]),
   [case "${enableval}" in
     yes) enable_debug=yes ;;
     no)  enable_debug=no ;;
@@ -890,7 +890,7 @@ AC_DEFUN([SIM_AC_DEBUGSYMBOLS], [
 AC_ARG_ENABLE(
   [symbols],
   AC_HELP_STRING([--enable-symbols],
-                 [include symbol debug information [default=yes]]),
+                 [include symbol debug information [[default=yes]]]),
   [case "${enableval}" in
     yes) enable_symbols=yes ;;
     no)  enable_symbols=no ;;
@@ -922,7 +922,7 @@ AC_DEFUN([SIM_AC_RTTI_SUPPORT], [
 AC_PREREQ([2.13])
 AC_ARG_ENABLE(
   [rtti],
-  AC_HELP_STRING([--enable-rtti], [(g++ only) compile with RTTI [default=yes]]),
+  AC_HELP_STRING([--enable-rtti], [(g++ only) compile with RTTI [[default=yes]]]),
   [case "${enableval}" in
     yes) enable_rtti=yes ;;
     no)  enable_rtti=no ;;
@@ -961,7 +961,7 @@ AC_PREREQ([2.13])
 AC_ARG_ENABLE(
   [exceptions],
   AC_HELP_STRING([--enable-exceptions],
-                 [(g++ only) compile with exceptions [default=no]]),
+                 [(g++ only) compile with exceptions [[default=no]]]),
   [case "${enableval}" in
     yes) enable_exceptions=yes ;;
     no)  enable_exceptions=no ;;
@@ -1065,7 +1065,7 @@ AC_PREREQ([2.13])
 AC_ARG_ENABLE(
   [profile],
   AC_HELP_STRING([--enable-profile],
-                 [(GCC only) turn on inclusion of profiling code [default=no]]),
+                 [(GCC only) turn on inclusion of profiling code [[default=no]]]),
   [case "${enableval}" in
     yes) enable_profile=yes ;;
     no)  enable_profile=no ;;
@@ -1114,7 +1114,7 @@ AC_DEFUN([SIM_COMPILER_WARNINGS], [
 AC_ARG_ENABLE(
   [warnings],
   AC_HELP_STRING([--enable-warnings],
-                 [turn on warnings when compiling [default=yes]]),
+                 [turn on warnings when compiling [[default=yes]]]),
   [case "${enableval}" in
     yes) enable_warnings=yes ;;
     no)  enable_warnings=no ;;
