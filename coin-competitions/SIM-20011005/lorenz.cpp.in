@@ -8,6 +8,8 @@
 #include <Inventor/nodes/SoTriangleStripSet.h>
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoFaceSet.h>
+#include <Inventor/nodes/SoTextureCoordinate2.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -38,17 +40,11 @@ Instead it is an example of deterministic chaos. As with other chaotic systems\n
 the Lorenz system is sensitive to the initial conditions, two initial states no\n\
 matter how close will diverge, usually sooner rather than later.\n\n";
 
-
 static float vertices[18][3] =
 {
-  { -0.5, 0.5, 0 }, { 0.5, 0.5, 0 }, { 0.5, -0.5, 0 },
-  { -0.5, 0.5, 0 }, { -0.5, -0.5, 0 }, { 0.5, -0.5, 0 },
-
-  { -0.5, 0, 0.5 }, { 0.5, 0, 0.5 }, { 0.5, 0, -0.5 },
-  { -0.5, 0, 0.5 }, { -0.5, 0, -0.5 }, { 0.5, 0, -0.5 },
-
-  { 0 ,-0.5, 0.5}, { 0, 0.5, 0.5 }, { 0, 0.5, -0.5 },
-  { 0, -0.5, 0.5 }, { 0, -0.5, -0.5 }, { 0, 0.5, -0.5 }
+  { -0.5, 0.5, 0 }, { 0.5, 0.5, 0 }, { 0.5, -0.5, 0 },  { -0.5, -0.5, 0 },
+  { -0.5, 0, 0.5 }, { 0.5, 0, 0.5 }, { 0.5, 0, -0.5 }, { -0.5, 0, -0.5 },
+  { 0, -0.5, 0.5}, { 0, 0.5, 0.5 }, { 0, 0.5, -0.5 }, { 0, -0.5, -0.5 }
 };
 
 SoSeparator * create_star(SbVec3f pos)
@@ -61,28 +57,13 @@ SoSeparator * create_star(SbVec3f pos)
   sep->addChild(trans);
 
   SoCoordinate3 * coords = new SoCoordinate3;
-  coords->point.setValues(0, 6, vertices);
+  coords->point.setValues(0, 18, vertices);
   sep->addChild(coords);
 
-  SoTriangleStripSet * strip = new SoTriangleStripSet;
-  strip->numVertices.setValue(6);
-  sep->addChild(strip);
-
-  coords = new SoCoordinate3;
-  coords->point.setValues(0, 6, &vertices[6]);
-  sep->addChild(coords);
-
-  strip = new SoTriangleStripSet;
-  strip->numVertices.setValue(6);
-  sep->addChild(strip);
-
-  coords = new SoCoordinate3;
-  coords->point.setValues(0, 6, &vertices[12]);
-  sep->addChild(coords);
-
-  strip = new SoTriangleStripSet;
-  strip->numVertices.setValue(6);
-  sep->addChild(strip);
+  SoFaceSet * faces = new SoFaceSet;
+  int32_t numverts[] = { 4, 4, 4 };
+  faces->numVertices.setValues(0, 3, numverts);
+  sep->addChild(faces);
 
   sep->unrefNoDelete();
 	
@@ -116,12 +97,11 @@ main (int argc, char ** argv)
   if (window == NULL) exit(1);
 
   SoSeparator * root = new SoSeparator;
-  SoShapeHints * hints = new SoShapeHints;
-
-  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
-  hints->shapeType = SoShapeHints::SOLID;
-
   root->ref();
+
+  SoShapeHints * hints = new SoShapeHints;
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::UNKNOWN_SHAPE_TYPE;
   root->addChild(hints);
 
   SoSeparator * stars = new SoSeparator;
@@ -140,6 +120,16 @@ main (int argc, char ** argv)
   texture->blendColor.setValue(1.0, 0.0, 0.0);
   stars->addChild(texture);
 
+  SoTextureCoordinate2 * texcoord = new SoTextureCoordinate2;
+  const float MINTEX = 0.1f;
+  const float MAXTEX = 0.9f;
+  float tcs[][2] = {
+    { MINTEX, MINTEX }, { MINTEX, MAXTEX}, { MAXTEX, MAXTEX}, {MAXTEX, MINTEX},
+    { MINTEX, MINTEX }, { MINTEX, MAXTEX}, { MAXTEX, MAXTEX}, {MAXTEX, MINTEX},
+    { MINTEX, MINTEX }, { MINTEX, MAXTEX}, { MAXTEX, MAXTEX}, {MAXTEX, MINTEX} };
+  texcoord->point.setValues(0, 12, tcs);
+  stars->addChild(texcoord);
+
   printf("Computing...\n");
 
   x0 = 0.1;
@@ -152,7 +142,9 @@ main (int argc, char ** argv)
     x0 = x1;
     y0 = y1;
     z0 = z1;
-    if (i > 100) { stars->addChild(create_star(SbVec3f(x0, y0, z0))); }
+    if (i > 100) { // skip the first 100 to avoid a too tight cluster
+      stars->addChild(create_star(SbVec3f(x0, y0, z0)));
+    }
   }
 
   printf("\nOk, done!\n\n");
