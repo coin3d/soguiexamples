@@ -125,7 +125,8 @@ BUILT_SOURCES = \
 	levelofdetail.cpp \
 	extselection.cpp \
 	pointset.cpp \
-	markerset.cpp
+	markerset.cpp \
+	image.cpp
 
 
 noinst_PROGRAMS = \
@@ -135,7 +136,7 @@ noinst_PROGRAMS = \
         faceset facesetindexed quadmesh trianglestripset \
         camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
-        pointset markerset
+        pointset markerset image
 
 
 drawstyle_SOURCES = drawstyle.cpp
@@ -172,6 +173,7 @@ levelofdetail_SOURCES = levelofdetail.cpp
 extselection_SOURCES = extselection.cpp
 pointset_SOURCES = pointset.cpp
 markerset_SOURCES = markerset.cpp
+image_SOURCES = image.cpp
 subdir = nodes
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -188,7 +190,7 @@ noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	atmospheric$(EXEEXT) shuttle$(EXEEXT) complexity$(EXEEXT) \
 	text2$(EXEEXT) text3$(EXEEXT) clipplane$(EXEEXT) \
 	levelofdetail$(EXEEXT) extselection$(EXEEXT) pointset$(EXEEXT) \
-	markerset$(EXEEXT)
+	markerset$(EXEEXT) image$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_atmospheric_OBJECTS = atmospheric.$(OBJEXT)
@@ -246,6 +248,11 @@ facesetindexed_OBJECTS = $(am_facesetindexed_OBJECTS)
 facesetindexed_LDADD = $(LDADD)
 facesetindexed_DEPENDENCIES =
 facesetindexed_LDFLAGS =
+am_image_OBJECTS = image.$(OBJEXT)
+image_OBJECTS = $(am_image_OBJECTS)
+image_LDADD = $(LDADD)
+image_DEPENDENCIES =
+image_LDFLAGS =
 am_levelofdetail_OBJECTS = levelofdetail.$(OBJEXT)
 levelofdetail_OBJECTS = $(am_levelofdetail_OBJECTS)
 levelofdetail_LDADD = $(LDADD)
@@ -374,7 +381,7 @@ depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 @AMDEP_TRUE@	$(DEPDIR)/directionallight.Po \
 @AMDEP_TRUE@	$(DEPDIR)/drawstyle.Po $(DEPDIR)/environment.Po \
 @AMDEP_TRUE@	$(DEPDIR)/extselection.Po $(DEPDIR)/faceset.Po \
-@AMDEP_TRUE@	$(DEPDIR)/facesetindexed.Po \
+@AMDEP_TRUE@	$(DEPDIR)/facesetindexed.Po $(DEPDIR)/image.Po \
 @AMDEP_TRUE@	$(DEPDIR)/levelofdetail.Po $(DEPDIR)/lights.Po \
 @AMDEP_TRUE@	$(DEPDIR)/markerset.Po $(DEPDIR)/material.Po \
 @AMDEP_TRUE@	$(DEPDIR)/pointlight.Po $(DEPDIR)/pointset.Po \
@@ -397,7 +404,7 @@ DIST_SOURCES = $(atmospheric_SOURCES) $(blinker_SOURCES) \
 	$(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) \
 	$(directionallight_SOURCES) $(drawstyle_SOURCES) \
 	$(environment_SOURCES) $(extselection_SOURCES) \
-	$(faceset_SOURCES) $(facesetindexed_SOURCES) \
+	$(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) \
 	$(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) \
 	$(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) \
 	$(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) \
@@ -407,7 +414,7 @@ DIST_SOURCES = $(atmospheric_SOURCES) $(blinker_SOURCES) \
 	$(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) \
 	$(translation_SOURCES) $(trianglestripset_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(atmospheric_SOURCES) $(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
+SOURCES = $(atmospheric_SOURCES) $(blinker_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -457,6 +464,9 @@ faceset$(EXEEXT): $(faceset_OBJECTS) $(faceset_DEPENDENCIES)
 facesetindexed$(EXEEXT): $(facesetindexed_OBJECTS) $(facesetindexed_DEPENDENCIES) 
 	@rm -f facesetindexed$(EXEEXT)
 	$(CXXLINK) $(facesetindexed_LDFLAGS) $(facesetindexed_OBJECTS) $(facesetindexed_LDADD) $(LIBS)
+image$(EXEEXT): $(image_OBJECTS) $(image_DEPENDENCIES) 
+	@rm -f image$(EXEEXT)
+	$(CXXLINK) $(image_LDFLAGS) $(image_OBJECTS) $(image_LDADD) $(LIBS)
 levelofdetail$(EXEEXT): $(levelofdetail_OBJECTS) $(levelofdetail_DEPENDENCIES) 
 	@rm -f levelofdetail$(EXEEXT)
 	$(CXXLINK) $(levelofdetail_LDFLAGS) $(levelofdetail_OBJECTS) $(levelofdetail_LDADD) $(LIBS)
@@ -544,6 +554,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/extselection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/faceset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/facesetindexed.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/image.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/levelofdetail.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/lights.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/markerset.Po@am__quote@
@@ -820,6 +831,9 @@ pointset.cpp: $(srcdir)/pointset.cpp.in
 
 markerset.cpp: $(srcdir)/markerset.cpp.in
 	@( cd $(top_builddir); ./config.status --file=nodes/markerset.cpp)
+
+image.cpp: $(srcdir)/image.cpp.in
+	@( cd $(top_builddir); ./config.status --file=nodes/image.cpp)
 
 ############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

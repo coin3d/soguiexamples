@@ -2838,7 +2838,9 @@ EOF
   AC_MSG_CHECKING([for Open Inventor library])
 
   for sim_ac_iv_cppflags_loop in "" "-DWIN32"; do
-    for sim_ac_iv_libcheck in $sim_ac_inventor_chk_libs; do
+    # Trying with no libraries first, as TGS Inventor uses pragmas in
+    # a header file to notify MSVC of what to link with.
+    for sim_ac_iv_libcheck in "" $sim_ac_inventor_chk_libs; do
       if test "x$sim_ac_inventor_libs" = "xUNRESOLVED"; then
         CPPFLAGS="$sim_ac_iv_cppflags_loop $sim_ac_inventor_cppflags $sim_ac_save_CPPFLAGS"
         LDFLAGS="$sim_ac_inventor_ldflags $sim_ac_save_LDFLAGS"
