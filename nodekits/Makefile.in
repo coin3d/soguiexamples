@@ -14,6 +14,9 @@
 
 @SET_MAKE@
 
+############################################################################
+# conditional build
+
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -83,6 +86,8 @@ HAVE_SIMVOLEON_FALSE = @HAVE_SIMVOLEON_FALSE@
 HAVE_SIMVOLEON_TRUE = @HAVE_SIMVOLEON_TRUE@
 HAVE_SLIDERSETS_FALSE = @HAVE_SLIDERSETS_FALSE@
 HAVE_SLIDERSETS_TRUE = @HAVE_SLIDERSETS_TRUE@
+HAVE_SMALLCHANGE_FALSE = @HAVE_SMALLCHANGE_FALSE@
+HAVE_SMALLCHANGE_TRUE = @HAVE_SMALLCHANGE_TRUE@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -163,11 +168,24 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
+@HAVE_SMALLCHANGE_FALSE@SMALLCHANGE_DEPENDENTS = 
+
+@HAVE_SMALLCHANGE_TRUE@SMALLCHANGE_DEPENDENTS = scalemarker
+
+
+############################################################################
+# make from *.in files
 BUILT_SOURCES = scalemarker.cpp wavekitdemo.cpp
 
-noinst_PROGRAMS = scalemarker wavekitdemo
 
-scalemarker_SOURCES = scalemarker.cpp ShapeScale.cpp ShapeScale.h
+############################################################################
+# executables
+noinst_PROGRAMS = wavekitdemo $(SMALLCHANGE_DEPENDENTS)
+
+
+############################################################################
+# source code dependencies
+scalemarker_SOURCES = scalemarker.cpp
 
 wavekitdemo_SOURCES = wavekitdemo.cpp WaveSurfaceKit.cpp WaveSurfaceKit.h
 subdir = nodekits
@@ -175,10 +193,12 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES = scalemarker.cpp wavekitdemo.cpp
-noinst_PROGRAMS = scalemarker$(EXEEXT) wavekitdemo$(EXEEXT)
+@HAVE_SMALLCHANGE_TRUE@noinst_PROGRAMS = wavekitdemo$(EXEEXT) \
+@HAVE_SMALLCHANGE_TRUE@	scalemarker$(EXEEXT)
+@HAVE_SMALLCHANGE_FALSE@noinst_PROGRAMS = wavekitdemo$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
-am_scalemarker_OBJECTS = scalemarker.$(OBJEXT) ShapeScale.$(OBJEXT)
+am_scalemarker_OBJECTS = scalemarker.$(OBJEXT)
 scalemarker_OBJECTS = $(am_scalemarker_OBJECTS)
 scalemarker_LDADD = $(LDADD)
 scalemarker_DEPENDENCIES =
@@ -192,8 +212,7 @@ wavekitdemo_LDFLAGS =
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ShapeScale.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/WaveSurfaceKit.Po \
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/WaveSurfaceKit.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/scalemarker.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/wavekitdemo.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -240,7 +259,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ShapeScale.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/WaveSurfaceKit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scalemarker.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wavekitdemo.Po@am__quote@
@@ -444,6 +462,8 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
+
+############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

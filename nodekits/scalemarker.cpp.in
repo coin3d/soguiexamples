@@ -1,8 +1,3 @@
-// FIXME: this doesn't seem to work at all for me??? 20031016 mortene.
-
-// FIXME: should not use the local ShapeScale, but rather the one from
-// the SmallChange library. 20031016 mortene.
-
 /**************************************************************************\
  *
  *  This file is part of a set of example programs for the Coin library.
@@ -42,7 +37,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "ShapeScale.h"
+#include <SmallChange/nodes/ShapeScale.h>
 
 // Returns random value between 0.0f and 1.0f.
 static float
@@ -79,6 +74,7 @@ construct_new_marker(const SbVec3f & v)
   
   markersep->addChild(cube);
   kit->setPart("shape", markersep);
+
   markerroot->addChild(kit);
 
   return markerroot;
@@ -108,7 +104,8 @@ event_cb(void * ud, SoEventCallback * n)
 
     const SoPath * p = rp.getCurPath();
 
-    for (int i = 0; i < p->getLength(); i++) {
+    int i;
+    for (i = 0; i < p->getLength(); i++) {
       SoNode * n = p->getNodeFromTail(i);
       if (n->isOfType(SoGroup::getClassTypeId())) {
         SoGroup * g = (SoGroup *)n;
@@ -116,6 +113,7 @@ event_cb(void * ud, SoEventCallback * n)
         break;
       }
     }
+    assert(i < p->getLength());
   }
 }
 
@@ -173,7 +171,6 @@ main(int argc, char ** argv)
   sep->addChild(ecb);
   
   ex1->setSceneGraph(newroot);
-  ex1->setTransparencyType(SoGLRenderAction::SORTED_OBJECT_BLEND);
   ex1->setViewing(FALSE);
   
   ex1->show();

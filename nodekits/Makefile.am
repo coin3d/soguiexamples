@@ -1,7 +1,27 @@
+############################################################################
+# conditional build
+
+if HAVE_SMALLCHANGE
+SMALLCHANGE_DEPENDENTS = scalemarker
+else
+SMALLCHANGE_DEPENDENTS = 
+endif
+
+############################################################################
+# make from *.in files
+
 BUILT_SOURCES = scalemarker.cpp wavekitdemo.cpp
 
-noinst_PROGRAMS = scalemarker wavekitdemo
+############################################################################
+# executables
 
-scalemarker_SOURCES = scalemarker.cpp ShapeScale.cpp ShapeScale.h
+noinst_PROGRAMS = wavekitdemo $(SMALLCHANGE_DEPENDENTS)
+
+############################################################################
+# source code dependencies
+
+scalemarker_SOURCES = scalemarker.cpp
 
 wavekitdemo_SOURCES = wavekitdemo.cpp WaveSurfaceKit.cpp WaveSurfaceKit.h
+
+############################################################################
