@@ -1,7 +1,7 @@
 #include "Minimax.h"
 #include "GameLogic.h"
 #include <string.h>
-#include <values.h>
+#include <limits.h>
 #include <stdio.h>
 
 Queue Minimax::q;
@@ -135,7 +135,7 @@ Minimax::doMinimax()
   int minimaxVal, idx, val;
   bool leaf=true;
 //    bool max = (this->depth%2==0);
-  minimaxVal=-MAXINT;
+  minimaxVal=-INT_MAX;
 //    if (max) minimaxVal=-MAXINT;
 //    else minimaxVal=MAXINT;
 
