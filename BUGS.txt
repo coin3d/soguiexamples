@@ -96,3 +96,96 @@
     20031117 mortene.
 
 =====================================================================
+
+005 Reported crash for actions/intersection example.
+
+    A summer intern reported a crash for this example (note: this was
+    with epsilon turned on for the intersection testing, at 0.5), but
+    was not able to reproduce later.
+
+    Should at least spin this through Valgrind or similar memory
+    checking tools.
+
+    20040624 mortene, reported by Terje Wiesener.
+
+=====================================================================
+
+006 Problems reported for ball-in-the-hoop example.
+
+    A summer intern reported the following problems when running this
+    example:
+
+    ----8<------ [snip] ----------8<------ [snip] ------
+    Ball in the Hoop:
+     right after I start a game: 
+    
+    SoWinGLWidgetP::wglMakeCurrent(), rendering context could not be made 
+    current. GetLastError = 3221684224
+    
+    SoGLLazyElement::sendDiffuseByIndex(): index 1 out of bounds [0,0]
+    
+    SoNode::GLRenderS(): GL error: GL_INVALID_OPERATION
+    
+    ,During play I get SoTimerSensor:schedule(): was already scheduled, if I 
+    press a mouse button while the ball is in play.
+    ----8<------ [snip] ----------8<------ [snip] ------
+
+    20040624 mortene, reported by Sigurd T. Seteklev.
+
+=====================================================================
+
+007 Problems reported for "cubes" example.
+
+    A summer intern reported the following problems when running this
+    example:
+
+    ----8<------ [snip] ----------8<------ [snip] ------
+     After dropping a few balls i get an debug error: abnormal program
+    termination, inside CRT0MSG.C (which is part of the VS library
+    (i.e. not Sim)). The callstack doesn't seem to be installed at my
+    computer (?), so I'm not sure where it fails.. Obviously it
+    crashes.
+    ----8<------ [snip] ----------8<------ [snip] ------
+
+    20040624 mortene, reported by Sigurd T. Seteklev.
+
+=====================================================================
+
+008 Problems reported for "chart", "flow", "smiley" and "styx" examples.
+
+    A summer intern reported the following problems when running these
+    examples:
+
+    ----8<------ [snip] ----------8<------ [snip] ------
+    I get coin warning SbTime:getMsecValue():timer overflow, during
+    startup, but they seem to run fine. In addition, when running
+    Smiley, I get a SoNode::GlRenderS(): GL_ERROR:
+    GL_INVALID_OPERATION; nodetype:Seperator too. Even though I try to
+    set the envvar COIN_GLERROR_DEBUGGING=1, I get the same message
+    (with no more information as it promises). The app runs fine.
+    ----8<------ [snip] ----------8<------ [snip] ------
+
+    20040624 mortene, reported by Sigurd T. Seteklev.
+
+=====================================================================
+
+009 Problems reported for "JuliaAnim" and "Mandelzoom" examples.
+
+    A summer intern reported the following problems when running these
+    examples:
+
+    ----8<------ [snip] ----------8<------ [snip] ------
+    During startup I get sbvec3::Normalize(): lenght 
+    must be > 0, And the applications renders only black.
+    ----8<------ [snip] ----------8<------ [snip] ------
+
+    Additional information from thammer on these:
+
+    ----8<------ [snip] ----------8<------ [snip] ------
+    They work OK in release mode, but not in debug mode (render only
+    black).
+    ----8<------ [snip] ----------8<------ [snip] ------
+
+    20040624 mortene, reported by Sigurd T. Seteklev.
+
+=====================================================================
