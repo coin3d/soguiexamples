@@ -1997,10 +1997,6 @@ else
   HAVE_GRAPHEDITOR_FALSE=
 fi
 
-CPPFLAGS="`$soguiconfig --cppflags` $CPPFLAGS"
-LDFLAGS="`$soguiconfig --ldflags` $LDFLAGS"
-LIBS="`$soguiconfig --libs` $LIBS"
-
 # **************************************************************************
 # Compiler control.
 
@@ -3346,6 +3342,10 @@ else
     echo "configure: WARNING: --enable-warnings only has effect when using GNU gcc or g++" >&2
   fi
 fi
+
+CPPFLAGS="`$soguiconfig --cppflags` $CPPFLAGS"
+LDFLAGS="`$soguiconfig --ldflags` $LDFLAGS"
+LIBS="`$soguiconfig --libs` $LIBS"
 
 # **************************************************************************
 # All files configure must automatically generate.
