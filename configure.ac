@@ -276,6 +276,12 @@ SIM_AC_HAVE_INVENTOR_FEATURE(
    ida.setDraggersEnabled(FALSE);],
   [HAVE_SOINTERSECTIONDETECTIONACTION])
 
+SIM_AC_HAVE_INVENTOR_FEATURE(
+  [for Open Inventor HardCopy support],
+  [#include <HardCopy/SoHardCopy.h>], [
+   const char * v = SoHardCopy::getVersion();],
+  [HAVE_HARDCOPY])
+
 # **************************************************************************
 # Remove redundant options from certain option lists, to clean up the
 # compiler and linker invocations.

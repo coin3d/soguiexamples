@@ -15,6 +15,9 @@
 /* define if the GL header should be included as GL/gl.h */
 #undef HAVE_GL_GL_H
 
+/* Define to enable use of Inventor feature */
+#undef HAVE_HARDCOPY
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
