@@ -30,7 +30,7 @@
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
-// this example requires the SoTextureScalePolicy node
+// this example requires the SoSceneTexture2 node
 #if !defined(HAVE_SOSCENETEXTURE2)
 
 #include <Inventor/nodes/SoText3.h>
@@ -46,8 +46,8 @@ main(int argc, char ** argv)
   root->ref();
 
   const char * info[] = {
-    "This example depends on a Coin specifc",
-    "extensions. This is just an informational",
+    "This example depends on a Coin specific",
+    "extension. This is just an informational",
     "message and not the real functionality",
     "of the example."
   };
@@ -70,7 +70,7 @@ main(int argc, char ** argv)
   return 1;
 }
 
-#else // ! HAVE_SOSCENETEXTURE2
+#else // HAVE_SOSCENETEXTURE2
 
 #include <stdlib.h> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
@@ -233,4 +233,3 @@ main (int argc, char ** argv)
 }
 
 #endif // HAVE_SOSCENETEXTURE2
-
