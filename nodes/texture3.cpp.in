@@ -84,7 +84,7 @@ main(int argc, char ** argv)
 #include <Inventor/nodes/SoBaseColor.h>
 #include <Inventor/draggers/SoTransformerDragger.h>
 
-#include <values.h>
+#include <float.h>
 
 unsigned char * generateTexture(int w, int h, int d)
 {
@@ -153,14 +153,15 @@ void doClipping(SbVec3f trans, SbRotation rot)
   globalTVerts->setNum(0);
   globalnv->startEditing();
   globalnv->setNum(0);
-  for (int i = 0;i<6*5;i++) {
+  int i;
+  for (i = 0;i<6*5;i++) {
     if (indices[i] == -1) {
       clip.clip(plane);
       int numVerts = clip.getNumVertices();
       if (numVerts > 0) {
-        for (int i = 0;i<numVerts;i++) {
+        for (int j = 0;j<numVerts;j++) {
           SbVec3f v;
-          clip.getVertex(i, v);
+          clip.getVertex(j, v);
           globalVerts->set1Value(globalVerts->getNum(), v);
           v += SbVec3f(5, 5, 5);
           v /= 10.0;
@@ -187,12 +188,12 @@ void doClipping(SbVec3f trans, SbRotation rot)
 
   
   clip.reset();
-  for (int i = 0;i<4;i++) {
+  for (i = 0;i<4;i++) {
     SbVec3f v;
     mat.multVecMatrix(planecoords[i], v);
     clip.addVertex(v);
   }
-  for (int i = 0;i<6*5;i+=5) {
+  for (i = 0;i<6*5;i+=5) {
     SbPlane p(coords[indices[i+2]],
               coords[indices[i+1]],
               coords[indices[i]]);
@@ -207,7 +208,7 @@ void doClipping(SbVec3f trans, SbRotation rot)
   planeVerts->setNum(0);
   planeTVerts->startEditing();
   planeTVerts->setNum(0);
-  for (int i = 0;i<numVerts;i++) {
+  for (i = 0;i<numVerts;i++) {
     SbVec3f v;
     clip.getVertex(i, v);
     planeVerts->set1Value(planeVerts->getNum(), v);
