@@ -1,0 +1,169 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#include <Inventor/SoDb.h>
+#include <Inventor/SbColor.h>
+#include <Inventor/actions/SoSearchAction.h>
+#include <Inventor/nodes/SoNodes.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoSelection.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+#include <Inventor/misc/SoAudioDevice.h>
+#include <Inventor/VRMLnodes/SoVRMLAudioClip.h>
+#include <Inventor/VRMLnodes/SoVRMLSound.h>
+
+int num_sources;
+
+struct Source {
+  SbColor color;
+  SbBool on;
+  Source(SbBool on = TRUE, SbColor color = SbColor(0.0f, 0.0f, 0.0f)) {
+    this->color = color;
+    this->on = on;
+  }
+};
+
+Source *sources;
+
+SbColor color_grey = SbColor(0.2f, 0.2f, 0.2f);
+SoSelection *root;
+
+double round(double val)
+{
+  double f = fmod(val, 1.0);
+  if (f>=0.5)
+    return val + (1.0 - f);
+  else
+    return val - f;
+}
+
+void
+timerCB(void *data, SoSensor *sensor)
+{
+  int num = round((double)rand() / (double)RAND_MAX * (double)(num_sources-1));
+  char str[5];
+  sprintf(str, "N%d", num);
+  SoNode *node = SoNode::getByName(str);
+  assert(node);
+  root->select(node);
+}
+
+void
+selectionCB(void *, SoPath *path)
+{
+  SoNode *node;
+  SoNode *parent = path->getNodeFromTail(1);
+  if (parent && (parent->isOfType(SoSeparator::getClassTypeId()))) {
+    SoSeparator *sep = (SoSeparator *)parent;
+	node = sep->getChild(1);
+	assert(node->isOfType(SoMaterial::getClassTypeId()));
+    SoMaterial *mat = (SoMaterial *)node;
+	SoVRMLAudioClip *clip = (SoVRMLAudioClip *)sep->getChild(3);
+	SoVRMLSound *sound = (SoVRMLSound *)sep->getChild(4);
+	const char *name = sep->getName().getString();
+    int num = atoi(name+1);
+    sources[num].on = !sources[num].on;
+    if (sources[num].on) {
+      mat->diffuseColor = sources[num].color;
+	  clip->stopTime = SbTime::getTimeOfDay();
+	  clip->startTime = SbTime::getTimeOfDay();
+    } else {
+      mat->diffuseColor = color_grey;
+	  clip->stopTime = SbTime::getTimeOfDay();
+    }
+  }
+  root->deselect(path);
+}
+
+int 
+main(int argc, char *argv[]) 
+{
+  @WIDGET@ win = So@Gui@::init(argc, argv, argv[0]);
+
+  char *filename = "clips/synthloop_a.ogg";
+  SbBool random = FALSE;
+  num_sources = 5;
+  printf("Usage: manysources [ <filename> [ <num sources> [random]]]\n");
+  if (argc>1) 
+    filename = argv[1];
+  if (argc>2)
+    num_sources = atoi(argv[2]);
+  if (argc>3)
+    random = (strcmpi(argv[3], "random") == 0) ? TRUE : FALSE;
+      
+  srand((unsigned)time(NULL));
+  sources = new Source[num_sources];
+
+  So@Gui@ExaminerViewer *viewer = new So@Gui@ExaminerViewer(win);
+
+  root = new SoSelection;
+  root->ref();
+  viewer->setSceneGraph(root);
+
+  root->addSelectionCallback(selectionCB);
+  root->policy = SoSelection::SINGLE;
+
+  if (random) {
+    SoTimerSensor *timer = new SoTimerSensor(timerCB, NULL);
+    timer->setInterval(SbTime(2.0f));
+    timer->schedule();
+  }
+
+  SoVRMLAudioClip *clip;
+  SoVRMLSound *sound;
+  SoMaterial *mat;
+  SoSphere *sphere;
+  SoSeparator *sep;
+  SoTransform *xf;
+  char str[5];
+
+  for (int i=0; i<num_sources; i++) {
+    sep = new SoSeparator;
+    root->addChild(sep);
+    xf = new SoTransform;
+    mat = new SoMaterial;
+    sphere = new SoSphere;
+    clip = new SoVRMLAudioClip;
+    sound = new SoVRMLSound;
+    sprintf(str, "S%d", i);
+    sep->setName(str);
+    sep->addChild(xf);
+    sep->addChild(mat);
+    sep->addChild(sphere);
+    sep->addChild(clip);
+    sep->addChild(sound);
+    xf->translation = SbVec3f((float)i * 2.0f, 0.0f, 0.0f);
+    sources[i].on = FALSE;
+    sources[i].color = SbColor(1.0f - ((float)i / (float)num_sources), 
+                                ((float)i / (float)num_sources), 
+                                0.25f + ((float)i / (float)num_sources) * 0.5f);
+    mat->diffuseColor = color_grey;
+    sphere->radius = 0.5f;
+    sprintf(str, "N%d", i);
+    sphere->setName(str);
+    sound->source = clip;
+    clip->loop = TRUE;
+    clip->url = filename;
+    clip->startTime = 0.0f;
+    clip->stopTime = 0.1f;
+  }
+
+  viewer->viewAll();
+  viewer->show();
+  
+  So@Gui@::show(win);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+
+  delete[] sources;
+  return 1;
+}
+
+
+
