@@ -8,33 +8,42 @@ ROSTER =
 #endif
 
 renderarea_SOURCES = \
-	renderarea.cpp \
+	computils.h \
 	computils.cpp \
-	computils.h
+	renderarea.cpp
 
 examinerviewer_SOURCES = \
-	examinerviewer.cpp \
+	computils.h \
 	computils.cpp \
-	computils.h
+	examinerviewer.cpp
 
 overlay_SOURCES = overlay.cpp
 
 planeviewer_SOURCES = \
-	planeviewer.cpp \
+	computils.h \
 	computils.cpp \
-	computils.h
+	planeviewer.cpp
 
 flyviewer_SOURCES = \
-	flyviewer.cpp \
+	computils.h \
 	computils.cpp \
-	computils.h
+	flyviewer.cpp
 
 snapshotviewer_SOURCES = \
-	snapshotviewer.cpp \
+	computils.h \
+	computils.cpp \
 	SoGuiSnapshotViewer.h \
 	SoGuiSnapshotViewer.cpp \
+	snapshotviewer.cpp
+
+cutterviewer_SOURCES = \
+	computils.h \
 	computils.cpp \
-	computils.h
+	GLOption.h \
+	GLOption.cpp \
+	SoGuiCutterViewer.h \
+	SoGuiCutterViewer.cpp \
+	cutterviewer.cpp
 
 backgroundimg_SOURCES = backgroundimg.cpp
 
@@ -97,8 +106,8 @@ printdialog_SOURCES = \
 ############################################################################
 
 BUILT_SOURCES = \
-	computils.cpp \
 	computils.h \
+	computils.cpp \
 	roster.cpp \
 	renderarea.cpp \
 	backgroundimg.cpp \
@@ -114,10 +123,13 @@ BUILT_SOURCES = \
 	grapheditor.cpp \
 	snapshotviewer.cpp \
 	SoGuiSnapshotViewer.h \
-	SoGuiSnapshotViewer.cpp
+	SoGuiSnapshotViewer.cpp \
+	cutterviewer.cpp \
+	SoGuiCutterViewer.h \
+	SoGuiCutterViewer.cpp
 
 noinst_PROGRAMS = renderarea backgroundimg examinerviewer overlay \
-	planeviewer flyviewer snapshotviewer \
+	planeviewer flyviewer snapshotviewer cutterviewer \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
 	$(MATERIALLIST) $(PRINTDIALOG)
 
@@ -188,5 +200,14 @@ SoGuiSnapshotViewer.h: $(srcdir)/SoGuiSnapshotViewer.h.in
 
 SoGuiSnapshotViewer.cpp: $(srcdir)/SoGuiSnapshotViewer.cpp.in
 	@( cd $(top_builddir); ./config.status --file=components/SoGuiSnapshotViewer.cpp )
+
+cutterviewer.cpp: $(srcdir)/cutterviewer.cpp.in
+	@( cd $(top_builddir); ./config.status --file=components/cutterviewer.cpp )
+
+SoGuiCutterViewer.h: $(srcdir)/SoGuiCutterViewer.h.in
+	@( cd $(top_builddir); ./config.status --file=components/SoGuiCutterViewer.h )
+
+SoGuiCutterViewer.cpp: $(srcdir)/SoGuiCutterViewer.cpp.in
+	@( cd $(top_builddir); ./config.status --file=components/SoGuiCutterViewer.cpp )
 
 ############################################################################
