@@ -1,5 +1,8 @@
 ############################################################################
-## Process this file with automake to generate Makefile.in.
+
+ACLOCAL_AMFLAGS = -I cfg/m4
+
+############################################################################
 
 SUBDIRS = \
   . components eyecandy coin-competitions \
