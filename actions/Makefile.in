@@ -90,18 +90,24 @@ gui = @gui@
 install_sh = @install_sh@
 soguiconfig = @soguiconfig@
 
-BUILT_SOURCES = search.cpp
+BUILT_SOURCES = search.cpp raypick.cpp
 
-noinst_PROGRAMS = search
+noinst_PROGRAMS = search raypick
 
 search_SOURCES = search.cpp
+raypick_SOURCES = raypick.cpp
 subdir = actions
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-noinst_PROGRAMS = search$(EXEEXT)
+noinst_PROGRAMS = search$(EXEEXT) raypick$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
+am_raypick_OBJECTS = raypick.$(OBJEXT)
+raypick_OBJECTS = $(am_raypick_OBJECTS)
+raypick_LDADD = $(LDADD)
+raypick_DEPENDENCIES =
+raypick_LDFLAGS =
 am_search_OBJECTS = search.$(OBJEXT)
 search_OBJECTS = $(am_search_OBJECTS)
 search_LDADD = $(LDADD)
@@ -114,16 +120,16 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/search.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/raypick.Po $(DEPDIR)/search.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 CXXFLAGS = @CXXFLAGS@
-DIST_SOURCES = $(search_SOURCES)
+DIST_SOURCES = $(raypick_SOURCES) $(search_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(search_SOURCES)
+SOURCES = $(raypick_SOURCES) $(search_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -140,6 +146,9 @@ Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.s
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
+raypick$(EXEEXT): $(raypick_OBJECTS) $(raypick_DEPENDENCIES) 
+	@rm -f raypick$(EXEEXT)
+	$(CXXLINK) $(raypick_LDFLAGS) $(raypick_OBJECTS) $(raypick_LDADD) $(LIBS)
 search$(EXEEXT): $(search_OBJECTS) $(search_DEPENDENCIES) 
 	@rm -f search$(EXEEXT)
 	$(CXXLINK) $(search_LDFLAGS) $(search_OBJECTS) $(search_LDADD) $(LIBS)
@@ -150,6 +159,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/raypick.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/search.Po@am__quote@
 
 distclean-depend:
