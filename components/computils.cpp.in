@@ -40,6 +40,18 @@
 
 // *************************************************************************
 
+template <class Type>
+inline Type cu_max( const Type A, const Type B ) {
+  return (A < B) ? B : A;
+}
+
+template <class Type>
+inline Type cu_min( const Type A, const Type B ) {
+  return (A < B) ? A : B;
+}
+
+// *************************************************************************
+
 SoNode *
 shape_to_scene_graph(
   SoShape * shape )
@@ -51,9 +63,9 @@ shape_to_scene_graph(
   hints->creaseAngle = 0.91f;
   root->addChild( hints );
   SoBaseColor * basecol = new SoBaseColor;
-  basecol->rgb.setValue( float(rand())/float(RAND_MAX),
-                         float(rand())/float(RAND_MAX),
-                         float(rand())/float(RAND_MAX) );
+  basecol->rgb.setValue( cu_min(1.0f, 0.3f + float(rand())/float(RAND_MAX)),
+                         cu_min(1.0f, 0.3f + float(rand())/float(RAND_MAX)),
+                         cu_min(1.0f, 0.3f + float(rand())/float(RAND_MAX)) );
   root->addChild( basecol );
   root->addChild( shape );
   return (SoNode *) root;
@@ -86,8 +98,10 @@ get_scene_graph(
       return shape_to_scene_graph( new SoCylinder );
     } else if ( ! strcmp( argv[1], "--text3" ) ) {
       SoText3 * textnode = new SoText3;
-      textnode->string.setValue( "Coin" );
+      const char * s[] = { "www", "Coin3D", "org" };
+      textnode->string.setValues( 0, 3, s );
       textnode->parts.setValue( SoText3::ALL );
+      textnode->justification = SoText3::CENTER;
       return shape_to_scene_graph( textnode );
     } else if ( ! in.openFile( argv[1] ) ) {
       return NULL;
