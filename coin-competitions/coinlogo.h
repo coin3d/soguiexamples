@@ -39,6 +39,7 @@
 
 static const char COIN_LOGO[] =
   "#Inventor V2.1 ascii\n"
+  "\n"
   "Separator {\n"
   "  Translation {\n"
   "    translation -2 -2.5 0.2\n"
@@ -88,13 +89,11 @@ static const char COIN_LOGO[] =
   "  Scale {\n"
   "    scaleFactor 0.2 0.8 0.5\n"
   "  }\n"
-  "  Cube {\n"
-  "  }\n"
+  "  Cube { }\n"
   "  Translation {\n"
   "    translation 0 11.4 0\n"
   "  }\n"
-  "  Cube {\n"
-  "  }	\n"
-  "}  \n";
+  "  Cube { }\n"
+  "}\n";
 
 #endif /* ! SOGUIEXAMPLES_COINLOGO_IV_H */
