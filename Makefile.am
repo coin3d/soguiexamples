@@ -12,6 +12,7 @@ BUILT_SOURCES = \
 	components/customviewer.cpp \
 	components/directionallighteditor.cpp \
 	components/examinerviewer.cpp \
+	components/overlay.cpp \
 	components/flyviewer.cpp \
 	components/lightsliderset.cpp \
 	components/materialeditor.cpp \
@@ -89,6 +90,9 @@ components/directionallighteditor.cpp: \
 	@./config.status --file=$@
 
 components/examinerviewer.cpp: $(srcdir)/components/examinerviewer.cpp.in
+	@./config.status --file=$@
+
+components/overlay.cpp: $(srcdir)/components/overlay.cpp.in
 	@./config.status --file=$@
 
 components/grapheditor.cpp: $(srcdir)/components/grapheditor.cpp.in

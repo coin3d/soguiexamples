@@ -102,11 +102,17 @@ renderarea_SOURCES = \
 	computils.cpp \
 	computils.h
 
-@HAVE_EXAMINERVIEWER_TRUE@EXAMINERVIEWER = @HAVE_EXAMINERVIEWER_TRUE@examinerviewer
+@HAVE_EXAMINERVIEWER_TRUE@EXAMINERVIEWER = @HAVE_EXAMINERVIEWER_TRUE@examinerviewer overlay
 @HAVE_EXAMINERVIEWER_FALSE@EXAMINERVIEWER = 
 
 examinerviewer_SOURCES = \
 	examinerviewer.cpp \
+	computils.cpp \
+	computils.h
+
+
+overlay_SOURCES = \
+	overlay.cpp \
 	computils.cpp \
 	computils.h
 
@@ -291,6 +297,11 @@ materialsliderset2_OBJECTS =  $(am_materialsliderset2_OBJECTS)
 materialsliderset2_LDADD = $(LDADD)
 materialsliderset2_DEPENDENCIES = 
 materialsliderset2_LDFLAGS = 
+am_overlay_OBJECTS =  overlay.o computils.o
+overlay_OBJECTS =  $(am_overlay_OBJECTS)
+overlay_LDADD = $(LDADD)
+overlay_DEPENDENCIES = 
+overlay_LDFLAGS = 
 am_planeviewer_OBJECTS =  planeviewer.o computils.o
 planeviewer_OBJECTS =  $(am_planeviewer_OBJECTS)
 planeviewer_LDADD = $(LDADD)
@@ -334,7 +345,7 @@ $(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) \
 $(flyviewer_SOURCES) $(grapheditor_SOURCES) $(lightsliderset_SOURCES) \
 $(materialeditor_SOURCES) $(materiallist_SOURCES) \
 $(materiallist2_SOURCES) $(materialsliderset_SOURCES) \
-$(materialsliderset2_SOURCES) $(planeviewer_SOURCES) \
+$(materialsliderset2_SOURCES) $(overlay_SOURCES) $(planeviewer_SOURCES) \
 $(printdialog_SOURCES) $(renderarea_SOURCES) $(roster_SOURCES) \
 $(transformsliderset_SOURCES) $(walkviewer_SOURCES)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
@@ -344,7 +355,7 @@ $(DEPDIR)/flyviewer.Po $(DEPDIR)/grapheditor.Po \
 $(DEPDIR)/lightsliderset.Po $(DEPDIR)/materialeditor.Po \
 $(DEPDIR)/materiallist.Po $(DEPDIR)/materiallist2.Po \
 $(DEPDIR)/materialsliderset.Po $(DEPDIR)/materialsliderset2.Po \
-$(DEPDIR)/planeviewer.Po $(DEPDIR)/printdialog.Po \
+$(DEPDIR)/overlay.Po $(DEPDIR)/planeviewer.Po $(DEPDIR)/printdialog.Po \
 $(DEPDIR)/renderarea.Po $(DEPDIR)/roster.Po \
 $(DEPDIR)/transformsliderset.Po $(DEPDIR)/walkviewer.Po
 DIST_COMMON =  README Makefile.am Makefile.in
@@ -353,8 +364,8 @@ DIST_COMMON =  README Makefile.am Makefile.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
-SOURCES = $(customviewer_SOURCES) $(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) $(flyviewer_SOURCES) $(grapheditor_SOURCES) $(lightsliderset_SOURCES) $(materialeditor_SOURCES) $(materiallist_SOURCES) $(materiallist2_SOURCES) $(materialsliderset_SOURCES) $(materialsliderset2_SOURCES) $(planeviewer_SOURCES) $(printdialog_SOURCES) $(renderarea_SOURCES) $(roster_SOURCES) $(transformsliderset_SOURCES) $(walkviewer_SOURCES)
-OBJECTS = $(am_customviewer_OBJECTS) $(am_directionallighteditor_OBJECTS) $(am_examinerviewer_OBJECTS) $(am_flyviewer_OBJECTS) $(am_grapheditor_OBJECTS) $(am_lightsliderset_OBJECTS) $(am_materialeditor_OBJECTS) $(am_materiallist_OBJECTS) $(am_materiallist2_OBJECTS) $(am_materialsliderset_OBJECTS) $(am_materialsliderset2_OBJECTS) $(am_planeviewer_OBJECTS) $(am_printdialog_OBJECTS) $(am_renderarea_OBJECTS) $(am_roster_OBJECTS) $(am_transformsliderset_OBJECTS) $(am_walkviewer_OBJECTS)
+SOURCES = $(customviewer_SOURCES) $(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) $(flyviewer_SOURCES) $(grapheditor_SOURCES) $(lightsliderset_SOURCES) $(materialeditor_SOURCES) $(materiallist_SOURCES) $(materiallist2_SOURCES) $(materialsliderset_SOURCES) $(materialsliderset2_SOURCES) $(overlay_SOURCES) $(planeviewer_SOURCES) $(printdialog_SOURCES) $(renderarea_SOURCES) $(roster_SOURCES) $(transformsliderset_SOURCES) $(walkviewer_SOURCES)
+OBJECTS = $(am_customviewer_OBJECTS) $(am_directionallighteditor_OBJECTS) $(am_examinerviewer_OBJECTS) $(am_flyviewer_OBJECTS) $(am_grapheditor_OBJECTS) $(am_lightsliderset_OBJECTS) $(am_materialeditor_OBJECTS) $(am_materiallist_OBJECTS) $(am_materiallist2_OBJECTS) $(am_materialsliderset_OBJECTS) $(am_materialsliderset2_OBJECTS) $(am_overlay_OBJECTS) $(am_planeviewer_OBJECTS) $(am_printdialog_OBJECTS) $(am_renderarea_OBJECTS) $(am_roster_OBJECTS) $(am_transformsliderset_OBJECTS) $(am_walkviewer_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -430,6 +441,10 @@ materialsliderset2: $(materialsliderset2_OBJECTS) $(materialsliderset2_DEPENDENC
 	@rm -f materialsliderset2
 	$(CXXLINK) $(materialsliderset2_LDFLAGS) $(materialsliderset2_OBJECTS) $(materialsliderset2_LDADD) $(LIBS)
 
+overlay: $(overlay_OBJECTS) $(overlay_DEPENDENCIES)
+	@rm -f overlay
+	$(CXXLINK) $(overlay_LDFLAGS) $(overlay_OBJECTS) $(overlay_LDADD) $(LIBS)
+
 planeviewer: $(planeviewer_OBJECTS) $(planeviewer_DEPENDENCIES)
 	@rm -f planeviewer
 	$(CXXLINK) $(planeviewer_LDFLAGS) $(planeviewer_OBJECTS) $(planeviewer_LDADD) $(LIBS)
@@ -499,6 +514,7 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/materiallist2.Po
 @AMDEP@include $(DEPDIR)/materialsliderset.Po
 @AMDEP@include $(DEPDIR)/materialsliderset2.Po
+@AMDEP@include $(DEPDIR)/overlay.Po
 @AMDEP@include $(DEPDIR)/planeviewer.Po
 @AMDEP@include $(DEPDIR)/printdialog.Po
 @AMDEP@include $(DEPDIR)/renderarea.Po

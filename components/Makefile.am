@@ -24,13 +24,18 @@ renderarea_SOURCES = \
 
 ## So@Gui@ExaminerViewer component
 if HAVE_EXAMINERVIEWER
-EXAMINERVIEWER = examinerviewer
+EXAMINERVIEWER = examinerviewer overlay
 else
 EXAMINERVIEWER =
 endif
 
 examinerviewer_SOURCES = \
 	examinerviewer.cpp \
+	computils.cpp \
+	computils.h
+
+overlay_SOURCES = \
+	overlay.cpp \
 	computils.cpp \
 	computils.h
 

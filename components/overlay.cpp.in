@@ -1,0 +1,97 @@
+/**************************************************************************\
+ *
+ *  Copyright (C) 2000 by Systems in Motion.  All rights reserved.
+ *
+ *  This file is part of the Coin library.
+ *
+ *  This file may be distributed under the terms of the Q Public License
+ *  as defined by Troll Tech AS of Norway and appearing in the file
+ *  LICENSE.QPL included in the packaging of this file.
+ *
+ *  If you want to use Coin in applications not covered by licenses
+ *  compatible with the QPL, you can contact SIM to aquire a
+ *  Professional Edition license for Coin.
+ *
+ *  Systems in Motion AS, Prof. Brochs gate 6, N-7030 Trondheim, NORWAY
+ *  http://www.sim.no/ sales@sim.no Voice: +47 73540378 Fax: +47 73943861
+ *
+\**************************************************************************/
+
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoOrthographicCamera.h>
+#include <Inventor/nodes/SoColorIndex.h>
+#include <Inventor/nodes/SoLightModel.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoLineSet.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#include "computils.h"
+
+// *************************************************************************
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  @WIDGET@ window = So@Gui@::init( argv[0] );
+
+  SoNode * root = get_scene_graph( argc, argv );
+  if ( ! root )
+    return -1;
+
+  SoSeparator * overlayRoot = new SoSeparator;
+
+  // set up camera of overlay scene
+  SoOrthographicCamera * overlayCamera = new SoOrthographicCamera;
+  overlayCamera->position.setValue(0, 0, 5);
+  overlayCamera->nearDistance.setValue(1);
+  overlayCamera->farDistance.setValue(10);
+  overlayRoot->addChild(overlayCamera);
+
+  // we only have to render in BaseColor
+  SoLightModel * overlayLightModel = new SoLightModel;
+  overlayLightModel->model = SoLightModel::BASE_COLOR;
+  overlayRoot->addChild(overlayLightModel);
+
+  // use the first entry in the overlay color map as
+  // Base Color
+  SoColorIndex * overlayColorIndex = new SoColorIndex;
+  overlayColorIndex->index = 1;
+  overlayRoot->addChild(overlayColorIndex);
+
+  // here is the stuff to be rendered
+  SoSeparator * lineSep = new SoSeparator;
+  overlayRoot->addChild( lineSep );
+
+  SoCoordinate3 * lineCoords = new SoCoordinate3;
+  SoLineSet * lineSet = new SoLineSet;
+
+  lineSep->addChild( lineCoords );
+  lineSep->addChild( lineSet );
+
+  lineCoords->point.set1Value( 0,-0.5f,-0.5f, 0.0f );
+  lineCoords->point.set1Value( 1,-0.5f, 0.5f, 0.0f );
+  lineCoords->point.set1Value( 2, 0.5f, 0.5f, 0.0f );
+  lineCoords->point.set1Value( 3, 0.5f,-0.5f, 0.0f );
+  lineCoords->point.set1Value( 4,-0.5f,-0.5f, 0.0f );
+
+  lineSet->numVertices.setValue( 5 );
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
+  viewer->setSceneGraph( root );
+  viewer->setOverlaySceneGraph( overlayRoot );
+
+  viewer->show();
+  So@Gui@::show( window );
+
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  return 0;
+} // main()
+
+// *************************************************************************
