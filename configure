@@ -3759,7 +3759,7 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 echo "$as_me:$LINENO: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
-# This need to go last, in case CPPFLAGS is modified in _exception_flag=-fno-exceptions or .
+# This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
 if test $sim_ac_accept_result = yes; then
   _exception_flag=-fno-exceptions
 else
@@ -3827,7 +3827,7 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 echo "$as_me:$LINENO: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
-# This need to go last, in case CPPFLAGS is modified in _exception_flag=-fno-handle-exceptions or .
+# This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
 if test $sim_ac_accept_result = yes; then
   _exception_flag=-fno-handle-exceptions
 else
@@ -3958,7 +3958,7 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 echo "$as_me:$LINENO: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
-# This need to go last, in case CPPFLAGS is modified in CFLAGS="$CFLAGS $sim_ac_try_warning_option" or .
+# This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
 if test $sim_ac_accept_result = yes; then
   CFLAGS="$CFLAGS $sim_ac_try_warning_option"
 else
@@ -4028,7 +4028,7 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 echo "$as_me:$LINENO: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
-# This need to go last, in case CPPFLAGS is modified in CXXFLAGS="$CXXFLAGS $sim_ac_try_warning_option" or .
+# This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
 if test $sim_ac_accept_result = yes; then
   CXXFLAGS="$CXXFLAGS $sim_ac_try_warning_option"
 else
@@ -4106,7 +4106,7 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 echo "$as_me:$LINENO: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
-# This need to go last, in case CPPFLAGS is modified in CFLAGS="$CFLAGS -fullwarn" or .
+# This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
 if test $sim_ac_accept_result = yes; then
   CFLAGS="$CFLAGS -fullwarn"
 else
@@ -4177,7 +4177,7 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 echo "$as_me:$LINENO: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
-# This need to go last, in case CPPFLAGS is modified in CXXFLAGS="$CXXFLAGS -fullwarn" or .
+# This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
 if test $sim_ac_accept_result = yes; then
   CXXFLAGS="$CXXFLAGS -fullwarn"
 else
@@ -4276,7 +4276,7 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 echo "$as_me:$LINENO: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
-# This need to go last, in case CPPFLAGS is modified in CFLAGS="$CFLAGS $sim_ac_bogus_warnings" or .
+# This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
 if test $sim_ac_accept_result = yes; then
   CFLAGS="$CFLAGS $sim_ac_bogus_warnings"
 else
@@ -4346,7 +4346,7 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 echo "$as_me:$LINENO: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
-# This need to go last, in case CPPFLAGS is modified in CXXFLAGS="$CXXFLAGS $sim_ac_bogus_warnings" or .
+# This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
 if test $sim_ac_accept_result = yes; then
   CXXFLAGS="$CXXFLAGS $sim_ac_bogus_warnings"
 else
@@ -7260,7 +7260,7 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 echo "$as_me:$LINENO: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
-# This need to go last, in case CPPFLAGS is modified in sim_ac_use_framework_option=true or .
+# This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
 if test $sim_ac_accept_result = yes; then
   sim_ac_use_framework_option=true
 else
@@ -9540,6 +9540,64 @@ fi
 
 
 
+echo "$as_me:$LINENO: checking if the Open Inventor SoSceneTexture2 node is available" >&5
+echo $ECHO_N "checking if the Open Inventor SoSceneTexture2 node is available... $ECHO_C" >&6
+if test "${sim_cv_have_oiv_soscenetexture2_node+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <Inventor/nodes/SoSceneTexture2.h>
+int
+main ()
+{
+SoSceneTexture2 * p = new SoSceneTexture2;
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  sim_cv_have_oiv_soscenetexture2_node=true
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+sim_cv_have_oiv_soscenetexture2_node=false
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+fi
+echo "$as_me:$LINENO: result: $sim_cv_have_oiv_soscenetexture2_node" >&5
+echo "${ECHO_T}$sim_cv_have_oiv_soscenetexture2_node" >&6
+
+if $sim_cv_have_oiv_soscenetexture2_node; then
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_SOSCENETEXTURE2 1
+_ACEOF
+
+
+else
+  :
+fi
+
+
+
 echo "$as_me:$LINENO: checking if the Open Inventor SoExtSelection node is available" >&5
 echo $ECHO_N "checking if the Open Inventor SoExtSelection node is available... $ECHO_C" >&6
 if test "${sim_cv_have_oiv_soextselection_node+set}" = set; then
@@ -11320,7 +11378,7 @@ fi
 # **************************************************************************
 # All files configure must automatically generate.
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ac_config_files="$ac_config_files Makefile components/Makefile components/SoGuiSnapshotViewer.cpp components/SoGuiSnapshotViewer.h components/backgroundimg.cpp components/computils.cpp components/computils.h components/examinerviewer.cpp components/flyviewer.cpp components/grapheditor.cpp components/lightsliderset.cpp components/materiallist.cpp components/materiallist2.cpp components/materialsliderset.cpp components/materialsliderset2.cpp components/overlay.cpp components/planeviewer.cpp components/renderarea.cpp components/roster.cpp components/snapshotviewer.cpp components/spaceballdemo.cpp components/transformsliderset.cpp actions/Makefile actions/search.cpp actions/raypick.cpp actions/intersection.cpp annex/Makefile annex/hardcopy.cpp draggers/Makefile draggers/translate1.cpp draggers/translate2.cpp draggers/dragpoint.cpp engines/Makefile engines/computebbox.cpp engines/computexfbbox.cpp eyecandy/Makefile eyecandy/moirepatterns.cpp eyecandy/juliaanim.cpp eyecandy/mandelzoom.cpp eyecandy/blob.cpp eyecandy/simbuoy.cpp manipulators/Makefile manipulators/pointlightmanip.cpp manipulators/tabboxmanip.cpp nodekits/Makefile nodekits/scalemarker.cpp nodekits/wavekitdemo.cpp nodes/Makefile nodes/drawstyle.cpp nodes/material.cpp nodes/selection.cpp nodes/slideshow.cpp nodes/sphere.cpp nodes/spherecolor.cpp nodes/rotation.cpp nodes/scale.cpp nodes/translation.cpp nodes/transform.cpp nodes/rotor.cpp nodes/directionallight.cpp nodes/pointlight.cpp nodes/spotlight.cpp nodes/lights.cpp nodes/faceset.cpp nodes/facesetindexed.cpp nodes/quadmesh.cpp nodes/trianglestripset.cpp nodes/camera.cpp nodes/blinker.cpp nodes/texture.cpp nodes/texture3.cpp nodes/environment.cpp nodes/atmospheric.cpp nodes/shuttle.cpp nodes/complexity.cpp nodes/text2.cpp nodes/text3.cpp nodes/clipplane.cpp nodes/levelofdetail.cpp nodes/extselection.cpp nodes/pointset.cpp nodes/markerset.cpp nodes/image.cpp nodes/bigimage.cpp nodes/textureunit.cpp nodes/bumpmap.cpp sensors/Makefile sensors/timersensor.cpp volumerendering/Makefile volumerendering/readvol.cpp volumerendering/changingdataset.cpp volumerendering/examine.cpp volumerendering/orthoslicer.cpp volumerendering/raypick.cpp volumerendering/rgbload.cpp volumerendering/simple8bit.cpp coin-competitions/Makefile coin-competitions/SIM-20010803/Makefile coin-competitions/SIM-20010803/chart.cpp coin-competitions/SIM-20010803/plasmafun.cpp coin-competitions/SIM-20010803/stars.cpp coin-competitions/SIM-20010824/Makefile coin-competitions/SIM-20010824/smiley.cpp coin-competitions/SIM-20010824/plasmaball.cpp coin-competitions/SIM-20010824/styx.cpp coin-competitions/SIM-20010824/stars2.cpp coin-competitions/SIM-20010914/Makefile coin-competitions/SIM-20010914/Moolah.cpp coin-competitions/SIM-20010914/calculator.cpp coin-competitions/SIM-20010914/coinhistory.cpp coin-competitions/SIM-20010914/kaos.cpp coin-competitions/SIM-20010914/rec.cpp coin-competitions/SIM-20011005/Makefile coin-competitions/SIM-20011005/lorenz.cpp coin-competitions/SIM-20011005/nurbscurve.cpp coin-competitions/SIM-20011005/cubes.cpp coin-competitions/SIM-20011116/Makefile coin-competitions/SIM-20011116/25bc5bb.cpp coin-competitions/SIM-20011116/foo.cpp coin-competitions/SIM-20011116/shaker.cpp coin-competitions/SIM-20020118/Makefile coin-competitions/SIM-20020118/blocks.cpp coin-competitions/SIM-20020503/Makefile coin-competitions/SIM-20020503/ballinthehoop.cpp coin-competitions/SIM-20020503/flow.cpp coin-competitions/SIM-20020503/typeomatic.cpp"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ac_config_files="$ac_config_files Makefile components/Makefile components/SoGuiSnapshotViewer.cpp components/SoGuiSnapshotViewer.h components/backgroundimg.cpp components/computils.cpp components/computils.h components/examinerviewer.cpp components/flyviewer.cpp components/grapheditor.cpp components/lightsliderset.cpp components/materiallist.cpp components/materiallist2.cpp components/materialsliderset.cpp components/materialsliderset2.cpp components/overlay.cpp components/planeviewer.cpp components/renderarea.cpp components/roster.cpp components/snapshotviewer.cpp components/spaceballdemo.cpp components/transformsliderset.cpp actions/Makefile actions/search.cpp actions/raypick.cpp actions/intersection.cpp annex/Makefile annex/hardcopy.cpp draggers/Makefile draggers/translate1.cpp draggers/translate2.cpp draggers/dragpoint.cpp engines/Makefile engines/computebbox.cpp engines/computexfbbox.cpp eyecandy/Makefile eyecandy/moirepatterns.cpp eyecandy/juliaanim.cpp eyecandy/mandelzoom.cpp eyecandy/blob.cpp eyecandy/simbuoy.cpp manipulators/Makefile manipulators/pointlightmanip.cpp manipulators/tabboxmanip.cpp nodekits/Makefile nodekits/scalemarker.cpp nodekits/wavekitdemo.cpp nodes/Makefile nodes/drawstyle.cpp nodes/material.cpp nodes/selection.cpp nodes/slideshow.cpp nodes/sphere.cpp nodes/spherecolor.cpp nodes/rotation.cpp nodes/scale.cpp nodes/translation.cpp nodes/transform.cpp nodes/rotor.cpp nodes/directionallight.cpp nodes/pointlight.cpp nodes/spotlight.cpp nodes/lights.cpp nodes/faceset.cpp nodes/facesetindexed.cpp nodes/quadmesh.cpp nodes/trianglestripset.cpp nodes/camera.cpp nodes/blinker.cpp nodes/texture.cpp nodes/texture3.cpp nodes/environment.cpp nodes/atmospheric.cpp nodes/shuttle.cpp nodes/complexity.cpp nodes/text2.cpp nodes/text3.cpp nodes/clipplane.cpp nodes/levelofdetail.cpp nodes/extselection.cpp nodes/pointset.cpp nodes/markerset.cpp nodes/image.cpp nodes/bigimage.cpp nodes/textureunit.cpp nodes/bumpmap.cpp nodes/scenetexture.cpp sensors/Makefile sensors/timersensor.cpp volumerendering/Makefile volumerendering/readvol.cpp volumerendering/changingdataset.cpp volumerendering/examine.cpp volumerendering/orthoslicer.cpp volumerendering/raypick.cpp volumerendering/rgbload.cpp volumerendering/simple8bit.cpp coin-competitions/Makefile coin-competitions/SIM-20010803/Makefile coin-competitions/SIM-20010803/chart.cpp coin-competitions/SIM-20010803/plasmafun.cpp coin-competitions/SIM-20010803/stars.cpp coin-competitions/SIM-20010824/Makefile coin-competitions/SIM-20010824/smiley.cpp coin-competitions/SIM-20010824/plasmaball.cpp coin-competitions/SIM-20010824/styx.cpp coin-competitions/SIM-20010824/stars2.cpp coin-competitions/SIM-20010914/Makefile coin-competitions/SIM-20010914/Moolah.cpp coin-competitions/SIM-20010914/calculator.cpp coin-competitions/SIM-20010914/coinhistory.cpp coin-competitions/SIM-20010914/kaos.cpp coin-competitions/SIM-20010914/rec.cpp coin-competitions/SIM-20011005/Makefile coin-competitions/SIM-20011005/lorenz.cpp coin-competitions/SIM-20011005/nurbscurve.cpp coin-competitions/SIM-20011005/cubes.cpp coin-competitions/SIM-20011116/Makefile coin-competitions/SIM-20011116/25bc5bb.cpp coin-competitions/SIM-20011116/foo.cpp coin-competitions/SIM-20011116/shaker.cpp coin-competitions/SIM-20020118/Makefile coin-competitions/SIM-20020118/blocks.cpp coin-competitions/SIM-20020503/Makefile coin-competitions/SIM-20020503/ballinthehoop.cpp coin-competitions/SIM-20020503/flow.cpp coin-competitions/SIM-20020503/typeomatic.cpp"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -12060,6 +12118,7 @@ do
   "nodes/bigimage.cpp" ) CONFIG_FILES="$CONFIG_FILES nodes/bigimage.cpp" ;;
   "nodes/textureunit.cpp" ) CONFIG_FILES="$CONFIG_FILES nodes/textureunit.cpp" ;;
   "nodes/bumpmap.cpp" ) CONFIG_FILES="$CONFIG_FILES nodes/bumpmap.cpp" ;;
+  "nodes/scenetexture.cpp" ) CONFIG_FILES="$CONFIG_FILES nodes/scenetexture.cpp" ;;
   "sensors/Makefile" ) CONFIG_FILES="$CONFIG_FILES sensors/Makefile" ;;
   "sensors/timersensor.cpp" ) CONFIG_FILES="$CONFIG_FILES sensors/timersensor.cpp" ;;
   "volumerendering/Makefile" ) CONFIG_FILES="$CONFIG_FILES volumerendering/Makefile" ;;

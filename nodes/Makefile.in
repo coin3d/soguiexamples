@@ -203,7 +203,8 @@ BUILT_SOURCES = \
 	image.cpp \
 	bigimage.cpp \
 	textureunit.cpp \
-	bumpmap.cpp
+	bumpmap.cpp \
+	scenetexture.cpp
 
 
 noinst_PROGRAMS = \
@@ -213,7 +214,8 @@ noinst_PROGRAMS = \
         faceset facesetindexed quadmesh trianglestripset \
         camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
-        pointset markerset image bigimage textureunit bumpmap
+        pointset markerset image bigimage textureunit bumpmap \
+	scenetexture
 
 
 drawstyle_SOURCES = drawstyle.cpp
@@ -254,6 +256,7 @@ image_SOURCES = image.cpp
 bigimage_SOURCES = bigimage.cpp
 textureunit_SOURCES = textureunit.cpp
 bumpmap_SOURCES = bumpmap.cpp
+scenetexture_SOURCES = scenetexture.cpp
 subdir = nodes
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
@@ -267,7 +270,7 @@ CONFIG_CLEAN_FILES = drawstyle.cpp material.cpp selection.cpp \
 	atmospheric.cpp shuttle.cpp complexity.cpp text2.cpp text3.cpp \
 	clipplane.cpp levelofdetail.cpp extselection.cpp pointset.cpp \
 	markerset.cpp image.cpp bigimage.cpp textureunit.cpp \
-	bumpmap.cpp
+	bumpmap.cpp scenetexture.cpp
 noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	selection$(EXEEXT) slideshow$(EXEEXT) sphere$(EXEEXT) \
 	spherecolor$(EXEEXT) rotation$(EXEEXT) scale$(EXEEXT) \
@@ -281,7 +284,7 @@ noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	text2$(EXEEXT) text3$(EXEEXT) clipplane$(EXEEXT) \
 	levelofdetail$(EXEEXT) extselection$(EXEEXT) pointset$(EXEEXT) \
 	markerset$(EXEEXT) image$(EXEEXT) bigimage$(EXEEXT) \
-	textureunit$(EXEEXT) bumpmap$(EXEEXT)
+	textureunit$(EXEEXT) bumpmap$(EXEEXT) scenetexture$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_atmospheric_OBJECTS = atmospheric.$(OBJEXT)
@@ -404,6 +407,11 @@ scale_OBJECTS = $(am_scale_OBJECTS)
 scale_LDADD = $(LDADD)
 scale_DEPENDENCIES =
 scale_LDFLAGS =
+am_scenetexture_OBJECTS = scenetexture.$(OBJEXT)
+scenetexture_OBJECTS = $(am_scenetexture_OBJECTS)
+scenetexture_LDADD = $(LDADD)
+scenetexture_DEPENDENCIES =
+scenetexture_LDFLAGS =
 am_selection_OBJECTS = selection.$(OBJEXT)
 selection_OBJECTS = $(am_selection_OBJECTS)
 selection_LDADD = $(LDADD)
@@ -491,6 +499,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/pointlight.Po ./$(DEPDIR)/pointset.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/quadmesh.Po ./$(DEPDIR)/rotation.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/rotor.Po ./$(DEPDIR)/scale.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/scenetexture.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/selection.Po ./$(DEPDIR)/shuttle.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/slideshow.Po ./$(DEPDIR)/sphere.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/spherecolor.Po ./$(DEPDIR)/spotlight.Po \
@@ -513,12 +522,12 @@ DIST_SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) \
 	$(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) \
 	$(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) \
 	$(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) \
-	$(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) \
-	$(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) \
-	$(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) \
-	$(texture_SOURCES) $(texture3_SOURCES) $(textureunit_SOURCES) \
-	$(transform_SOURCES) $(translation_SOURCES) \
-	$(trianglestripset_SOURCES)
+	$(scale_SOURCES) $(scenetexture_SOURCES) $(selection_SOURCES) \
+	$(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) \
+	$(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) \
+	$(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) \
+	$(textureunit_SOURCES) $(transform_SOURCES) \
+	$(translation_SOURCES) $(trianglestripset_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in atmospheric.cpp.in \
 	bigimage.cpp.in blinker.cpp.in bumpmap.cpp.in camera.cpp.in \
 	clipplane.cpp.in complexity.cpp.in directionallight.cpp.in \
@@ -527,11 +536,12 @@ DIST_COMMON = Makefile.am Makefile.in atmospheric.cpp.in \
 	levelofdetail.cpp.in lights.cpp.in markerset.cpp.in \
 	material.cpp.in pointlight.cpp.in pointset.cpp.in \
 	quadmesh.cpp.in rotation.cpp.in rotor.cpp.in scale.cpp.in \
-	selection.cpp.in shuttle.cpp.in slideshow.cpp.in sphere.cpp.in \
-	spherecolor.cpp.in spotlight.cpp.in text2.cpp.in text3.cpp.in \
-	texture.cpp.in texture3.cpp.in textureunit.cpp.in \
-	transform.cpp.in translation.cpp.in trianglestripset.cpp.in
-SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) $(blinker_SOURCES) $(bumpmap_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(textureunit_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
+	scenetexture.cpp.in selection.cpp.in shuttle.cpp.in \
+	slideshow.cpp.in sphere.cpp.in spherecolor.cpp.in \
+	spotlight.cpp.in text2.cpp.in text3.cpp.in texture.cpp.in \
+	texture3.cpp.in textureunit.cpp.in transform.cpp.in \
+	translation.cpp.in trianglestripset.cpp.in
+SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) $(blinker_SOURCES) $(bumpmap_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(scenetexture_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(textureunit_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -619,6 +629,8 @@ textureunit.cpp: $(top_builddir)/config.status textureunit.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 bumpmap.cpp: $(top_builddir)/config.status bumpmap.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+scenetexture.cpp: $(top_builddir)/config.status scenetexture.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -694,6 +706,9 @@ rotor$(EXEEXT): $(rotor_OBJECTS) $(rotor_DEPENDENCIES)
 scale$(EXEEXT): $(scale_OBJECTS) $(scale_DEPENDENCIES) 
 	@rm -f scale$(EXEEXT)
 	$(CXXLINK) $(scale_LDFLAGS) $(scale_OBJECTS) $(scale_LDADD) $(LIBS)
+scenetexture$(EXEEXT): $(scenetexture_OBJECTS) $(scenetexture_DEPENDENCIES) 
+	@rm -f scenetexture$(EXEEXT)
+	$(CXXLINK) $(scenetexture_LDFLAGS) $(scenetexture_OBJECTS) $(scenetexture_LDADD) $(LIBS)
 selection$(EXEEXT): $(selection_OBJECTS) $(selection_DEPENDENCIES) 
 	@rm -f selection$(EXEEXT)
 	$(CXXLINK) $(selection_LDFLAGS) $(selection_OBJECTS) $(selection_LDADD) $(LIBS)
@@ -767,6 +782,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rotation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rotor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scale.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scenetexture.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/selection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shuttle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/slideshow.Po@am__quote@

@@ -242,6 +242,7 @@ SIM_AC_HAVE_INVENTOR_NODE(SoImage)
 SIM_AC_HAVE_INVENTOR_NODE(SoTextureScalePolicy)
 SIM_AC_HAVE_INVENTOR_NODE(SoTextureUnit)
 SIM_AC_HAVE_INVENTOR_NODE(SoBumpMap)
+SIM_AC_HAVE_INVENTOR_NODE(SoSceneTexture2)
 SIM_AC_HAVE_INVENTOR_NODE(SoExtSelection, [
   SIM_AC_HAVE_INVENTOR_FEATURE(
     [for SoExtSelection::lassoMode],
@@ -507,6 +508,7 @@ AC_OUTPUT([
 	nodes/bigimage.cpp
 	nodes/textureunit.cpp
 	nodes/bumpmap.cpp
+	nodes/scenetexture.cpp
 
 	sensors/Makefile
 	sensors/timersensor.cpp
