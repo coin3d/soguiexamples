@@ -367,6 +367,8 @@ main(int argc, char **argv)
   root->addChild(surroundsep);
 
   SoTexture2 * texnode = new SoTexture2;
+  // FIXME: this causes a crash with SGI Inventor --
+  // investigate. 20010919 mortene.
   texnode->image.setValue(PLASMADIMENSIONS, 4, NULL);
   surroundsep->addChild(texnode);
 
@@ -439,9 +441,11 @@ main(int argc, char **argv)
   viewer->setDecoration(FALSE);
   viewer->show();
   So@Gui@::show(window);
+#ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
   // Must do this _after_ show() to avoid the "Start"-bar being
-  // visible. (Bug!)
+  // visible with SoWin. (Bug!)
   (void)viewer->setFullScreen(TRUE);
+#endif // HAVE_SOCOMPONENT_SETFULLSCREEN
 
   So@Gui@::mainLoop();
   delete viewer;
