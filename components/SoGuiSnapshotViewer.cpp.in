@@ -247,7 +247,8 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
     // FIXME: why does transparency work at home, and not at work?
     renderer->setComponents(SoOffscreenRenderer::RGB_TRANSPARENCY);
     // FIXME: when using transparency - maybe set white background?  this is
-    // only an issue if it affects the antialiasing along the object edges...
+    // only an issue if it affects the antialiasing along the object edges,
+    // and/or if the background color stains transparent surfaces...
   } else {
     renderer->setComponents(SoOffscreenRenderer::RGB);
     renderer->setBackgroundColor(this->getSceneManager()->getBackgroundColor());
