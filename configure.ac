@@ -316,6 +316,8 @@ SIM_AC_HAVE_SMALLCHANGE_IFELSE([
   fi
 ])
 
+AM_CONDITIONAL(HAVE_SMALLCHANGE, $sim_ac_smallchange_avail)
+
 # **************************************************************************
 # If we're using SoQt, check to see if SimVoleon is also available.
 # Those are the two dependencies of the examples under the
