@@ -95,7 +95,7 @@ noinst_PROGRAMS = ballinthehoop flow typeomatic
 
 ballinthehoop_SOURCES = ballinthehoop.cpp
 flow_SOURCES = flow.cpp
-typeomatic_SOURCES = typeomatic.cpp ../strutils.cpp
+typeomatic_SOURCES = typeomatic.cpp $(srcdir)/../strutils.cpp
 
 BUILT_SOURCES = ballinthehoop.cpp flow.cpp typeomatic.cpp
 subdir = coin-competitions/SIM-20020503
@@ -162,7 +162,7 @@ ballinthehoop$(EXEEXT): $(ballinthehoop_OBJECTS) $(ballinthehoop_DEPENDENCIES)
 flow$(EXEEXT): $(flow_OBJECTS) $(flow_DEPENDENCIES) 
 	@rm -f flow$(EXEEXT)
 	$(CXXLINK) $(flow_LDFLAGS) $(flow_OBJECTS) $(flow_LDADD) $(LIBS)
-strutils.$(OBJEXT): ../strutils.cpp
+strutils.$(OBJEXT): $(srcdir)/../strutils.cpp
 typeomatic$(EXEEXT): $(typeomatic_OBJECTS) $(typeomatic_DEPENDENCIES) 
 	@rm -f typeomatic$(EXEEXT)
 	$(CXXLINK) $(typeomatic_LDFLAGS) $(typeomatic_OBJECTS) $(typeomatic_LDADD) $(LIBS)
@@ -193,17 +193,17 @@ distclean-depend:
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
 
-strutils.o: ../strutils.cpp
-@AMDEP_TRUE@	source='../strutils.cpp' object='strutils.o' libtool=no @AMDEPBACKSLASH@
+strutils.o: $(srcdir)/../strutils.cpp
+@AMDEP_TRUE@	source='$(srcdir)/../strutils.cpp' object='strutils.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/strutils.Po' tmpdepfile='$(DEPDIR)/strutils.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o strutils.o `test -f ../strutils.cpp || echo '$(srcdir)/'`../strutils.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o strutils.o `test -f $(srcdir)/../strutils.cpp || echo '$(srcdir)/'`$(srcdir)/../strutils.cpp
 
-strutils.obj: ../strutils.cpp
-@AMDEP_TRUE@	source='../strutils.cpp' object='strutils.obj' libtool=no @AMDEPBACKSLASH@
+strutils.obj: $(srcdir)/../strutils.cpp
+@AMDEP_TRUE@	source='$(srcdir)/../strutils.cpp' object='strutils.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/strutils.Po' tmpdepfile='$(DEPDIR)/strutils.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o strutils.obj `cygpath -w ../strutils.cpp`
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o strutils.obj `cygpath -w $(srcdir)/../strutils.cpp`
 CXXDEPMODE = @CXXDEPMODE@
 uninstall-info-am:
 
