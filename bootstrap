@@ -11,7 +11,7 @@
 DIE=false
 
 AUTOCONF_VER=2.49[bc]   # Autoconf from CVS
-AUTOMAKE_VER=1.4a    # Automake from CVS
+AUTOMAKE_VER=1.4[abc]   # Automake from CVS
 
 MACRODIR=cfg/m4
 AUTOMAKE_ADD=
@@ -78,13 +78,13 @@ $DIE && exit 1
 echo "Running aclocal (generating aclocal.m4)..."
 aclocal -I $MACRODIR
 
+echo "Running autoconf (generating ./configure)..."
+autoconf
+
 echo "Running autoheader (generating config.h.in)..."
 autoheader
 
 echo "Running automake (generating the Makefile.in files)..."
 automake --foreign $AUTOMAKE_ADD
-
-echo "Running autoconf (generating ./configure)..."
-autoconf
 
 echo "Done."
