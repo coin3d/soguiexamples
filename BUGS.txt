@@ -213,3 +213,14 @@
     20040624 kintel
 
 =====================================================================
+
+011 volumerendering/voleonexplore does not handle specification of
+    non-existent volume file well.
+
+    To reproduce, just run
+
+       $ volumerendering/voleonexplore nosuchfile
+
+    20040919 mortene.
+
+=====================================================================
