@@ -10,8 +10,8 @@
 
 DIE=false
 
-AUTOCONF_VER=2.5
-AUTOMAKE_VER=1.5
+AUTOCONF_VER=2.5[2-9]
+AUTOMAKE_VER=1.6.1
 
 MACRODIR=cfg/m4
 AUTOMAKE_ADD=
@@ -39,16 +39,6 @@ if test -z "`autoconf --version | grep \" $AUTOCONF_VER\" 2> /dev/null`"; then
   cat <<EOF
 
   Invalid Version of Autoconf
-  ---------------------------
-  You must use the CVS development version of Autoconf ($AUTOCONF_VER)
-  to generate configure information and Makefiles for $PROJECT.
-
-  The CVS autoconf repository can be fetched by running the following
-  set of commands:
-
-  $ cvs -d :pserver:anoncvs@subversions.gnu.org:/cvs login
-    (no password)
-  $ cvs -d :pserver:anoncvs@subversions.gnu.org:/cvs co autoconf
 
 EOF
   DIE=true
