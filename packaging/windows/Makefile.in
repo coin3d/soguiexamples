@@ -12,16 +12,16 @@
 
 top_srcdir = @soguiexamples_src_dir@
 
-all: dspex executables
+all: executables
 
-executables : dspex
+executables : # dspex
 	cd dspex; \
 	for filename in `find . -name '*.dsp' | sed -e 's%^\./%%'`; do \
 	  projectname=`echo $$filename | sed -e 's%.*/%%' -e 's%\.dsp$$%%'`; \
 	  MAKEFLAGS=""; \
-	  cmd /C msdev $$filename /USEENV /MAKE "$$projectname - Win32 Debug" /REBUILD; \
+	  cmd /C msdev $$filename /USEENV /MAKE "$$projectname - Win32 Release" /REBUILD; \
 	  exename=`echo $$filename | sed -e 's%/[^/]*$$%%'`; \
-	  exename="$$exename/Debug/$$projectname.exe"; \
+	  exename="$$exename/Release/$$projectname.exe"; \
 	  if ! test -f $$exename; then \
 	    exit 1; \
 	  fi; \
