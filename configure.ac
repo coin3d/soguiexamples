@@ -517,6 +517,10 @@ AC_OUTPUT([
 	sensors/Makefile
 	sensors/timersensor.cpp
 
+	sound/Makefile
+	sound/audiocallback.cpp
+	sound/manysources.cpp
+
 	volumerendering/Makefile
 	volumerendering/readvol.cpp
 	volumerendering/changingdataset.cpp
