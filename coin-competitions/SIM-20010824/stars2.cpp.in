@@ -264,7 +264,7 @@ generateTexture( SoNode * root, SoTexture2 * texture, short width, short height 
     renderer->getGLRenderAction()->setTransparencyType(SoGLRenderAction::ADD);
   }
 
-  renderer->setBackgroundColor( SbColor( 0.2, 0.2, 0.2 ) );
+  renderer->setBackgroundColor( SbColor( 0.0, 0.0, 0.8 ) );
   renderer->render( root );
   texture->image.setValue( SbVec2s( width, height ), SoOffscreenRenderer::RGB, renderer->getBuffer( ) );
 
