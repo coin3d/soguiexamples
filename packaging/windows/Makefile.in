@@ -1,0 +1,38 @@
+# **************************************************************************
+# Makefile
+#
+# Makes VisualC++ project files
+#
+# Prerequisites:
+#   Cygwin system.
+#
+# Authors:
+#   Thomas Hammer <thammer@sim.no>
+# **************************************************************************
+
+top_srcdir = @soguiexamples_src_dir@
+
+# **************************************************************************
+
+all: dspex
+
+# **************************************************************************
+
+dspex:
+	@if test -d dspex; then :; else mkdir dspex; fi
+	cd dspex; \
+	$(top_srcdir)/configure \
+          --with-toolkit=SoWin \
+          --enable-msvcdspex; \
+	$(MAKE) clean && $(MAKE)
+	find dspex -name *.o | xargs rm
+	cp $(top_srcdir)/AUTHORS dspex
+	cp $(top_srcdir)/BUGS.txt dspex
+	cp $(top_srcdir)/COPYING dspex
+	cp $(top_srcdir)/INSTALL dspex
+	cp $(top_srcdir)/NEWS dspex
+	cp $(top_srcdir)/README dspex
+
+.PHONY: all dspex
+
+# **************************************************************************
