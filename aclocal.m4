@@ -377,7 +377,10 @@ fi
 
 AC_DEFUN([AM_AUX_DIR_EXPAND], [
 # expand $ac_aux_dir to an absolute path
-am_aux_dir=`CDPATH=:; cd $ac_aux_dir && pwd`
+if test "${CDPATH+set}" = set; then
+  CDPATH=${ZSH_VERSION+.}:   # as recommended in autoconf.texi
+fi
+am_aux_dir=`cd $ac_aux_dir && pwd`
 ])
 
 # AM_PROG_INSTALL_SH
@@ -1784,10 +1787,16 @@ if test x"$with_opengl" != xno; then
       if test "x$sim_cv_lib_gl" = "xUNRESOLVED"; then
         LIBS="$sim_ac_gl_libcheck $sim_ac_save_libs"
         AC_TRY_LINK([
-#if HAVE_WINDOWS_H
+#ifdef HAVE_WINDOWS_H
 #include <windows.h>
 #endif /* HAVE_WINDOWS_H */
+#ifdef HAVE_GL_GL_H
 #include <GL/gl.h>
+#else
+#ifdef HAVE_OPENGL_GL_H
+#include <OpenGL/gl.h>
+#endif
+#endif
 ],
                     [
 glPointSize(1.0f);
@@ -1819,7 +1828,13 @@ glPointSize(1.0f);
           if test "x$sim_cv_lib_gl_pthread" = "xUNRESOLVED"; then
             LIBS="$sim_ac_gl_libcheck $sim_ac_pthread_libs $sim_ac_save_libs"
             AC_TRY_LINK([
+#ifdef HAVE_GL_GL_H
 #include <GL/gl.h>
+#else
+#ifdef HAVE_OPENGL_GL_H
+#include <OpenGL/gl.h>
+#endif
+#endif
 ],
                         [
 glPointSize(1.0f);
@@ -1918,10 +1933,16 @@ if test x"$with_glu" != xno; then
       if test "x$sim_cv_lib_glu" = "xUNRESOLVED"; then
         LIBS="$sim_ac_glu_libcheck $sim_ac_save_libs"
         AC_TRY_LINK([
-#if HAVE_WINDOWS_H
+#ifdef HAVE_WINDOWS_H
 #include <windows.h>
 #endif /* HAVE_WINDOWS_H */
+#ifdef HAVE_GL_GL_H
 #include <GL/gl.h>
+#else
+#ifdef HAVE_OPENGL_GL_H
+#include <OpenGL/gl.h>
+#endif
+#endif
 #include <GL/glu.h>
 ],
                     [
@@ -1961,10 +1982,16 @@ AC_DEFUN([SIM_AC_GLU_READY_IFELSE],
   [sim_cv_glu_ready],
   [AC_TRY_LINK(
     [
-#if HAVE_WINDOWS_H
+#ifdef HAVE_WINDOWS_H
 #include <windows.h>
 #endif /* HAVE_WINDOWS_H */
+#ifdef HAVE_GL_GL_H
 #include <GL/gl.h>
+#else
+#ifdef HAVE_OPENGL_GL_H
+#include <OpenGL/gl.h>
+#endif
+#endif
 #include <GL/glu.h>
 ],
     [
@@ -2004,10 +2031,16 @@ AC_CACHE_CHECK(
    for sim_ac_glu_structname in GLUnurbs GLUnurbsObj; do
     if test "$sim_cv_func_glu_nurbsobject" = NONE; then
       AC_TRY_LINK([
-#if HAVE_WINDOWS_H
+#ifdef HAVE_WINDOWS_H
 #include <windows.h>
 #endif /* HAVE_WINDOWS_H */
+#ifdef HAVE_GL_GL_H
 #include <GL/gl.h>
+#else
+#ifdef HAVE_OPENGL_GL_H
+#include <OpenGL/gl.h>
+#endif
+#endif
 #include <GL/glu.h>],
                   [
 $sim_ac_glu_structname * hepp = gluNewNurbsRenderer();

@@ -233,6 +233,7 @@ SIM_AC_HAVE_INVENTOR_FEATURE(
 AC_OUTPUT([
 	Makefile
 	components/Makefile
+	coin-competitions/SIM-20010914/Makefile
 	coin-competitions/SIM-20010824/Makefile
 	coin-competitions/SIM-20010803/Makefile
 	eyecandy/Makefile

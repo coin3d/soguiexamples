@@ -92,7 +92,9 @@ soguiconfig = @soguiconfig@
 
 SUBDIRS = \
   . components eyecandy \
-  coin-competitions/SIM-20010824 coin-competitions/SIM-20010803 \
+  coin-competitions/SIM-20010914 \
+  coin-competitions/SIM-20010824 \
+  coin-competitions/SIM-20010803 \
   actions draggers manipulators nodes sensors 
 
 
@@ -169,7 +171,12 @@ BUILT_SOURCES = \
 	coin-competitions/SIM-20010824/stars2.cpp \
 	coin-competitions/SIM-20010824/plasmaball.cpp \
 	coin-competitions/SIM-20010824/styx.cpp \
-	coin-competitions/SIM-20010824/smiley.cpp
+	coin-competitions/SIM-20010824/smiley.cpp \
+	coin-competitions/SIM-20010914/Moolah.cpp \
+	coin-competitions/SIM-20010914/calculator.cpp \
+	coin-competitions/SIM-20010914/coinhistory.cpp \
+	coin-competitions/SIM-20010914/kaos.cpp \
+	coin-competitions/SIM-20010914/rec.cpp
 
 
 noinst_DATA = $(BUILT_SOURCES)
@@ -732,6 +739,23 @@ coin-competitions/SIM-20010824/styx.cpp: $(srcdir)/coin-competitions/SIM-2001082
 	@./config.status --file=$@
 
 coin-competitions/SIM-20010824/plasmaball.cpp: $(srcdir)/coin-competitions/SIM-20010824/plasmaball.cpp.in
+	@./config.status --file=$@
+
+############################################################################
+
+coin-competitions/SIM-20010914/Moolah.cpp: $(srcdir)/coin-competitions/SIM-20010914/Moolah.cpp.in
+	@./config.status --file=$@
+
+coin-competitions/SIM-20010914/calculator.cpp: $(srcdir)/coin-competitions/SIM-20010914/calculator.cpp.in
+	@./config.status --file=$@
+
+coin-competitions/SIM-20010914/coinhistory.cpp: $(srcdir)/coin-competitions/SIM-20010914/coinhistory.cpp.in
+	@./config.status --file=$@
+
+coin-competitions/SIM-20010914/kaos.cpp: $(srcdir)/coin-competitions/SIM-20010914/kaos.cpp.in
+	@./config.status --file=$@
+
+coin-competitions/SIM-20010914/rec.cpp: $(srcdir)/coin-competitions/SIM-20010914/rec.cpp.in
 	@./config.status --file=$@
 
 ############################################################################

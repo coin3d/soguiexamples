@@ -10,7 +10,7 @@
 
 DIE=false
 
-AUTOCONF_VER=2.52b  # Autoconf from CVS
+AUTOCONF_VER=2.52e  # Autoconf from CVS
 AUTOMAKE_VER=1.5
 
 MACRODIR=cfg/m4
