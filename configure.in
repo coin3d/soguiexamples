@@ -15,8 +15,9 @@ SIM_AC_CVS_CHANGES([
 SIM_AC_MSVC_SUPPORT
 
 # **************************************************************************
+
 AC_PROG_CXX
-AC_LANG_CPLUSPLUS
+AC_LANG(C++)
 
 # **************************************************************************
 # Miscellaneous options and initializations.
@@ -133,6 +134,10 @@ else
     sogtk,
     AC_HELP_STRING([--with-sogtk], [build against the SoGtk toolkit]),
     [sim_ac_gui_default=sogtk])
+  AC_ARG_WITH(
+    oiv,
+    AC_HELP_STRING([--with-oiv], [build against the InventorXt toolkit]),
+    [sim_ac_gui_default=oivxt])
 
   AC_ARG_WITH(
     toolkit,
@@ -145,6 +150,7 @@ else
       win | sowin)   sim_ac_gui_toolkit=sowin ;;
       gtk | sogtk)   sim_ac_gui_toolkit=sogtk ;;
       be  | sobe)    sim_ac_gui_toolkit=sobe  ;;
+      oiv )          sim_ac_gui_toolkit=oivxt ;;
       *) AC_MSG_ERROR([invalid --with-toolkit value: "$withval"]) ;;
     esac],
     [sim_ac_gui_toolkit=$sim_ac_gui_default])
@@ -213,6 +219,18 @@ AC_SUBST(gui)
 AC_SUBST(EVENT)
 AC_SUBST(WIDGET)
 AC_SUBST(COMPONENTHEADER)
+
+# **************************************************************************
+# In case of building against SGI/TGS SoXt.
+
+AC_LANG(C)
+AC_LANG(C++)
+SIM_AC_HAVE_INVENTOR_FEATURE(
+  [for So${Gui}Viewer::setStereoViewing functions],
+  [#include <Inventor/${Gui}/viewers/So${Gui}ExaminerViewer.h>], [
+   So${Gui}ExaminerViewer * viewer = (So${Gui}ExaminerViewer *) 0;
+   viewer->setStereoViewing(FALSE);],
+  [HAVE_VIEWER_STEREO_VIEWING])
 
 # **************************************************************************
 # All files configure must automatically generate.

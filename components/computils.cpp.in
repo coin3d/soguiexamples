@@ -26,10 +26,15 @@
 #include <Inventor/nodes/SoCone.h>
 #include <Inventor/nodes/SoCube.h>
 #include <Inventor/nodes/SoCylinder.h>
+#include <Inventor/nodes/SoShapeHints.h>
 #include <Inventor/nodes/SoSphere.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoText3.h>
 #include <Inventor/@Gui@/viewers/So@Gui@Viewer.h>
+
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 // *************************************************************************
 
@@ -38,6 +43,11 @@ shape_to_scene_graph(
   SoShape * shape )
 {
   SoSeparator * root = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+  hints->creaseAngle = 0.91f;
+  root->addChild( hints );
   SoBaseColor * basecol = new SoBaseColor;
   basecol->rgb.setValue( float(rand())/float(RAND_MAX),
                          float(rand())/float(RAND_MAX),
@@ -102,6 +112,7 @@ config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
 {
   int i = 1;
   while (i < argc) {
+#ifdef HAVE_VIEWER_STEREO_VIEWING
     if (!strcmp(argv[i], "--stereo")) {
       viewer->setQuadBufferStereo(TRUE);
       viewer->setStereoViewing(TRUE);
@@ -116,7 +127,9 @@ config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
       viewer->setStereoOffset(atoi(argv[i+1]));
       i += 2;
     }
-    else if (!strcmp(argv[i], "--title" ) && (i < argc - 1)) {
+    else
+#endif
+    if (!strcmp(argv[i], "--title" ) && (i < argc - 1)) {
       viewer->setTitle(argv[i+1]);
       i += 2;
     }

@@ -6,6 +6,9 @@
 /* Define this to use OpenGL widget from <GL/GLwMDrawA.h> */
 #undef HAVE_GL_GLWMDRAWA_H
 
+/* Define to enable use of Inventor feature */
+#undef HAVE_VIEWER_STEREO_VIEWING
+
 /* Define this to use OpenGL widget from <X11/GLw/GLwDrawA.h> */
 #undef HAVE_X11_GLW_GLWDRAWA_H
 
