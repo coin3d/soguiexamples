@@ -58,7 +58,8 @@ SIM_COMPILER_WARNINGS
 
 AC_ARG_WITH([alternate],
   [AC_HELP_STRING([--with-alternate=keyword], [use keyword-configuration of GUI toolkit])],
-  [alternate_option=--alternate=$withval],
+  [alternate_option=--alternate=$withval
+   sim_ac_alternate_keyword=$withval],
   [alternate_option=])
 
 # **************************************************************************
@@ -178,6 +179,8 @@ else
     esac],
     [sim_ac_gui_toolkit=$sim_ac_gui_default])
 
+  SIM_AC_CONFIGURATION_SETTING([GUI toolkit], [$sim_ac_gui_toolkit])
+
   # **************************************************************************
   # Environment variables to configure the generic sourcefiles.
 
@@ -186,7 +189,17 @@ else
 
   sim_ac_gui_configcmd=${sim_ac_gui_toolkit}-config
   AC_PATH_PROG(soguiconfig, $sim_ac_gui_configcmd, false, $sim_ac_path)
-  if $soguiconfig; then
+  if $soguiconfig $alternate_option; then
+    SIM_AC_CONFIGURATION_SETTING([Configuration Setting], [$sim_ac_alternate_keyword])
+    GUI=`$soguiconfig $alternate_option --ac-subst GUI`
+    Gui=`$soguiconfig $alternate_option --ac-subst Gui`
+    gui=`$soguiconfig $alternate_option --ac-subst gui`
+    WIDGET=`$soguiconfig $alternate_option --ac-subst WIDGET`
+    EVENT=`$soguiconfig $alternate_option --ac-subst EVENT`
+    COMPONENTHEADER=`$soguiconfig $alternate_option --ac-subst COMPONENTHEADER`
+  elif $soguiconfig; then
+    AC_MSG_WARN([configuration '$sim_ac_alternate_keyword' not found: fallback on default])
+    SIM_AC_CONFIGURATION_SETTING([Configuration Setting], [default (fallback: $sim_ac_alternate_keyword not found)])
     GUI=`$soguiconfig $alternate_option --ac-subst GUI`
     Gui=`$soguiconfig $alternate_option --ac-subst Gui`
     gui=`$soguiconfig $alternate_option --ac-subst gui`
@@ -283,5 +296,7 @@ AC_OUTPUT([
 	nodes/Makefile
 	sensors/Makefile
 ])
+
+SIM_AC_CONFIGURATION_SUMMARY
 
 # **************************************************************************
