@@ -137,9 +137,6 @@ endif
 
 ############################################################################
 
-INCLUDES = -I$(top_builddir)/../src -I$(top_srcdir)/../src
-VPATH = .:@srcdir@
-
 BUILT_SOURCES = \
 	computils.cpp \
 	computils.h \

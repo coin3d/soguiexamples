@@ -30,4 +30,4 @@ Ideas for example programs:
           creation of new nodes
 
 	- make an SoDisc or SoCircle nodetype to show off the creation
-          of new nodes
+          of new shape nodes (with generateprimitives, picking etc)

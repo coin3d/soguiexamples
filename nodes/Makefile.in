@@ -94,8 +94,6 @@ soguiconfig = @soguiconfig@
 ############################################################################
 
 
-INCLUDES = -I$(top_builddir)/../src -I$(top_srcdir)/../src
-
 BUILT_SOURCES = \
 	drawstyle.cpp \
 	material.cpp \
