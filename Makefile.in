@@ -535,7 +535,7 @@ info-am:
 
 install-data-am:
 
-install-exec-am:
+install-exec-am: install-exec-local
 
 install-info: install-info-recursive
 
@@ -571,8 +571,8 @@ uninstall-info: uninstall-info-recursive
 	distdir distuninstallcheck dvi dvi-am dvi-recursive info \
 	info-am info-recursive install install-am install-data \
 	install-data-am install-data-recursive install-exec \
-	install-exec-am install-exec-recursive install-info \
-	install-info-am install-info-recursive install-man \
+	install-exec-am install-exec-local install-exec-recursive \
+	install-info install-info-am install-info-recursive install-man \
 	install-recursive install-strip installcheck installcheck-am \
 	installdirs installdirs-am installdirs-recursive \
 	maintainer-clean maintainer-clean-generic \
@@ -601,6 +601,12 @@ windows-packages: windows-files
 	@( cd windows; $(MAKE) VERSION=$(VERSION) )
 
 # **************************************************************************
+
+# Create Mac OS X application bundles.
+install-exec-local:
+	@case $(target_os) in darwin* ) \
+	  echo "Making Mac OS application bundles." ;; \
+	esac
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

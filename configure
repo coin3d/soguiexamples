@@ -10260,7 +10260,7 @@ sim_ac_smallchange_includedir=
 sim_ac_smallchange_version=
 
 # internal variables
-: ${sim_ac_smallchange_desired=false}
+: ${sim_ac_smallchange_desired=true}
 sim_ac_smallchange_extrapath=
 
 
@@ -13130,6 +13130,12 @@ fi
 echo ""
 echo "Now run 'make' to build the examples."
 echo ""
+
+case $target_os in
+  darwin* )
+    echo "Run 'make install' to create app bundles for the executables." ;;
+esac
+
 echo "(Note that they are not installed, so after building you should"
 echo "execute them straight from this directory's subdirectories.)"
 echo ""
