@@ -1,0 +1,10 @@
+Contributions:
+
+        * Moolah submitted by Marius Bugge Monsen <mariusbu@sim.no>
+        * Calculator submitted by Lars J Aas <larsa@sim.no>
+        * Coinhistory submitted by Thomas Hammer <thammer@sim.no>
+        * Kaos submitted by Karin Kosina <kyrah@sim.no>
+        * Rec submitted by Barbara Langmueller <barbara@sim.no>
+
+Jury: Majken + ?.
+Winner: Moolah
