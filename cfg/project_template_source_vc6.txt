@@ -1,0 +1,4 @@
+# Begin Source File
+
+SOURCE=@SOURCEFILE@
+# End Source File
