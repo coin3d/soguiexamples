@@ -3,7 +3,10 @@
 # configure process.
 
 if HAVE_SIMVOLEON
-VOLUMERENDERINGDIR = volumerendering
+# FIXME: tmp disabled, as the SoQtGradientColor editor has been taken out of
+# SoQt, so some sources doesn't compile. (This class should be moved to a
+# new "SIM-wide" repository with Qt-extensions.) 20040903 mortene.
+VOLUMERENDERINGDIR = #volumerendering
 else
 VOLUMERENDERINGDIR = 
 endif
@@ -40,4 +43,3 @@ install-exec-local:
 	@case $(target_os) in darwin* ) \
 	  echo "Making Mac OS application bundles." ;; \
 	esac
-	
