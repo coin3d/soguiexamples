@@ -214,7 +214,7 @@ SoSeparator* createIndexedLineSet(SbVec3f firstPoint, SbVec3f lastPoint){
 	SoSeparator *root = new SoSeparator;
 	root->ref();
 
-	maxNrIndex=pow(2,2*maxRekDepth);
+	maxNrIndex=(int)pow(2,2*maxRekDepth);
 	
 	SoIndexedLineSet *lineSet = new SoIndexedLineSet;
 	coords = new SoCoordinate3;
