@@ -290,7 +290,7 @@ show_instructions( void )
                 "     'r' = Rectangle mode\n"
                 "     'n' = Pick/NoLasso mode\n"
                 "     's' = Single selection\n"
-                "     'h' = Shift selection\n",
+                "     'h' = Shift selection\n"
                 "     't' = toggle selection \n\n");
 }
 
