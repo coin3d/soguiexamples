@@ -169,15 +169,17 @@ BUILT_SOURCES = \
 	hardcopy.cpp
 
 
-noinst_PROGRAMS = hardcopy
+noinst_PROGRAMS = hardcopy rawhardcopy
 
 hardcopy_SOURCES = hardcopy.cpp
+
+rawhardcopy_SOURCES = rawhardcopy.cpp
 subdir = annex
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES = hardcopy.cpp
-noinst_PROGRAMS = hardcopy$(EXEEXT)
+noinst_PROGRAMS = hardcopy$(EXEEXT) rawhardcopy$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_hardcopy_OBJECTS = hardcopy.$(OBJEXT)
@@ -185,19 +187,25 @@ hardcopy_OBJECTS = $(am_hardcopy_OBJECTS)
 hardcopy_LDADD = $(LDADD)
 hardcopy_DEPENDENCIES =
 hardcopy_LDFLAGS =
+am_rawhardcopy_OBJECTS = rawhardcopy.$(OBJEXT)
+rawhardcopy_OBJECTS = $(am_rawhardcopy_OBJECTS)
+rawhardcopy_LDADD = $(LDADD)
+rawhardcopy_DEPENDENCIES =
+rawhardcopy_LDFLAGS =
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/hardcopy.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/hardcopy.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/rawhardcopy.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
-DIST_SOURCES = $(hardcopy_SOURCES)
+DIST_SOURCES = $(hardcopy_SOURCES) $(rawhardcopy_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in hardcopy.cpp.in
-SOURCES = $(hardcopy_SOURCES)
+SOURCES = $(hardcopy_SOURCES) $(rawhardcopy_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -217,6 +225,9 @@ clean-noinstPROGRAMS:
 hardcopy$(EXEEXT): $(hardcopy_OBJECTS) $(hardcopy_DEPENDENCIES) 
 	@rm -f hardcopy$(EXEEXT)
 	$(CXXLINK) $(hardcopy_LDFLAGS) $(hardcopy_OBJECTS) $(hardcopy_LDADD) $(LIBS)
+rawhardcopy$(EXEEXT): $(rawhardcopy_OBJECTS) $(rawhardcopy_DEPENDENCIES) 
+	@rm -f rawhardcopy$(EXEEXT)
+	$(CXXLINK) $(rawhardcopy_LDFLAGS) $(rawhardcopy_OBJECTS) $(rawhardcopy_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -225,6 +236,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hardcopy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rawhardcopy.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)
