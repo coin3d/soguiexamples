@@ -36,6 +36,8 @@ main(
     return -1;
 
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
+  config_viewer( viewer, argc, argv );
+
   viewer->setSceneGraph( root );
   viewer->show();
   So@Gui@::show( window );

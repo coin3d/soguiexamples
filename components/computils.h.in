@@ -21,9 +21,11 @@
 #define __SO_COMPUTILS_H__
 
 // *************************************************************************
+class So@Gui@Viewer;
 
 int verify_usage( int argc, char ** argv );
 SoNode * get_scene_graph( int argc, char ** argv );
+void config_viewer( So@Gui@Viewer * viewer, int argc, char ** argv );
 
 // *************************************************************************
 

@@ -29,6 +29,7 @@
 #include <Inventor/nodes/SoSphere.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoText3.h>
+#include <Inventor/@Gui@/viewers/So@Gui@Viewer.h>
 
 // *************************************************************************
 
@@ -95,5 +96,45 @@ get_scene_graph(
     return shape_to_scene_graph( textnode );
   }
 } // get_scene_graph()
+
+void 
+config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
+{
+  int i = 1;
+  while (i < argc) {
+    if (!strcmp(argv[i], "--stereo")) {
+      viewer->setQuadBufferStereo(TRUE);
+      viewer->setStereoViewing(TRUE);
+      i++;
+    }
+    else if (!strcmp(argv[i], "--anaglyph")) {
+      viewer->setQuadBufferStereo(FALSE);
+      viewer->setStereoViewing(TRUE);
+      i++;
+    }
+    else if (!strcmp(argv[i], "--stereooffset") && (i < argc - 1)) {
+      viewer->setStereoOffset(atoi(argv[i+1]));
+      i += 2;
+    }
+    else if (!strcmp(argv[i], "--title" ) && (i < argc - 1)) {
+      viewer->setTitle(argv[i+1]);
+      i += 2;
+    }
+    else if (!strcmp(argv[i], "--size") && (i < argc - 2)) {
+      viewer->setSize(SbVec2s(atoi(argv[i+1]), atoi(argv[i+2])));
+      i += 3;
+    }
+    else if (!strcmp(argv[i], "--noheadlight")) {
+      viewer->setHeadlight(FALSE);
+      i++;
+    }
+    else if (!strcmp(argv[i], "--noautoclip")) {
+      viewer->setAutoClipping(FALSE);
+      i++;
+    }
+    else i++;
+  }
+} // config_viewer
+
 
 // *************************************************************************
