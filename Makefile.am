@@ -2,7 +2,7 @@
 ## Process this file with automake to generate Makefile.in.
 
 SUBDIRS = \
-  . components actions draggers engines manipulators nodes sensors eyecandy
+  . components actions draggers manipulators nodes sensors eyecandy
 
 ############################################################################
 
@@ -30,7 +30,6 @@ BUILT_SOURCES = \
 	draggers/dragpoint.cpp \
 	draggers/translate1.cpp \
 	draggers/translate2.cpp \
-	engines/calculator.cpp \
 	manipulators/pointlightmanip.cpp \
 	nodes/atmospheric.cpp \
 	nodes/blinker.cpp \
@@ -153,12 +152,6 @@ draggers/translate1.cpp: $(srcdir)/draggers/translate1.cpp.in
 	@./config.status --file=$@
 
 draggers/translate2.cpp: $(srcdir)/draggers/translate2.cpp.in
-	@./config.status --file=$@
-
-############################################################################
-## sources in engines/
-
-engines/calculator.cpp: $(srcdir)/engines/calculator.cpp.in
 	@./config.status --file=$@
 
 ############################################################################

@@ -198,7 +198,6 @@ AC_OUTPUT([
 	components/Makefile
 	actions/Makefile
 	draggers/Makefile
-	engines/Makefile
 	manipulators/Makefile
 	nodes/Makefile
 	sensors/Makefile
