@@ -19,6 +19,16 @@
  *
 \**************************************************************************/
 
+// This example uses SoExtSelection, SoPolygonOffset and
+// SbBSPTree. All of these are missing from SGI Inventor. TGS Inventor
+// has the first two, but is missing SbBSPTree.
+#ifndef __COIN__
+
+#include <stdio.h>
+int main(void) { (void)fprintf(stderr, "This example only works with Coin.\n"); return 1; }
+
+#else // __COIN__
+
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SoDB.h>
@@ -233,3 +243,4 @@ main(int argc, char ** argv)
   return 0;
 } // main()
 
+#endif // __COIN__

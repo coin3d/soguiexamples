@@ -19,6 +19,14 @@
  *
 \**************************************************************************/
 
+// SoMarkerSet is not part of SGI Inventor.
+#ifndef HAVE_SOMARKERSET
+
+#include <stdio.h>
+int main(void) { (void)fprintf(stderr, "SoMarkerSet node is missing from the Inventor implementation.\n"); return 1; }
+
+#else // HAVE_SOMARKERSET
+
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoBaseColor.h>
@@ -133,3 +141,5 @@ main(int argc, char ** argv)
   delete viewer;
   return 0;
 }
+
+#endif // HAVE_SOMARKERSET

@@ -19,6 +19,7 @@
  *
 \**************************************************************************/
 
+#include <stdlib.h> // rand()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/events/SoKeyboardEvent.h>
@@ -27,6 +28,7 @@
 #include <Inventor/nodes/SoEventCallback.h>
 #include <Inventor/nodes/SoPointSet.h>
 #include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/SbBox.h>
 
 // *************************************************************************
 
