@@ -43,6 +43,7 @@
 \**************************************************************************/
 
 #include <stdlib.h>
+#include <time.h>
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
@@ -247,7 +248,7 @@ scene()
     SoSeparator * obj = new SoSeparator;
 
     one = new SoOneShot;
-    one->duration = 3;
+    one->duration = 3.0;
     one->flags.setValue(SoOneShot::HOLD_FINAL);
 
     SoMaterial * mPlain = new SoMaterial;
@@ -322,7 +323,9 @@ main(int, char ** argv)
     So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
     viewer->setSceneGraph(root);
     viewer->setTitle("KAOS -- Kaos (is) An Ordered System");
+#ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
     viewer->setFullScreen(FALSE);
+#endif // HAVE_SOCOMPONENT_SETFULLSCREEN
     viewer->setTransparencyType(SoGLRenderAction::DELAYED_BLEND);
     viewer->setHeadlight(FALSE);  // don't use default lighting
     viewer->setDecoration(FALSE); // don't show the ugly interaction stuff

@@ -24,6 +24,9 @@ Barbara Langmueller, 14.Sept.2001
 createLogo() function adopted from plasmaball by Morten Eriksen
 */
 
+// FIXME: just hangs when running on top of SGI
+// Inventor. Strange. Investigate.  20010919 mortene.
+
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -403,7 +406,9 @@ int main(int, char ** argv){
 	examinerviewer->setDecoration(FALSE);
 	
 	examinerviewer->show();
+#ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
 	examinerviewer->setFullScreen(TRUE);
+#endif // HAVE_SOCOMPONENT_SETFULLSCREEN
 	
 	So@Gui@::mainLoop();
 	delete examinerviewer;
