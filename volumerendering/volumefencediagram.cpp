@@ -97,20 +97,20 @@ unsigned char * generateTexture(SbVec3s & dim)
 void keyboardCB(void * userdata, SoEventCallback * node)
 {
   
-  if (SO_KEY_PRESS_EVENT(node->getEvent(), Q)) { 
+  if (SO_KEY_PRESS_EVENT(node->getEvent(), A)) { 
     currentfencetransfcolour++;    
     if (currentfencetransfcolour >= fencetransftablelen) currentfencetransfcolour = 0;
   }
-  else if (SO_KEY_PRESS_EVENT(node->getEvent(), W)) { 
+  else if (SO_KEY_PRESS_EVENT(node->getEvent(), S)) { 
     currentfencetransfcolour--; 
     if (currentfencetransfcolour < 0) currentfencetransfcolour = fencetransftablelen-1;
   }
 
-  if (SO_KEY_PRESS_EVENT(node->getEvent(), E)) { 
+  if (SO_KEY_PRESS_EVENT(node->getEvent(), D)) { 
     currentwalltransfcolour++;    
     if (currentwalltransfcolour >= fencetransftablelen) currentwalltransfcolour = 0;
   }
-  else if (SO_KEY_PRESS_EVENT(node->getEvent(), R)) { 
+  else if (SO_KEY_PRESS_EVENT(node->getEvent(), F)) { 
     currentwalltransfcolour--; 
     if (currentwalltransfcolour < 0) currentwalltransfcolour = fencetransftablelen-1;
   }
@@ -237,7 +237,7 @@ int main(int argc, char * argv[])
   }
 
 
-  // Fetch the volume dimensions (incase we loaded a VOL file)  
+  // Fetch the volume dimensions (in case we loaded a VOL file)  
   SbBox3f volbox = voldata->getVolumeSize();
   SbVec3f volsize;
   volbox.getSize(volsize[0], volsize[1], volsize[2]);
@@ -285,8 +285,8 @@ int main(int argc, char * argv[])
   renderarea->show();
 
   printf("\nInstructions:\n");
-  printf(" * [Q, W] Cycle colour schemes for fence.\n");
-  printf(" * [E, R] Cycle colour schemes for walls.\n");
+  printf(" * [A, S] Cycle colour schemes for the fence.\n");
+  printf(" * [D, F] Cycle colour schemes for the walls.\n");
   printf(" * Use the mouse to manipulate the point-draggers on top of each fence-segment.\n");
   printf("\n\n");
 
