@@ -23,7 +23,7 @@ template <class generic> MooList<generic>::~MooList( void )
   delete this->first;
 }
 
-template <class generic> bool inline MooList<generic>::start( void )
+template <class generic> inline bool MooList<generic>::start( void )
 {
   this->current = this->first->next;
 
@@ -32,7 +32,7 @@ template <class generic> bool inline MooList<generic>::start( void )
   return ( this->current != this->first );
 }
 
-template <class generic> bool inline MooList<generic>::end( void )
+template <class generic> inline bool MooList<generic>::end( void )
 {
 	
   this->current = this->first->prev;
@@ -106,7 +106,7 @@ template<class generic> bool MooList<generic>::append( generic item )
 
 }
 
-template<class generic> bool inline MooList<generic>::next( void )
+template<class generic> inline bool MooList<generic>::next( void )
 {
 	
   if ( this->current->next == this->first )
@@ -119,7 +119,7 @@ template<class generic> bool inline MooList<generic>::next( void )
 
 }
 
-template<class generic> bool inline MooList<generic>::prev( void )
+template<class generic> inline bool MooList<generic>::prev( void )
 {
 	
   if ( this->current->prev == this->first )
@@ -173,12 +173,12 @@ template<class generic> void MooList<generic>::empty( void )
   while ( this->remove( ) );
 }
 
-template<class generic> unsigned int inline MooList<generic>::length( void )
+template<class generic> inline unsigned int MooList<generic>::length( void )
 {
   return this->count;
 }
 
-template<class generic> generic inline MooList<generic>::get( void )
+template<class generic> inline generic MooList<generic>::get( void )
 {
   return this->current->item;
 }
