@@ -30,6 +30,7 @@ BUILT_SOURCES = \
 	components/transformsliderset.cpp \
 	components/walkviewer.cpp \
 	components/grapheditor.cpp \
+	actions/raypick.cpp \
 	actions/search.cpp \
 	draggers/dragpoint.cpp \
 	draggers/translate1.cpp \
@@ -157,6 +158,9 @@ components/walkviewer.cpp: $(srcdir)/components/walkviewer.cpp.in
 
 ############################################################################
 ## sources in actions/
+
+actions/raypick.cpp: $(srcdir)/actions/raypick.cpp.in
+	@./config.status --file=$@
 
 actions/search.cpp: $(srcdir)/actions/search.cpp.in
 	@./config.status --file=$@
