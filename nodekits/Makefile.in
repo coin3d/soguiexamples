@@ -154,17 +154,19 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 
-BUILT_SOURCES = scalemarker.cpp
+BUILT_SOURCES = scalemarker.cpp wavekitdemo.cpp
 
-noinst_PROGRAMS = scalemarker
+noinst_PROGRAMS = scalemarker wavekitdemo
 
 scalemarker_SOURCES = scalemarker.cpp ShapeScale.cpp ShapeScale.h
+
+wavekitdemo_SOURCES = wavekitdemo.cpp WaveSurfaceKit.cpp WaveSurfaceKit.h
 subdir = nodekits
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-noinst_PROGRAMS = scalemarker$(EXEEXT)
+noinst_PROGRAMS = scalemarker$(EXEEXT) wavekitdemo$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_scalemarker_OBJECTS = scalemarker.$(OBJEXT) ShapeScale.$(OBJEXT)
@@ -172,12 +174,19 @@ scalemarker_OBJECTS = $(am_scalemarker_OBJECTS)
 scalemarker_LDADD = $(LDADD)
 scalemarker_DEPENDENCIES =
 scalemarker_LDFLAGS =
+am_wavekitdemo_OBJECTS = wavekitdemo.$(OBJEXT) WaveSurfaceKit.$(OBJEXT)
+wavekitdemo_OBJECTS = $(am_wavekitdemo_OBJECTS)
+wavekitdemo_LDADD = $(LDADD)
+wavekitdemo_DEPENDENCIES =
+wavekitdemo_LDFLAGS =
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ShapeScale.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/scalemarker.Po
+@AMDEP_TRUE@	./$(DEPDIR)/WaveSurfaceKit.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/scalemarker.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/wavekitdemo.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -187,9 +196,9 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(scalemarker_SOURCES)
+DIST_SOURCES = $(scalemarker_SOURCES) $(wavekitdemo_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(scalemarker_SOURCES)
+SOURCES = $(scalemarker_SOURCES) $(wavekitdemo_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -207,6 +216,9 @@ clean-noinstPROGRAMS:
 scalemarker$(EXEEXT): $(scalemarker_OBJECTS) $(scalemarker_DEPENDENCIES) 
 	@rm -f scalemarker$(EXEEXT)
 	$(CXXLINK) $(scalemarker_LDFLAGS) $(scalemarker_OBJECTS) $(scalemarker_LDADD) $(LIBS)
+wavekitdemo$(EXEEXT): $(wavekitdemo_OBJECTS) $(wavekitdemo_DEPENDENCIES) 
+	@rm -f wavekitdemo$(EXEEXT)
+	$(CXXLINK) $(wavekitdemo_LDFLAGS) $(wavekitdemo_OBJECTS) $(wavekitdemo_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -215,7 +227,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ShapeScale.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/WaveSurfaceKit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scalemarker.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wavekitdemo.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)
@@ -421,6 +435,9 @@ uninstall-am: uninstall-info-am
 
 scalemarker.cpp: $(srcdir)/scalemarker.cpp.in
 	@( cd $(top_builddir); ./config.status --file=nodekits/scalemarker.cpp)
+
+wavekitdemo.cpp: $(srcdir)/wavekitdemo.cpp.in
+	@( cd $(top_builddir); ./config.status --file=nodekits/wavekitdemo.cpp)
 
 ############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

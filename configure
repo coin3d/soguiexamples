@@ -5136,7 +5136,12 @@ for sim_ac_math_chk in "" -lm -lmw; do
   if test x"$sim_ac_mathlib_test" = xUNDEFINED; then
     sim_ac_store_libs=$LIBS
     LIBS="$sim_ac_store_libs $sim_ac_math_chk"
-    cat >conftest.$ac_ext <<_ACEOF
+
+# It is on purpose that we avoid caching, as this macro could be
+# run twice from the same configure-script: once for the C compiler,
+# once for the C++ compiler.
+
+cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
 /* confdefs.h.  */
 _ACEOF
@@ -5144,26 +5149,27 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 #include <math.h>
-                #include <stdlib.h>
-                #include <stdio.h>
+    #include <stdlib.h>
+    #include <stdio.h>
 int
 main ()
 {
 char s[16];
-                 /*
-                    SGI IRIX MIPSpro compilers may "fold" math
-                    functions with constant arguments already
-                    at compile time.
-                     It is also theoretically possible to do this
-                    for atof(), so to be _absolutely_ sure the
-                    math functions aren't replaced by constants at
-                    compile time, we get the arguments from a guaranteed
-                    non-constant source (stdin).
-                 */
-                fmod(atof(fgets(s,15,stdin)), atof(fgets(s,15,stdin)));
-                pow(atof(fgets(s,15,stdin)), atof(fgets(s,15,stdin)));
-                exp(atof(fgets(s,15,stdin)));
-                sin(atof(fgets(s,15,stdin)))
+    /*
+    SGI IRIX MIPSpro compilers may "fold" math
+    functions with constant arguments already
+    at compile time.
+
+    It is also theoretically possible to do this
+    for atof(), so to be _absolutely_ sure the
+    math functions aren't replaced by constants at
+    compile time, we get the arguments from a guaranteed
+    non-constant source (stdin).
+    */
+    printf("> %g\n",fmod(atof(fgets(s,15,stdin)), atof(fgets(s,15,stdin))));
+    printf("> %g\n",pow(atof(fgets(s,15,stdin)), atof(fgets(s,15,stdin))));
+    printf("> %g\n",exp(atof(fgets(s,15,stdin))));
+    printf("> %g\n",sin(atof(fgets(s,15,stdin))))
   ;
   return 0;
 }
@@ -5180,26 +5186,40 @@ if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
-  sim_ac_mathlib_test=$sim_ac_math_chk
+  sim_ac_mathlib_ready=true
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
+sim_ac_mathlib_ready=false
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+
+if ${sim_ac_mathlib_ready}; then
+  sim_ac_mathlib_test=$sim_ac_math_chk
+else
+  :
+fi
+
     LIBS=$sim_ac_store_libs
   fi
 done
 
-echo "$as_me:$LINENO: result: $sim_ac_mathlib_test" >&5
-echo "${ECHO_T}$sim_ac_mathlib_test" >&6
-
 if test x"$sim_ac_mathlib_test" != xUNDEFINED; then
-  sim_ac_libm=$sim_ac_mathlib_test
-  LIBS="$sim_ac_libm $LIBS"
+  if test x"$sim_ac_mathlib_test" != x""; then
+    sim_ac_libm=$sim_ac_mathlib_test
+    LIBS="$sim_ac_libm $LIBS"
+    echo "$as_me:$LINENO: result: $sim_ac_mathlib_test" >&5
+echo "${ECHO_T}$sim_ac_mathlib_test" >&6
+  else
+    echo "$as_me:$LINENO: result: no explicit linkage necessary" >&5
+echo "${ECHO_T}no explicit linkage necessary" >&6
+  fi
 
 else
-  :
+  echo "$as_me:$LINENO: result: failed!" >&5
+echo "${ECHO_T}failed!" >&6
+
 fi
 
 
