@@ -1,30 +1,3 @@
-/**************************************************************************
- *
- *  This file is part of the Coin 3D visualization library.
- *  Copyright (C) 1998-2001 by Systems in Motion. All rights reserved.
- *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public License
- *  version 2.1 as published by the Free Software Foundation. See the
- *  file LICENSE.LGPL at the root directory of the distribution for
- *  more details.
- *
- *  If you want to use Coin for applications not compatible with the
- *  LGPL, please contact SIM to acquire a Professional Edition license.
- *
- *  Systems in Motion, Prof Brochs gate 6, 7030 Trondheim, NORWAY
- *  http://www.sim.no support@sim.no Voice: +47 22114160 Fax: +47 22207097
- *
- **************************************************************************/
-
-#ifndef SOGUIEXAMPLES_SIMLOGO_IV_H
-#define SOGUIEXAMPLES_SIMLOGO_IV_H
-
-// Added to the common repository from a contribution by larsa@sim.no.
-
-// FIXME: there's a bug in the geometry. 20011116 mortene.
-// FIXME: make it into a stand-alone Inventor file string. 20011116 mortene.
-
 "Separator {",
 "  Material {",
 "    ambientColor 0.100000 0.100000 0.200000",
@@ -351,9 +324,12 @@
 "     93, 84, 69, 103, -1, 108, 69, 88, -1, 108, 103, 69,",
 "     -1, 111, 108, 88, -1, 88, 101, 111, -1, 98, 101, 88,",
 "     -1, 88, 95, 98, -1, 91, 95, 88, -1, 88, 81, 86,",
-"     91, -1, 81, 79, 86, -1, 74, 79, 81, 77, -1, 77,",
-"     64, 74, -1, 66, 77, 64, 61, -1, 66, 61, 64, 77,",
-"     -1, 52, 41, 59, -1, 52, 59, 61, -1, 61, 59, 72,",
+"     91, -1,",
+"     81, 79, 86, -1,",
+"     74, 79, 81, 77, -1,",
+"     77, 64, 74, -1,",
+"     66, 61, 64, 77, -1,",
+"     52, 41, 59, -1, 52, 59, 61, -1, 61, 59, 72,",
 "     -1, 59, 57, 72, -1, 48, 45, 50, -1, 48, 43, 45,",
 "     -1,",
 "     43, 38, 45, -1,",
@@ -382,5 +358,3 @@
 "  Sphere {",
 "  }",
 "}",
-
-#endif /* ! SOGUIEXAMPLES_SIMLOGO_IV_H */
