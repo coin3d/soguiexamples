@@ -1,0 +1,398 @@
+/* ********************************************************************** *
+ * plasmaball
+ *
+ * Demo application for showcasing Coin.
+ *
+ * Written by Morten Eriksen <mortene@coin3d.org>, partly based on
+ * code by Peder Blekken <pederb@coin3d.org> and Marius Bugge Monsen
+ * <mariusbu@stud.ntnu.no>.
+ * ********************************************************************** */
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/nodes/SoAntiSquish.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoRotor.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoSurroundScale.h>
+#include <Inventor/nodes/SoText3.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoTextureCoordinateEnvironment.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef struct
+{
+  unsigned char r,g,b,a;
+} myrgb;
+
+// yeah, statics :)
+static int * plasma;
+static unsigned int palette[256];
+static myrgb colors[256];
+static unsigned short rpos1, rpos2, rpos3, rpos4;
+static unsigned short gpos1, gpos2, gpos3, gpos4;
+static unsigned short bpos1, bpos2, bpos3, bpos4;
+static short adders[18] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 91, 11, 12, 13, 14, 15, 16, 17, 18 };
+
+void
+event_cb(void * userdata, SoEventCallback * node)
+{
+  const SoEvent * event = node->getEvent();
+
+//    if (SO_KEY_PRESS_EVENT(event, XXX)) {
+//    }
+}
+
+static int
+random(int maxval)
+{
+  return rand() % (maxval+1);
+}
+
+static void
+redraw_plasma(unsigned char * buffer, SbVec2s size, int components)
+{
+  int i,j;
+  unsigned char color;
+  unsigned short rtpos1,rtpos2, rtpos3,rtpos4;
+  unsigned short gtpos1,gtpos2, gtpos3,gtpos4;
+  unsigned short btpos1,btpos2, btpos3,btpos4;
+
+  rtpos3 = rpos3;
+  rtpos4 = rpos4;
+  gtpos3 = gpos3;
+  gtpos4 = gpos4;
+  btpos3 = bpos3;
+  btpos4 = bpos4;
+
+  unsigned char * ptr = buffer;
+  unsigned int col;
+
+  for (i = 0; i < size[1]; i++) {
+    rtpos1 = rpos1;
+    rtpos2 = rpos2;
+    gtpos1 = gpos1;
+    gtpos2 = gpos2;
+    btpos1 = bpos1;
+    btpos2 = bpos2;
+    for (j = 0; j < size[0]; j++) {
+      color = plasma[rtpos1]+plasma[rtpos2]+plasma[rtpos3]+
+	plasma[rtpos4]+plasma[i%0xff]+plasma[j&0xff];
+
+      col = palette[color];
+
+      color = plasma[gtpos1]+plasma[gtpos2]+plasma[gtpos3]+
+  	plasma[gtpos4]+plasma[i%0xff]+plasma[j&0xff];
+
+      col |= palette[color]<<8;
+
+      color = plasma[btpos1]+plasma[btpos2]+plasma[btpos3]+
+ 	plasma[btpos4]+plasma[i%0xff]+plasma[j&0xff];
+
+      col |= palette[color]<<16;
+
+      // Doesn't matter whether we're big-endian or not.
+      *ptr++ = (col>>8)&0xff;
+      *ptr++ = (col>>16)&0xff;
+      *ptr++ = col>>24;
+      *ptr++ = (col&0xff) < 224 ? 0 : 255;  // XXX
+
+      rtpos1 = rtpos1+adders[0];
+      rtpos2 = rtpos2+adders[1];
+      gtpos1 = gtpos1+adders[6];
+      gtpos2 = gtpos2+adders[7];
+      btpos1 = btpos1+adders[12];
+      btpos2 = btpos2+adders[13];
+    }								
+    rtpos3 = rtpos3+adders[2];
+    rtpos4 = rtpos4+adders[3];
+    gtpos3 = gtpos3+adders[8];
+    gtpos4 = gtpos4+adders[9];
+    btpos3 = btpos3+adders[14];
+    btpos4 = btpos4+adders[15];
+
+  }
+  rpos1 = rpos1 + adders[4];
+  rpos3 = rpos3 + adders[5];
+  gpos1 = gpos1 + adders[10];
+  gpos3 = gpos3 + adders[11];
+  bpos1 = bpos1 + adders[16];
+  bpos3 = bpos3 + adders[17];
+}
+
+
+static void
+setup_plasma(void)
+{
+  rpos1 = rand();
+  rpos2 = rand();
+  rpos3 = rand();
+  rpos4 = rand();
+  gpos1 = rand();
+  gpos2 = rand();
+  gpos3 = rand();
+  gpos4 = rand();
+  bpos1 = rand();
+  bpos2 = rand();
+  bpos3 = rand();
+  bpos4 = rand();
+
+  int i;
+
+  plasma = new int[65536];
+
+  double inc0 = M_PI*2.0f / (256.0f*(random(128)+1));
+  double inc1 = M_PI*2.0f / (256.0f*(random(64)+1));
+  double inc2 = M_PI*2.0f / (256.0f*(random(32)+1));
+  double inc3 = M_PI*2.0f / (256.0f*(random(1)+1));
+
+  double v0, v1, v2, v3;
+
+  v0 = v1 = v2 = v3 = 0.0;
+
+  for (i = 0; i < 65536; i++) {
+    plasma[i] = (int) ((sin(v0) + sin(v1) + sin(v2) + sin(v3)) * 32.0);
+    v0 += inc0;
+    v1 += inc1;
+    v2 += inc2;
+    v3 += inc3;
+  }
+
+  for (i = 0; i < 128; i++) {
+    palette[i] = (i*2);
+    palette[i+128] = (255-i*2);
+  }
+
+  double inc = M_PI / 256.0f;
+  double val = 0.0;
+  for (i = 0; i < 255; i++) {
+    palette[i] = (unsigned int) (sin(val) * 127) + 128;
+    val += inc;
+  }
+
+  for (i = 0; i < 64; i++) {
+    colors[i].r = 255;
+    colors[i].g = i*4;
+    colors[i].b = 0;
+    colors[i].a = 255;
+  }
+
+  for (i = 0; i < 64; i++) {
+    colors[i+64].r = 255-i*4;
+    colors[i+64].g = 255;
+    colors[i+64].b = i*4;
+    colors[i+64].a = 255;
+  }
+
+  for (i = 0; i < 64; i++) {
+    colors[i+128].r = 0;
+    colors[i+128].g = i*4;
+    colors[i+128].b = 255;
+    colors[i+128].a = 255;
+  }
+  for (i = 0; i < 64; i++) {
+    colors[i+192].r = i*4;
+    colors[i+192].g = 255 - i*4;
+    colors[i+192].b = 255 - i*4;
+    colors[i+192].a = 255;
+  }
+}
+
+static void
+timersensorcallback(void * data, SoSensor *)
+{
+  SoTexture2 * texnode = (SoTexture2*) data;
+  SbVec2s size;
+  int nc;
+  unsigned char * image = texnode->image.startEditing(size, nc);
+  redraw_plasma(image, size, nc);
+  texnode->image.finishEditing();
+}
+
+static SoSeparator *
+create_logo(void)
+{
+  SoSeparator * sep = new SoSeparator;
+  sep->ref();
+
+  SoMaterial * mat = new SoMaterial;
+  mat->specularColor.setValue( 1.0f, 0.0f, 0.0f );
+  mat->emissiveColor.setValue( 0.5f, 0.3f, 0.0f );
+  mat->shininess = 0.8f;
+
+  sep->addChild(mat);
+
+  SoTranslation * trans = new SoTranslation;
+  trans->translation.setValue(-2.0f, -2.5f, 0.2f);
+  sep->addChild(trans);
+
+  SoScale * scale = new SoScale;
+  scale->scaleFactor.setValue(0.6f, 0.7f, 0.6f);
+  sep->addChild(scale);
+	
+  // C
+  SoText3 * c = new SoText3;
+  c->string.setValue( "C" );
+  c->parts.setValue( SoText3::ALL );
+  sep->addChild(c);
+
+  SoSeparator * separator = new SoSeparator;
+
+  // O
+  SoTranslation * trans_o = new SoTranslation;
+  trans_o->translation.setValue(1.75f, 2.5f, 0.0f);
+  separator->addChild(trans_o);
+
+  SoScale * scale_o = new SoScale;
+  scale_o->scaleFactor.setValue(0.57f, 0.57f, 1.0f);
+  separator->addChild(scale_o);
+
+  SoText3 * o = new SoText3;
+  o->string.setValue( "O" );
+  o->parts.setValue( SoText3::ALL );
+  separator->addChild(o);
+
+  // I
+  SoTranslation * trans_i = new SoTranslation;
+  trans_i->translation.setValue(2.5f, 1.1f, 0.0f);
+  separator->addChild(trans_i);
+
+  SoScale * scale_i = new SoScale;
+  scale_i->scaleFactor.setValue(0.7f, 0.7f, 1.0f);
+  separator->addChild(scale_i);
+
+  SoText3 * i = new SoText3;
+  i->string.setValue( "I" );
+  i->parts.setValue( SoText3::ALL );
+  separator->addChild(i);
+
+  // N
+  SoTranslation * trans_n = new SoTranslation;
+  trans_n->translation.setValue(-0.8f, -6.3f, 0.0f);
+  separator->addChild(trans_n);
+
+  SoScale * scale_n = new SoScale;
+  scale_n->scaleFactor.setValue(0.6f, 0.6f, 1.0f);
+  separator->addChild(scale_n);
+
+  SoText3 * n = new SoText3;
+  n->string.setValue( "N" );
+  n->parts.setValue( SoText3::ALL );
+  separator->addChild(n);
+
+  // separator
+  sep->addChild(separator);
+
+  // top
+  SoTranslation * trans_t = new SoTranslation;
+  trans_t->translation.setValue(3.6f, -0.9f, -0.5f);
+  sep->addChild(trans_t);
+
+  SoScale * scale_t = new SoScale;
+  scale_t->scaleFactor.setValue(0.2f, 0.8f, 0.5f);
+  sep->addChild(scale_t);
+
+  SoCube * t = new SoCube;
+  sep->addChild(t);
+
+  // bottom
+  SoTranslation * trans_b = new SoTranslation;
+  trans_b->translation.setValue(0.0f, 11.4f, 0.0f);
+  sep->addChild(trans_b);
+
+  SoCube * b = new SoCube;
+  sep->addChild(b);
+
+  sep->unrefNoDelete();
+	
+  return sep;
+}
+
+int
+main(int argc, char **argv)
+{
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  SoEventCallback * cb = new SoEventCallback;
+  cb->addEventCallback(SoKeyboardEvent::getClassTypeId(), event_cb, NULL);
+  root->insertChild(cb, 0);
+
+  srand(998648536);
+
+  setup_plasma();
+
+  const SbVec2s PLASMADIMENSIONS(256, 256);
+
+  SoSeparator * surroundsep = new SoSeparator;
+  root->addChild(surroundsep);
+
+  SoTexture2 * texnode = new SoTexture2;
+  texnode->image.setValue(PLASMADIMENSIONS, 4, NULL);
+  surroundsep->addChild(texnode);
+
+  SoMaterial * mat = new SoMaterial;
+  mat->diffuseColor = SbColor(0.8f, 0.8f, 0.8f);
+  mat->specularColor = SbColor(1.0f, 1.0f, 1.0f);
+  mat->shininess = 0.9f;
+  surroundsep->addChild(mat);
+
+  SoSurroundScale * ss = new SoSurroundScale;
+  ss->numNodesUpToReset = 1;
+  ss->numNodesUpToContainer = 2;
+  surroundsep->addChild(ss);
+
+  SoAntiSquish * antisquish = new SoAntiSquish;
+  antisquish->sizing = SoAntiSquish::BIGGEST_DIMENSION;
+  surroundsep->addChild(antisquish);
+
+  SoSphere * sphere = new SoSphere;
+  sphere->radius = 1.2f;
+  surroundsep->addChild(sphere);
+
+  SoRotor * logorot = new SoRotor;
+  logorot->rotation = SbRotation(SbVec3f(0, 1, 0), 1);
+  logorot->speed = 0.2f;
+  root->addChild(logorot);
+
+  root->addChild(create_logo());
+
+  // Timer sensor
+  SoTimerSensor * texturetimer = new SoTimerSensor(timersensorcallback, texnode);
+  texturetimer->setInterval(0.05); // FIXME: base on framerate. 20010817 mortene.
+  texturetimer->schedule();
+
+  // Setting up the examiner viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setBackgroundColor( SbColor( 0.2f, 0.4f, 0.5f )  );
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Hairy plasma ball");
+  viewer->viewAll();
+  viewer->setDecoration(FALSE);
+  viewer->show();
+  So@Gui@::show(window);
+  // Must do this _after_ show() to avoid the "Start"-bar being
+  // visible. (Bug!)
+  (void)viewer->setFullScreen(TRUE);
+
+  So@Gui@::mainLoop();
+  delete viewer;
+  root->unref();
+  return 0;
+}
