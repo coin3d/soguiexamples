@@ -248,20 +248,25 @@ for filename in $sourcefiles; do
   fi
   bdir=`echo $bfilename | sed -e 's%[^/]*$%%'`
   if ! test x"$bdir" = x""; then
+    bdir=`echo $bdir | sed -e 's%/$%%'`
     bname=`echo $bfilename | sed -e 's%^.*/%%'`
     curdir=`pwd`
     wcurdir=`cygpath -w $curdir`
     wbdir=`cygpath -w $bdir`
     wbdir2=`abs2dots $wbdir $wcurdir \\\\`
     if ! test x"$wbdir2" = x""; then
-      filename="$wbdir2\\$bname"
+      wbfilename="$wbdir2\\$bname"
+    else
+      wbfilename=`cygpath -w $bfilename`
     fi
+  else
+    wbfilename=`cygpath -w $bfilename`
   fi
 
   # convert to dos format, and escape backslashes
-  wfilename=`cygpath -w $filename | sed -e 's%\\\\%\\\\\\\\%g'`
+  wbfilename=`echo $wbfilename | sed -e 's%\\\\%\\\\\\\\%g' -e 's%^\\.\\\\\\\\%%'`
 
-  cat $sourcedir/cfg/$project_template_source | sed -e "s%@SOURCEFILE@%$wfilename%g">>sourcefiles.txt
+  cat $sourcedir/cfg/$project_template_source | sed -e "s%@SOURCEFILE@%$wbfilename%g">>sourcefiles.txt
 done
 
 cat $sourcedir/cfg/$project_template_main | sed -e "s/@PROJECTNAME@/$stem/g" \

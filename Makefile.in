@@ -177,7 +177,7 @@ target_vendor = @target_vendor@
 # **************************************************************************
 SUBDIRS = \
   . components eyecandy coin-competitions annex \
-  actions draggers engines manipulators nodes sensors nodekits \
+  actions draggers engines manipulators nodes sensors nodekits sound \
   $(VOLUMERENDERINGDIR)
 
 subdir = .
@@ -197,7 +197,7 @@ DIST_COMMON = README AUTHORS COPYING ChangeLog INSTALL Makefile.am \
 	cfg/config.sub cfg/depcomp cfg/install-sh cfg/missing \
 	cfg/mkinstalldirs config.h.in configure configure.ac
 DIST_SUBDIRS = . components eyecandy coin-competitions annex actions \
-	draggers engines manipulators nodes sensors nodekits \
+	draggers engines manipulators nodes sensors nodekits sound \
 	volumerendering
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
@@ -378,7 +378,7 @@ distcleancheck_listfiles = find . -type f -print
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkinstalldirs) $(distdir)/actions $(distdir)/annex $(distdir)/cfg $(distdir)/coin-competitions/SIM-20010803 $(distdir)/coin-competitions/SIM-20010824 $(distdir)/coin-competitions/SIM-20010914 $(distdir)/coin-competitions/SIM-20011005 $(distdir)/coin-competitions/SIM-20011116 $(distdir)/coin-competitions/SIM-20020118 $(distdir)/coin-competitions/SIM-20020503 $(distdir)/components $(distdir)/draggers $(distdir)/engines $(distdir)/eyecandy $(distdir)/manipulators $(distdir)/nodekits $(distdir)/nodes $(distdir)/sensors $(distdir)/volumerendering
+	$(mkinstalldirs) $(distdir)/actions $(distdir)/annex $(distdir)/cfg $(distdir)/coin-competitions/SIM-20010803 $(distdir)/coin-competitions/SIM-20010824 $(distdir)/coin-competitions/SIM-20010914 $(distdir)/coin-competitions/SIM-20011005 $(distdir)/coin-competitions/SIM-20011116 $(distdir)/coin-competitions/SIM-20020118 $(distdir)/coin-competitions/SIM-20020503 $(distdir)/components $(distdir)/draggers $(distdir)/engines $(distdir)/eyecandy $(distdir)/manipulators $(distdir)/nodekits $(distdir)/nodes $(distdir)/sensors $(distdir)/sound $(distdir)/volumerendering
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
