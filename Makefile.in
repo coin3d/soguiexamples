@@ -66,7 +66,6 @@ target_alias = @target_alias@
 target_triplet = @target@
 AMDEP = @AMDEP@
 AMTAR = @AMTAR@
-AS = @AS@
 AWK = @AWK@
 BUILD_WITH_MSVC = @BUILD_WITH_MSVC@
 CC = @CC@
@@ -75,17 +74,12 @@ CPP = @CPP@
 CXX = @CXX@
 CXXCPP = @CXXCPP@
 DEPDIR = @DEPDIR@
-DLLTOOL = @DLLTOOL@
 EVENT = @EVENT@
 GUI = @GUI@
 Gui = @Gui@
-LIBTOOL = @LIBTOOL@
-LN_S = @LN_S@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
-OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
-RANLIB = @RANLIB@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
 gui = @gui@
@@ -176,8 +170,8 @@ DATA =  $(noinst_DATA)
 
 DIST_COMMON =  README ./stamp-h.in AUTHORS COPYING ChangeLog INSTALL \
 Makefile.am Makefile.in NEWS TODO aclocal.m4 cfg/config.guess \
-cfg/config.sub cfg/install-sh cfg/ltconfig cfg/ltmain.sh cfg/missing \
-cfg/mkinstalldirs config.h.in configure configure.in
+cfg/config.sub cfg/install-sh cfg/missing cfg/mkinstalldirs config.h.in \
+configure configure.in
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -448,7 +442,6 @@ clean-am:  clean-hdr clean-tags clean-generic mostlyclean-am
 clean: clean-recursive
 
 distclean-am:  distclean-hdr distclean-tags distclean-generic clean-am
-	-rm -f libtool
 
 distclean: distclean-recursive
 	-rm -f config.status

@@ -72,9 +72,6 @@ AM_CONFIG_HEADER(config.h)
 # Turn off default maintainer make-rules -- use ./bootstrap instead.
 AM_MAINTAINER_MODE
 
-# Initialize libtool
-AC_PROG_LIBTOOL
-
 # **************************************************************************
 # Search and set up necessary stuff to use the GUI library.
 
