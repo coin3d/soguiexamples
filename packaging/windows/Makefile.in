@@ -14,7 +14,8 @@ top_srcdir = @soguiexamples_src_dir@
 
 # **************************************************************************
 
-all: dspex
+# all: dspex executables
+all: executables
 
 # **************************************************************************
 
@@ -24,7 +25,39 @@ dspex:
 	$(top_srcdir)/configure \
           --with-toolkit=SoWin \
           --enable-msvcdspex; \
-	$(MAKE) clean && $(MAKE)
+	$(MAKE) clean && $(MAKE); \
+	echo "" > SoWinExamples.dsw; \
+	echo "Microsoft Developer Studio Workspace File, Format Version 6.00" >> SoWinExamples.dsw; \
+	echo "# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!" >> SoWinExamples.dsw; \
+	echo "" >> SoWinExamples.dsw; \
+	echo "###############################################################################" >> SoWinExamples.dsw; \
+	for projectpath in `find . -type f -name *.dsp | sed -e "s%^\./%%"`; do \
+	  projectname=`echo $$path | sed -e "s%.*/%%" -e "s%\.dsw$$%%"`; \
+	  echo "" >> SoWinExamples.dsw; \
+	  echo "Project: \"$$projectname\"=$$projectpath - Package Owner=<4>" >> SoWinExamples.dsw; \
+	  echo "" >> SoWinExamples.dsw; \
+	  echo "Package=<5>" >> SoWinExamples.dsw; \
+	  echo "{{{" >> SoWinExamples.dsw; \
+	  echo "}}}" >> SoWinExamples.dsw; \
+	  echo "" >> SoWinExamples.dsw; \
+	  echo "Package=<4>" >> SoWinExamples.dsw; \
+	  echo "{{{" >> SoWinExamples.dsw; \
+	  echo "}}}" >> SoWinExamples.dsw; \
+	  echo "" >> SoWinExamples.dsw; \
+	  echo "###############################################################################" >> SoWinExamples.dsw; \
+	done; \
+	echo "" >> SoWinExamples.dsw; \
+	echo "Global:" >> SoWinExamples.dsw; \
+	echo "" >> SoWinExamples.dsw; \
+	echo "Package=<5>" >> SoWinExamples.dsw; \
+	echo "{{{" >> SoWinExamples.dsw; \
+	echo "}}}" >> SoWinExamples.dsw; \
+	echo "" >> SoWinExamples.dsw; \
+	echo "Package=<3>" >> SoWinExamples.dsw; \
+	echo "{{{" >> SoWinExamples.dsw; \
+	echo "}}}" >> SoWinExamples.dsw; \
+	echo "" >> SoWinExamples.dsw; \
+	echo "###############################################################################" >> SoWinExamples.dsw
 	find dspex -name *.o | xargs rm
 	cp $(top_srcdir)/AUTHORS dspex
 	cp $(top_srcdir)/BUGS.txt dspex
@@ -33,6 +66,20 @@ dspex:
 	cp $(top_srcdir)/NEWS dspex
 	cp $(top_srcdir)/README dspex
 
-.PHONY: all dspex
+executables:
+	@if test -d executables; then :; else mkdir executables; fi
+	cd executables; \
+	$(top_srcdir)/configure \
+          --with-toolkit=SoWin; \
+	$(MAKE) clean && $(MAKE); \
+	cp $(top_srcdir)/AUTHORS executables
+	cp $(top_srcdir)/BUGS.txt executables
+	cp $(top_srcdir)/COPYING executables
+	cp $(top_srcdir)/INSTALL executables
+	cp $(top_srcdir)/NEWS executables
+	cp $(top_srcdir)/README executables
+
+
+.PHONY: all dspex executables
 
 # **************************************************************************
