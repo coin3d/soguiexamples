@@ -80,8 +80,8 @@ void timer_cb( void * userdata, SoSensor * )
   }
 
   out.cursor( );
-  consol_texture->image.setValue( SbVec2s( 640, 300 ), 4,
-      ( const unsigned char * ) out.pixels( ) );
+  consol_texture->image.setValue( SbVec2s( 1024, 512 ), 4,
+    ( const unsigned char * ) out.pixels( ) );
 }
 
 void event_cb( void * userdata, SoEventCallback * node )
@@ -106,7 +106,7 @@ void event_cb( void * userdata, SoEventCallback * node )
         out.back( );
       }
       if ( k == SoKeyboardEvent::RETURN || k == SoKeyboardEvent::ENTER ) {
-        
+
         out.nl( );
 
         // execute command
@@ -136,8 +136,8 @@ void event_cb( void * userdata, SoEventCallback * node )
       in.append( c );
       out.out( c );
     }
-  
-    consol_texture->image.setValue( SbVec2s( 640, 300 ), 4,
+
+    consol_texture->image.setValue( SbVec2s( 1024, 512 ), 4,
       ( const unsigned char * ) out.pixels( ) );
 
     node->setHandled( );
@@ -226,7 +226,7 @@ int add( int argc, char ** argv )
 
     translation->setName( argv[2] );
     selected_separator->addChild( translation );
-    
+
     float x = ( float ) atof( argv[3] );
     float y = ( float ) atof( argv[4] );
     float z = ( float ) atof( argv[5] );
@@ -248,7 +248,7 @@ int add( int argc, char ** argv )
 
     rotation->setName( argv[2] );
     selected_separator->addChild( rotation );
-    
+
     float x = ( float ) atof( argv[3] );
     float y = ( float ) atof( argv[4] );
     float z = ( float ) atof( argv[5] );
@@ -271,7 +271,7 @@ int add( int argc, char ** argv )
 
     scale->setName( argv[2] );
     selected_separator->addChild( scale );
-    
+
     float x = ( float ) atof( argv[3] );
     float y = ( float ) atof( argv[4] );
     float z = ( float ) atof( argv[5] );
@@ -293,7 +293,7 @@ int add( int argc, char ** argv )
 
     cube->setName( argv[2] );
     selected_separator->addChild( cube );
-    
+
     float width = ( float ) atof( argv[3] );
     cube->width.setValue( width );
 
@@ -319,7 +319,7 @@ int add( int argc, char ** argv )
 
     sphere->setName( argv[2] );
     selected_separator->addChild( sphere );
-    
+
     float radius = ( float ) atof( argv[3] );
     sphere->radius.setValue( radius );
 
@@ -339,7 +339,7 @@ int add( int argc, char ** argv )
 
     cone->setName( argv[2] );
     selected_separator->addChild( cone );
-    
+
     float radius = ( float ) atof( argv[3] );
     cone->bottomRadius.setValue( radius );
 
@@ -362,7 +362,7 @@ int add( int argc, char ** argv )
 
     cylinder->setName( argv[2] );
     selected_separator->addChild( cylinder );
-    
+
     float radius = ( float ) atof( argv[3] );
     cylinder->radius.setValue( radius );
 
@@ -404,7 +404,7 @@ int list( int argc, char ** argv )
 
   for ( int i = 0; i < num_children; i++ ) {
     node = selected_separator->getChild( i );
-    
+
     out.out( " " );
     out.out( node->getName( ).getString( ) );
     out.out( "\n" );
@@ -481,7 +481,7 @@ int main( int argc, char ** argv )
 
   // Add texture
   consol_texture = new SoTexture2;
-  consol_texture->image.setValue( SbVec2s( 640, 300 ), 4, ( const unsigned char * ) out.pixels( ) );
+  consol_texture->image.setValue( SbVec2s( 1024, 512 ), 4, ( const unsigned char * ) out.pixels( ) );
 
   // Add event cb
   SoEventCallback * ecb = new SoEventCallback;
@@ -511,10 +511,10 @@ int main( int argc, char ** argv )
   // Define the consol texture coordinates
   SoTextureCoordinate2 * tex_coord = new SoTextureCoordinate2;
   root->addChild( tex_coord );
-  tex_coord->point.set1Value( 0, SbVec2f( 0, 1 ) );
-  tex_coord->point.set1Value( 1, SbVec2f( 1, 1 ) );
-  tex_coord->point.set1Value( 2, SbVec2f( 1, 0 ) );
-  tex_coord->point.set1Value( 3, SbVec2f( 0, 0 ) );
+  tex_coord->point.set1Value( 0, SbVec2f( 0.0f, 300.0f/512.0f ) );
+  tex_coord->point.set1Value( 1, SbVec2f( 640.0f/1024.0f, 300.0f/512.0f ) );
+  tex_coord->point.set1Value( 2, SbVec2f( 640.0f/1024.0f, 0 ) );
+  tex_coord->point.set1Value( 3, SbVec2f( 0.0f, 0.0f ) );
 
   // Define normal and texture coordinate bindings
   SoNormalBinding * normal_bind = new SoNormalBinding;
@@ -550,4 +550,3 @@ int main( int argc, char ** argv )
   return 0;
 
 }
-

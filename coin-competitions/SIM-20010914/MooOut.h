@@ -49,9 +49,9 @@ public:
 protected:
 
 private:
-  
+
   char buffer[25][80];
-  unsigned int texture[640 * 300];
+  unsigned int texture[1024 * 512];
   unsigned int color;
   unsigned int background;
   unsigned int column;

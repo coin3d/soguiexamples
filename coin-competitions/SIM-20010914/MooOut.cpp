@@ -38,7 +38,7 @@ MooOut::MooOut( void )
   }
   */
   memset( this->buffer, 0, 25 * 80 );
-  memset( this->texture, 0, 640 * 300 * 4 );
+  memset( this->texture, 0, 1024 * 512 * 4 );
 
   this->column = 0;
   this->line = 0;
@@ -74,11 +74,11 @@ void MooOut::out( char c )                // output char
 
   this->render( buffer[this->line][this->column],
     this->line, this->column );
-  
+
   this->column++;
 
   if ( this->column >= 80 || c == '\n' ) {
-    
+
     this->nl( );
 
   }
@@ -93,11 +93,11 @@ void MooOut::nl( void )                     // newline
   this->line++;
 
   if ( this->line >= 24 ) {
-    
+
     this->line = 0; // FIXME: doesn't scroll
-    
+
     memset( this->buffer, 0, 25 * 80 );
-    memset( this->texture, 0, 640 * 300 * 4 );
+    memset( this->texture, 0, 1024 * 512 * 4 );
 
   }
 
@@ -119,7 +119,7 @@ void * MooOut::pixels( void )
 
 void MooOut::render( void )
 {
-  
+
   for ( unsigned int line = 0; line < 25; line++ ) {
 
     for ( unsigned int column = 0; column < 80; column++ ) {
@@ -146,11 +146,11 @@ void MooOut::render( char c, unsigned int line, unsigned int column )
   bitmap = font[c];
 
   // FIXME: rendering is sloooow!
-  
+
   for ( bit_pos_y = 0; bit_pos_y < 12; bit_pos_y++ ) {
 
-    pixel_line_start = ( ( bit_pos_y + char_pos_y ) * 640 ) + char_pos_x;
-			    
+    pixel_line_start = ( ( bit_pos_y + char_pos_y ) * 1024 ) + char_pos_x;
+			
     for ( bit_pos_x = 0; bit_pos_x < 8; bit_pos_x++ ) {
 
       this->texture[ pixel_line_start + bit_pos_x ] =
