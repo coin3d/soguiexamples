@@ -178,10 +178,9 @@ event_cb(void * userdata, SoEventCallback * node)
     fprintf(stdout,"done\n");
     fflush(stdout);
 
-    va->endViewport();
-    
     fprintf(stdout,"Creating postscript file (%s)...", exportfilename);
     fflush(stdout);
+    va->endViewport();    
     va->endPage();
     out->closeFile();
 
