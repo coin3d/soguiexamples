@@ -252,7 +252,7 @@ main(
   mat->specularColor.setValue( 1, 1, 1 );
   root->addChild( mat );
   SoMaterialBinding * matbind = new SoMaterialBinding;
-  matbind->value.setValue( SoMaterialBinding::PER_VERTEX );
+  matbind->value.setValue( SoMaterialBinding::OVERALL );
   root->addChild( matbind );
   
   // Vertices / Faceset
