@@ -1,0 +1,9 @@
+
+This directory contains "eye candy" applications created for no other
+reason than to catch the eye of passer-bys at SIGGRAPH 2000 (New Orleans).
+Some of them were shown, others were not.  If you were there and saw a
+demo that isn't here, it might have been a demo of a non-generic extension
+like the video4linux movie texture that we haven't included with Coin (but
+which is available on request), or a larger non-public (sorry about that)
+extension over Coin, like the CLOD terrain application.
+
