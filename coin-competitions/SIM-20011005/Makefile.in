@@ -100,8 +100,8 @@ noinst_PROGRAMS = \
 lorenz_SOURCES = lorenz.cpp star.h
 nurbscurve_SOURCES = nurbscurve.cpp
 cubes_SOURCES = cubes.cpp \
-        Board.cpp Board.h GameLogic.cpp GameLogic.h Minimax.cpp Minimax.h \
-        ../TextureWriter.cpp
+	Board.cpp Board.h GameLogic.cpp GameLogic.h Minimax.cpp Minimax.h \
+	$(top_srcdir)/coin-competitions/TextureWriter.cpp
 
 
 BUILT_SOURCES = \
@@ -173,7 +173,8 @@ Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.s
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
-TextureWriter.$(OBJEXT): ../TextureWriter.cpp
+TextureWriter.$(OBJEXT): \
+	$(top_srcdir)/coin-competitions/TextureWriter.cpp
 cubes$(EXEEXT): $(cubes_OBJECTS) $(cubes_DEPENDENCIES) 
 	@rm -f cubes$(EXEEXT)
 	$(CXXLINK) $(cubes_LDFLAGS) $(cubes_OBJECTS) $(cubes_LDADD) $(LIBS)
@@ -213,17 +214,17 @@ distclean-depend:
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
 
-TextureWriter.o: ../TextureWriter.cpp
-@AMDEP_TRUE@	source='../TextureWriter.cpp' object='TextureWriter.o' libtool=no @AMDEPBACKSLASH@
+TextureWriter.o: $(top_srcdir)/coin-competitions/TextureWriter.cpp
+@AMDEP_TRUE@	source='$(top_srcdir)/coin-competitions/TextureWriter.cpp' object='TextureWriter.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/TextureWriter.Po' tmpdepfile='$(DEPDIR)/TextureWriter.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o TextureWriter.o `test -f ../TextureWriter.cpp || echo '$(srcdir)/'`../TextureWriter.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o TextureWriter.o `test -f $(top_srcdir)/coin-competitions/TextureWriter.cpp || echo '$(srcdir)/'`$(top_srcdir)/coin-competitions/TextureWriter.cpp
 
-TextureWriter.obj: ../TextureWriter.cpp
-@AMDEP_TRUE@	source='../TextureWriter.cpp' object='TextureWriter.obj' libtool=no @AMDEPBACKSLASH@
+TextureWriter.obj: $(top_srcdir)/coin-competitions/TextureWriter.cpp
+@AMDEP_TRUE@	source='$(top_srcdir)/coin-competitions/TextureWriter.cpp' object='TextureWriter.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/TextureWriter.Po' tmpdepfile='$(DEPDIR)/TextureWriter.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o TextureWriter.obj `cygpath -w ../TextureWriter.cpp`
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o TextureWriter.obj `cygpath -w $(top_srcdir)/coin-competitions/TextureWriter.cpp`
 CXXDEPMODE = @CXXDEPMODE@
 uninstall-info-am:
 
