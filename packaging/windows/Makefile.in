@@ -33,12 +33,13 @@ dspex:
           --with-toolkit=SoWin \
           --enable-msvcdspex; \
 	$(MAKE) clean && $(MAKE); \
+	if test -f SoWinExamples.dsw; then rm SoWinExamples.dsw; fi; \
 	echo "Microsoft Developer Studio Workspace File, Format Version 6.00" >> SoWinExamples.dsw; \
 	echo "# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!" >> SoWinExamples.dsw; \
 	echo "" >> SoWinExamples.dsw; \
 	echo "###############################################################################" >> SoWinExamples.dsw; \
 	for projectpath in `find . -type f -name *.dsp | sed -e "s%^\./%%"`; do \
-	  projectname=`echo $$path | sed -e "s%.*/%%" -e "s%\.dsw$$%%"`; \
+	  projectname=`echo $$projectpath | sed -e "s%.*/%%" -e "s%\.dsw$$%%"`; \
 	  echo "" >> SoWinExamples.dsw; \
 	  echo "Project: \"$$projectname\"=$$projectpath - Package Owner=<4>" >> SoWinExamples.dsw; \
 	  echo "" >> SoWinExamples.dsw; \
@@ -64,7 +65,6 @@ dspex:
 	echo "}}}" >> SoWinExamples.dsw; \
 	echo "" >> SoWinExamples.dsw; \
 	echo "###############################################################################" >> SoWinExamples.dsw
-	find dspex -name *.o | xargs rm
 	cp $(top_srcdir)/AUTHORS dspex
 	cp $(top_srcdir)/BUGS.txt dspex
 	cp $(top_srcdir)/COPYING dspex
