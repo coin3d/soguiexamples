@@ -285,8 +285,11 @@ show_instructions( void )
                 "     'r' = Rectangle mode\n"
                 "     'n' = Pick/NoLasso mode\n"
                 "     's' = Single selection\n"
-                "     'h' = Shift selection\n"
-                "     't' = toggle selection\n\n");
+                "     'h' = Shift selection\n\n");
+  // FIXME: toggle is not functional yet in the example
+  // program. 20020808 mortene.
+
+  //                 "     't' = toggle selection \n\n");
 }
 
 void
@@ -338,10 +341,13 @@ event_cb(void * userdata, SoEventCallback * node)
     selection->policy = SoSelection::SHIFT;
     fprintf(stdout,"Shift selection\n");
   }
-  if (SO_KEY_PRESS_EVENT(event, T)) {
-    selection->policy = SoSelection::TOGGLE;
-    fprintf(stdout,"Toggle selection\n");
-  }
+  // FIXME: toggle is not functional yet in the example
+  // program. 20020808 mortene.
+
+//   if (SO_KEY_PRESS_EVENT(event, T)) {
+//     selection->policy = SoSelection::TOGGLE;
+//     fprintf(stdout,"Toggle selection\n");
+//   }
 
 }
 
@@ -395,7 +401,7 @@ main(int argc, char ** argv)
   selection->setLassoColor(SbColor(0.9f,0.7f,0.2f));
   selection->setLassoWidth(3);
   selection->setOverlayLassoPattern(0xf0f0);  // 0011 0011 0011 0011
-  selection->animateOverlayLasso(TRUE);
+  selection->animateOverlayLasso(FALSE);
   selection->addStartCallback(start_callback);
   selection->addFinishCallback(finish_callback);
   selection->setTriangleFilterCallback(triangleCB, NULL);
