@@ -59,6 +59,9 @@
 #include <stdlib.h> // exit()
 #include <time.h>
 
+#include <coinlogo.h>
+
+
 typedef struct
 {
   unsigned char r,g,b,a;
@@ -248,105 +251,6 @@ timersensorcallback(void * data, SoSensor *)
   texnode->image.finishEditing();
 }
 
-static SoSeparator *
-create_logo(void)
-{
-  SoSeparator * sep = new SoSeparator;
-  sep->ref();
-
-  SoMaterial * mat = new SoMaterial;
-  mat->specularColor.setValue( 1.0f, 0.0f, 0.0f );
-  mat->emissiveColor.setValue( 0.5f, 0.3f, 0.0f );
-  mat->shininess = 0.8f;
-
-  sep->addChild(mat);
-
-  SoTranslation * trans = new SoTranslation;
-  trans->translation.setValue(-2.0f, -2.5f, 0.2f);
-  sep->addChild(trans);
-
-  SoScale * scale = new SoScale;
-  scale->scaleFactor.setValue(0.6f, 0.7f, 0.6f);
-  sep->addChild(scale);
-	
-  // C
-  SoText3 * c = new SoText3;
-  c->string.setValue( "C" );
-  c->parts.setValue( SoText3::ALL );
-  sep->addChild(c);
-
-  SoSeparator * separator = new SoSeparator;
-
-  // O
-  SoTranslation * trans_o = new SoTranslation;
-  trans_o->translation.setValue(1.75f, 2.5f, 0.0f);
-  separator->addChild(trans_o);
-
-  SoScale * scale_o = new SoScale;
-  scale_o->scaleFactor.setValue(0.57f, 0.57f, 1.0f);
-  separator->addChild(scale_o);
-
-  SoText3 * o = new SoText3;
-  o->string.setValue( "O" );
-  o->parts.setValue( SoText3::ALL );
-  separator->addChild(o);
-
-  // I
-  SoTranslation * trans_i = new SoTranslation;
-  trans_i->translation.setValue(2.5f, 1.1f, 0.0f);
-  separator->addChild(trans_i);
-
-  SoScale * scale_i = new SoScale;
-  scale_i->scaleFactor.setValue(0.7f, 0.7f, 1.0f);
-  separator->addChild(scale_i);
-
-  SoText3 * i = new SoText3;
-  i->string.setValue( "I" );
-  i->parts.setValue( SoText3::ALL );
-  separator->addChild(i);
-
-  // N
-  SoTranslation * trans_n = new SoTranslation;
-  trans_n->translation.setValue(-0.8f, -6.3f, 0.0f);
-  separator->addChild(trans_n);
-
-  SoScale * scale_n = new SoScale;
-  scale_n->scaleFactor.setValue(0.6f, 0.6f, 1.0f);
-  separator->addChild(scale_n);
-
-  SoText3 * n = new SoText3;
-  n->string.setValue( "N" );
-  n->parts.setValue( SoText3::ALL );
-  separator->addChild(n);
-
-  // separator
-  sep->addChild(separator);
-
-  // top
-  SoTranslation * trans_t = new SoTranslation;
-  trans_t->translation.setValue(3.6f, -0.9f, -0.5f);
-  sep->addChild(trans_t);
-
-  SoScale * scale_t = new SoScale;
-  scale_t->scaleFactor.setValue(0.2f, 0.8f, 0.5f);
-  sep->addChild(scale_t);
-
-  SoCube * t = new SoCube;
-  sep->addChild(t);
-
-  // bottom
-  SoTranslation * trans_b = new SoTranslation;
-  trans_b->translation.setValue(0.0f, 11.4f, 0.0f);
-  sep->addChild(trans_b);
-
-  SoCube * b = new SoCube;
-  sep->addChild(b);
-
-  sep->unrefNoDelete();
-	
-  return sep;
-}
-
 int
 main(int argc, char **argv)
 {
@@ -403,7 +307,12 @@ main(int argc, char **argv)
   logorot->speed = 0.2f;
   logosep->addChild(logorot);
 
-  logosep->addChild(create_logo());
+  SoInput in;
+  in.setBuffer((void *)COIN_LOGO, strlen(COIN_LOGO));
+  SoNode * logoroot;
+  SbBool ok = SoDB::read(&in, logoroot);
+  assert(ok && "COIN_LOGO import failed");
+  logosep->addChild(logoroot);
 
   // Timer sensor
   SoTimerSensor * texturetimer = new SoTimerSensor(timersensorcallback, texnode);
