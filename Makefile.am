@@ -2,8 +2,9 @@
 ## Process this file with automake to generate Makefile.in.
 
 SUBDIRS = \
-  . components actions draggers manipulators nodes sensors eyecandy \
-  coin-competitions/SIM-20010803
+  . components eyecandy \
+  coin-competitions/SIM-20010824 coin-competitions/SIM-20010803 \
+  actions draggers manipulators nodes sensors 
 
 ############################################################################
 
@@ -47,7 +48,9 @@ BUILT_SOURCES = \
 	nodes/levelofdetail.cpp \
 	nodes/lights.cpp \
 	nodes/material.cpp \
+	nodes/markerset.cpp \
 	nodes/pointlight.cpp \
+	nodes/pointset.cpp \
 	nodes/quadmesh.cpp \
 	nodes/rotation.cpp \
 	nodes/rotor.cpp \
@@ -72,7 +75,11 @@ BUILT_SOURCES = \
 	eyecandy/simbuoy.cpp \
 	coin-competitions/SIM-20010803/chart.cpp \
 	coin-competitions/SIM-20010803/plasmafun.cpp \
-	coin-competitions/SIM-20010803/stars.cpp
+	coin-competitions/SIM-20010803/stars.cpp \
+	coin-competitions/SIM-20010824/stars2.cpp \
+	coin-competitions/SIM-20010824/plasmaball.cpp \
+	coin-competitions/SIM-20010824/styx.cpp \
+	coin-competitions/SIM-20010824/smiley.cpp
 
 noinst_DATA = $(BUILT_SOURCES)
 
@@ -215,7 +222,13 @@ nodes/lights.cpp: $(srcdir)/nodes/lights.cpp.in
 nodes/material.cpp: $(srcdir)/nodes/material.cpp.in
 	@./config.status --file=$@
 
+nodes/markerset.cpp: $(srcdir)/nodes/markerset.cpp.in
+	@./config.status --file=$@
+
 nodes/pointlight.cpp: $(srcdir)/nodes/pointlight.cpp.in
+	@./config.status --file=$@
+
+nodes/pointset.cpp: $(srcdir)/nodes/pointset.cpp.in
 	@./config.status --file=$@
 
 nodes/quadmesh.cpp: $(srcdir)/nodes/quadmesh.cpp.in
@@ -300,6 +313,21 @@ coin-competitions/SIM-20010803/plasmafun.cpp: $(srcdir)/coin-competitions/SIM-20
 	@./config.status --file=$@
 
 coin-competitions/SIM-20010803/stars.cpp: $(srcdir)/coin-competitions/SIM-20010803/stars.cpp.in
+	@./config.status --file=$@
+
+############################################################################
+## sources in coin-competitions/SIM-20010824/
+
+coin-competitions/SIM-20010824/stars2.cpp: $(srcdir)/coin-competitions/SIM-20010824/stars2.cpp.in
+	@./config.status --file=$@
+
+coin-competitions/SIM-20010824/smiley.cpp: $(srcdir)/coin-competitions/SIM-20010824/smiley.cpp.in
+	@./config.status --file=$@
+
+coin-competitions/SIM-20010824/styx.cpp: $(srcdir)/coin-competitions/SIM-20010824/styx.cpp.in
+	@./config.status --file=$@
+
+coin-competitions/SIM-20010824/plasmaball.cpp: $(srcdir)/coin-competitions/SIM-20010824/plasmaball.cpp.in
 	@./config.status --file=$@
 
 ############################################################################

@@ -31,7 +31,9 @@ BUILT_SOURCES = \
 	text3.cpp \
 	clipplane.cpp \
 	levelofdetail.cpp \
-	extselection.cpp
+	extselection.cpp \
+	pointset.cpp \
+	markerset.cpp
 
 
 
@@ -41,7 +43,8 @@ noinst_PROGRAMS = \
         directionallight pointlight spotlight lights \
         faceset facesetindexed quadmesh trianglestripset \
         camera blinker texture environment atmospheric shuttle \
-        complexity text2 text3 clipplane levelofdetail extselection
+        complexity text2 text3 clipplane levelofdetail extselection \
+        pointset markerset
 
 drawstyle_SOURCES = drawstyle.cpp
 
@@ -104,5 +107,9 @@ clipplane_SOURCES = clipplane.cpp
 levelofdetail_SOURCES = levelofdetail.cpp
 
 extselection_SOURCES = extselection.cpp
+
+pointset_SOURCES = pointset.cpp
+
+markerset_SOURCES = markerset.cpp
 
 ############################################################################

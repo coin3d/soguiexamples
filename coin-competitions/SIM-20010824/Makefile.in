@@ -36,7 +36,7 @@ oldincludedir = /usr/include
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
-top_builddir = ..
+top_builddir = ../..
 
 ACLOCAL = @ACLOCAL@
 AUTOCONF = @AUTOCONF@
@@ -89,65 +89,53 @@ install_sh = @install_sh@
 soguiconfig = @soguiconfig@
 
 noinst_PROGRAMS = \
-	moirepatterns \
-	juliaanim \
-	mandelzoom \
-	blob \
-	simbuoy
+	smiley \
+	plasmaball \
+	styx \
+	stars2
 
 
-moirepatterns_SOURCES = moirepatterns.cpp
+smiley_SOURCES = smiley.cpp
+plasmaball_SOURCES = plasmaball.cpp
+styx_SOURCES = styx.cpp
 
-juliaanim_SOURCES = juliaanim.cpp
-EXTRA_juliaanim_SOURCES = stone42a.h stone42b.h sky10a.h sky10b.h
-
-mandelzoom_SOURCES = mandelzoom.cpp
-EXTRA_mandelzoom_SOURCES = stone42a.h stone42b.h sky10a.h sky10b.h
-
-blob_SOURCES = blob.cpp
-
-simbuoy_SOURCES = simbuoy.cpp
+stars2_SOURCES = stars2.cpp
+EXTRA_stars2_SOURCES = star_raw.h envq_raw.h
 
 BUILT_SOURCES = \
-	moirepatterns.cpp \
-	juliaanim.cpp \
-	mandelzoom.cpp \
-	blob.cpp \
-	simbuoy.cpp
+	smiley.cpp \
+	plasmaball.cpp \
+	styx.cpp \
+	stars2.cpp
 
-subdir = eyecandy
+subdir = coin-competitions/SIM-20010824
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-noinst_PROGRAMS = moirepatterns$(EXEEXT) juliaanim$(EXEEXT) \
-	mandelzoom$(EXEEXT) blob$(EXEEXT) simbuoy$(EXEEXT)
+noinst_PROGRAMS = smiley$(EXEEXT) plasmaball$(EXEEXT) styx$(EXEEXT) \
+	stars2$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
-am_blob_OBJECTS = blob.$(OBJEXT)
-blob_OBJECTS = $(am_blob_OBJECTS)
-blob_LDADD = $(LDADD)
-blob_DEPENDENCIES =
-blob_LDFLAGS =
-am_juliaanim_OBJECTS = juliaanim.$(OBJEXT)
-juliaanim_OBJECTS = $(am_juliaanim_OBJECTS)
-juliaanim_LDADD = $(LDADD)
-juliaanim_DEPENDENCIES =
-juliaanim_LDFLAGS =
-am_mandelzoom_OBJECTS = mandelzoom.$(OBJEXT)
-mandelzoom_OBJECTS = $(am_mandelzoom_OBJECTS)
-mandelzoom_LDADD = $(LDADD)
-mandelzoom_DEPENDENCIES =
-mandelzoom_LDFLAGS =
-am_moirepatterns_OBJECTS = moirepatterns.$(OBJEXT)
-moirepatterns_OBJECTS = $(am_moirepatterns_OBJECTS)
-moirepatterns_LDADD = $(LDADD)
-moirepatterns_DEPENDENCIES =
-moirepatterns_LDFLAGS =
-am_simbuoy_OBJECTS = simbuoy.$(OBJEXT)
-simbuoy_OBJECTS = $(am_simbuoy_OBJECTS)
-simbuoy_LDADD = $(LDADD)
-simbuoy_DEPENDENCIES =
-simbuoy_LDFLAGS =
+am_plasmaball_OBJECTS = plasmaball.$(OBJEXT)
+plasmaball_OBJECTS = $(am_plasmaball_OBJECTS)
+plasmaball_LDADD = $(LDADD)
+plasmaball_DEPENDENCIES =
+plasmaball_LDFLAGS =
+am_smiley_OBJECTS = smiley.$(OBJEXT)
+smiley_OBJECTS = $(am_smiley_OBJECTS)
+smiley_LDADD = $(LDADD)
+smiley_DEPENDENCIES =
+smiley_LDFLAGS =
+am_stars2_OBJECTS = stars2.$(OBJEXT)
+stars2_OBJECTS = $(am_stars2_OBJECTS)
+stars2_LDADD = $(LDADD)
+stars2_DEPENDENCIES =
+stars2_LDFLAGS =
+am_styx_OBJECTS = styx.$(OBJEXT)
+styx_OBJECTS = $(am_styx_OBJECTS)
+styx_LDADD = $(LDADD)
+styx_DEPENDENCIES =
+styx_LDFLAGS =
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -155,9 +143,8 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/blob.Po $(DEPDIR)/juliaanim.Po \
-@AMDEP_TRUE@	$(DEPDIR)/mandelzoom.Po $(DEPDIR)/moirepatterns.Po \
-@AMDEP_TRUE@	$(DEPDIR)/simbuoy.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/plasmaball.Po $(DEPDIR)/smiley.Po \
+@AMDEP_TRUE@	$(DEPDIR)/stars2.Po $(DEPDIR)/styx.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -169,12 +156,10 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(blob_SOURCES) $(juliaanim_SOURCES) \
-	$(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) \
-	$(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES) \
-	$(simbuoy_SOURCES)
-DIST_COMMON = README Makefile.am Makefile.in
-SOURCES = $(blob_SOURCES) $(juliaanim_SOURCES) $(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) $(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES) $(simbuoy_SOURCES)
+DIST_SOURCES = $(plasmaball_SOURCES) $(smiley_SOURCES) $(stars2_SOURCES) \
+	$(EXTRA_stars2_SOURCES) $(styx_SOURCES)
+DIST_COMMON = Makefile.am Makefile.in
+SOURCES = $(plasmaball_SOURCES) $(smiley_SOURCES) $(stars2_SOURCES) $(EXTRA_stars2_SOURCES) $(styx_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -183,7 +168,7 @@ all: $(BUILT_SOURCES)
 .SUFFIXES: .cpp .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  eyecandy/Makefile
+	  $(AUTOMAKE) --gnu  coin-competitions/SIM-20010824/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
@@ -191,21 +176,18 @@ Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.s
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
-blob$(EXEEXT): $(blob_OBJECTS) $(blob_DEPENDENCIES) 
-	@rm -f blob$(EXEEXT)
-	$(CXXLINK) $(blob_LDFLAGS) $(blob_OBJECTS) $(blob_LDADD) $(LIBS)
-juliaanim$(EXEEXT): $(juliaanim_OBJECTS) $(juliaanim_DEPENDENCIES) 
-	@rm -f juliaanim$(EXEEXT)
-	$(CXXLINK) $(juliaanim_LDFLAGS) $(juliaanim_OBJECTS) $(juliaanim_LDADD) $(LIBS)
-mandelzoom$(EXEEXT): $(mandelzoom_OBJECTS) $(mandelzoom_DEPENDENCIES) 
-	@rm -f mandelzoom$(EXEEXT)
-	$(CXXLINK) $(mandelzoom_LDFLAGS) $(mandelzoom_OBJECTS) $(mandelzoom_LDADD) $(LIBS)
-moirepatterns$(EXEEXT): $(moirepatterns_OBJECTS) $(moirepatterns_DEPENDENCIES) 
-	@rm -f moirepatterns$(EXEEXT)
-	$(CXXLINK) $(moirepatterns_LDFLAGS) $(moirepatterns_OBJECTS) $(moirepatterns_LDADD) $(LIBS)
-simbuoy$(EXEEXT): $(simbuoy_OBJECTS) $(simbuoy_DEPENDENCIES) 
-	@rm -f simbuoy$(EXEEXT)
-	$(CXXLINK) $(simbuoy_LDFLAGS) $(simbuoy_OBJECTS) $(simbuoy_LDADD) $(LIBS)
+plasmaball$(EXEEXT): $(plasmaball_OBJECTS) $(plasmaball_DEPENDENCIES) 
+	@rm -f plasmaball$(EXEEXT)
+	$(CXXLINK) $(plasmaball_LDFLAGS) $(plasmaball_OBJECTS) $(plasmaball_LDADD) $(LIBS)
+smiley$(EXEEXT): $(smiley_OBJECTS) $(smiley_DEPENDENCIES) 
+	@rm -f smiley$(EXEEXT)
+	$(CXXLINK) $(smiley_LDFLAGS) $(smiley_OBJECTS) $(smiley_LDADD) $(LIBS)
+stars2$(EXEEXT): $(stars2_OBJECTS) $(stars2_DEPENDENCIES) 
+	@rm -f stars2$(EXEEXT)
+	$(CXXLINK) $(stars2_LDFLAGS) $(stars2_OBJECTS) $(stars2_LDADD) $(LIBS)
+styx$(EXEEXT): $(styx_OBJECTS) $(styx_DEPENDENCIES) 
+	@rm -f styx$(EXEEXT)
+	$(CXXLINK) $(styx_LDFLAGS) $(styx_OBJECTS) $(styx_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -213,11 +195,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/blob.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/juliaanim.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mandelzoom.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/moirepatterns.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/simbuoy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/plasmaball.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/smiley.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/stars2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/styx.Po@am__quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
@@ -270,7 +251,7 @@ distclean-tags:
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-top_distdir = ..
+top_distdir = ../..
 distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
@@ -367,6 +348,20 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic tags uninstall uninstall-am \
 	uninstall-info-am
 
+
+############################################################################
+
+smiley.cpp: $(srcdir)/smiley.cpp.in
+	@( cd ../..; $(MAKE) built-sources )
+
+plasmaball.cpp: $(srcdir)/plasmaball.cpp.in
+	@( cd ../..; $(MAKE) built-sources )
+
+styx.cpp: $(srcdir)/styx.cpp.in
+	@( cd ../..; $(MAKE) built-sources )
+
+stars2.cpp: $(srcdir)/stars2.cpp.in
+	@( cd ../..; $(MAKE) built-sources )
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

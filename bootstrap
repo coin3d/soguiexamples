@@ -11,7 +11,7 @@
 DIE=false
 
 AUTOCONF_VER=2.52b  # Autoconf from CVS
-AUTOMAKE_VER=1.4e   # Automake from CVS
+AUTOMAKE_VER=1.5
 
 MACRODIR=cfg/m4
 AUTOMAKE_ADD=
@@ -58,16 +58,6 @@ if test -z "`automake --version | grep \" $AUTOMAKE_VER\" 2> /dev/null`"; then
   cat <<EOF
 
   Invalid Version of Automake
-  ---------------------------
-  You must use the CVS development version of automake ($AUTOMAKE_VER)
-  to generate configure information and Makefiles for $PROJECT.
-
-  The CVS autoconf repository can be fetched by running the following
-  set of commands:
-
-  $ cvs -d :pserver:anoncvs@subversions.gnu.org:/cvs/automake login
-    (no password)
-  $ cvs -d :pserver:anoncvs@subversions.gnu.org:/cvs/automake co autoconf
 
 EOF
   DIE=true
