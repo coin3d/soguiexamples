@@ -10,9 +10,9 @@ raypick_SOURCES = raypick.cpp
 ############################################################################
 
 search.cpp: $(srcdir)/search.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd $(top_builddir); ./config.status --file=actions/search.cpp)
 
 raypick.cpp: $(srcdir)/raypick.cpp.in
-	@( cd ..; $(MAKE) built-sources )
+	@( cd $(top_builddir); ./config.status --file=actions/raypick.cpp)
 
 ############################################################################

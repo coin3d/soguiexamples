@@ -18,11 +18,12 @@ BUILT_SOURCES = \
 ############################################################################
 
 chart.cpp: $(srcdir)/chart.cpp.in
-	@( cd ../..; $(MAKE) built-sources )
+	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010803/chart.cpp )
 
 plasmafun.cpp: $(srcdir)/plasmafun.cpp.in
-	@( cd ../..; $(MAKE) built-sources )
+	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010803/plasmafun.cpp )
 
 stars.cpp: $(srcdir)/stars.cpp.in
-	@( cd ../..; $(MAKE) built-sources )
+	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20010803/stars.cpp )
 
+############################################################################

@@ -118,48 +118,51 @@ noinst_PROGRAMS = renderarea examinerviewer overlay \
 ############################################################################
 
 computils.cpp: $(srcdir)/computils.cpp.in
-	@( cd ..; $(MAKE) components/computils.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/computils.cpp )
 
 computils.h: $(srcdir)/computils.h.in
-	@( cd ..; $(MAKE) components/computils.h )
+	@( cd $(top_builddir); ./config.status --file=components/computils.h )
 
 renderarea.cpp: $(srcdir)/renderarea.cpp.in
-	@( cd ..; $(MAKE) components/renderarea.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/renderarea.cpp )
 
 examinerviewer.cpp: $(srcdir)/examinerviewer.cpp.in
-	@( cd ..; $(MAKE) components/examinerviewer.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/examinerviewer.cpp )
 
 planeviewer.cpp: $(srcdir)/planeviewer.cpp.in
-	@( cd ..; $(MAKE) components/planeviewer.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/planeviewer.cpp )
 
 walkviewer.cpp: $(srcdir)/walkviewer.cpp.in
-	@( cd ..; $(MAKE) components/walkviewer.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/walkviewer.cpp )
 
 flyviewer.cpp: $(srcdir)/flyviewer.cpp.in
-	@( cd ..; $(MAKE) components/flyviewer.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/flyviewer.cpp )
 
 overlay.cpp: $(srcdir)/overlay.cpp.in
-	@( cd ..; $(MAKE) components/overlay.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/overlay.cpp )
 
 lightsliderset.cpp: $(srcdir)/lightsliderset.cpp.in
-	@( cd ..; $(MAKE) components/lightsliderset.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/lightsliderset.cpp )
 
 materialsliderset.cpp: $(srcdir)/materialsliderset.cpp.in
-	@( cd ..; $(MAKE) components/materialsliderset.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/materialsliderset.cpp )
 
 materialsliderset2.cpp: $(srcdir)/materialsliderset2.cpp.in
-	@( cd ..; $(MAKE) components/materialsliderset2.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/materialsliderset2.cpp )
 
 transformsliderset.cpp: $(srcdir)/transformsliderset.cpp.in
-	@( cd ..; $(MAKE) components/transformsliderset.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/transformsliderset.cpp )
 
 materiallist.cpp: $(srcdir)/materiallist.cpp.in
-	@( cd ..; $(MAKE) components/materiallist.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/materiallist.cpp )
 
 materiallist2.cpp: $(srcdir)/materiallist2.cpp.in
-	@( cd ..; $(MAKE) components/materiallist2.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/materiallist2.cpp )
 
 grapheditor.cpp: $(srcdir)/grapheditor.cpp.in
-	@( cd ..; $(MAKE) components/grapheditor.cpp )
+	@( cd $(top_builddir); ./config.status --file=components/grapheditor.cpp )
+
+roster.cpp: $(srcdir)/roster.cpp.in
+	@( cd $(top_builddir); ./config.status --file=components/roster.cpp )
 
 ############################################################################

@@ -30,18 +30,18 @@ BUILT_SOURCES = \
 ############################################################################
 
 moirepatterns.cpp: $(srcdir)/moirepatterns.cpp.in
-	@( cd ..; $(MAKE) eyecandy/moirepatterns.cpp )
+	@( cd $(top_builddir); ./config.status --file=eyecandy/moirepatterns.cpp)
 
 juliaanim.cpp: $(srcdir)/juliaanim.cpp.in
-	@( cd ..; $(MAKE) eyecandy/juliaanim.cpp )
+	@( cd $(top_builddir); ./config.status --file=eyecandy/juliaanim.cpp)
 
 mandelzoom.cpp: $(srcdir)/mandelzoom.cpp.in
-	@( cd ..; $(MAKE) eyecandy/mandelzoom.cpp )
+	@( cd $(top_builddir); ./config.status --file=eyecandy/mandelzoom.cpp)
 
 blob.cpp: $(srcdir)/blob.cpp.in
-	@( cd ..; $(MAKE) eyecandy/blob.cpp )
+	@( cd $(top_builddir); ./config.status --file=eyecandy/blob.cpp)
 
 simbuoy.cpp: $(srcdir)/simbuoy.cpp.in
-	@( cd ..; $(MAKE) eyecandy/simbuoy.cpp )
+	@( cd $(top_builddir); ./config.status --file=eyecandy/simbuoy.cpp)
 
 ############################################################################

@@ -305,6 +305,11 @@ uninstall-am: uninstall-info-am
 
 
 ############################################################################
+
+computebbox.cpp: $(srcdir)/computebbox.cpp.in
+	@( cd $(top_builddir); ./config.status --file=engines/computebbox.cpp)
+
+############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

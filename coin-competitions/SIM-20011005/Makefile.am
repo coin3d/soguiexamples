@@ -20,10 +20,12 @@ BUILT_SOURCES = \
 ############################################################################
 
 lorenz.cpp: $(srcdir)/lorenz.cpp.in
-	@( cd ../..; $(MAKE) built-sources )
+	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20011005/lorenz.cpp )
 
 nurbscurve.cpp: $(srcdir)/nurbscurve.cpp.in
-	@( cd ../..; $(MAKE) built-sources )
+	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20011005/nurbscurve.cpp )
 
 cubes.cpp: $(srcdir)/cubes.cpp.in
-	@( cd ../..; $(MAKE) built-sources )
+	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20011005/cubes.cpp )
+
+############################################################################

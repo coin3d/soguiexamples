@@ -100,9 +100,7 @@ BUILT_SOURCES = \
 noinst_PROGRAMS = translate1 translate2 dragpoint
 
 translate1_SOURCES = translate1.cpp
-
 translate2_SOURCES = translate2.cpp
-
 dragpoint_SOURCES = dragpoint.cpp
 subdir = draggers
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
@@ -330,6 +328,17 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic tags uninstall uninstall-am \
 	uninstall-info-am
 
+
+############################################################################
+
+translate1.cpp: $(srcdir)/translate1.cpp.in
+	@( cd $(top_builddir); ./config.status --file=draggers/translate1.cpp )
+
+translate2.cpp: $(srcdir)/translate2.cpp.in
+	@( cd $(top_builddir); ./config.status --file=draggers/translate2.cpp )
+
+dragpoint.cpp: $(srcdir)/dragpoint.cpp.in
+	@( cd $(top_builddir); ./config.status --file=draggers/dragpoint.cpp )
 
 ############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

@@ -3,9 +3,6 @@
 /* Define if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
-/* define if the GL header should be included as GL/gl.h */
-#undef HAVE_GL_GL_H
-
 /* define if the GLU header should be included as GL/glu.h */
 #undef HAVE_GL_GLU_H
 
@@ -15,11 +12,14 @@
 /* Define this to use OpenGL widget from <GL/GLwMDrawA.h> */
 #undef HAVE_GL_GLWMDRAWA_H
 
-/* define if the GL header should be included as OpenGL/gl.h */
-#undef HAVE_OPENGL_GL_H
+/* define if the GL header should be included as GL/gl.h */
+#undef HAVE_GL_GL_H
 
 /* define if the GLU header should be included as OpenGL/glu.h */
 #undef HAVE_OPENGL_GLU_H
+
+/* define if the GL header should be included as OpenGL/gl.h */
+#undef HAVE_OPENGL_GL_H
 
 /* Define to enable use of Inventor feature */
 #undef HAVE_SOCOMPONENT_SETFULLSCREEN
@@ -54,8 +54,8 @@
 /* Version number of package */
 #undef VERSION
 
-/* Define if the X Window System is missing or not being used. */
-#undef X_DISPLAY_MISSING
-
 /* Define this to the Xt/Motif OpenGL widget class to use */
 #undef XT_GLWIDGET
+
+/* Define if the X Window System is missing or not being used. */
+#undef X_DISPLAY_MISSING

@@ -303,6 +303,11 @@ uninstall-am: uninstall-info-am
 
 
 ############################################################################
+
+timersensor.cpp: $(srcdir)/timersensor.cpp.in
+	@( cd $(top_builddir); ./config.status --file=sensors/timersensor.cpp)
+
+############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

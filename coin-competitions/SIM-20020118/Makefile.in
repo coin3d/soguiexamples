@@ -304,9 +304,6 @@ uninstall-am: uninstall-info-am
 
 ############################################################################
 
-#blocks.cpp: $(srcdir)/blocks.cpp.in
-#	@( cd ../..; $(MAKE) coin-competitions/SIM-20020118/blocks.cpp )
-
 blocks.cpp: $(srcdir)/blocks.cpp.in
 	@( cd $(top_builddir); ./config.status --file=coin-competitions/SIM-20020118/blocks.cpp )
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
