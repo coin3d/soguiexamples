@@ -91,16 +91,18 @@ gui = @gui@
 install_sh = @install_sh@
 soguiconfig = @soguiconfig@
 
-BUILT_SOURCES = pointlightmanip.cpp
+BUILT_SOURCES = pointlightmanip.cpp tabboxmanip.cpp
 
-noinst_PROGRAMS = pointlightmanip
+noinst_PROGRAMS = pointlightmanip tabboxmanip
 
 pointlightmanip_SOURCES = pointlightmanip.cpp
+
+tabboxmanip_SOURCES = tabboxmanip.cpp
 subdir = manipulators
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-noinst_PROGRAMS = pointlightmanip$(EXEEXT)
+noinst_PROGRAMS = pointlightmanip$(EXEEXT) tabboxmanip$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_pointlightmanip_OBJECTS = pointlightmanip.$(OBJEXT)
@@ -108,6 +110,11 @@ pointlightmanip_OBJECTS = $(am_pointlightmanip_OBJECTS)
 pointlightmanip_LDADD = $(LDADD)
 pointlightmanip_DEPENDENCIES =
 pointlightmanip_LDFLAGS =
+am_tabboxmanip_OBJECTS = tabboxmanip.$(OBJEXT)
+tabboxmanip_OBJECTS = $(am_tabboxmanip_OBJECTS)
+tabboxmanip_LDADD = $(LDADD)
+tabboxmanip_DEPENDENCIES =
+tabboxmanip_LDFLAGS =
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -115,16 +122,17 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/pointlightmanip.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/pointlightmanip.Po \
+@AMDEP_TRUE@	$(DEPDIR)/tabboxmanip.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 CXXFLAGS = @CXXFLAGS@
-DIST_SOURCES = $(pointlightmanip_SOURCES)
+DIST_SOURCES = $(pointlightmanip_SOURCES) $(tabboxmanip_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(pointlightmanip_SOURCES)
+SOURCES = $(pointlightmanip_SOURCES) $(tabboxmanip_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -144,6 +152,9 @@ clean-noinstPROGRAMS:
 pointlightmanip$(EXEEXT): $(pointlightmanip_OBJECTS) $(pointlightmanip_DEPENDENCIES) 
 	@rm -f pointlightmanip$(EXEEXT)
 	$(CXXLINK) $(pointlightmanip_LDFLAGS) $(pointlightmanip_OBJECTS) $(pointlightmanip_LDADD) $(LIBS)
+tabboxmanip$(EXEEXT): $(tabboxmanip_OBJECTS) $(tabboxmanip_DEPENDENCIES) 
+	@rm -f tabboxmanip$(EXEEXT)
+	$(CXXLINK) $(tabboxmanip_LDFLAGS) $(tabboxmanip_OBJECTS) $(tabboxmanip_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -152,6 +163,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/pointlightmanip.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tabboxmanip.Po@am__quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)

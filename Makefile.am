@@ -34,6 +34,7 @@ BUILT_SOURCES = \
 	draggers/translate2.cpp \
 	engines/computebbox.cpp \
 	manipulators/pointlightmanip.cpp \
+	manipulators/tabboxmanip.cpp \
 	nodes/atmospheric.cpp \
 	nodes/blinker.cpp \
 	nodes/camera.cpp \
@@ -190,6 +191,9 @@ engines/computebbox.cpp: $(srcdir)/engines/computebbox.cpp.in config.status
 ## sources in manipulators/
 
 manipulators/pointlightmanip.cpp: $(srcdir)/manipulators/pointlightmanip.cpp.in config.status
+	@./config.status --file=$@
+
+manipulators/tabboxmanip.cpp: $(srcdir)/manipulators/tabboxmanip.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
