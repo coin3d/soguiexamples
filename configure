@@ -4925,7 +4925,7 @@ echo "${ECHO_T}#include <$sim_ac_gl_header>" >&6
       echo "$as_me:$LINENO: result: $sim_ac_gl_cppflags, #include <$sim_ac_gl_header>" >&5
 echo "${ECHO_T}$sim_ac_gl_cppflags, #include <$sim_ac_gl_header>" >&6
     fi
-
+    CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
   else
     echo "$as_me:$LINENO: result: not found" >&5
 echo "${ECHO_T}not found" >&6
@@ -6921,6 +6921,13 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
     sim_ac_gl_ldflags="-Wl,-framework,OpenGL"
   fi
 
+  sim_ac_save_cppflags=$CPPFLAGS
+  sim_ac_save_ldflags=$LDFLAGS
+  sim_ac_save_libs=$LIBS
+
+  CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
+  LDFLAGS="$LDFLAGS $sim_ac_gl_ldflags"
+
   sim_ac_gl_header_avail=false
 echo "$as_me:$LINENO: checking how to include gl.h" >&5
 echo $ECHO_N "checking how to include gl.h... $ECHO_C" >&6
@@ -7142,13 +7149,6 @@ echo "$as_me: error: could not find gl.h" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
-
-  sim_ac_save_cppflags=$CPPFLAGS
-  sim_ac_save_ldflags=$LDFLAGS
-  sim_ac_save_libs=$LIBS
-
-  CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
-  LDFLAGS="$LDFLAGS $sim_ac_gl_ldflags"
 
   echo "$as_me:$LINENO: checking whether OpenGL library is available" >&5
 echo $ECHO_N "checking whether OpenGL library is available... $ECHO_C" >&6
@@ -9263,6 +9263,98 @@ else
   :
 fi
 
+
+
+# **************************************************************************
+# Remove redundant options from certain option lists, to clean up the
+# compiler and linker invocations.
+
+
+sim_ac_save_prefix=$prefix
+sim_ac_save_exec_prefix=$exec_prefix
+test x"$prefix" = xNONE && prefix=/usr/local
+test x"$exec_prefix" = xNONE && exec_prefix='${prefix}'
+sim_ac_uniqued_list=
+for sim_ac_item in $CPPFLAGS; do
+  eval sim_ac_eval_item="$sim_ac_item"
+  eval sim_ac_eval_item="$sim_ac_eval_item"
+  if test x"$sim_ac_uniqued_list" = x; then
+    sim_ac_uniqued_list="$sim_ac_item"
+  else
+    sim_ac_unique=true
+    for sim_ac_uniq in $sim_ac_uniqued_list; do
+      eval sim_ac_eval_uniq="$sim_ac_uniq"
+      eval sim_ac_eval_uniq="$sim_ac_eval_uniq"
+      test x"$sim_ac_eval_item" = x"$sim_ac_eval_uniq" && sim_ac_unique=false
+    done
+    $sim_ac_unique && sim_ac_uniqued_list="$sim_ac_uniqued_list $sim_ac_item"
+  fi
+done
+CPPFLAGS=$sim_ac_uniqued_list
+prefix=$sim_ac_save_prefix
+exec_prefix=$sim_ac_save_exec_prefix
+# unset sim_ac_save_prefix
+# unset sim_ac_save_exec_prefix
+# unset sim_ac_eval_item
+# unset sim_ac_eval_uniq
+
+
+sim_ac_save_prefix=$prefix
+sim_ac_save_exec_prefix=$exec_prefix
+test x"$prefix" = xNONE && prefix=/usr/local
+test x"$exec_prefix" = xNONE && exec_prefix='${prefix}'
+sim_ac_uniqued_list=
+for sim_ac_item in $LDFLAGS; do
+  eval sim_ac_eval_item="$sim_ac_item"
+  eval sim_ac_eval_item="$sim_ac_eval_item"
+  if test x"$sim_ac_uniqued_list" = x; then
+    sim_ac_uniqued_list="$sim_ac_item"
+  else
+    sim_ac_unique=true
+    for sim_ac_uniq in $sim_ac_uniqued_list; do
+      eval sim_ac_eval_uniq="$sim_ac_uniq"
+      eval sim_ac_eval_uniq="$sim_ac_eval_uniq"
+      test x"$sim_ac_eval_item" = x"$sim_ac_eval_uniq" && sim_ac_unique=false
+    done
+    $sim_ac_unique && sim_ac_uniqued_list="$sim_ac_uniqued_list $sim_ac_item"
+  fi
+done
+LDFLAGS=$sim_ac_uniqued_list
+prefix=$sim_ac_save_prefix
+exec_prefix=$sim_ac_save_exec_prefix
+# unset sim_ac_save_prefix
+# unset sim_ac_save_exec_prefix
+# unset sim_ac_eval_item
+# unset sim_ac_eval_uniq
+
+
+sim_ac_save_prefix=$prefix
+sim_ac_save_exec_prefix=$exec_prefix
+test x"$prefix" = xNONE && prefix=/usr/local
+test x"$exec_prefix" = xNONE && exec_prefix='${prefix}'
+sim_ac_uniqued_list=
+for sim_ac_item in $LIBS; do
+  eval sim_ac_eval_item="$sim_ac_item"
+  eval sim_ac_eval_item="$sim_ac_eval_item"
+  if test x"$sim_ac_uniqued_list" = x; then
+    sim_ac_uniqued_list="$sim_ac_item"
+  else
+    sim_ac_unique=true
+    for sim_ac_uniq in $sim_ac_uniqued_list; do
+      eval sim_ac_eval_uniq="$sim_ac_uniq"
+      eval sim_ac_eval_uniq="$sim_ac_eval_uniq"
+      test x"$sim_ac_eval_item" = x"$sim_ac_eval_uniq" && sim_ac_unique=false
+    done
+    $sim_ac_unique && sim_ac_uniqued_list="$sim_ac_uniqued_list $sim_ac_item"
+  fi
+done
+LIBS=$sim_ac_uniqued_list
+prefix=$sim_ac_save_prefix
+exec_prefix=$sim_ac_save_exec_prefix
+# unset sim_ac_save_prefix
+# unset sim_ac_save_exec_prefix
+# unset sim_ac_eval_item
+# unset sim_ac_eval_uniq
 
 
 # **************************************************************************
