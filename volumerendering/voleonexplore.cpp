@@ -162,10 +162,11 @@ main(int argc, char ** argv)
     
   // Print user instructions.
   printf("\n");
+  printf("Manipulate the colour-channels to change appearance of the rendered volume data.\n\n");
   printf(" 'c' - Activate clip plane.\n");
   printf(" 'm' - Max intensity rendering.\n");
   printf(" 's' - Sum intensity rendering.\n");
-  printf(" 'i' - Toggle interpolation (LINEAR/NEAREST).\n");
+  printf(" 'i' - Toggle texture interpolation (LINEAR/NEAREST).\n\n\n");
 
   // Create a viewer with a blue tinted background and a stereo offset
   // of 200.0f.
