@@ -25,10 +25,10 @@
 #include <Inventor/nodes/SoSeparator.h>
 
 // This example uses SbClip, SoTexture3, SoTextureCoordinate3 and
-// SbVec3s. All of these are missing from SGI Inventor. TGS Inventor
-// has SoTexture3 support, so we could probably make the example work
-// with it with a little bit of effort.
-#ifndef __COIN__
+// SbVec3s. All of these are missing from SGI Inventor and Coin-1. TGS
+// Inventor has SoTexture3 support, so we could probably make the
+// example work with it with a little bit of effort.
+#if !defined(__COIN__) || COIN_MAJOR_VERSION < 2
 
 #include <Inventor/nodes/SoText3.h>
 #include <stdio.h>
@@ -43,7 +43,7 @@ main(int argc, char ** argv)
   root->ref();
 
   const char * info[] = {
-    "This example depends on Coin-specific",
+    "This example depends on Coin-2 specific",
     "extensions. This is just an informational",
     "message and not the real functionality",
     "of the example."
