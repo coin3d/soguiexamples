@@ -27,7 +27,7 @@
 // This example uses SoExtSelection, SoPolygonOffset and
 // SbBSPTree. All of these are missing from SGI Inventor. TGS Inventor
 // has the first two, but is missing SbBSPTree.
-#ifndef __COIN__
+#if !defined(HAVE_SOEXTSELECTION) || !defined(__COIN__)
 
 #include <Inventor/nodes/SoText3.h>
 #include <stdio.h>
@@ -67,7 +67,7 @@ main(int argc, char ** argv)
   return 1;
 }
 
-#else // __COIN__
+#else // HAVE_SOEXTSELECTION && __COIN__
 
 #include <Inventor/nodes/SoTranslation.h>
 #include <Inventor/nodes/SoExtSelection.h>
@@ -274,8 +274,10 @@ show_instructions( void )
                 "  * hold SHIFT to avoid clearing selection when selecting new triangles\n"
                 "  * hit ESC to toggle back and forth to view mode\n\n"
                 "  * Toggle keys:\n"
+#if HAVE_SOEXTSELECTION_LASSOMODE
                 "     'v' = VISIBLE_SHAPES selection\n"
                 "     'a' = ALL_SHAPES selection\n"
+#endif // HAVE_SOEXTSELECTION_LASSOMODE
                 "     'f' = FULL mode\n"
                 "     'p' = PART mode\n"
                 "     '1' = FULL_BBOX selection\n"
@@ -293,6 +295,7 @@ event_cb(void * userdata, SoEventCallback * node)
 {
   const SoEvent * event = node->getEvent();
 
+#if HAVE_SOEXTSELECTION_LASSOMODE
   if (SO_KEY_PRESS_EVENT(event, V)) {
     selection->lassoMode = SoExtSelection::VISIBLE_SHAPES;
     fprintf(stdout,"VISIBLE_SHAPES mode\n");
@@ -301,6 +304,7 @@ event_cb(void * userdata, SoEventCallback * node)
     selection->lassoMode = SoExtSelection::ALL_SHAPES;
     fprintf(stdout,"ALL_SHAPES mode\n");
   }
+#endif // HAVE_SOEXTSELECTION_LASSOMODE
   if (SO_KEY_PRESS_EVENT(event, F)) {
     selection->lassoPolicy = SoExtSelection::FULL;
     fprintf(stdout,"FULL mode\n");
@@ -391,7 +395,9 @@ main(int argc, char ** argv)
   selection->lassoPolicy = SoExtSelection::PART;
   selection->policy = SoSelection::SHIFT;
   selection->lassoType = SoExtSelection::LASSO;
+#if HAVE_SOEXTSELECTION_LASSOMODE
   selection->lassoMode = SoExtSelection::ALL_SHAPES;
+#endif // HAVE_SOEXTSELECTION_LASSOMODE
 
   selection->setLassoColor(SbColor(0.9f,0.7f,0.2f));
   selection->setLassoWidth(3);
