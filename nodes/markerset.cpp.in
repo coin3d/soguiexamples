@@ -72,10 +72,10 @@ add_new_somarkerset_marker(void)
     }
   }
 
-  int MYAPP_ARROW = SoMarkerSet::getNumDefinedMarkers(); // add at end
-  SoMarkerSet::addMarker(MYAPP_ARROW, SbVec2s(WIDTH, HEIGHT),
+  int MYAPP_ARROW_IDX = SoMarkerSet::getNumDefinedMarkers(); // add at end
+  SoMarkerSet::addMarker(MYAPP_ARROW_IDX, SbVec2s(WIDTH, HEIGHT),
                          bitmapbytes, FALSE, TRUE);
-  return MYAPP_ARROW;
+  return MYAPP_ARROW_IDX;
 }
 
 // *************************************************************************
