@@ -44,97 +44,72 @@ OpaqueChair::OpaqueChair(const char * filename)
   
   this->opaquechairroot = NULL;
 
-  this->bottominsideorthoslice = NULL;
-  this->leftinsideorthoslice = NULL;
-  this->backinsideorthoslice = NULL;
+  for (unsigned int i=0; i < 3; i++) {
+    this->orthoslice[i] = NULL;
+    this->draggersensor[i] = NULL;
+    this->clipplanetrans[i] = NULL;
+    this->axislabeltrans[i] = NULL;
+    this->axislabel[i] = NULL;
+  }
 
-  this->draggerXSensor = NULL;
-  this->draggerYSensor = NULL;
-  this->draggerZSensor = NULL;
-
-  this->leftclipplanetrans = NULL;
-  this->bottomclipplanetrans = NULL;
-  this->backclipplanetrans = NULL;
-
-  this->axisxlabeltrans = NULL;
-  this->axisylabeltrans = NULL;
-  this->axiszlabeltrans = NULL;
-
-  this->axisxlabel = NULL;
-  this->axisylabel = NULL;
-  this->axiszlabel = NULL;
-
-  loadInventorFile();
-  loadVolumeData(filename);
-
+  this->loadInventorFile();
+  this->loadVolumeData(filename);
 }
 
 OpaqueChair::~OpaqueChair()
 {
-
-  delete this->draggerXSensor;
-  delete this->draggerYSensor;
-  delete this->draggerZSensor;
-
+  for (unsigned int i=0; i < 3; i++) {
+    delete this->draggersensor[i];
+  }
 }
 
 /*************************************************************************************/
 
 void
-OpaqueChair::draggerXCB(void * data, SoSensor * sensor)
+OpaqueChair::draggerCBCommon(SoSensor * sensor, unsigned int axis)
 {
-  OpaqueChair * oc = (OpaqueChair *) data;
   SoFieldSensor * fs = (SoFieldSensor *) sensor;
   SoSFVec3f * trans = (SoSFVec3f *) fs->getAttachedField();
 
-  const int slice = SbMax(0, (int) (oc->volumeslices[0] * (trans->getValue()[0]/oc->draggerXRange) - 1));
-  oc->leftinsideorthoslice->sliceNumber.setValue(slice);
+  const float normalizedpos = trans->getValue()[0] / this->draggerrange[axis];
 
-  const float ctrans = (trans->getValue()[0]/oc->draggerXRange) * oc->volumedims[0] - oc->volumedims[0]/2.0f;
-  oc->leftclipplanetrans->translation.setValue(ctrans, 0.0f, 0.0f);
+  unsigned int slice = (unsigned int)
+    ((this->volumeslices[axis] - 1) * normalizedpos);
 
-  SbString str;
-  oc->axisxlabeltrans->translation.setValue(ctrans + oc->volumedims[0]/2.0f, 0.0f, 0.0f);
-  oc->axisxlabel->string.setValue(str.sprintf("  [%d]", slice));
-  
+  this->orthoslice[axis]->sliceNumber.setValue(slice);
+
+  const float ctrans = normalizedpos * this->volumedims[axis] - this->volumedims[axis]/2.0f;
+  SbVec3f v(0, 0, 0);
+  v[axis] = ctrans;
+  this->clipplanetrans[axis]->translation = v;
+
+  if (this->axislabel[axis]) {
+    v[axis] += this->volumedims[axis]/2.0f;
+    this->axislabeltrans[axis]->translation = v;
+    SbString str;
+    this->axislabel[axis]->string.setValue(str.sprintf("  [%d]", slice));
+  }
+}
+
+void
+OpaqueChair::draggerXCB(void * data, SoSensor * sensor)
+{
+  OpaqueChair * oc = (OpaqueChair *) data;
+  oc->draggerCBCommon(sensor, 0);
 }
 
 void
 OpaqueChair::draggerYCB(void * data, SoSensor * sensor)
 {
   OpaqueChair * oc = (OpaqueChair *) data;
-  SoFieldSensor * fs = (SoFieldSensor *) sensor;
-  SoSFVec3f * trans = (SoSFVec3f *) fs->getAttachedField();
-
-  const int slice = SbMax(0, (int) (oc->volumeslices[1] * (trans->getValue()[0]/oc->draggerYRange) - 1));
-  oc->bottominsideorthoslice->sliceNumber.setValue(slice);
-
-  const float ctrans = (trans->getValue()[0]/oc->draggerYRange) * oc->volumedims[1] - oc->volumedims[1]/2.0f;
-  oc->bottomclipplanetrans->translation.setValue(0.0f, ctrans, 0.0f);
-
-  SbString str;
-  oc->axisylabeltrans->translation.setValue(0.0f, ctrans + oc->volumedims[1]/2.0f, 0.0f);
-  oc->axisylabel->string.setValue(str.sprintf("  [%d]", slice));
-
+  oc->draggerCBCommon(sensor, 1);
 }
 
 void
 OpaqueChair::draggerZCB(void * data, SoSensor * sensor)
 {
   OpaqueChair * oc = (OpaqueChair *) data;
-  SoFieldSensor * fs = (SoFieldSensor *) sensor;
-  SoSFVec3f * trans = (SoSFVec3f *) fs->getAttachedField();
-
-  const int slice = SbMax(0, (int) (oc->volumeslices[2] * (trans->getValue()[0]/oc->draggerZRange) - 1));
-  oc->backinsideorthoslice->sliceNumber.setValue(slice);
-
-  const float ctrans = (trans->getValue()[0]/oc->draggerZRange) * oc->volumedims[2] - oc->volumedims[2]/2.0f;
-  oc->backclipplanetrans->translation.setValue(0.0f, 0.0f, ctrans);
- 
-  SbString str;
-  oc->axiszlabeltrans->translation.setValue(0.0f, 0.0f, ctrans + oc->volumedims[2]/2.0f);
-  oc->axiszlabel->string.setValue(str.sprintf("  [%d]", slice));
-
+  oc->draggerCBCommon(sensor, 2);
 }
 
 
@@ -153,14 +128,15 @@ OpaqueChair::loadInventorFile()
 void
 OpaqueChair::setupDraggers()
 {
+  unsigned int i;
 
   assert(this->opaquechairroot && "Scene graph not loaded yet! Fatal error.");
   SoVolumeData * voldat = (SoVolumeData *) this->opaquechairroot->getByName(SbName("Volumedata"));
    
   const SbBox3f dims = voldat->getVolumeSize();
-  this->volumedims[0] = SbAbs(dims.getMax()[0]) + SbAbs(dims.getMin()[0]);
-  this->volumedims[1] = SbAbs(dims.getMax()[1]) + SbAbs(dims.getMin()[1]);
-  this->volumedims[2] = SbAbs(dims.getMax()[2]) + SbAbs(dims.getMin()[2]);
+  for (i=0; i < 3; i++) {
+    this->volumedims[i] = SbAbs(dims.getMax()[i]) + SbAbs(dims.getMin()[i]);
+  }
 
   SoTranslation * origotrans = 
     (SoTranslation *) this->opaquechairroot->getByName(SbName("OrigoTranslation"));
@@ -194,76 +170,65 @@ OpaqueChair::setupDraggers()
   scale->scaleFactor.setValue(width * draggerlen, width, 1.0f);
     
   // Setup dragger field sensors
-  if (!this->draggerXSensor) this->draggerXSensor = new SoFieldSensor(draggerXCB, this);
-  if (!this->draggerYSensor) this->draggerYSensor = new SoFieldSensor(draggerYCB, this);
-  if (!this->draggerZSensor) this->draggerZSensor = new SoFieldSensor(draggerZCB, this);
+  if (!this->draggersensor[0]) this->draggersensor[0] = new SoFieldSensor(draggerXCB, this);
+  if (!this->draggersensor[1]) this->draggersensor[1] = new SoFieldSensor(draggerYCB, this);
+  if (!this->draggersensor[2]) this->draggersensor[2] = new SoFieldSensor(draggerZCB, this);
 
   // Fetch ortho slice nodes
-  this->bottominsideorthoslice = 
+  this->orthoslice[1] = 
     (SoOrthoSlice *) this->opaquechairroot->getByName(SbName("BottomInsideSlice"));
-  this->leftinsideorthoslice = 
+  this->orthoslice[0] = 
     (SoOrthoSlice *) this->opaquechairroot->getByName(SbName("LeftInsideSlice"));
-  this->backinsideorthoslice = 
+  this->orthoslice[2] = 
     (SoOrthoSlice *) this->opaquechairroot->getByName(SbName("BackInsideSlice"));
 
   // Fetch clip plane translation nodes
-  this->leftclipplanetrans = 
+  this->clipplanetrans[0] = 
     (SoTranslation *) this->opaquechairroot->getByName(SbName("LeftClipPlaneTrans"));
-  this->backclipplanetrans = 
+  this->clipplanetrans[2] = 
     (SoTranslation *) this->opaquechairroot->getByName(SbName("BackClipPlaneTrans"));
-  this->bottomclipplanetrans = 
+  this->clipplanetrans[1] = 
     (SoTranslation *) this->opaquechairroot->getByName(SbName("BottomClipPlaneTrans"));
 
-  // Fetch dragger label translation nodes
-  this->axisxlabeltrans = 
-    (SoTranslation *) this->opaquechairroot->getByName(SbName("AxisXLabelTrans"));
-  this->axisylabeltrans = 
-    (SoTranslation *) this->opaquechairroot->getByName(SbName("AxisYLabelTrans"));
-  this->axiszlabeltrans = 
-    (SoTranslation *) this->opaquechairroot->getByName(SbName("AxisZLabelTrans"));
-
-  // Fetch dragger text label nodes
-  this->axisxlabel = 
-    (SoText2 *) this->opaquechairroot->getByName(SbName("AxisXLabel"));
-  this->axisylabel = 
-    (SoText2 *) this->opaquechairroot->getByName(SbName("AxisYLabel"));
-  this->axiszlabel = 
-    (SoText2 *) this->opaquechairroot->getByName(SbName("AxisZLabel"));
-
+  // Fetch dragger text labels, with translation nodes
+  SbString str;
+  static const char * axis[] = { "X", "Y", "Z" };
+  for (i=0; i < 3; i++) {
+    this->axislabeltrans[i] = (SoTranslation *)
+      this->opaquechairroot->getByName(str.sprintf("Axis%sLabelTrans", axis[i]).getString());
+    this->axislabel[i] = (SoText2 *)
+      this->opaquechairroot->getByName(str.sprintf("Axis%sLabel", axis[i]).getString());
+  }
 
   // Setup dragger range and attach field sensors
   SmRangeTranslate1Dragger * dragger;
   dragger = 
     (SmRangeTranslate1Dragger *) this->opaquechairroot->getByName(SbName("AxisXDragger"));
-  this->draggerXRange = (this->volumedims[0]) / (width * draggerlen);
-  dragger->range.setValue(0.0f, this->draggerXRange);
-  this->draggerXSensor->attach(&dragger->translation);
+  this->draggerrange[0] = (this->volumedims[0]) / (width * draggerlen);
+  dragger->range.setValue(0.0f, this->draggerrange[0]);
+  this->draggersensor[0]->attach(&dragger->translation);
   dragger->translation.setValue((this->volumedims[0]/2.0f) / (width * draggerlen), 0.0f, 0.0f);
 
   dragger = 
     (SmRangeTranslate1Dragger *) this->opaquechairroot->getByName(SbName("AxisYDragger"));
-  this->draggerYRange = (this->volumedims[1])  / (width * draggerlen);
-  dragger->range.setValue(0.0f, this->draggerYRange);
-  this->draggerYSensor->attach(&dragger->translation);
+  this->draggerrange[1] = (this->volumedims[1])  / (width * draggerlen);
+  dragger->range.setValue(0.0f, this->draggerrange[1]);
+  this->draggersensor[1]->attach(&dragger->translation);
   dragger->translation.setValue((this->volumedims[1]/2.0f) / (width * draggerlen), 0.0f, 0.0f);
 
   dragger = 
     (SmRangeTranslate1Dragger *) this->opaquechairroot->getByName(SbName("AxisZDragger"));
-  this->draggerZRange = (this->volumedims[2]) / (width * draggerlen);
-  dragger->range.setValue(0.0f, this->draggerZRange);
-  this->draggerZSensor->attach(&dragger->translation);
+  this->draggerrange[2] = (this->volumedims[2]) / (width * draggerlen);
+  dragger->range.setValue(0.0f, this->draggerrange[2]);
+  this->draggersensor[2]->attach(&dragger->translation);
   dragger->translation.setValue((this->volumedims[2]/2.0f) / (width * draggerlen), 0.0f, 0.0f);
-
-
 }
 
 
 void
 OpaqueChair::setupGeometry()
 {
-  
   assert(this->opaquechairroot && "Scene graph not loaded yet! Fatal error.");
-  SoVolumeData * voldat = (SoVolumeData *) this->opaquechairroot->getByName(SbName("Volumedata"));
    
   SoOrthoSlice * slice;
   slice = (SoOrthoSlice *) this->opaquechairroot->getByName(SbName("TopLSlice"));
@@ -275,10 +240,9 @@ OpaqueChair::setupGeometry()
   slice = (SoOrthoSlice *) this->opaquechairroot->getByName(SbName("FrontLSlice"));
   slice->sliceNumber.setValue((int) this->volumeslices[2] - 1);
 
-  setXAxisRange(0.0f, 50.0f, 5.0f); // Default values
-  setYAxisRange(0.0f, 50.0f, 5.0f);
-  setZAxisRange(0.0f, 50.0f, 5.0f);
-
+  for (unsigned int i=0; i < 3; i++) {
+    this->setAxisRange(i, 0.0f, 50.0f, 5.0f); // Default values
+  }
 }
 
 
@@ -293,7 +257,6 @@ OpaqueChair::setupAxisMarkers(SmAxisKit * kit, float start, float stop, float in
   kit->markerInterval.setValue(interval);
   kit->textInterval.setValue(interval * 2.0f); // Text label every 2nd marker
   kit->markerHeight.setValue(markerheight / 40.0f); // marker height is 1/40 of volume size
-
 }
 
 
@@ -312,8 +275,8 @@ OpaqueChair::loadVolumeData(const char * filename)
   SoVolumeData::DataType type;
   assert(voldat->getVolumeData(this->volumeslices, discardptr, type));
    
-  setupDraggers(); // Make the draggers fit the new data set
-  setupGeometry();
+  this->setupDraggers(); // Make the draggers fit the new data set
+  this->setupGeometry();
 
   return TRUE;
 }
@@ -327,61 +290,34 @@ OpaqueChair::getSceneGraph()
 
 
 void 
-OpaqueChair::setXAxisRange(float start, float stop, float interval)
+OpaqueChair::setAxisRange(unsigned int axis, float start, float stop, float interval)
 {
   assert(this->opaquechairroot && "Scene graph not loaded yet! Fatal error.");
 
-  SmAxisKit * kit = (SmAxisKit *) this->opaquechairroot->getByName(SbName("AxisX"));
-  setupAxisMarkers(kit, start, stop, interval);
+  SbString str;
+  static const char * axisstr[] = { "X", "Y", "Z" };
+  SmAxisKit * kit = (SmAxisKit *)
+    this->opaquechairroot->getByName(str.sprintf("Axis%s", axisstr[axis]).getString());
+  if (!kit) { return; }
+  this->setupAxisMarkers(kit, start, stop, interval);
 
   const float length = SbAbs(stop) - SbAbs(start);
-  SoScale * scale;
-  scale = (SoScale *) this->opaquechairroot->getByName(SbName("AxisXScale"));
-  scale->scaleFactor.setValue(this->volumedims[0]/length, 1.0f, 1.0f);
 
-  SoTranslation * trans;
-  trans = (SoTranslation *) this->opaquechairroot->getByName(SbName("AxisXTrans"));
-  trans->translation.setValue(this->volumedims[0]/2.0f, this->volumedims[1], 0.0f);
+  SoScale * scale = (SoScale *)
+    this->opaquechairroot->getByName(str.sprintf("Axis%sScale", axisstr[axis]).getString());
+  SoTranslation * trans = (SoTranslation *)
+    this->opaquechairroot->getByName(str.sprintf("Axis%sTrans", axisstr[axis]).getString());
 
+  if (axis == 0) {
+    scale->scaleFactor.setValue(this->volumedims[0]/length, 1.0f, 1.0f);
+    trans->translation.setValue(this->volumedims[0]/2.0f, this->volumedims[1], 0.0f);
+  }
+  else if (axis == 1) {
+    scale->scaleFactor.setValue(this->volumedims[1]/length, 1.0f, 1.0f);
+    trans->translation.setValue(0.0f, this->volumedims[1]/2.0f, this->volumedims[2]);
+  }
+  else {
+    scale->scaleFactor.setValue(this->volumedims[2]/length, 1.0f, 1.0f);
+    trans->translation.setValue(0.0f, this->volumedims[1], this->volumedims[2]/2.0f);
+  }
 }
- 
-
-void 
-OpaqueChair::setYAxisRange(float start, float stop, float interval)
-{
-  assert(this->opaquechairroot && "Scene graph not loaded yet! Fatal error.");
-
-  SmAxisKit * kit = (SmAxisKit *) this->opaquechairroot->getByName(SbName("AxisY"));
-  setupAxisMarkers(kit, start, stop, interval);
-
-  const float length = SbAbs(stop) - SbAbs(start);
-  SoScale * scale;
-  scale = (SoScale *) this->opaquechairroot->getByName(SbName("AxisYScale"));
-  scale->scaleFactor.setValue(this->volumedims[1]/length, 1.0f, 1.0f);
-
-  SoTranslation * trans;
-  trans = (SoTranslation *) this->opaquechairroot->getByName(SbName("AxisYTrans"));
-  trans->translation.setValue(0.0f, this->volumedims[1]/2.0f, this->volumedims[2]);
-
-}
- 
-
-void 
-OpaqueChair::setZAxisRange(float start, float stop, float interval)
-{
-  assert(this->opaquechairroot && "Scene graph not loaded yet! Fatal error.");
-
-  SmAxisKit * kit = (SmAxisKit *) this->opaquechairroot->getByName(SbName("AxisZ"));
-  setupAxisMarkers(kit, start, stop, interval);
- 
-  const float length = SbAbs(stop) - SbAbs(start);
-  SoScale * scale;
-  scale = (SoScale *) this->opaquechairroot->getByName(SbName("AxisZScale"));
-  scale->scaleFactor.setValue(this->volumedims[2]/length, 1.0f, 1.0f);
-
-  SoTranslation * trans;
-  trans = (SoTranslation *) this->opaquechairroot->getByName(SbName("AxisZTrans"));
-  trans->translation.setValue(0.0f, this->volumedims[1], this->volumedims[2]/2.0f);
-
-}
-
