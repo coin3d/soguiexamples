@@ -10343,6 +10343,11 @@ else
 fi
 
     sim_ac_gui_toolkit=inventorqt
+    # We'd rather not see all those ugly g++ warnings from the SGI / TGS
+    # headers.
+    if test x"$GXX" = x"yes"; then
+      CXXFLAGS="$CXXFLAGS -w"
+    fi
   fi
 
 else
