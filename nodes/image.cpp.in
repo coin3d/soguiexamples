@@ -48,6 +48,7 @@ main(void)
 #include <Inventor/nodes/SoCamera.h>
 #include <Inventor/nodes/SoCube.h>
 #include <Inventor/nodes/SoImage.h>
+#include <Inventor/sensors/SoTimerSensor.h>
 
 // Function to generate a mandelbrot set.
 // Parameters:
@@ -59,7 +60,7 @@ main(void)
 //  int height          = height of the bitmap
 //  int mult            = number to multiply each color by
 //  unsigned char * bmp = pointer to bitmap
-//  int n               = number of itterations.
+//  int n               = number of iterations.
 void
 mandel(double sr, double si, double width, double height, 
        int bwidth, int bheight, int mult, unsigned char * bmp, int n)
@@ -81,6 +82,26 @@ mandel(double sr, double si, double width, double height,
     }
 }
 
+static void
+sensorCB(void * data, SoSensor * sensor)
+{
+  SoImage * nimage = (SoImage *)data;
+
+  (void)printf("SoImage change: %s\n",
+         SbTime::getTimeOfDay().formatDate().getString());
+
+  SbVec2s dimensions;
+  int components;
+  static float mandeldim = 0.025;
+
+  mandeldim /= 1.05f;
+
+  unsigned char * buffer = nimage->image.startEditing(dimensions, components);
+  mandel(-0.5, 0.6, mandeldim, mandeldim, dimensions[0], dimensions[1],
+         1, buffer, 256);
+  nimage->image.finishEditing();
+}
+
 int
 main(int argc, char ** argv)
 {
@@ -89,8 +110,8 @@ main(int argc, char ** argv)
   SoSeparator * root = new SoSeparator;
   root->ref();
 
-  const int IMGWIDTH = 256;
-  const int IMGHEIGHT = 256;
+  const int IMGWIDTH = 128;
+  const int IMGHEIGHT = 128;
   unsigned char * img = new unsigned char[IMGWIDTH * IMGHEIGHT];
   mandel(-0.5, 0.6, 0.025, 0.025, IMGWIDTH, IMGHEIGHT, 1, img, 256);
 
@@ -98,11 +119,10 @@ main(int argc, char ** argv)
   nimage->vertAlignment = SoImage::HALF;
   nimage->horAlignment = SoImage::CENTER;
   nimage->image.setValue(SbVec2s(IMGWIDTH, IMGHEIGHT), 1, img);
+  root->addChild(nimage);
 
   SoCube * cube = new SoCube;
-
   root->addChild(cube);
-  root->addChild(nimage);
 
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(mainwin);
   viewer->setSceneGraph(root);
@@ -112,6 +132,10 @@ main(int argc, char ** argv)
   SoCamera * cam = viewer->getCamera();
   cam->position = SbVec3f(0, 0, 50);
   cam->focalDistance = 50;
+
+  SoTimerSensor * sensor = new SoTimerSensor(sensorCB, nimage);
+  sensor->setInterval(1.0);
+  sensor->schedule();
 
   So@Gui@::show(mainwin);
   So@Gui@::mainLoop();
