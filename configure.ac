@@ -434,6 +434,7 @@ AC_OUTPUT([
 	components/materiallist2.cpp
 	components/materialsliderset.cpp
 	components/materialsliderset2.cpp
+	components/multifileviewer.cpp
 	components/overlay.cpp
 	components/planeviewer.cpp
 	components/renderarea.cpp
