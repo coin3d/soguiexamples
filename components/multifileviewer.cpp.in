@@ -1,7 +1,216 @@
-// coming soon
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2003 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+// FIXME: test for Coin 2.3 (SoDB::isMultiThread()). pederb, 2004-03-24
+
+#include <Inventor/SbBasic.h>
+#include <stdio.h>
+
+#ifndef __COIN__
 
 int main(int argc, char ** argv)
 {
-  return 0;
+  (void)fprintf(stdout,
+                "\n"
+                "This example depends on Coin specific\n"
+                "extensions. This is just an informational\n"
+                "message and not the real functionality\n"
+                "of the example.\n\n");
+  return 1;
 }
+
+#else // ! __COIN__
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SoDB.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoCamera.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/SoInput.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/errors/SoDebugError.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+#include <Inventor/threads/SbMutex.h>
+#include <Inventor/threads/SbThread.h>
+#include <assert.h>
+
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+#ifdef HAVE_SMALLCHANGE_LIBRARY
+#include <SmallChange/misc/Init.h>
+#endif // HAVE_SMALLCHANGE_LIBRARY
+
+static SbMutex * mymutex;
+static So@Gui@ExaminerViewer * myviewer = NULL;
+static SoGroup * myloadednode = NULL;  
+static SbBool didloadfile = FALSE;
+static SbThread * mythread = NULL;
+static int myargc;
+static char ** myargv;
+static int mycurrentfile;
+
+
+static void *
+mythread_func(void * closure)
+{
+  const char * filename = (const char *) closure;
+  SoInput in;
+  if (in.openFile(filename)) {
+    SoSeparator * root = SoDB::readAll(&in); 
+    if (root) {
+      mymutex->lock();
+      myloadednode = root;
+      didloadfile = TRUE;
+      myloadednode->ref();
+      mymutex->unlock();
+      SoDebugError::postInfo("mythread_func",
+                             "loaded: %s",
+                             filename);
+    }
+    else {
+      mymutex->lock();
+      didloadfile = TRUE;
+      myloadednode = NULL;
+      mymutex->unlock();      
+    }
+  }
+  return NULL;
+}
+
+static void
+schedule_next_file(void)
+{
+  mymutex->lock();
+  if (!mythread) {
+    mycurrentfile++;
+    if (mycurrentfile >= myargc) mycurrentfile = 1;
+    SoDebugError::postInfo("schedule_next_file",
+                           "scheduling: %s",
+                           myargv[mycurrentfile]);
+    mythread = SbThread::create(mythread_func, 
+                                (void*) myargv[mycurrentfile]);
+  }
+  mymutex->unlock();
+}
+
+class MyViewer : public So@Gui@ExaminerViewer {
+public:
+  MyViewer(@WIDGET@ window) :
+    So@Gui@ExaminerViewer(window) { }
+  virtual SbBool processSoEvent(const SoEvent * event) {
+    if (SO_KEY_PRESS_EVENT(event, N)) {
+      schedule_next_file();
+    }
+    return So@Gui@ExaminerViewer::processSoEvent(event);
+  }
+};
+
+
+static void
+timer_cb(void * closure, SoSensor * sensor)
+{
+  mymutex->lock();
+  if (didloadfile) {
+    if (myloadednode) {
+      myviewer->setSceneGraph(myloadednode);
+      myviewer->viewAll();
+      myloadednode->unref();
+      myloadednode = NULL;
+    }
+    didloadfile = FALSE;
+    if (mythread) {
+      mythread->join();
+      SbThread::destroy(mythread);
+      mythread = NULL;
+    }
+  }
+  mymutex->unlock();
+}
+
+int
+main(int argc, char ** argv )
+{
+  (void)printf("This example is created for testing thread safe reading "
+               "of Inventor files. Specify any number of files on the command line, "
+               "and press 'N' any time to load the next file.\n");
+  if (argc < 2) return 0;
+
+  myargc = argc;
+  myargv = argv;
+  mycurrentfile = 1;
+  
+  @WIDGET@ window = So@Gui@::init( argv[0] );
+
+#ifdef HAVE_SMALLCHANGE_LIBRARY
+  smallchange_init();
+#endif // HAVE_SMALLCHANGE_LIBRARY
+
+  SoDB::setRealTimeInterval(SbTime(1.0/50.0));
+  mymutex = new SbMutex;
+  //  SoDB::getSensorManager()->setDelaySensorTimeout(SbTime(1.0/15.0));
+  
+  So@Gui@ExaminerViewer * ex1 = new MyViewer( window );
+  myviewer = ex1;
+  ex1->setBackgroundColor(SbColor(0.1f, 0.3f, 0.5f));
+  
+  SoInput * input = new SoInput;
+  SbBool ok = input->openFile(argv[1]);
+
+  if (!ok) {
+    return -1;
+  }
+
+  SoSeparator *root = SoDB::readAll(input); 
+
+  if (!root) {
+    return -1;
+  }
+  delete input;
+
+  root->ref();
+
+  ex1->show();
+  So@Gui@::show( window );
+
+  ex1->setSceneGraph( root );
+  ex1->setTransparencyType(SoGLRenderAction::SORTED_OBJECT_BLEND);
+
+  SoTimerSensor * sensor = new SoTimerSensor(timer_cb, NULL);
+  sensor->setInterval(1.0);
+  sensor->schedule();
+
+  So@Gui@::mainLoop();
+  delete ex1; 
+  root->unref();
+  delete sensor;
+  delete mymutex;
+  SoDB::cleanup();
+
+  return 0;
+} // main()
+
+#endif //  __COIN__
 
