@@ -29,8 +29,7 @@
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoIndexedLineSet.h>
 #include <Inventor/engines/SoComputeBoundingBox.h>
-#include <Inventor/engines/SoDecomposeVec3f.h>
-#include <Inventor/engines/SoComposeVec3f.h>
+#include <Inventor/engines/SoCompose.h>
 #include <Inventor/engines/SoConcatenate.h>
 #include <Inventor/nodes/SoPointSet.h>
 #include <assert.h>
