@@ -178,7 +178,10 @@ BUILT_SOURCES = \
 	coin-competitions/SIM-20010914/rec.cpp \
 	coin-competitions/SIM-20011005/lorenz.cpp \
 	coin-competitions/SIM-20011005/nurbscurve.cpp \
-	coin-competitions/SIM-20011005/cubes.cpp
+	coin-competitions/SIM-20011005/cubes.cpp \
+	coin-competitions/SIM-20011116/25bc5bb.cpp \
+	coin-competitions/SIM-20011116/foo.cpp \
+	coin-competitions/SIM-20011116/shaker.cpp
 
 
 DISTCLEANFILES = $(BUILT_SOURCES)
@@ -773,6 +776,17 @@ coin-competitions/SIM-20011005/nurbscurve.cpp: $(srcdir)/coin-competitions/SIM-2
 	@./config.status --file=$@
 
 coin-competitions/SIM-20011005/cubes.cpp: $(srcdir)/coin-competitions/SIM-20011005/cubes.cpp.in config.status
+	@./config.status --file=$@
+
+############################################################################
+
+coin-competitions/SIM-20011116/25bc5bb.cpp: $(srcdir)/coin-competitions/SIM-20011116/25bc5bb.cpp.in config.status
+	@./config.status --file=$@
+
+coin-competitions/SIM-20011116/foo.cpp: $(srcdir)/coin-competitions/SIM-20011116/foo.cpp.in config.status
+	@./config.status --file=$@
+
+coin-competitions/SIM-20011116/shaker.cpp: $(srcdir)/coin-competitions/SIM-20011116/shaker.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
