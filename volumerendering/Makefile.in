@@ -177,7 +177,8 @@ target_vendor = @target_vendor@
 # Executables.
 noinst_PROGRAMS = \
 	readvol changingdataset examine orthoslicer \
-	raypick simple8bit $(SIMAGE_DEPENDENTS)
+	raypick simple8bit $(SIMAGE_DEPENDENTS) \
+	opaquechair
 
 
 
@@ -224,6 +225,8 @@ rgbload_SOURCES = rgbload.cpp
 
 simple8bit_SOURCES = simple8bit.cpp utility.cpp utility.h
 
+opaquechair_SOURCES = chair.cpp OpaqueChair.cpp OpaqueChair.h OpaqueChair-iv.h
+
 
 ############################################################################
 BUILT_SOURCES = \
@@ -248,11 +251,12 @@ CONFIG_CLEAN_FILES = readvol.cpp changingdataset.cpp examine.cpp \
 @HAVE_SIMAGE_TRUE@noinst_PROGRAMS = readvol$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@	changingdataset$(EXEEXT) examine$(EXEEXT) \
 @HAVE_SIMAGE_TRUE@	orthoslicer$(EXEEXT) raypick$(EXEEXT) \
-@HAVE_SIMAGE_TRUE@	simple8bit$(EXEEXT) rgbload$(EXEEXT)
+@HAVE_SIMAGE_TRUE@	simple8bit$(EXEEXT) rgbload$(EXEEXT) \
+@HAVE_SIMAGE_TRUE@	opaquechair$(EXEEXT)
 @HAVE_SIMAGE_FALSE@noinst_PROGRAMS = readvol$(EXEEXT) \
 @HAVE_SIMAGE_FALSE@	changingdataset$(EXEEXT) examine$(EXEEXT) \
 @HAVE_SIMAGE_FALSE@	orthoslicer$(EXEEXT) raypick$(EXEEXT) \
-@HAVE_SIMAGE_FALSE@	simple8bit$(EXEEXT)
+@HAVE_SIMAGE_FALSE@	simple8bit$(EXEEXT) opaquechair$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_changingdataset_OBJECTS = changingdataset.$(OBJEXT)
@@ -265,6 +269,11 @@ examine_OBJECTS = $(am_examine_OBJECTS)
 examine_LDADD = $(LDADD)
 examine_DEPENDENCIES =
 examine_LDFLAGS =
+am_opaquechair_OBJECTS = chair.$(OBJEXT) OpaqueChair.$(OBJEXT)
+opaquechair_OBJECTS = $(am_opaquechair_OBJECTS)
+opaquechair_LDADD = $(LDADD)
+opaquechair_DEPENDENCIES =
+opaquechair_LDFLAGS =
 am__objects_1 = SoTransferFunction_ctrl.$(OBJEXT) \
 	moc_SoTransferFunction_ctrl.$(OBJEXT) \
 	TransferFunctionHandler.$(OBJEXT) \
@@ -305,13 +314,14 @@ simple8bit_LDFLAGS =
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/OrthoSliceHandler.Po \
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/OpaqueChair.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/OrthoSliceHandler.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/SoOrthoSlice_ctrl.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/SoTransferFunction_ctrl.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/SoVolumeRender_ctrl.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/TransferFunctionHandler.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/VolumeRenderHandler.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/changingdataset.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/chair.Po ./$(DEPDIR)/changingdataset.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/examine.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/moc_OrthoSliceHandler.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/moc_SoOrthoSlice_ctrl.Po \
@@ -332,12 +342,13 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) \
-	$(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) \
-	$(rgbload_SOURCES) $(simple8bit_SOURCES)
+	$(opaquechair_SOURCES) $(orthoslicer_SOURCES) \
+	$(raypick_SOURCES) $(readvol_SOURCES) $(rgbload_SOURCES) \
+	$(simple8bit_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in changingdataset.cpp.in \
 	examine.cpp.in orthoslicer.cpp.in raypick.cpp.in readvol.cpp.in \
 	rgbload.cpp.in simple8bit.cpp.in
-SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) $(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) $(rgbload_SOURCES) $(simple8bit_SOURCES)
+SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) $(opaquechair_SOURCES) $(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) $(rgbload_SOURCES) $(simple8bit_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -372,6 +383,9 @@ changingdataset$(EXEEXT): $(changingdataset_OBJECTS) $(changingdataset_DEPENDENC
 examine$(EXEEXT): $(examine_OBJECTS) $(examine_DEPENDENCIES) 
 	@rm -f examine$(EXEEXT)
 	$(CXXLINK) $(examine_LDFLAGS) $(examine_OBJECTS) $(examine_LDADD) $(LIBS)
+opaquechair$(EXEEXT): $(opaquechair_OBJECTS) $(opaquechair_DEPENDENCIES) 
+	@rm -f opaquechair$(EXEEXT)
+	$(CXXLINK) $(opaquechair_LDFLAGS) $(opaquechair_OBJECTS) $(opaquechair_LDADD) $(LIBS)
 orthoslicer$(EXEEXT): $(orthoslicer_OBJECTS) $(orthoslicer_DEPENDENCIES) 
 	@rm -f orthoslicer$(EXEEXT)
 	$(CXXLINK) $(orthoslicer_LDFLAGS) $(orthoslicer_OBJECTS) $(orthoslicer_LDADD) $(LIBS)
@@ -394,12 +408,14 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OpaqueChair.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OrthoSliceHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SoOrthoSlice_ctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SoTransferFunction_ctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SoVolumeRender_ctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TransferFunctionHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/VolumeRenderHandler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chair.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/changingdataset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/examine.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moc_OrthoSliceHandler.Po@am__quote@

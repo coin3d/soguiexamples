@@ -12,7 +12,8 @@ endif
 
 noinst_PROGRAMS = \
 	readvol changingdataset examine orthoslicer \
-	raypick simple8bit $(SIMAGE_DEPENDENTS)
+	raypick simple8bit $(SIMAGE_DEPENDENTS) \
+	opaquechair
 
 ############################################################################
 # Common sources.
@@ -53,6 +54,8 @@ raypick_SOURCES = raypick.cpp utility.cpp utility.h
 rgbload_SOURCES = rgbload.cpp
 
 simple8bit_SOURCES = simple8bit.cpp utility.cpp utility.h
+
+opaquechair_SOURCES = chair.cpp OpaqueChair.cpp OpaqueChair.h OpaqueChair-iv.h
 
 ############################################################################
 

@@ -1,3 +1,24 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2003 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
 
 #include <Inventor/SbName.h>
 #include <Inventor/SoInput.h>
@@ -16,6 +37,7 @@
 #include <SmallChange/nodekits/SmAxisKit.h>
 
 #include "OpaqueChair.h"
+#include "OpaqueChair-iv.h"
 
 OpaqueChair::OpaqueChair(const char * filename)
 { 
@@ -122,19 +144,10 @@ OpaqueChair::draggerZCB(void * data, SoSensor * sensor)
 void
 OpaqueChair::loadInventorFile()
 {
-
   SoInput in;
-  if (in.openFile("OpaqueChair.iv")) {
-    this->opaquechairroot = SoDB::readAll(&in);
-    if (!opaquechairroot) {
-      SoDebugError::postInfo("loadInventorFile", "Error parsing 'OpaqueChair.iv'! Aborting.");
-      assert(FALSE);
-    }
-  } else {
-    SoDebugError::postInfo("loadInventorFile", "Could find 'OpaqueChair.iv'! Aborting.");
-    assert(FALSE);
-  }
-    
+  in.setBuffer((void *)opaquechair_scene, strlen(opaquechair_scene));
+  this->opaquechairroot = SoDB::readAll(&in);
+  assert(opaquechairroot);
 }
 
 void
@@ -302,6 +315,7 @@ OpaqueChair::loadVolumeData(const char * filename)
   setupDraggers(); // Make the draggers fit the new data set
   setupGeometry();
 
+  return TRUE;
 }
 
 SoSeparator *
