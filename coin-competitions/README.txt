@@ -1,12 +1,13 @@
 The subdirectories below this directory contains the entries of our
-"periodically" running internal Coin programming contest at Systems in
-Motion.  Every 3 weeks we collect entries submitted and let our
-non-programming personell decide upon a winner.  The author receives a
-prize, which is usually some expensive booze. :-)
+constantly running internal Coin programming contest at Systems in
+Motion.  Every 3 weeks we collect entries submitted to the maintainer
+of the SoGuiExamples CVS module and let our non-programming personell
+decide upon a winner.  The author receives a prize, which is usually
+some expensive booze. :-)
 
-So be aware that the sourcecode for these examples might noe be very
-"clean" and beautiful, as much of it has probably been written under
+Be aware that the sourcecode for most of these examples is written in
+a quick'n'dirty fashion, as much of it has been hacked out under
 deadline pressure.
 
 == 
-mortene@coin3d.org
+<mortene@coin3d.org>
