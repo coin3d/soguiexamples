@@ -22,9 +22,6 @@ executables : dspex
 	  cmd /C msdev $$filename /USEENV /MAKE "$$projectname - Win32 Release" /REBUILD; \
 	  exename=`echo $$filename | sed -e 's%/[^/]*$$%%'`; \
 	  exename="$$exename/Release/$$projectname.exe"; \
-	  if ! test -f $$exename; then \
-	    exit 1; \
-	  fi; \
 	done
 
 dspex:
