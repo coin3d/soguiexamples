@@ -21,16 +21,6 @@
  *
 \**************************************************************************/
 
-/*
-
-Known Bugs:
-===========
-
-
-
-*/
-
-
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -47,7 +37,7 @@ Known Bugs:
 int
 main(int argc, char ** argv)
 {
-  QWidget * window = So@Gui@::init(argv[0]);
+  @WIDGET@ window = So@Gui@::init(argv[0]);
   if (window == NULL) exit(1);
 
   SoSeparator * root = new SoSeparator;
@@ -148,10 +138,6 @@ static void
 finish_callback(void * userdata, SoSelection * sel)
 {
   int n = mybsptree.numPoints();
-  //SoDebugError::postInfo("finish_callback","trianglecounter=%d  linecounter=%d  pointcounter=%d",
-  //                       trianglecounter,linecounter,pointcounter);
-   
-
   mycoords->point.setNum(n);
   memcpy(mycoords->point.startEditing(), mybsptree.getPointsArrayPtr(), n*sizeof(SbVec3f));
   mycoords->point.finishEditing();
@@ -404,17 +390,8 @@ main(int argc, char ** argv)
   selection = new SoExtSelection;
   selection->ref();
   selection->lassoPolicy = SoExtSelection::PART;
-  //selection->lassoPolicy = SoExtSelection::PART_BBOX;
-  //selection->lassoPolicy = SoExtSelection::FULL;
-  //selection->lassoPolicy = SoExtSelection::FULL_BBOX;
-
   selection->policy = SoSelection::SHIFT;
-
   selection->lassoType = SoExtSelection::LASSO;
-  //selection->lassoType = SoExtSelection::RECTANGLE;
-  //selection->lassoType = SoExtSelection::NOLASSO;
-
-  //selection->lassoMode = SoExtSelection::VISIBLE_SHAPES;
   selection->lassoMode = SoExtSelection::ALL_SHAPES;
 
   selection->setLassoColor(SbColor(0.9f,0.7f,0.2f));
