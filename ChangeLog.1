@@ -1,0 +1,747 @@
+ChangeLog
+=========
+
+This is the ChangeLog file for the SoAnyExamples module.  This file is
+automatically generated every night.  Entries are in reversed chronological
+order.
+
+See http://www.red-bean.com/~kfogel/cvs2cl.shtml for information about the
+cvs2cl script used to generate this file.
+
+============================================================================
+
+2000-07-06 19:33  larsa
+
+	* components/examinerviewer.cpp.in:
+	
+	Removed disabled code.
+
+2000-07-03 10:18  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/levelofdetail.cpp.in:
+	
+	A new example that shows how to use the SoLevelOfDetail node. 
+	Written by torgunna.
+
+2000-07-03 08:44  mortene
+
+	* nodes/text3.cpp.in:
+	
+	Fix text3.cpp.in so it would work w/ various for() scopings. Patch
+	from Loring Holden.
+
+2000-06-29 18:34  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/clipplane.cpp.in,
+	nodes/text3.cpp.in:
+	
+	Two new examples to demonstrate SoText3 and SoClipPlane.
+
+2000-06-28 13:46  mortene
+
+	* nodes/text2.cpp.in:
+	
+	Printing out the description of this example in the terminal
+	window. Fixed by torgunna.
+
+2000-06-28 11:38  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/text2.cpp.in:
+	
+	A new example that shows how to use the SoText2 node. Written by
+	torgunna.
+
+2000-06-26 16:48  mortene
+
+	* nodes/atmospheric.cpp.in:
+	
+	Added the possibility to change between fog, haze, smoke and to
+	disable the atmospheric effect.
+	
+	Done by torgunna.
+
+2000-06-26 13:22  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/complexity.cpp.in:
+	
+	A new example that shows how to use the SoComplexity node. Written
+	by torgunna.
+
+2000-06-26 11:38  mortene
+
+	* nodes/atmospheric.cpp.in:
+	
+	Improved description of functionality.
+
+2000-06-26 10:23  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/atmospheric.cpp.in,
+	nodes/shuttle.cpp.in:
+	
+	New examples for demonstrating the SoShuttle and SoEnvironment
+	nodes.	Written by torgunna.
+
+2000-06-22 22:46  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/blinker.cpp.in:
+	
+	A new example that shows how to use the SoBlinker node. Written by
+	torgunna.
+
+2000-06-22 22:44  mortene
+
+	* nodes/environment.cpp.in:
+	
+	Corrected the viewer's title name, and Julia set also got improved
+	quality. Done by torgunna.
+
+2000-06-22 22:42  mortene
+
+	* nodes/rotor.cpp.in:
+	
+	Enabled backface culling, and some other minor changes. Done by
+	torgunna.
+
+2000-06-22 22:42  mortene
+
+	* sensors/timersensor.cpp.in:
+	
+	Renamed the variables _cr_ and _ci_ to cr and ci (to avoid stepping
+	into the namespace of the C implementation), and some other minor
+	changes.  Done by torgunna.
+
+2000-06-22 22:40  mortene
+
+	* sensors/timersensor.cpp.in:
+	
+	Makes sure that the portable SbBool type is used instead of bool. 
+	Fix from Loring Holden.
+
+2000-06-22 17:50  mortene
+
+	* sensors/timersensor.cpp.in:
+	
+	Changes: from a 256x256 texture to a 128x128, in addition the Julia
+	set only runs 64 itterations instead of 128 for each pixel. Fixed
+	by torgunna.
+
+2000-06-22 17:37  mortene
+
+	* Makefile.am, configure.in, sensors/Makefile.am,
+	sensors/timersensor.cpp.in:
+	
+	A new example that shows how to use the SoTimerSensor. Done by
+	torgunna.
+
+2000-06-22 16:31  larsa
+
+	* nodes/directionallight.cpp.in:
+	
+	Correction from false to FALSE, by Loring Holden.
+
+2000-06-21 21:49  mortene
+
+	* nodes/: directionallight.cpp.in, pointlight.cpp.in,
+	spotlight.cpp.in:
+	
+	Enabled backface culling, fixed by torgunna.
+
+2000-06-21 21:47  mortene
+
+	* nodes/environment.cpp.in:
+	
+	Removed the loading of model and texture from file, and added a
+	Julia set function that generates a bitmap instead. Other major
+	improvments, so this is actually a new example.
+	
+	Done by torgunna.
+
+2000-06-21 21:45  mortene
+
+	* nodes/texture.cpp.in:
+	
+	Removed the use of file texture, and instead added a function that
+	generates a julia set bitmap. In addition other major changes have
+	been done to this example to better demonstrate the SoTexture2
+	node.  Done by torgunna.
+
+2000-06-21 13:12  larsa
+
+	* configure.in, components/Makefile.am,
+	components/Makefile.in.diff, components/materialsliderset2.cpp.in:
+	
+	Added another example program for the materialsliderset component.
+
+2000-06-20 16:48  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/environment.cpp.in:
+	
+	A new example that shows how to use the
+	SoTextureCoordinateEnvironment.  Written by torgunna.
+
+2000-06-19 20:53  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/texture.cpp.in:
+	
+	Newly written SoTexture2 example, by torgunna.
+
+2000-06-19 20:27  mortene
+
+	* nodes/quadmesh.cpp.in:
+	
+	Enabled backface culling. Fixed by torgunna.
+
+2000-06-19 20:13  mortene
+
+	* nodes/: rotation.cpp.in, scale.cpp.in, transform.cpp.in,
+	translation.cpp.in:
+	
+	Enabled backface culling + other minor changes. Done by torgunna.
+
+2000-06-19 18:48  mortene
+
+	* nodes/lights.cpp.in:
+	
+	Enabled backface culling and some other minor changes. Done by
+	torgunna.
+
+2000-06-19 17:38  mortene
+
+	* nodes/faceset.cpp.in:
+	
+	Fixed scope problem for variable in for-loop.
+
+2000-06-19 17:23  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/faceset.cpp.in,
+	nodes/facesetindexed.cpp.in, nodes/lights.cpp.in,
+	nodes/quadmesh.cpp.in, nodes/trianglestripset.cpp.in:
+	
+	Examples for demonstrating use of multiple lightsources,
+	SoFaceSetIndexed nodes, SoFaceSet nodes, SoQuadMesh nodes and
+	SoTriangleStripSet nodes.
+	
+	All written by torgunna.
+
+2000-06-16 18:28  larsa
+
+	* components/materiallist2.cpp.in:
+	
+	A much more interesting scene-graph, by Peder.
+
+2000-06-16 17:33  larsa
+
+	* configure.in, components/Makefile.am,
+	components/Makefile.in.diff, components/examinerviewer.cpp.in,
+	components/materiallist2.cpp.in:
+	
+	Added components/materiallist2 example which demonstrates the
+	material list hooked up to a material in a viewer scene graph.
+
+2000-06-16 12:57  larsa
+
+	* components/materiallist.cpp.in:
+	
+	Display the selected material node on the terminal.
+
+2000-06-15 10:14  mortene
+
+	* nodes/spotlight.cpp.in:
+	
+	Added an object to represent the light source + some minor
+	adjustments. Done by torgunna.
+
+2000-06-15 10:09  mortene
+
+	* nodes/pointlight.cpp.in:
+	
+	Added an object to represent the light source + some minor
+	adjustments. Done by torgunna.
+
+2000-06-14 17:42  larsa
+
+	* nodes/: directionallight.cpp.in, material.cpp.in,
+	pointlight.cpp.in, rotation.cpp.in, rotor.cpp.in, spotlight.cpp.in,
+	transform.cpp.in:
+	
+	Added M_PI define.
+
+2000-06-14 17:33  larsa
+
+	* draggers/translate1.cpp.in:
+	
+	Added M_PI define.
+
+2000-06-09 17:42  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/camera.cpp.in:
+	
+	Added an example that shows the difference between two camera nodes
+	SoPerspectiveCamera and SoOrthographicCamera. Written by torgunna.
+
+2000-06-09 15:59  mortene
+
+	* nodes/rotor.cpp.in:
+	
+	Added counterclockwise rotation on the rotor. So both clockwise and
+	counterclockwise are demonstrated. Done by torgunna.
+
+2000-06-09 14:19  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/rotor.cpp.in:
+	
+	A new eksample that shows how to use the SoRotor node. Written by
+	torgunna.
+
+2000-06-09 12:10  larsa
+
+	* nodes/: directionallight.cpp.in, pointlight.cpp.in,
+	spotlight.cpp.in:
+	
+	Substituted "false" with "FALSE" where appropriate.  By Loring
+	Holden.
+
+2000-06-08 21:03  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/drawstyle.cpp.in:
+	
+	A new example that shows how to use the SoDrawStyle node. Written
+	by torgunna.
+
+2000-06-08 21:00  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/directionallight.cpp.in,
+	nodes/pointlight.cpp.in, nodes/spotlight.cpp.in:
+	
+	Three new examples to demonstrate the use of the
+	SoDirectionalLight, SoPointLight and SoSpotLight node types.
+	Written by torgunna.
+
+2000-06-08 19:48  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/material.cpp.in:
+	
+	A new example that shows how to use the SoMaterial node. Written by
+	torgunna.
+
+2000-06-07 17:15  mortene
+
+	* nodes/transform.cpp.in:
+	
+	Improved version with a recursive function call to generate the
+	scene graph. Done by torgunna.
+
+2000-06-07 17:13  mortene
+
+	* nodes/scale.cpp.in:
+	
+	Renovated example code, by torgunna.
+
+2000-06-07 17:07  mortene
+
+	* nodes/rotation.cpp.in:
+	
+	New improved example code, by torgunna.
+
+2000-06-07 16:50  mortene
+
+	* nodes/translation.cpp.in:
+	
+	Recoded example, new and much better. By torgunna.
+
+2000-06-06 17:36  mortene
+
+	* nodes/transform.cpp.in:
+	
+	Misc minor fixes, by torgunna.
+
+2000-06-06 17:04  mortene
+
+	* nodes/translation.cpp.in:
+	
+	Misc changes, by torgunna.
+
+2000-06-06 16:53  mortene
+
+	* nodes/scale.cpp.in:
+	
+	Replaced cube with sphere, did some cosmetic changes. Done by
+	torgunna.
+
+2000-06-06 16:33  mortene
+
+	* nodes/rotation.cpp.in:
+	
+	Misc changes, by torgunna.
+
+2000-06-06 16:19  mortene
+
+	* nodes/: sphere.cpp.in, spherecolor.cpp.in:
+	
+	Various fixes from torgunna.
+
+2000-06-06 15:33  mortene
+
+	* TODO:
+	
+	Added textfile for storing ideas to examples applications.
+
+2000-06-06 15:23  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/rotation.cpp.in,
+	nodes/scale.cpp.in, nodes/transform.cpp.in,
+	nodes/translation.cpp.in:
+	
+	4 new examples programs from torgunna.
+
+2000-06-06 15:23  mortene
+
+	* nodes/sphere.cpp.in:
+	
+	Codestyle fixes.
+
+2000-06-06 15:03  mortene
+
+	* configure.in, nodes/Makefile.am, nodes/sphere.cpp.in,
+	nodes/spherecolor.cpp.in:
+	
+	Added two new examples from torgunna.
+
+2000-06-05 18:35  mortene
+
+	* components/: computils.cpp.in, examinerviewer.cpp.in,
+	flyviewer.cpp.in, planeviewer.cpp.in, renderarea.cpp.in,
+	walkviewer.cpp.in:
+	
+	Killed a bug which made it impossible to run viewer examples
+	without any arguments.
+
+2000-06-04 13:41  mortene
+
+	* components/computils.cpp.in:
+	
+	computils.cpp.in
+
+2000-06-04 10:10  mortene
+
+	* autogen.sh:
+	
+	larsa corrected path to libtool-package from GNU ftp.
+
+2000-06-02 12:04  mortene
+
+	* autogen.sh:
+	
+	Upgrade to latest Automake from CVS and latest Libtool release
+	(version 1.3.5). The Autoconf and Automake versions we are using
+	also includes a number of bugfixes.
+	
+	The upgrade of Automake and Libtool fixes a number of bugs, among
+	them the need to have GNU Make on IRIX and sourcecode dependency
+	tracking for the SGI MipsPro compilers.
+
+2000-05-30 17:18  larsa
+
+	* configure.in, components/Makefile.am,
+	components/Makefile.in.diff,
+	components/directionallighteditor.cpp.in,
+	components/materialeditor.cpp.in, components/materiallist.cpp.in,
+	components/printdialog.cpp.in:
+	
+	Four new test-programs (of which two almost work).
+
+2000-05-30 15:56  larsa
+
+	* configure.in, components/Makefile.am,
+	components/Makefile.in.diff, components/lightsliderset.cpp.in,
+	components/materialsliderset.cpp.in,
+	components/transformsliderset.cpp.in:
+	
+	New example programs for demonstrating the slider set components.
+
+2000-05-29 19:54  mortene
+
+	* components/computils.cpp.in:
+	
+	Removed unused variable.
+
+2000-05-29 18:04  mortene
+
+	* autogen.sh:
+	
+	Removed GNU-specific option to ``patch''.
+
+2000-05-24 19:19  mortene
+
+	* manipulators/pointlightmanip.cpp.in:
+	
+	Use a nicer transparency type than SCREEN_DOOR for the example.
+
+2000-05-23 17:38  mortene
+
+	* nodes/selection.cpp.in:
+	
+	Bugfixes -- must explicitly touch() SoSelection node to redraw.
+
+2000-05-18 12:09  mortene
+
+	* components/computils.cpp.in:
+	
+	Don't duplicate error message from Coin when trying to read a
+	non-existent file.
+
+2000-05-15 14:41  larsa
+
+	* components/walkviewer.cpp.in:
+	
+	Added missing #include <Inventor/nodes/SoNode.h>.
+
+2000-05-13 19:46  mortene
+
+	* configure.in:
+	
+	Decrease possibility of compile/link mismatches on systems with
+	both Coin and Inventor installed.
+
+2000-05-13 19:44  mortene
+
+	* actions/search.cpp.in:
+	
+	Fixed bugs when running on top of Inventor.
+
+2000-05-13 15:28  mortene
+
+	* autogen.sh, components/Makefile.in.diff:
+	
+	Patch the examples/components/Makefile.in file from autogen.sh to
+	work around an Automake bug (it tries to use C linker mechanisms
+	instead of C++ linker mechanisms for the examples/components/
+	apps).
+
+2000-05-13 15:22  mortene
+
+	* configure.in:
+	
+	Use the same default as Coin and the So* libraries for the RTTI
+	setting for g++.
+
+2000-04-17 16:04  mortene
+
+	* Makefile.am, configure.in, actions/Makefile.am,
+	components/Makefile.am, draggers/Makefile.am, engines/Makefile.am,
+	manipulators/Makefile.am, nodes/Makefile.am:
+	
+	Simplified the makefile rules for re-generation of sourcecode.
+
+2000-04-11 14:07  mortene
+
+	* actions/search.cpp.in, components/examinerviewer.cpp.in,
+	components/flyviewer.cpp.in, components/planeviewer.cpp.in,
+	components/renderarea.cpp.in, components/walkviewer.cpp.in,
+	draggers/dragpoint.cpp.in, draggers/translate1.cpp.in,
+	draggers/translate2.cpp.in, engines/calculator.cpp.in,
+	manipulators/pointlightmanip.cpp.in, nodes/selection.cpp.in,
+	nodes/slideshow.cpp.in:
+	
+	Added code to do proper resource deallocation on application exit.
+
+2000-04-05 16:23  mortene
+
+	* nodes/slideshow.cpp.in:
+	
+	Lets code compile on top of Inventor.
+
+2000-04-05 14:00  mortene
+
+	* configure.in, actions/Makefile.am, components/Makefile.am,
+	draggers/Makefile.am, engines/Makefile.am,
+	manipulators/Makefile.am, nodes/Makefile.am:
+	
+	Configure examples so the user don't have to either install the
+	library or explicitly set up LD_LIBRARY_PATH.
+
+2000-04-04 22:46  mortene
+
+	* Makefile.am, nodes/Makefile.am, nodes/slideshow.cpp.in:
+	
+	Added example for using the SoFile node (and SoElapsedTime and
+	SoComposeRotation engines, plus SoAlarmSensor, plus a shitload of
+	other node types..).
+
+2000-04-04 15:15  larsa
+
+	* configure.in, actions/Makefile.am, components/Makefile.am,
+	draggers/Makefile.am, engines/Makefile.am,
+	manipulators/Makefile.am, nodes/Makefile.am:
+	
+	Changed strategy for argument passing from super-projects to this
+	sub-project.  configure can now be run stand-alone.  Done by
+	Morten.
+
+2000-04-04 14:44  larsa
+
+	* manipulators/pointlightmanip.cpp.in:
+	
+	Used ref() and unref() where appropriate.  By Morten.
+
+2000-03-24 10:25  mortene
+
+	* components/renderarea.cpp.in:
+	
+	Set window and mimnimalized icon titles for renderarea example
+	code.  Primarily done so we can easily test if the setTitle() and
+	setIconTitle() methods of SoComponent works.
+
+2000-03-20 09:06  mortene
+
+	* components/renderarea.cpp.in:
+	
+	Use a different background color than the default black, to test
+	that the setBackgroundColor() method works.
+
+2000-03-10 11:15  mortene
+
+	* Makefile.am, configure.in, engines/Makefile.am,
+	engines/calculator.cpp.in:
+	
+	Added calculator engine example code (dead ugly and useless, but
+	that'll be fixed later).
+
+2000-03-10 10:07  mortene
+
+	* configure.in:
+	
+	Fixed invalid argument to AC_INIT().
+
+2000-03-09 19:52  larsa
+
+	* components/computils.cpp, components/computils.cpp.in,
+	components/computils.h, components/computils.h.in, Makefile.am,
+	components/Makefile.am:
+	
+	Workaround for IRIX make problem.
+
+2000-03-07 11:04  larsa
+
+	* actions/search.cpp.in, components/examinerviewer.cpp.in,
+	components/flyviewer.cpp.in, components/planeviewer.cpp.in,
+	components/renderarea.cpp.in, components/walkviewer.cpp.in,
+	draggers/dragpoint.cpp.in, draggers/translate1.cpp.in,
+	draggers/translate2.cpp.in, manipulators/pointlightmanip.cpp.in,
+	nodes/selection.cpp.in:
+	
+	Changed @WIDGET@ to @WINWIDGET@ for widget returned by
+	So@GUI@::init().
+
+2000-03-07 11:02  larsa
+
+	* configure.in:
+	
+	Some accommodations to be able to use components for GUI libraries
+	that distinguishes between toplevel window widgets and other
+	widgets.
+
+2000-03-07 10:53  larsa
+
+	* ChangeLog.sh:
+	
+	Added autodetection on which directory and which module the script
+	is run for, so the module can be moved around without having to
+	have the ChangeLog.sh script updated.
+
+2000-03-05 12:04  mortene
+
+	* Makefile.am, configure.in, actions/Makefile.am,
+	actions/search.cpp.in:
+	
+	Added first actions example, a simple demonstration of
+	SoSearchAction.
+
+2000-03-05 00:39  mortene
+
+	* Makefile.am, configure.in, draggers/Makefile.am,
+	draggers/dragpoint.cpp.in, draggers/translate1.cpp.in,
+	draggers/translate2.cpp.in:
+	
+	Added 3 small example programs to show off the use of some simple
+	draggers (translate1, translate2 and dragpoint).
+
+2000-03-03 18:37  mortene
+
+	* manipulators/pointlightmanip.cpp.in:
+	
+	Completed the SoPointLightManip example code.
+
+2000-03-02 17:18  mortene
+
+	* Makefile.am, autogen.sh, configure.in, components/Makefile.am,
+	manipulators/Makefile.am, manipulators/pointlightmanip.cpp.in,
+	nodes/Makefile.am:
+	
+	Make a separate configure script for the SoAnyExamples module. 
+	This kills the need to do separate updates within all the GUI glue
+	modules every time new example code is added, old code is removed
+	or the layout of the module changes.
+	
+	Commit also includes the beginnings of a first manipulators
+	example.
+
+2000-03-01 15:13  larsa
+
+	* nodes/Makefile.am:
+	
+	Moved source code generation from configure-time to make-time so
+	changes in the source templates will cause the files to regenerate.
+
+2000-03-01 14:50  larsa
+
+	* components/Makefile.am, nodes/Makefile.am:
+	
+	Moved source-code-generation from configure-time to make-time so
+	the files will regenerate when their template sources are changed.
+
+2000-02-29 21:56  larsa
+
+	* ChangeLog.0:
+	
+	Removed "autogenerated every night"-message from the header of this
+	static ChangeLog file.
+
+2000-02-29 21:52  larsa
+
+	* Makefile.am:
+	
+	Changed the order of things...
+
+2000-02-29 11:27  mortene
+
+	* Makefile.am:
+	
+	Added nodes/ directory to SUBDIRS.
+
+2000-02-29 11:15  mortene
+
+	* nodes/: Makefile.am, selection.cpp.in:
+	
+	Added sourcecode and buildfiles for SoSelection node example.
+
+2000-02-28 19:07  larsa
+
+	* ChangeLog.0, ChangeLog.sh, Makefile.am, components/Makefile.am,
+	components/README, components/computils.cpp,
+	components/computils.h, components/examinerviewer.cpp.in,
+	components/flyviewer.cpp.in, components/planeviewer.cpp.in,
+	components/renderarea.cpp.in, components/walkviewer.cpp.in:
+	
+	New So*/examples directory.
+
+2000-02-28 19:07  larsa
+
+	* ChangeLog.0, ChangeLog.sh, Makefile.am, components/Makefile.am,
+	components/README, components/computils.cpp,
+	components/computils.h, components/examinerviewer.cpp.in,
+	components/flyviewer.cpp.in, components/planeviewer.cpp.in,
+	components/renderarea.cpp.in, components/walkviewer.cpp.in:
+	
+	Initial revision
+
