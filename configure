@@ -1389,22 +1389,57 @@ else
 fi;
 
 
+sim_ac_full_builddir=`pwd`
+sim_ac_full_srcdir=`cd $srcdir; pwd`
+if test -z "`echo $sim_ac_full_srcdir | tr -cd ' '`"; then :; else
+  { echo "$as_me:$LINENO: WARNING: Detected space character in the path leading up to the Coin source directory - this will probably cause random problems later. You are advised to move the Coin source directory to another location." >&5
+echo "$as_me: WARNING: Detected space character in the path leading up to the Coin source directory - this will probably cause random problems later. You are advised to move the Coin source directory to another location." >&2;}
+
+if test x"${sim_ac_configuration_warnings+set}" = x"set"; then
+  sim_ac_configuration_warnings="$sim_ac_configuration_warnings|Detected space character in the path leading up to the Coin source directory - this will probably cause random problems later. You are advised to move the Coin source directory to another location."
+else
+  sim_ac_configuration_warnings="Detected space character in the path leading up to the Coin source directory - this will probably cause random problems later. You are advised to move the Coin source directory to another location."
+fi
+
+fi
+if test -z "`echo $sim_ac_full_builddir | tr -cd ' '`"; then :; else
+  { echo "$as_me:$LINENO: WARNING: Detected space character in the path leading up to the Coin build directory - this will probably cause random problems later. You are advised to move the Coin build directory to another location." >&5
+echo "$as_me: WARNING: Detected space character in the path leading up to the Coin build directory - this will probably cause random problems later. You are advised to move the Coin build directory to another location." >&2;}
+
+if test x"${sim_ac_configuration_warnings+set}" = x"set"; then
+  sim_ac_configuration_warnings="$sim_ac_configuration_warnings|Detected space character in the path leading up to the Coin build directory - this will probably cause random problems later. You are advised to move the Coin build directory to another location."
+else
+  sim_ac_configuration_warnings="Detected space character in the path leading up to the Coin build directory - this will probably cause random problems later. You are advised to move the Coin build directory to another location."
+fi
+
+fi
+
+
+
 
 
 : ${BUILD_WITH_MSVC=false}
 if $sim_ac_try_msvc; then
-  sim_ac_wrapmsvc=`cd $ac_aux_dir; pwd`/wrapmsvc.exe
   if test -z "$CC" -a -z "$CXX"; then
-    if $sim_ac_wrapmsvc >/dev/null 2>&1; then
+    sim_ac_wrapmsvc=`cd $ac_aux_dir; pwd`/wrapmsvc.exe
+    echo "$as_me:$LINENO: sim_ac_wrapmsvc=$sim_ac_wrapmsvc" >&5
+    echo "$as_me:$LINENO: checking setup for wrapmsvc.exe" >&5
+echo $ECHO_N "checking setup for wrapmsvc.exe... $ECHO_C" >&6
+    if $sim_ac_wrapmsvc >&5 2>&5; then
 
 
       CC=$sim_ac_wrapmsvc
       CXX=$sim_ac_wrapmsvc
       export CC CXX
       BUILD_WITH_MSVC=true
+      echo "$as_me:$LINENO: result: working" >&5
+echo "${ECHO_T}working" >&6
     else
       case $host in
       *-cygwin)
+        echo "$as_me:$LINENO: result: not working" >&5
+echo "${ECHO_T}not working" >&6
+
 echo >&2 ""
 
 
@@ -1431,6 +1466,10 @@ echo >&2 ""
 echo "$as_me: error: aborting" >&2;}
    { (exit 1); exit 1; }; }
  ;;
+      *)
+        echo "$as_me:$LINENO: result: not working (as expected)" >&5
+echo "${ECHO_T}not working (as expected)" >&6
+        ;;
       esac
     fi
   fi
@@ -3657,8 +3696,12 @@ fi;
 # 20020104 larsa
 if test x"$enable_symbols" = x"no"; then
   # CPPFLAGS="`echo $CPPFLAGS | sed 's/-g\>//'`"
-  CFLAGS="`echo $CFLAGS | sed 's/-g\>//'`"
-  CXXFLAGS="`echo $CXXFLAGS | sed 's/-g\>//'`"
+  CFLAGS="`echo $CFLAGS | sed 's/ -g //'`"
+  CFLAGS="`echo $CFLAGS | sed 's/^-g//'`"
+  CFLAGS="`echo $CFLAGS | sed 's/-g$//'`"
+  CXXFLAGS="`echo $CXXFLAGS | sed 's/ -g //'`"
+  CXXFLAGS="`echo $CXXFLAGS | sed 's/^-g//'`"
+  CXXFLAGS="`echo $CXXFLAGS | sed 's/-g$//'`"
 fi
 
 
@@ -3901,8 +3944,8 @@ fi;
 
 if test x"$enable_warnings" = x"yes"; then
 
-  for sim_ac_try_warning_option in \
-    "-W" "-Wall" "-Wno-unused" "-Wno-multichar" "-Woverloaded-virtual"; do
+  for sim_ac_try_cc_warning_option in \
+    "-W" "-Wall" "-Wno-unused" "-Wno-multichar"; do
 
     if test x"$GCC" = x"yes"; then
 
@@ -3914,11 +3957,11 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-echo "$as_me:$LINENO: checking whether $CC accepts $sim_ac_try_warning_option" >&5
-echo $ECHO_N "checking whether $CC accepts $sim_ac_try_warning_option... $ECHO_C" >&6
+echo "$as_me:$LINENO: checking whether $CC accepts $sim_ac_try_cc_warning_option" >&5
+echo $ECHO_N "checking whether $CC accepts $sim_ac_try_cc_warning_option... $ECHO_C" >&6
 
 sim_ac_save_cppflags=$CPPFLAGS
-CPPFLAGS="$CPPFLAGS $sim_ac_try_warning_option"
+CPPFLAGS="$CPPFLAGS $sim_ac_try_cc_warning_option"
 cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
 /* confdefs.h.  */
@@ -3960,7 +4003,7 @@ echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
 # This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
 if test $sim_ac_accept_result = yes; then
-  CFLAGS="$CFLAGS $sim_ac_try_warning_option"
+  CFLAGS="$CFLAGS $sim_ac_try_cc_warning_option"
 else
   :
 fi
@@ -3973,7 +4016,10 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
     fi
+  done
 
+  for sim_ac_try_cxx_warning_option in \
+    "-W" "-Wall" "-Wno-unused" "-Wno-multichar" "-Woverloaded-virtual"; do
     if test x"$GXX" = x"yes"; then
 
 
@@ -3984,11 +4030,11 @@ ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
-echo "$as_me:$LINENO: checking whether $CXX accepts $sim_ac_try_warning_option" >&5
-echo $ECHO_N "checking whether $CXX accepts $sim_ac_try_warning_option... $ECHO_C" >&6
+echo "$as_me:$LINENO: checking whether $CXX accepts $sim_ac_try_cxx_warning_option" >&5
+echo $ECHO_N "checking whether $CXX accepts $sim_ac_try_cxx_warning_option... $ECHO_C" >&6
 
 sim_ac_save_cppflags=$CPPFLAGS
-CPPFLAGS="$CPPFLAGS $sim_ac_try_warning_option"
+CPPFLAGS="$CPPFLAGS $sim_ac_try_cxx_warning_option"
 cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
 /* confdefs.h.  */
@@ -4030,7 +4076,7 @@ echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
 # This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
 if test $sim_ac_accept_result = yes; then
-  CXXFLAGS="$CXXFLAGS $sim_ac_try_warning_option"
+  CXXFLAGS="$CXXFLAGS $sim_ac_try_cxx_warning_option"
 else
   :
 fi
@@ -9531,6 +9577,64 @@ if $sim_cv_have_oiv_sobumpmap_node; then
 
 cat >>confdefs.h <<\_ACEOF
 #define HAVE_SOBUMPMAP 1
+_ACEOF
+
+
+else
+  :
+fi
+
+
+
+echo "$as_me:$LINENO: checking if the Open Inventor SoBumpMapTransform node is available" >&5
+echo $ECHO_N "checking if the Open Inventor SoBumpMapTransform node is available... $ECHO_C" >&6
+if test "${sim_cv_have_oiv_sobumpmaptransform_node+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <Inventor/nodes/SoBumpMapTransform.h>
+int
+main ()
+{
+SoBumpMapTransform * p = new SoBumpMapTransform;
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  sim_cv_have_oiv_sobumpmaptransform_node=true
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+sim_cv_have_oiv_sobumpmaptransform_node=false
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+fi
+echo "$as_me:$LINENO: result: $sim_cv_have_oiv_sobumpmaptransform_node" >&5
+echo "${ECHO_T}$sim_cv_have_oiv_sobumpmaptransform_node" >&6
+
+if $sim_cv_have_oiv_sobumpmaptransform_node; then
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_SOBUMPMAPTRANSFORM 1
 _ACEOF
 
 

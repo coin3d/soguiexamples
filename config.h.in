@@ -45,6 +45,9 @@
 /* Define to enable use of the Open Inventor SoBumpMap node */
 #undef HAVE_SOBUMPMAP
 
+/* Define to enable use of the Open Inventor SoBumpMapTransform node */
+#undef HAVE_SOBUMPMAPTRANSFORM
+
 /* Define to enable use of Inventor feature */
 #undef HAVE_SOCOMPONENT_SETFULLSCREEN
 
