@@ -38,6 +38,7 @@
 #include <Inventor/nodes/SoShape.h>
 #include <Inventor/nodes/SoSphere.h>
 #include <Inventor/nodes/SoTranslation.h>
+
 #include <assert.h>
 
 static SoCoordinate3 * coord3 = NULL;
@@ -45,10 +46,18 @@ static SoIndexedFaceSet * ifs = NULL;
 
 static int coord3idx = 0;
 
+#ifdef __COIN__
+#include <Inventor/SbBSPTree.h>
+static SbBSPTree * bsptree = NULL;
+#endif // __COIN__
 
 static int
 find_coord3_idx(const SoCoordinate3 * c, const SbVec3f & v)
 {
+#ifdef __COIN__
+  return bsptree->findPoint(v);
+#else // __COIN__
+
   // FIXME: the run-time of this algorithm could quickly get very
   // ugly.. like O(n²)-time ugly. Use an oct-tree or something to
   // fix. 20011009 mortene.
@@ -57,6 +66,8 @@ find_coord3_idx(const SoCoordinate3 * c, const SbVec3f & v)
     if (v == c->point[i]) { return i; }
   }
   return -1; // not found
+
+#endif // ! __COIN__
 }
 
 static void
@@ -80,6 +91,12 @@ triangle_cb(void * userdata, SoCallbackAction * action,
       coord3->point.set1Value(coord3idx, vx[i]);
       indices[i] = coord3idx;
       coord3idx++;
+#ifdef __COIN__
+      // add point to BSP tree. The point in the BSP tree will have
+      // the same index as the corresponding point in the Coordinate3
+      // node, and find_coord3_idx() will return the correct index.
+      bsptree->addPoint(vx[i]);
+#endif // __COIN__
     }
     else {
       indices[i] = presentidx;
@@ -110,6 +127,9 @@ main(int argc, char ** argv)
 
   root->ref();
 
+#ifdef __COIN__
+  bsptree = new SbBSPTree;
+#endif // __COIN__
   coord3 = new SoCoordinate3;
   coord3->point.setNum(0);
   ifs = new SoIndexedFaceSet;
