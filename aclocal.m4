@@ -1946,6 +1946,8 @@ if test x"$with_glu" != xno; then
 #include <OpenGL/gl.h>
 #endif
 #endif
+/* FIXME: is this correct for Mac OS X?  Seems unlikely, should
+   probably be OpenGL/glu.h? 20010915 mortene. */
 #include <GL/glu.h>
 ],
                     [

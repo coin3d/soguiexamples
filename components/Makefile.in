@@ -98,10 +98,6 @@ soguiconfig = @soguiconfig@
 ROSTER = 
 
 #endif
-roster_SOURCES = \
-	roster.cpp
-
-
 RENDERAREA = renderarea
 renderarea_SOURCES = \
 	renderarea.cpp \
@@ -191,17 +187,6 @@ printdialog_SOURCES = \
 	printdialog.cpp
 
 
-# if HAVE_GRAPHEDITOR
-# GRAPHEDITOR = grapheditor
-# else
-GRAPHEDITOR = 
-
-# endif
-grapheditor_SOURCES = grapheditor.cpp \
-	computils.cpp \
-	computils.h
-
-
 
 ############################################################################
 BUILT_SOURCES = \
@@ -222,10 +207,10 @@ BUILT_SOURCES = \
 	grapheditor.cpp
 
 
-noinst_PROGRAMS = $(ROSTER) $(RENDERAREA) examinerviewer overlay \
+noinst_PROGRAMS = $(RENDERAREA) examinerviewer overlay \
 	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
-	$(MATERIALLIST) $(PRINTDIALOG) $(GRAPHEDITOR)
+	$(MATERIALLIST) $(PRINTDIALOG)
 
 subdir = components
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs

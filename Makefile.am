@@ -2,10 +2,7 @@
 ## Process this file with automake to generate Makefile.in.
 
 SUBDIRS = \
-  . components eyecandy \
-  coin-competitions/SIM-20010914 \
-  coin-competitions/SIM-20010824 \
-  coin-competitions/SIM-20010803 \
+  . components eyecandy coin-competitions \
   actions draggers engines manipulators nodes sensors 
 
 ############################################################################
@@ -89,6 +86,8 @@ BUILT_SOURCES = \
 	coin-competitions/SIM-20010914/kaos.cpp \
 	coin-competitions/SIM-20010914/rec.cpp
 
+DISTCLEANFILES = $(BUILT_SOURCES)
+
 noinst_DATA = $(BUILT_SOURCES)
 
 built-sources: $(BUILT_SOURCES)
@@ -96,270 +95,266 @@ built-sources: $(BUILT_SOURCES)
 ############################################################################
 ## sources in components/
 
-components/computils.cpp: $(srcdir)/components/computils.cpp.in
+components/computils.cpp: $(srcdir)/components/computils.cpp.in config.status
 	@./config.status --file=$@
 
-components/computils.h: $(srcdir)/components/computils.h.in
+components/computils.h: $(srcdir)/components/computils.h.in config.status
 	@./config.status --file=$@
 
 components/directionallighteditor.cpp: \
-  $(srcdir)/components/directionallighteditor.cpp.in
+  $(srcdir)/components/directionallighteditor.cpp.in config.status
 	@./config.status --file=$@
 
-components/examinerviewer.cpp: $(srcdir)/components/examinerviewer.cpp.in
+components/examinerviewer.cpp: $(srcdir)/components/examinerviewer.cpp.in config.status
 	@./config.status --file=$@
 
-components/overlay.cpp: $(srcdir)/components/overlay.cpp.in
+components/overlay.cpp: $(srcdir)/components/overlay.cpp.in config.status
 	@./config.status --file=$@
 
-components/grapheditor.cpp: $(srcdir)/components/grapheditor.cpp.in
+components/grapheditor.cpp: $(srcdir)/components/grapheditor.cpp.in config.status
 	@./config.status --file=$@
 
-components/flyviewer.cpp: $(srcdir)/components/flyviewer.cpp.in
+components/flyviewer.cpp: $(srcdir)/components/flyviewer.cpp.in config.status
 	@./config.status --file=$@
 
-components/lightsliderset.cpp: $(srcdir)/components/lightsliderset.cpp.in
+components/lightsliderset.cpp: $(srcdir)/components/lightsliderset.cpp.in config.status
 	@./config.status --file=$@
 
-components/materialeditor.cpp: $(srcdir)/components/materialeditor.cpp.in
+components/materialeditor.cpp: $(srcdir)/components/materialeditor.cpp.in config.status
 	@./config.status --file=$@
 
-components/materiallist.cpp: $(srcdir)/components/materiallist.cpp.in
+components/materiallist.cpp: $(srcdir)/components/materiallist.cpp.in config.status
 	@./config.status --file=$@
 
-components/materiallist2.cpp: $(srcdir)/components/materiallist2.cpp.in
+components/materiallist2.cpp: $(srcdir)/components/materiallist2.cpp.in config.status
 	@./config.status --file=$@
 
-components/materialsliderset.cpp: \
-  $(srcdir)/components/materialsliderset.cpp.in
+components/materialsliderset.cpp: $(srcdir)/components/materialsliderset.cpp.in config.status
 	@./config.status --file=$@
 
-components/materialsliderset2.cpp: \
-  $(srcdir)/components/materialsliderset2.cpp.in
+components/materialsliderset2.cpp: $(srcdir)/components/materialsliderset2.cpp.in config.status
 	@./config.status --file=$@
 
-components/planeviewer.cpp: $(srcdir)/components/planeviewer.cpp.in
+components/planeviewer.cpp: $(srcdir)/components/planeviewer.cpp.in config.status
 	@./config.status --file=$@
 
-components/printdialog.cpp: $(srcdir)/components/printdialog.cpp.in
+components/printdialog.cpp: $(srcdir)/components/printdialog.cpp.in config.status
 	@./config.status --file=$@
 
-components/renderarea.cpp: $(srcdir)/components/renderarea.cpp.in
+components/renderarea.cpp: $(srcdir)/components/renderarea.cpp.in config.status
 	@./config.status --file=$@
 
-components/roster.cpp: $(srcdir)/components/roster.cpp.in
+components/roster.cpp: $(srcdir)/components/roster.cpp.in config.status
 	@./config.status --file=$@
 
-components/transformsliderset.cpp: \
-  $(srcdir)/components/transformsliderset.cpp.in
+components/transformsliderset.cpp: $(srcdir)/components/transformsliderset.cpp.in config.status
 	@./config.status --file=$@
 
-components/walkviewer.cpp: $(srcdir)/components/walkviewer.cpp.in
+components/walkviewer.cpp: $(srcdir)/components/walkviewer.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
 ## sources in actions/
 
-actions/raypick.cpp: $(srcdir)/actions/raypick.cpp.in
+actions/raypick.cpp: $(srcdir)/actions/raypick.cpp.in config.status
 	@./config.status --file=$@
 
-actions/search.cpp: $(srcdir)/actions/search.cpp.in
+actions/search.cpp: $(srcdir)/actions/search.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
 ## sources in draggers/
 
-draggers/dragpoint.cpp: $(srcdir)/draggers/dragpoint.cpp.in
+draggers/dragpoint.cpp: $(srcdir)/draggers/dragpoint.cpp.in config.status
 	@./config.status --file=$@
 
-draggers/translate1.cpp: $(srcdir)/draggers/translate1.cpp.in
+draggers/translate1.cpp: $(srcdir)/draggers/translate1.cpp.in config.status
 	@./config.status --file=$@
 
-draggers/translate2.cpp: $(srcdir)/draggers/translate2.cpp.in
+draggers/translate2.cpp: $(srcdir)/draggers/translate2.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
 ## sources in engines/
 
-engines/computebbox.cpp: $(srcdir)/engines/computebbox.cpp.in
+engines/computebbox.cpp: $(srcdir)/engines/computebbox.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
 ## sources in manipulators/
 
-manipulators/pointlightmanip.cpp: \
-  $(srcdir)/manipulators/pointlightmanip.cpp.in
+manipulators/pointlightmanip.cpp: $(srcdir)/manipulators/pointlightmanip.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
 ## sources in nodes/
 
-nodes/atmospheric.cpp: $(srcdir)/nodes/atmospheric.cpp.in
+nodes/atmospheric.cpp: $(srcdir)/nodes/atmospheric.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/blinker.cpp: $(srcdir)/nodes/blinker.cpp.in
+nodes/blinker.cpp: $(srcdir)/nodes/blinker.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/camera.cpp: $(srcdir)/nodes/camera.cpp.in
+nodes/camera.cpp: $(srcdir)/nodes/camera.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/clipplane.cpp: $(srcdir)/nodes/clipplane.cpp.in
+nodes/clipplane.cpp: $(srcdir)/nodes/clipplane.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/complexity.cpp: $(srcdir)/nodes/complexity.cpp.in
+nodes/complexity.cpp: $(srcdir)/nodes/complexity.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/directionallight.cpp: $(srcdir)/nodes/directionallight.cpp.in
+nodes/directionallight.cpp: $(srcdir)/nodes/directionallight.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/drawstyle.cpp: $(srcdir)/nodes/drawstyle.cpp.in
+nodes/drawstyle.cpp: $(srcdir)/nodes/drawstyle.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/environment.cpp: $(srcdir)/nodes/environment.cpp.in
+nodes/environment.cpp: $(srcdir)/nodes/environment.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/extselection.cpp: $(srcdir)/nodes/extselection.cpp.in
+nodes/extselection.cpp: $(srcdir)/nodes/extselection.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/faceset.cpp: $(srcdir)/nodes/faceset.cpp.in
+nodes/faceset.cpp: $(srcdir)/nodes/faceset.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/facesetindexed.cpp: $(srcdir)/nodes/facesetindexed.cpp.in
+nodes/facesetindexed.cpp: $(srcdir)/nodes/facesetindexed.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/levelofdetail.cpp: $(srcdir)/nodes/levelofdetail.cpp.in
+nodes/levelofdetail.cpp: $(srcdir)/nodes/levelofdetail.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/lights.cpp: $(srcdir)/nodes/lights.cpp.in
+nodes/lights.cpp: $(srcdir)/nodes/lights.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/material.cpp: $(srcdir)/nodes/material.cpp.in
+nodes/material.cpp: $(srcdir)/nodes/material.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/markerset.cpp: $(srcdir)/nodes/markerset.cpp.in
+nodes/markerset.cpp: $(srcdir)/nodes/markerset.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/pointlight.cpp: $(srcdir)/nodes/pointlight.cpp.in
+nodes/pointlight.cpp: $(srcdir)/nodes/pointlight.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/pointset.cpp: $(srcdir)/nodes/pointset.cpp.in
+nodes/pointset.cpp: $(srcdir)/nodes/pointset.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/quadmesh.cpp: $(srcdir)/nodes/quadmesh.cpp.in
+nodes/quadmesh.cpp: $(srcdir)/nodes/quadmesh.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/rotation.cpp: $(srcdir)/nodes/rotation.cpp.in
+nodes/rotation.cpp: $(srcdir)/nodes/rotation.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/rotor.cpp: $(srcdir)/nodes/rotor.cpp.in
+nodes/rotor.cpp: $(srcdir)/nodes/rotor.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/scale.cpp: $(srcdir)/nodes/scale.cpp.in
+nodes/scale.cpp: $(srcdir)/nodes/scale.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/selection.cpp: $(srcdir)/nodes/selection.cpp.in
+nodes/selection.cpp: $(srcdir)/nodes/selection.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/shuttle.cpp: $(srcdir)/nodes/shuttle.cpp.in
+nodes/shuttle.cpp: $(srcdir)/nodes/shuttle.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/slideshow.cpp: $(srcdir)/nodes/slideshow.cpp.in
+nodes/slideshow.cpp: $(srcdir)/nodes/slideshow.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/sphere.cpp: $(srcdir)/nodes/sphere.cpp.in
+nodes/sphere.cpp: $(srcdir)/nodes/sphere.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/spherecolor.cpp: $(srcdir)/nodes/spherecolor.cpp.in
+nodes/spherecolor.cpp: $(srcdir)/nodes/spherecolor.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/spotlight.cpp: $(srcdir)/nodes/spotlight.cpp.in
+nodes/spotlight.cpp: $(srcdir)/nodes/spotlight.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/text2.cpp: $(srcdir)/nodes/text2.cpp.in
+nodes/text2.cpp: $(srcdir)/nodes/text2.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/text3.cpp: $(srcdir)/nodes/text3.cpp.in
+nodes/text3.cpp: $(srcdir)/nodes/text3.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/texture.cpp: $(srcdir)/nodes/texture.cpp.in
+nodes/texture.cpp: $(srcdir)/nodes/texture.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/transform.cpp: $(srcdir)/nodes/transform.cpp.in
+nodes/transform.cpp: $(srcdir)/nodes/transform.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/translation.cpp: $(srcdir)/nodes/translation.cpp.in
+nodes/translation.cpp: $(srcdir)/nodes/translation.cpp.in config.status
 	@./config.status --file=$@
 
-nodes/trianglestripset.cpp: $(srcdir)/nodes/trianglestripset.cpp.in
+nodes/trianglestripset.cpp: $(srcdir)/nodes/trianglestripset.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
 ## sources in sensors/
 
-sensors/timersensor.cpp: $(srcdir)/sensors/timersensor.cpp.in
+sensors/timersensor.cpp: $(srcdir)/sensors/timersensor.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
 ## sources in eyecandy/
 
-eyecandy/moirepatterns.cpp: $(srcdir)/eyecandy/moirepatterns.cpp.in
+eyecandy/moirepatterns.cpp: $(srcdir)/eyecandy/moirepatterns.cpp.in config.status
 	@./config.status --file=$@
 
-eyecandy/juliaanim.cpp: $(srcdir)/eyecandy/juliaanim.cpp.in
+eyecandy/juliaanim.cpp: $(srcdir)/eyecandy/juliaanim.cpp.in config.status
 	@./config.status --file=$@
 
-eyecandy/mandelzoom.cpp: $(srcdir)/eyecandy/mandelzoom.cpp.in
+eyecandy/mandelzoom.cpp: $(srcdir)/eyecandy/mandelzoom.cpp.in config.status
 	@./config.status --file=$@
 
-eyecandy/blob.cpp: $(srcdir)/eyecandy/blob.cpp.in
+eyecandy/blob.cpp: $(srcdir)/eyecandy/blob.cpp.in config.status
 	@./config.status --file=$@
 
-eyecandy/simbuoy.cpp: $(srcdir)/eyecandy/simbuoy.cpp.in
+eyecandy/simbuoy.cpp: $(srcdir)/eyecandy/simbuoy.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
 ## sources in coin-competitions/SIM-20010803/
 
-coin-competitions/SIM-20010803/chart.cpp: $(srcdir)/coin-competitions/SIM-20010803/chart.cpp.in
+coin-competitions/SIM-20010803/chart.cpp: $(srcdir)/coin-competitions/SIM-20010803/chart.cpp.in config.status
 	@./config.status --file=$@
 
-coin-competitions/SIM-20010803/plasmafun.cpp: $(srcdir)/coin-competitions/SIM-20010803/plasmafun.cpp.in
+coin-competitions/SIM-20010803/plasmafun.cpp: $(srcdir)/coin-competitions/SIM-20010803/plasmafun.cpp.in config.status
 	@./config.status --file=$@
 
-coin-competitions/SIM-20010803/stars.cpp: $(srcdir)/coin-competitions/SIM-20010803/stars.cpp.in
+coin-competitions/SIM-20010803/stars.cpp: $(srcdir)/coin-competitions/SIM-20010803/stars.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
 ## sources in coin-competitions/SIM-20010824/
 
-coin-competitions/SIM-20010824/stars2.cpp: $(srcdir)/coin-competitions/SIM-20010824/stars2.cpp.in
+coin-competitions/SIM-20010824/stars2.cpp: $(srcdir)/coin-competitions/SIM-20010824/stars2.cpp.in config.status
 	@./config.status --file=$@
 
-coin-competitions/SIM-20010824/smiley.cpp: $(srcdir)/coin-competitions/SIM-20010824/smiley.cpp.in
+coin-competitions/SIM-20010824/smiley.cpp: $(srcdir)/coin-competitions/SIM-20010824/smiley.cpp.in config.status
 	@./config.status --file=$@
 
-coin-competitions/SIM-20010824/styx.cpp: $(srcdir)/coin-competitions/SIM-20010824/styx.cpp.in
+coin-competitions/SIM-20010824/styx.cpp: $(srcdir)/coin-competitions/SIM-20010824/styx.cpp.in config.status
 	@./config.status --file=$@
 
-coin-competitions/SIM-20010824/plasmaball.cpp: $(srcdir)/coin-competitions/SIM-20010824/plasmaball.cpp.in
+coin-competitions/SIM-20010824/plasmaball.cpp: $(srcdir)/coin-competitions/SIM-20010824/plasmaball.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################
 ## sources in coin-competitions/SIM-20010914/
 
-coin-competitions/SIM-20010914/Moolah.cpp: $(srcdir)/coin-competitions/SIM-20010914/Moolah.cpp.in
+coin-competitions/SIM-20010914/Moolah.cpp: $(srcdir)/coin-competitions/SIM-20010914/Moolah.cpp.in config.status
 	@./config.status --file=$@
 
-coin-competitions/SIM-20010914/calculator.cpp: $(srcdir)/coin-competitions/SIM-20010914/calculator.cpp.in
+coin-competitions/SIM-20010914/calculator.cpp: $(srcdir)/coin-competitions/SIM-20010914/calculator.cpp.in config.status
 	@./config.status --file=$@
 
-coin-competitions/SIM-20010914/coinhistory.cpp: $(srcdir)/coin-competitions/SIM-20010914/coinhistory.cpp.in
+coin-competitions/SIM-20010914/coinhistory.cpp: $(srcdir)/coin-competitions/SIM-20010914/coinhistory.cpp.in config.status
 	@./config.status --file=$@
 
-coin-competitions/SIM-20010914/kaos.cpp: $(srcdir)/coin-competitions/SIM-20010914/kaos.cpp.in
+coin-competitions/SIM-20010914/kaos.cpp: $(srcdir)/coin-competitions/SIM-20010914/kaos.cpp.in config.status
 	@./config.status --file=$@
 
-coin-competitions/SIM-20010914/rec.cpp: $(srcdir)/coin-competitions/SIM-20010914/rec.cpp.in
+coin-competitions/SIM-20010914/rec.cpp: $(srcdir)/coin-competitions/SIM-20010914/rec.cpp.in config.status
 	@./config.status --file=$@
 
 ############################################################################

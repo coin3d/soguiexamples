@@ -7,9 +7,6 @@
 ROSTER =
 #endif
 
-roster_SOURCES = \
-	roster.cpp
-
 RENDERAREA = renderarea
 renderarea_SOURCES = \
 	renderarea.cpp \
@@ -116,17 +113,6 @@ endif
 printdialog_SOURCES = \
 	printdialog.cpp
 
-## So@Gui@GraphEditor component
-# if HAVE_GRAPHEDITOR
-# GRAPHEDITOR = grapheditor
-# else
-GRAPHEDITOR =
-# endif
-
-grapheditor_SOURCES = grapheditor.cpp \
-	computils.cpp \
-	computils.h
-
 ############################################################################
 
 BUILT_SOURCES = \
@@ -146,10 +132,10 @@ BUILT_SOURCES = \
 	materiallist2.cpp \
 	grapheditor.cpp
 
-noinst_PROGRAMS = $(ROSTER) $(RENDERAREA) examinerviewer overlay \
+noinst_PROGRAMS = $(RENDERAREA) examinerviewer overlay \
 	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
-	$(MATERIALLIST) $(PRINTDIALOG) $(GRAPHEDITOR)
+	$(MATERIALLIST) $(PRINTDIALOG)
 
 ############################################################################
 
