@@ -165,6 +165,28 @@ lineCB(void * userdata,
   vec3[1] += 0.01;
   vec3[2] += 0.01;
   
+  // FIXME: there's a bug here. Use the following scenegraph to
+  // reproduce it:
+  //
+  // ------8<--- [snip] ---------8<--- [snip] ---------8<--- [snip] ---
+  // #Inventor V2.1 ascii
+  //
+  // Separator {
+  //   PerspectiveCamera { position 0 0 5 }
+  //   LightModel { model BASE_COLOR }
+  //   Coordinate3 { point [ -1 1 1, -1 -1 1 ] }
+  //   IndexedLineSet { coordIndex [ 0, 1, -1 ] }
+  // }
+  // ------8<--- [snip] ---------8<--- [snip] ---------8<--- [snip] ---
+  //
+  // SoExtSelection seems to behave correctly and send us the correct
+  // primitive as selected, but our rendering seems to fail.
+  //
+  // Remove the PerspectiveCamera node in the case above, and it will
+  // again work as expected (a red "selected" indicator line will be
+  // drawn a top of the scenegraph line).
+  //
+  // 20020805 mortene (found and reported by handegar).
   
   mm.multVecMatrix(v1->getPoint(),vec1);
   mm.multVecMatrix(v2->getPoint(),vec2);
@@ -256,7 +278,7 @@ make_line_sg(void)
   col->rgb = SbColor(1.0f, 0.0f, 0.0f);
   sep->addChild(col);
   SoDrawStyle * ds = new SoDrawStyle;
-  ds->lineWidth = 1;
+  ds->lineWidth = 2;
   sep->addChild(ds);
 
   mycoords = new SoCoordinate3;
@@ -361,6 +383,8 @@ main(int argc, char ** argv)
   @WIDGET@ window = So@Gui@::init( argv[0] );
 
   So@Gui@ExaminerViewer * ex1 = new So@Gui@ExaminerViewer( window );
+
+  ex1->setBackgroundColor(SbColor(0.5, 0.5, 0.7));
   
   SoInput input;
   SbBool ok = input.openFile(argv[1]);
