@@ -108,7 +108,6 @@ EOF
   EVENT="XAnyEvent *"
   COMPONENTHEADER=
 
-  AM_CONDITIONAL(HAVE_EXAMINERVIEWER, true)
   AM_CONDITIONAL(HAVE_PLANEVIEWER, true)
   AM_CONDITIONAL(HAVE_WALKVIEWER, true)
   AM_CONDITIONAL(HAVE_FLYVIEWER, true)
@@ -181,11 +180,8 @@ else
     AC_MSG_ERROR([cannot find required '$sim_ac_gui_configcmd' utility])
   fi
 
-  # Which examples to build. These env vars also taken from
-  # libconfigvars.sh of the "parent module".
+  # Which component examples to build.
 
-  AM_CONDITIONAL(HAVE_EXAMINERVIEWER,
-    $soguiconfig --have-feature examinerviewer)
   AM_CONDITIONAL(HAVE_PLANEVIEWER,
     $soguiconfig --have-feature planeviewer)
   AM_CONDITIONAL(HAVE_WALKVIEWER,

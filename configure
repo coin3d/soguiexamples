@@ -5345,14 +5345,6 @@ fi
   COMPONENTHEADER=
 
 if true; then
-  HAVE_EXAMINERVIEWER_TRUE=
-  HAVE_EXAMINERVIEWER_FALSE='#'
-else
-  HAVE_EXAMINERVIEWER_TRUE='#'
-  HAVE_EXAMINERVIEWER_FALSE=
-fi
-
-if true; then
   HAVE_PLANEVIEWER_TRUE=
   HAVE_PLANEVIEWER_FALSE='#'
 else
@@ -5464,7 +5456,7 @@ if test "${with_toolkit+set}" = set; then
       gtk | sogtk)   sim_ac_gui_toolkit=sogtk ;;
       be  | sobe)    sim_ac_gui_toolkit=sobe  ;;
       oiv )          sim_ac_gui_toolkit=oivxt ;;
-      *) { { echo "$as_me:5467: error: invalid --with-toolkit value: \"$withval\"" >&5
+      *) { { echo "$as_me:5459: error: invalid --with-toolkit value: \"$withval\"" >&5
 echo "$as_me: error: invalid --with-toolkit value: \"$withval\"" >&2;}
    { (exit 1); exit 1; }; } ;;
     esac
@@ -5481,7 +5473,7 @@ fi;
   sim_ac_gui_configcmd=${sim_ac_gui_toolkit}-config
   # Extract the first word of "$sim_ac_gui_configcmd", so it can be a program name with args.
 set dummy $sim_ac_gui_configcmd; ac_word=$2
-echo "$as_me:5484: checking for $ac_word" >&5
+echo "$as_me:5476: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
 if test "${ac_cv_path_soguiconfig+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -5498,7 +5490,7 @@ do
   test -z "$as_dir" && as_dir=.
   if $as_executable_p "$as_dir/$ac_word"; then
    ac_cv_path_soguiconfig="$as_dir/$ac_word"
-   echo "$as_me:5501: found $as_dir/$ac_word" >&5
+   echo "$as_me:5493: found $as_dir/$ac_word" >&5
    break
 fi
 done
@@ -5510,10 +5502,10 @@ fi
 soguiconfig=$ac_cv_path_soguiconfig
 
 if test -n "$soguiconfig"; then
-  echo "$as_me:5513: result: $soguiconfig" >&5
+  echo "$as_me:5505: result: $soguiconfig" >&5
 echo "${ECHO_T}$soguiconfig" >&6
 else
-  echo "$as_me:5516: result: no" >&5
+  echo "$as_me:5508: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
@@ -5525,21 +5517,12 @@ fi
     EVENT=`$soguiconfig --ac-subst EVENT`
     COMPONENTHEADER=`$soguiconfig --ac-subst COMPONENTHEADER`
   else
-    { { echo "$as_me:5528: error: cannot find required '$sim_ac_gui_configcmd' utility" >&5
+    { { echo "$as_me:5520: error: cannot find required '$sim_ac_gui_configcmd' utility" >&5
 echo "$as_me: error: cannot find required '$sim_ac_gui_configcmd' utility" >&2;}
    { (exit 1); exit 1; }; }
   fi
 
-  # Which examples to build. These env vars also taken from
-  # libconfigvars.sh of the "parent module".
-
-if $soguiconfig --have-feature examinerviewer; then
-  HAVE_EXAMINERVIEWER_TRUE=
-  HAVE_EXAMINERVIEWER_FALSE='#'
-else
-  HAVE_EXAMINERVIEWER_TRUE='#'
-  HAVE_EXAMINERVIEWER_FALSE=
-fi
+  # Which component examples to build.
 
 if $soguiconfig --have-feature planeviewer; then
   HAVE_PLANEVIEWER_TRUE=
@@ -5625,13 +5608,13 @@ ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
-echo "$as_me:5628: checking for So${Gui}Viewer::setStereoViewing functions" >&5
+echo "$as_me:5611: checking for So${Gui}Viewer::setStereoViewing functions" >&5
 echo $ECHO_N "checking for So${Gui}Viewer::setStereoViewing functions... $ECHO_C" >&6
 if test "${sim_cv_have_oiv_have_viewer_stereo_viewing+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
-#line 5634 "configure"
+#line 5617 "configure"
 #include "confdefs.h"
 #include <Inventor/${Gui}/viewers/So${Gui}ExaminerViewer.h>
 #ifdef F77_DUMMY_MAIN
@@ -5651,16 +5634,16 @@ main ()
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:5654: \"$ac_link\"") >&5
+if { (eval echo "$as_me:5637: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:5657: \$? = $ac_status" >&5
+  echo "$as_me:5640: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:5660: \"$ac_try\"") >&5
+  { (eval echo "$as_me:5643: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:5663: \$? = $ac_status" >&5
+  echo "$as_me:5646: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   sim_cv_have_oiv_have_viewer_stereo_viewing=true
 else
@@ -5670,7 +5653,7 @@ sim_cv_have_oiv_have_viewer_stereo_viewing=false
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
 fi
-echo "$as_me:5673: result: $sim_cv_have_oiv_have_viewer_stereo_viewing" >&5
+echo "$as_me:5656: result: $sim_cv_have_oiv_have_viewer_stereo_viewing" >&5
 echo "${ECHO_T}$sim_cv_have_oiv_have_viewer_stereo_viewing" >&6
 
 if $sim_cv_have_oiv_have_viewer_stereo_viewing; then
@@ -5766,7 +5749,7 @@ DEFS=-DHAVE_CONFIG_H
 : ${CONFIG_STATUS=./config.status}
 ac_clean_files_save=$ac_clean_files
 ac_clean_files="$ac_clean_files $CONFIG_STATUS"
-{ echo "$as_me:5769: creating $CONFIG_STATUS" >&5
+{ echo "$as_me:5752: creating $CONFIG_STATUS" >&5
 echo "$as_me: creating $CONFIG_STATUS" >&6;}
 cat >$CONFIG_STATUS <<_ACEOF
 #! $SHELL
@@ -5982,7 +5965,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF
     echo "$ac_cs_version"; exit 0 ;;
   --he | --h)
     # Conflict between --help and --header
-    { { echo "$as_me:5985: error: ambiguous option: $1
+    { { echo "$as_me:5968: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -6001,7 +5984,7 @@ Try \`$0 --help' for more information." >&2;}
     ac_need_defaults=false;;
 
   # This is an error.
-  -*) { { echo "$as_me:6004: error: unrecognized option: $1
+  -*) { { echo "$as_me:5987: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -6043,7 +6026,7 @@ do
   "sensors/Makefile" ) CONFIG_FILES="$CONFIG_FILES sensors/Makefile" ;;
   "default-1" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default-1" ;;
   "config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
-  *) { { echo "$as_me:6046: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:6029: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -6176,8 +6159,6 @@ s,@CFLAGS@,$CFLAGS,;t t
 s,@ac_ct_CC@,$ac_ct_CC,;t t
 s,@CCDEPMODE@,$CCDEPMODE,;t t
 s,@CXXCPP@,$CXXCPP,;t t
-s,@HAVE_EXAMINERVIEWER_TRUE@,$HAVE_EXAMINERVIEWER_TRUE,;t t
-s,@HAVE_EXAMINERVIEWER_FALSE@,$HAVE_EXAMINERVIEWER_FALSE,;t t
 s,@HAVE_PLANEVIEWER_TRUE@,$HAVE_PLANEVIEWER_TRUE,;t t
 s,@HAVE_PLANEVIEWER_FALSE@,$HAVE_PLANEVIEWER_FALSE,;t t
 s,@HAVE_WALKVIEWER_TRUE@,$HAVE_WALKVIEWER_TRUE,;t t
@@ -6283,7 +6264,7 @@ for as_mkdir_dir in `IFS='/\\'; set X $as_dummy; shift; echo "$@"`; do
       as_incr_dir=$as_incr_dir/$as_mkdir_dir
       test -d "$as_incr_dir" ||
         mkdir "$as_incr_dir" ||
-	{ { echo "$as_me:6286: error: cannot create \"$ac_dir\"" >&5
+	{ { echo "$as_me:6267: error: cannot create \"$ac_dir\"" >&5
 echo "$as_me: error: cannot create \"$ac_dir\"" >&2;}
    { (exit 1); exit 1; }; }
     ;;
@@ -6320,7 +6301,7 @@ esac
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:6323: creating $ac_file" >&5
+    { echo "$as_me:6304: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -6338,7 +6319,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:6341: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:6322: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -6351,7 +6332,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:6354: error: cannot find input file: $f" >&5
+           { { echo "$as_me:6335: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -6412,7 +6393,7 @@ for ac_file in : $CONFIG_HEADERS; do test "x$ac_file" = x: && continue
   * )   ac_file_in=$ac_file.in ;;
   esac
 
-  test x"$ac_file" != x- && { echo "$as_me:6415: creating $ac_file" >&5
+  test x"$ac_file" != x- && { echo "$as_me:6396: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
 
   # First look for the input files in the build tree, otherwise in the
@@ -6423,7 +6404,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:6426: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:6407: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -6436,7 +6417,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:6439: error: cannot find input file: $f" >&5
+           { { echo "$as_me:6420: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -6553,7 +6534,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF
   rm -f $tmp/in
   if test x"$ac_file" != x-; then
     if cmp -s $ac_file $tmp/config.h 2>/dev/null; then
-      { echo "$as_me:6556: $ac_file is unchanged" >&5
+      { echo "$as_me:6537: $ac_file is unchanged" >&5
 echo "$as_me: $ac_file is unchanged" >&6;}
     else
       ac_dir=`$as_expr X"$ac_file" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
@@ -6580,7 +6561,7 @@ for as_mkdir_dir in `IFS='/\\'; set X $as_dummy; shift; echo "$@"`; do
       as_incr_dir=$as_incr_dir/$as_mkdir_dir
       test -d "$as_incr_dir" ||
         mkdir "$as_incr_dir" ||
-	{ { echo "$as_me:6583: error: cannot create \"$ac_dir\"" >&5
+	{ { echo "$as_me:6564: error: cannot create \"$ac_dir\"" >&5
 echo "$as_me: error: cannot create \"$ac_dir\"" >&2;}
    { (exit 1); exit 1; }; }
     ;;
@@ -6645,7 +6626,7 @@ case $srcdir in
     ac_top_srcdir=$ac_top_builddir$srcdir ;;
 esac
 
-  { echo "$as_me:6648: executing $ac_dest commands" >&5
+  { echo "$as_me:6629: executing $ac_dest commands" >&5
 echo "$as_me: executing $ac_dest commands" >&6;}
   case $ac_dest in
     default-1 )

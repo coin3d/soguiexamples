@@ -13,7 +13,6 @@ SUBDIRS = \
 BUILT_SOURCES = \
 	components/computils.cpp \
 	components/computils.h \
-	components/customviewer.cpp \
 	components/directionallighteditor.cpp \
 	components/examinerviewer.cpp \
 	components/overlay.cpp \
@@ -99,9 +98,6 @@ components/computils.cpp: $(srcdir)/components/computils.cpp.in
 	@./config.status --file=$@
 
 components/computils.h: $(srcdir)/components/computils.h.in
-	@./config.status --file=$@
-
-components/customviewer.cpp: $(srcdir)/components/customviewer.cpp.in
 	@./config.status --file=$@
 
 components/directionallighteditor.cpp: \

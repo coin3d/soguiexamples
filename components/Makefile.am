@@ -10,19 +10,11 @@ ROSTER =
 roster_SOURCES = \
 	roster.cpp
 
-## So@Gui@RenderArea component
 RENDERAREA = renderarea
 renderarea_SOURCES = \
 	renderarea.cpp \
 	computils.cpp \
 	computils.h
-
-## So@Gui@ExaminerViewer component
-if HAVE_EXAMINERVIEWER
-EXAMINERVIEWER = examinerviewer overlay
-else
-EXAMINERVIEWER =
-endif
 
 examinerviewer_SOURCES = \
 	examinerviewer.cpp \
@@ -34,7 +26,6 @@ overlay_SOURCES = \
 	computils.cpp \
 	computils.h
 
-## So@Gui@PlaneViewer component
 if HAVE_PLANEVIEWER
 PLANEVIEWER = planeviewer
 else
@@ -46,7 +37,6 @@ planeviewer_SOURCES = \
 	computils.cpp \
 	computils.h
 
-## So@Gui@WalkViewer component
 if HAVE_WALKVIEWER
 WALKVIEWER = walkviewer
 else
@@ -58,7 +48,6 @@ walkviewer_SOURCES = \
 	computils.cpp \
 	computils.h
 
-## So@Gui@FlyViewer component
 if HAVE_FLYVIEWER
 FLYVIEWER = flyviewer
 else
@@ -70,17 +59,6 @@ flyviewer_SOURCES = \
 	computils.cpp \
 	computils.h
 
-## So@Gui@CustomViewer component
-# if HAVE_CUSTOMVIEWER
-# CUSTOMVIEWER = customviewer
-# else
-CUSTOMVIEWER =
-# endif
-
-customviewer_SOURCES = \
-	customviewer.cpp \
-	computils.cpp \
-	computils.h
 
 ## So@Gui@LightSliderSet component
 if HAVE_SLIDERSETS
@@ -160,7 +138,6 @@ BUILT_SOURCES = \
 	planeviewer.cpp \
 	walkviewer.cpp \
 	flyviewer.cpp \
-	customviewer.cpp \
 	lightsliderset.cpp \
 	materialsliderset.cpp \
 	materialsliderset2.cpp \
@@ -169,8 +146,8 @@ BUILT_SOURCES = \
 	materiallist2.cpp \
 	grapheditor.cpp
 
-noinst_PROGRAMS = $(ROSTER) $(RENDERAREA) $(EXAMINERVIEWER) \
-	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) $(CUSTOMVIEWER) \
+noinst_PROGRAMS = $(ROSTER) $(RENDERAREA) examinerviewer overlay \
+	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
 	$(MATERIALLIST) $(PRINTDIALOG) $(GRAPHEDITOR)
 
@@ -195,9 +172,6 @@ walkviewer.cpp: $(srcdir)/walkviewer.cpp.in
 	@( cd ..; $(MAKE) built-sources )
 
 flyviewer.cpp: $(srcdir)/flyviewer.cpp.in
-	@( cd ..; $(MAKE) built-sources )
-
-customviewer.cpp: $(srcdir)/customviewer.cpp.in
 	@( cd ..; $(MAKE) built-sources )
 
 lightsliderset.cpp: $(srcdir)/lightsliderset.cpp.in
