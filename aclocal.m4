@@ -16,8 +16,8 @@
 #
 # macros:
 #   SIM_AC_MSVC_DSPEX_ENABLE_OPTION
-#   SIM_AC_MSVC_DSPEX_SETUP(Project, source dir, template suffix, 
-#                           substitutes, extra args)
+#   SIM_AC_MSVC_DSPEX_SETUP(Project, source dir, build dir, 
+#                           template suffix, substitutes, extra args)
 #   SIM_AC_MSVC_DSPEX_PREPARE(source dir, dest dir)
 #
 # authors:
@@ -53,11 +53,11 @@ if $sim_ac_make_dspex; then
 
   # Notes: 
   # - these defines are picked up by gendspex.sh
-  # - template basename ($3) = vc6 -> workspace_template_vc6.txt, etc
+  # - template basename = vc6 -> workspace_template_vc6.txt, etc
   # - $(DEFAULT_INCLUDES) and $(INCLUDES) are set by the generated 
   #   Makefile scripts. Yes, this is a hack.
   # 2003-11-04 thammer
-  LDFLAGS="-Dsourcedir=$2 -Dtemplatesuffix=$3 -Dsubstitutes=$4 $LDFLAGS $CPPFLAGS $5 \$(DEFAULT_INCLUDES) \$(INCLUDES)"
+  LDFLAGS="-Dsourcedir=$2 -Dbuilddir=$3 -Dtemplatesuffix=$4 -Dsubstitutes=$5 $LDFLAGS $CPPFLAGS $6 \$(DEFAULT_INCLUDES) \$(INCLUDES)"
 fi
 ])
 

@@ -32,6 +32,7 @@ workspace_template=
 project_tamplate_main=
 project_template_source=
 sourcedir=
+builddir=
 substitutes=
 
 function abs2dots ()
@@ -144,6 +145,9 @@ do
     -Dsourcedir=* )
       sourcedir=`echo $arg | cut -d= -f2-`
       ;;
+    -Dbuilddir=* )
+      builddir=`echo $arg | cut -d= -f2-`
+      ;;
     -Dtemplatesuffix=* )
       suffix=`echo $arg | cut -d= -f2-`
       workspace_template="workspace_template_$suffix.txt"
@@ -169,8 +173,7 @@ do
     -L* )
       value=`echo $arg | cut -c3-`
       if test x"$sourcedir" != x""; then
-        curdir=`pwd`
-        value=`echo $value | sed -e "s%$sourcedir%$curdir%"`
+        value=`echo $value | sed -e "s%$sourcedir%$builddir%"`
       fi
       # if $value is not a subdir of $source
       if ! issubdir "$sourcedir" "$value"; then
@@ -181,8 +184,7 @@ do
     -I* )
       value=`echo $arg | cut -c3-`
       if test x"$sourcedir" != x""; then
-        curdir=`pwd`
-        value=`echo $value | sed -e "s%$sourcedir%$curdir%"`
+        value=`echo $value | sed -e "s%$sourcedir%$builddir%"`
       fi
       # if $value is not a subdir of $source
       if ! issubdir "$sourcedir" "$value"; then
@@ -205,27 +207,15 @@ do
       stem=`echo $arg | sed -e 's/\..*$//g'`
       extension=`echo $arg | sed -e 's/.*\.//g'`
       if test x"$extension" = x"obj"; then
-        sourcefiles="$sourcefiles $stem.cpp"
+        filenamefromobj=`cat $arg`
+        if test x"$filenamefromobj" != x""; then
+          sourcefiles="$sourcefiles $filenamefromobj"
+        fi
       fi
       ;;
     esac
   fi
 done
-
-if test x"$sourcefile" = x""; then :; else
-  usource=`cygpath -u $sourcefile`
-  justname=`echo $usource | sed -e "s%.*/%%"`
-  if test -e $justname; then :; else
-    cp $usource .
-  fi
-  if test x"$objectfile" = x""; then
-    objectfile=`echo $sourcefile | sed -e 's%^.*[/\\\\]%%g' -e 's%\.\(cpp\|c\)$%.o%'`
-  fi
-fi
-
-if test x"$objectfile" = x""; then :; else
-  date >$objectfile
-fi
 
 if test x"$dependfile" = x""; then :; else
   echo "" >$dependfile
@@ -233,6 +223,13 @@ fi
 
 stem=`echo $outputfile | sed -e 's/\..*$//g'`
 extension=`echo $outputfile | sed -e 's/.*\.//g'`
+
+if  test x"$extension" = x"obj"; then
+  # Put source filename in the (phony) obj file
+  usourcefile=`cygpath -u $sourcefile`
+  echo "$usourcefile">"$stem.obj"
+fi
+
 if ! test x"$extension" = x"exe"; then
   exit
 fi
@@ -244,7 +241,27 @@ if test -e sourcefiles.txt; then
 fi
 
 for filename in $sourcefiles; do
-  cat $sourcedir/cfg/$project_template_source | sed -e "s%@SOURCEFILE@%$filename%g">>sourcefiles.txt
+  # convert filename to relative path, copy to build dir if necessary
+  bfilename=`echo $filename | sed -e "s%$sourcedir%$builddir%"`
+  if ! test -f $bfilename; then
+    cp $filename $bfilename
+  fi
+  bdir=`echo $bfilename | sed -e 's%[^/]*$%%'`
+  if ! test x"$bdir" = x""; then
+    bname=`echo $bfilename | sed -e 's%^.*/%%'`
+    curdir=`pwd`
+    wcurdir=`cygpath -w $curdir`
+    wbdir=`cygpath -w $bdir`
+    wbdir2=`abs2dots $wbdir $wcurdir \\\\`
+    if ! test x"$wbdir2" = x""; then
+      filename="$wbdir2\\$bname"
+    fi
+  fi
+
+  # convert to dos format, and escape backslashes
+  wfilename=`cygpath -w $filename | sed -e 's%\\\\%\\\\\\\\%g'`
+
+  cat $sourcedir/cfg/$project_template_source | sed -e "s%@SOURCEFILE@%$wfilename%g">>sourcefiles.txt
 done
 
 cat $sourcedir/cfg/$project_template_main | sed -e "s/@PROJECTNAME@/$stem/g" \
