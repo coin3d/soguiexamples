@@ -26,11 +26,6 @@
 
 #include <Inventor/SoDB.h>
 
-// XXX
-#define HAVE_HARDCOPY 1 // hack
-#define HAVE_SIMVOLEON_LIBRARY 1
-#define HAVE_SMALLCHANGE_LIBRARY 1
-
 // this example requires HardCopy support, and uses Coin-specific
 // HarcCopy features as well...
 #if !defined(HAVE_HARDCOPY) || !defined(__COIN__)
@@ -62,6 +57,9 @@ main(int argc, char ** argv)
 #include <HardCopy/SoHardCopy.h>
 #include <HardCopy/SoVectorizePSAction.h>
 #include <HardCopy/SoVectorOutput.h>
+
+// FIXME: the lib inits below are duplicated from components/computils
+// -- should rather share the code. 20040204 mortene.
 
 #ifdef HAVE_SIMVOLEON_LIBRARY
 #include <VolumeViz/nodes/SoVolumeRendering.h>
