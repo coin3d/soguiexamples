@@ -12,11 +12,14 @@
 
 top_srcdir = @soguiexamples_src_dir@
 
-# **************************************************************************
-
 all: dspex executables
 
-# **************************************************************************
+executables : dspex
+	cd dspex; \
+	for filename in `find . -name '*.dsp' | sed -e 's%^\./%%'`; do \
+	  projectname=`echo $$filename | sed -e 's%.*/%%' -e 's%\.dsp$$%%'`; \
+	  cmd /C msdev $$filename /USEENV /MAKE "$$projectname - Win32 Debug" /REBUILD; \
+	done
 
 dspex:
 	@if test -d dspex; then :; else mkdir dspex; fi
@@ -64,20 +67,6 @@ dspex:
 	cp $(top_srcdir)/INSTALL dspex
 	cp $(top_srcdir)/NEWS dspex
 	cp $(top_srcdir)/README dspex
-
-executables:
-	@if test -d executables; then :; else mkdir executables; fi
-	cd executables; \
-	$(top_srcdir)/configure \
-          --with-toolkit=SoWin; \
-	$(MAKE) clean && $(MAKE); \
-	cp $(top_srcdir)/AUTHORS executables
-	cp $(top_srcdir)/BUGS.txt executables
-	cp $(top_srcdir)/COPYING executables
-	cp $(top_srcdir)/INSTALL executables
-	cp $(top_srcdir)/NEWS executables
-	cp $(top_srcdir)/README executables
-
 
 .PHONY: all dspex executables
 
