@@ -28,13 +28,51 @@
  *
  * ********************************************************************** */
 
+// FIXME: causes a crash when running on top of SGI Inventor with this
+// backtrace:
+//
+//  #0  0x4047740e in SoOutlineFontCache::getFont ()
+//     from /usr/local/sgi-inventor/usr/lib/libInventor.so
+//  #1  0x4047622c in SoText3::setupFontCache ()
+//     from /usr/local/sgi-inventor/usr/lib/libInventor.so
+//  #2  0x40475845 in SoText3::computeBBox ()
+//     from /usr/local/sgi-inventor/usr/lib/libInventor.so
+//  #3  0x404676df in SoShape::getBoundingBox ()
+//     from /usr/local/sgi-inventor/usr/lib/libInventor.so
+//  #4  0x40413265 in SoNode::getBoundingBoxS ()
+//     from /usr/local/sgi-inventor/usr/lib/libInventor.so
+//  #5  0x4039cbaf in SoGetBoundingBoxAction::beginTraversal ()
+//     from /usr/local/sgi-inventor/usr/lib/libInventor.so
+//  #6  0x40399070 in SoAction::apply ()
+//     from /usr/local/sgi-inventor/usr/lib/libInventor.so
+//  #7  0x8049964 in timerSensorCallback (data=0x0) at coinhistory.cpp:818
+//  #8  0x4048d961 in SoSensor::trigger ()
+//     from /usr/local/sgi-inventor/usr/lib/libInventor.so
+//  #9  0x4048e8e2 in SoTimerSensor::trigger ()
+//     from /usr/local/sgi-inventor/usr/lib/libInventor.so
+//  #10 0x4048dee5 in SoSensorManager::processTimerQueue ()
+//     from /usr/local/sgi-inventor/usr/lib/libInventor.so
+//  #11 0x40078cf1 in SoXtEventHandler::xtTimerCallback ()
+//     from /usr/local/sgi-inventor/usr/lib/libInventorXt.so
+//  #12 0x4078a33a in _XtRemoveAllInputs () from /usr/X11R6/lib/libXt.so.6
+//  #13 0x4078a5a9 in XtAppNextEvent () from /usr/X11R6/lib/libXt.so.6
+//  #14 0x400789d0 in SoXt::mainLoop ()
+//
+// Looks like a bug in SGI Inventor that is hard to make a work-around
+// for.  20010919 mortene.
+
 #include <math.h>
 #include <stdlib.h>
+#include <time.h>
+
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 
-#include <Inventor/SbRotation.h>
+#include <Inventor/SbLinear.h>
 #include <Inventor/nodes/SoScale.h>
 #include <Inventor/nodes/SoBaseColor.h>
 #include <Inventor/nodes/SoCone.h>
@@ -1144,7 +1182,11 @@ main(
   //   SoWinExaminerViewer *viewer = new SoWinExaminerViewer(window);
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
 
+#ifdef HAVE_SOGLRENDERACTION_SORTED_OBJECT_SORTED_TRIANGLE_BLEND
   viewer->setTransparencyType( SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND );
+#else // !HAVE_SOGLRENDERACTION_SORTED_OBJECT_SORTED_TRIANGLE_BLEND
+  viewer->setTransparencyType( SoGLRenderAction::SORTED_OBJECT_BLEND );
+#endif // !HAVE_SOGLRENDERACTION_SORTED_OBJECT_SORTED_TRIANGLE_BLEND
 
   viewer->setSceneGraph( root );
 
@@ -1168,9 +1210,12 @@ main(
   viewer->setDecoration(FALSE);
   viewer->show();
   So@Gui@::show( window );
+
+#ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
   // Must do this _after_ show() to avoid the "Start"-bar being
-  // visible. (Bug!)
+  // visible with SoWin. (Bug!)
   (void)viewer->setFullScreen(TRUE);
+#endif // HAVE_SOCOMPONENT_SETFULLSCREEN
 
 
   So@Gui@::mainLoop();

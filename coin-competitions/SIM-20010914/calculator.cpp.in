@@ -75,24 +75,24 @@ const char * scenegraph[] = {
   "      DEF UnitCube Separator {",
   "        Coordinate3 {",
   "          point [",
-  "            0 0 0",
-  "            1 0 0",
-  "            1 1 0",
-  "            0 1 0",
-  "            0 0 1",
-  "            1 0 1",
-  "            1 1 1",
+  "            0 0 0,",
+  "            1 0 0,",
+  "            1 1 0,",
+  "            0 1 0,",
+  "            0 0 1,",
+  "            1 0 1,",
+  "            1 1 1,",
   "            0 1 1",
   "          ]",
   "        }",
   "        SoIndexedFaceSet {",
   "          coordIndex [",
-  "            0 1 5 4 -1",
-  "            0 3 2 1 -1",
-  "            0 4 7 3 -1",
-  "            1 2 6 5 -1",
-  "            2 3 7 6 -1",
-  "            4 5 6 7 -1",
+  "            0, 1, 5, 4, -1,",
+  "            0, 3, 2, 1, -1,",
+  "            0, 4, 7, 3, -1,",
+  "            1, 2, 6, 5, -1,",
+  "            2, 3, 7, 6, -1,",
+  "            4, 5, 6, 7, -1",
   "          ]",
   "        }",
   "      }",
@@ -488,9 +488,7 @@ main(
 {
   setbuf(stderr, NULL);
   setbuf(stdout, NULL);
-  @WIDGET@ window = So@Gui@::init(argc, argv, "Styx");
-
-  srand(SbTime::getTimeOfDay().getMsecValue());
+  @WIDGET@ window = So@Gui@::init(argv[0]);
 
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
   viewer->setTransparencyType(SoGLRenderAction::DELAYED_BLEND);
@@ -513,6 +511,8 @@ main(
   delete in;
   scene->ref();
 
+  // FIXME: getNodeByName() fails when running on top SGI
+  // Inventor. Investigate. 20010919 mortene.
   SoCallback * hook = (SoCallback *) getNodeByName(scene, "hook");
   if ( ! hook ) {
     fprintf(stderr, "hook not installed.\n");

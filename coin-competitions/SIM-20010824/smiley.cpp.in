@@ -26,6 +26,10 @@
  * Written by Marius Kintel <kintel@coin3d.org>.
  * ********************************************************************** */
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoPointSet.h>
 #include <Inventor/nodes/SoDrawStyle.h>

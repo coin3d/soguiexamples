@@ -28,6 +28,10 @@
  * <mariusbu@stud.ntnu.no>.
  * ********************************************************************** */
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/events/SoKeyboardEvent.h>

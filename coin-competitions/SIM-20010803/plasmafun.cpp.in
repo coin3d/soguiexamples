@@ -517,6 +517,8 @@ main(int argc, char **argv)
   texnode->wrapS = SoTexture2::CLAMP;
   texnode->wrapT = SoTexture2::CLAMP;
 
+  // FIXME: this crashes when running on SGI
+  // Inventor. Investigate. 20010919 mortene.
   texnode->image.setValue(SbVec2s((short) imagewidth, (short) imageheight), 3, NULL);
 
   SoMaterial * mat = new SoMaterial;

@@ -39,6 +39,13 @@
  *   sequence
  */
 
+// FIXME: there are several bugs when running on top of SGI
+// Inventor. Investigate. 20010919 mortene.
+
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 
@@ -64,6 +71,7 @@
 #include <Inventor/SoPickedPoint.h>
 #include <Inventor/SoPath.h>
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -97,7 +105,7 @@ main(
 {
   setbuf( stderr, NULL );
   setbuf( stdout, NULL );
-  @WIDGET@ win = So@Gui@::init(argc, argv, "Chart");
+  @WIDGET@ win = So@Gui@::init(argv[0]);
   srand(SbTime::getTimeOfDay().getMsecValue());
   viewer = new So@Gui@ExaminerViewer(win);
   viewer->setViewing(false);
@@ -743,21 +751,23 @@ vertexOrdering COUNTERCLOCKWISE\n\
 shapeType SOLID\n\
 }\n\
 DEF normals Normal {\n\
-vector [ 1 0 0  -1 0 0  0 1 0  0 -1 0  0 0 1  0 0 -1 ]\n\
+vector [ 1 0 0,  -1 0 0,  0 1 0,  0 -1 0,  0 0 1,  0 0 -1 ]\n\
 }\n\
 NormalBinding { value PER_FACE_INDEXED }\n\
 DEF points Coordinate3 {}\n\
-Separator {\n\
-PolygonOffset {\n\
+Separator {\n"
+#ifdef HAVE_SOPOLYGONOFFSET
+"PolygonOffset {\n\
 factor 1\n\
 units 1\n\
-}\n\
-IndexedFaceSet {\n\
+}\n"
+#endif //!HAVE_SOPOLYGONOFFSET
+"IndexedFaceSet {\n\
 coordIndex [\n\
-0 1 2 3 0 -1  4 7 6 5 4 -1  0 4 5 1 0 -1\n\
-1 5 6 2 1 -1  2 6 7 3 2 -1  3 7 4 0 3 -1\n\
+0, 1, 2, 3, 0, -1,  4, 7, 6, 5, 4, -1,  0, 4, 5, 1, 0, -1,\n\
+1, 5, 6, 2, 1, -1,  2, 6, 7, 3, 2, -1,  3, 7, 4, 0, 3, -1\n\
 ]\n\
-normalIndex [ 4 5 3 0 2 1 -1 ]\n\
+normalIndex [ 4, 5, 3, 0, 2, 1, -1 ]\n\
 }\n\
 }\n\
 MaterialBinding { value PER_FACE_INDEXED }\n\
@@ -774,16 +784,16 @@ direction 0 0 1\n\
 }\n\
 Coordinate3 {\n\
 point [\n\
-0.01 -0.17 -0.1  0.01 -0.06 -0.1  0.39 -0.06 -0.1  0.39 -0.17 -0.1\n\
-0.01 -0.29 -0.1  0.01 -0.18 -0.1  0.39 -0.18 -0.1  0.39 -0.29 -0.1\n\
-0.00  0.00 -0.2  0.40  0.00 -0.2  0.40 -0.40 -0.2  0.00 -0.40 -0.2\n\
+0.01 -0.17 -0.1,  0.01 -0.06 -0.1,  0.39 -0.06 -0.1,  0.39 -0.17 -0.1,\n\
+0.01 -0.29 -0.1,  0.01 -0.18 -0.1,  0.39 -0.18 -0.1,  0.39 -0.29 -0.1,\n\
+0.00  0.00 -0.2,  0.40  0.00 -0.2,  0.40 -0.40 -0.2,  0.00 -0.40 -0.2\n\
 ]\n\
 }\n\
 DEF menuposition Translation {}\n\
 DEF menusize Scale {}\n\
 Separator {\n\
 Material { diffuseColor 0.7 0.2 0.2 }\n\
-DEF baseface IndexedFaceSet { coordIndex [ 8 9 10 11 8 -1 ] }\n\
+DEF baseface IndexedFaceSet { coordIndex [ 8, 9, 10, 11, 8, -1 ] }\n\
 BaseColor { rgb 0 0 0 }\n\
 Translation { translation 0.02 -0.05 0 }\n\
 DEF wwwtext Text2 { string \"www.Coin3D.org\" }\n\
@@ -792,7 +802,7 @@ DEF positiontext Text2 { string \"\" }\n\
 }\n\
 Separator {\n\
 Material { diffuseColor 0 0.8 0.9 }\n\
-DEF interactface IndexedFaceSet { coordIndex [ 4 5 6 7 4 -1 ] }\n\
+DEF interactface IndexedFaceSet { coordIndex [ 4, 5, 6, 7, 4, -1 ] }\n\
 Translation { translation 0.02 -0.27 0 }\n\
 Scale { scaleFactor 0.01 0.01 0.01 }\n\
 BaseColor { rgb 0 0 0 }\n\
@@ -800,7 +810,7 @@ DEF interacttext AsciiText { string \"Interact\" }\n\
 }\n\
 Separator {\n\
 Material { diffuseColor 0 0.9 0.8 }\n\
-DEF demoface IndexedFaceSet { coordIndex [ 0 1 2 3 0 -1 ] }\n\
+DEF demoface IndexedFaceSet { coordIndex [ 0, 1, 2, 3, 0, -1 ] }\n\
 Translation { translation 0.02 -0.15 0 }\n\
 Scale { scaleFactor 0.01 0.01 0.01 }\n\
 BaseColor { rgb 0 0 0 }\n\

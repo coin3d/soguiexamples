@@ -20,7 +20,15 @@
 \**************************************************************************/
 // File: Moolah.cpp
 
-// Coin stuff
+// FIXME: doesn't work with SGI Inventor -- the <enter> doesn't
+// respond. Investigate.  20010919 mortene.
+
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+#include <stdlib.h> // atof()
+
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/events/SoKeyboardEvent.h>
@@ -167,9 +175,8 @@ int help( int argc, char ** argv )
 
 int exit( int argc, char ** argv )
 {
-  So@Gui@::exitMainLoop( );
-
-  return 0;
+  // FIXME: doesn't clean up resources.  20010919 mortene.
+  exit(0);
 }
 
 int add( int argc, char ** argv )
@@ -526,7 +533,11 @@ int main( int argc, char ** argv )
   viewer->setSceneGraph( root );
   viewer->setTitle( "Moolah" );
   viewer->show( );
+#ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
+  // FIXME: must be done after show(), or the "Start" taskbar will
+  // show with SoWin (this is a bug in SoWin). 20010919 mortene.
   viewer->setFullScreen( TRUE );
+#endif // HAVE_SOCOMPONENT_SETFULLSCREEN
   viewer->setDecoration( FALSE );
   viewer->setViewing( FALSE );
 
