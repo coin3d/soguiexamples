@@ -195,6 +195,7 @@ main(int argc, char ** argv)
   So@Gui@::mainLoop();
   
   // Clean up resources.
+  root->unref();
   delete eviewer;
 
   return 0;

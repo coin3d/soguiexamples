@@ -299,12 +299,13 @@ void WaveSurfaceKit::setDefaultValues(void)
   delete[] this->vertexPositions1;
   delete[] this->vertexPositions2;
 
-  this->vertexPositions0 = new SbVec3f[w*h];
-  this->vertexPositions1 = new SbVec3f[w*h];
-  this->vertexPositions2 = new SbVec3f[w*h];
 
   int numIndices = (w-1)*(h*2+1);
   int numVertices = w*h;
+  
+  this->vertexPositions0 = new SbVec3f[numVertices];
+  this->vertexPositions1 = new SbVec3f[numVertices];
+  this->vertexPositions2 = new SbVec3f[numVertices];
   
   int * indices = new int[numIndices];
   
@@ -324,7 +325,7 @@ void WaveSurfaceKit::setDefaultValues(void)
   
   k=0;
   // generate indices. -1 terminates each triangle strip
-  for(i=0; i<w; i++) {
+  for(i=0; i<w-1; i++) {
     for(j=0; j<h; j++) {
       indices[k] = i*h+j;
       indices[k+1] = (i+1)*h+j;
@@ -337,6 +338,7 @@ void WaveSurfaceKit::setDefaultValues(void)
       k+=2;
     }
   }
+  assert(numIndices == k);
    
   SoShapeHints* sHints = new SoShapeHints();
   // ensures double sided lighting
@@ -361,6 +363,7 @@ void WaveSurfaceKit::setDefaultValues(void)
   // use an indexed set of triangle strips for fast rendering
   SoIndexedTriangleStripSet* triangleStrips = new SoIndexedTriangleStripSet();
   triangleStrips->coordIndex.setValues(0, numIndices, indices);
+  delete [] indices;
 
   // this sets the parts we've just made
   setPart("appearance.material", material);
