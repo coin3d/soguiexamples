@@ -105,6 +105,7 @@ show_instructions(void)
                  "  * press ESC, then 'V' or 'G' to export a postscript file\n"
                  "    ('V' for a flat shading, 'G' for gouraud shading)\n"
                  "  * use a postscript viewer to examine the result\n\n"); 
+  fflush(stdout);
 }
 
 // *************************************************************************
@@ -171,12 +172,23 @@ event_cb(void * userdata, SoEventCallback * node)
 
     va->beginViewport(SbVec2f(offx, offy), SbVec2f(xsize, ysize));
     va->calibrate(viewer->getViewportRegion());
+
+    fprintf(stdout,"Vectorizing...");
+    fflush(stdout);
     
     va->apply(viewer->getSceneManager()->getSceneGraph());
-    va->endViewport();
-    va->endPage();
+    fprintf(stdout,"done\n");
+    fflush(stdout);
 
+    va->endViewport();
+    
+    fprintf(stdout,"Creating postscript file (%s)...", exportfilename);
+    fflush(stdout);
+    va->endPage();
     out->closeFile();
+
+    fprintf(stdout,"done\n");
+    fflush(stdout);
   }
 }
 
