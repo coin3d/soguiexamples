@@ -92,17 +92,23 @@ install_sh = @install_sh@
 soguiconfig = @soguiconfig@
 
 BUILT_SOURCES = \
-	computebbox.cpp
+	computebbox.cpp \
+	computexfbbox.cpp.in
 
 
-noinst_PROGRAMS = computebbox
+noinst_PROGRAMS = computebbox computexfbbox
 
 computebbox_SOURCES = computebbox.cpp
+
+computexfbbox_SOURCES = \
+        computexfbbox.cpp \
+        ComputeXfBoundingBox.cpp ComputeXfBoundingBox.h
+
 subdir = engines
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-noinst_PROGRAMS = computebbox$(EXEEXT)
+noinst_PROGRAMS = computebbox$(EXEEXT) computexfbbox$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_computebbox_OBJECTS = computebbox.$(OBJEXT)
@@ -110,6 +116,12 @@ computebbox_OBJECTS = $(am_computebbox_OBJECTS)
 computebbox_LDADD = $(LDADD)
 computebbox_DEPENDENCIES =
 computebbox_LDFLAGS =
+am_computexfbbox_OBJECTS = computexfbbox.$(OBJEXT) \
+	ComputeXfBoundingBox.$(OBJEXT)
+computexfbbox_OBJECTS = $(am_computexfbbox_OBJECTS)
+computexfbbox_LDADD = $(LDADD)
+computexfbbox_DEPENDENCIES =
+computexfbbox_LDFLAGS =
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -117,16 +129,22 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/computebbox.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/ComputeXfBoundingBox.Po \
+@AMDEP_TRUE@	$(DEPDIR)/computebbox.Po $(DEPDIR)/computexfbbox.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 CXXFLAGS = @CXXFLAGS@
-DIST_SOURCES = $(computebbox_SOURCES)
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES = $(computebbox_SOURCES) $(computexfbbox_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(computebbox_SOURCES)
+SOURCES = $(computebbox_SOURCES) $(computexfbbox_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -146,6 +164,9 @@ clean-noinstPROGRAMS:
 computebbox$(EXEEXT): $(computebbox_OBJECTS) $(computebbox_DEPENDENCIES) 
 	@rm -f computebbox$(EXEEXT)
 	$(CXXLINK) $(computebbox_LDFLAGS) $(computebbox_OBJECTS) $(computebbox_LDADD) $(LIBS)
+computexfbbox$(EXEEXT): $(computexfbbox_OBJECTS) $(computexfbbox_DEPENDENCIES) 
+	@rm -f computexfbbox$(EXEEXT)
+	$(CXXLINK) $(computexfbbox_LDFLAGS) $(computexfbbox_OBJECTS) $(computexfbbox_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -153,7 +174,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ComputeXfBoundingBox.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/computebbox.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/computexfbbox.Po@am__quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
@@ -308,6 +331,9 @@ uninstall-am: uninstall-info-am
 
 computebbox.cpp: $(srcdir)/computebbox.cpp.in
 	@( cd $(top_builddir); ./config.status --file=engines/computebbox.cpp)
+
+computexfbbox.cpp: $(srcdir)/computexfbbox.cpp.in
+	@( cd $(top_builddir); ./config.status --file=engines/computexfbbox.cpp)
 
 ############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
