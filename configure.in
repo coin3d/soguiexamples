@@ -231,6 +231,14 @@ else
   CXXFLAGS="$CXXFLAGS `$soguiconfig $alternate_option --cxxflags`"
   LDFLAGS="$LDFLAGS `$soguiconfig $alternate_option --ldflags`"
   LIBS="`$soguiconfig $alternate_option --libs` $LIBS"
+
+  AC_MSG_CHECKING([basic So$Gui linking])
+  AC_TRY_LINK([#include <Inventor/$Gui/So$Gui.h>],
+              [(void)So$Gui::init((const char *)NULL);],
+              [AC_MSG_RESULT(ok)],
+              [AC_MSG_RESULT(failed!)
+               AC_MSG_ERROR([Failed to link a simple test program -- see config.log for error information.])]
+             );
 fi
 
 AC_SUBST(GUI)
@@ -241,7 +249,7 @@ AC_SUBST(WIDGET)
 AC_SUBST(COMPONENTHEADER)
 
 # **************************************************************************
-# In case of building against SGI/TGS SoXt.
+# Inventor feature checking.
 
 ## FIXME: what is the point of setting up C here before C++? Strange.
 ## 20010919 mortene.
