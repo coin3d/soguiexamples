@@ -128,9 +128,6 @@ EOF
   EVENT="XAnyEvent *"
   COMPONENTHEADER=
 
-  AM_CONDITIONAL(HAVE_PLANEVIEWER, true)
-  AM_CONDITIONAL(HAVE_WALKVIEWER, true)
-  AM_CONDITIONAL(HAVE_FLYVIEWER, true)
   AM_CONDITIONAL(HAVE_SLIDERSETS, true)
   AM_CONDITIONAL(HAVE_MATERIALEDITOR, true)
   AM_CONDITIONAL(HAVE_DIRECTIONALLIGHTEDITOR, true)
@@ -202,12 +199,6 @@ else
 
   # Which component examples to build.
 
-  AM_CONDITIONAL(HAVE_PLANEVIEWER,
-    $soguiconfig $alternate_option --have-feature planeviewer)
-  AM_CONDITIONAL(HAVE_WALKVIEWER,
-    $soguiconfig $alternate_option --have-feature walkviewer)
-  AM_CONDITIONAL(HAVE_FLYVIEWER,
-    $soguiconfig $alternate_option --have-feature flyviewer)
   AM_CONDITIONAL(HAVE_SLIDERSETS,
     $soguiconfig $alternate_option --have-feature sliderset)
   AM_CONDITIONAL(HAVE_MATERIALEDITOR,
