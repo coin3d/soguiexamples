@@ -303,6 +303,8 @@ SIM_AC_HAVE_INVENTOR_FEATURE(
 # **************************************************************************
 # Use SmallChange if available.
 
+sim_ac_smallchange_desired=false
+
 SIM_AC_HAVE_SMALLCHANGE_IFELSE([
   CPPFLAGS="$CPPFLAGS `$sim_ac_smallchange_configcmd $alternate_option --cppflags`"
   CXXFLAGS="$CXXFLAGS `$sim_ac_smallchange_configcmd $alternate_option --cxxflags`"
