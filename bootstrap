@@ -16,6 +16,23 @@ AUTOMAKE_VER=1.4a    # Automake from CVS
 MACRODIR=cfg/m4
 AUTOMAKE_ADD=
 
+if test "$1" = "--clean"; then
+  rm -f aclocal.m4 \
+        config.h.in \
+        configure \
+        stamp-h.in \
+        cfg/config.guess \
+        cfg/config.sub \
+        cfg/depcomp \
+        cfg/install-sh \
+        cfg/missing \
+        cfg/mkinstalldirs
+  find . -name Makefile.in -print | xargs rm
+  exit
+elif test "$1" = "--add"; then
+  AUTOMAKE_ADD="--add-missing --foreign --copy"
+fi
+
 echo "Checking the installed configuration tools..."
 
 if test -z "`autoconf --version | grep \" $AUTOCONF_VER\" 2> /dev/null`"; then
@@ -67,18 +84,7 @@ autoheader
 echo "Running automake (generating the Makefile.in files)..."
 automake --foreign $AUTOMAKE_ADD
 
-AMBUGFIXES=`find . -name Makefile.in.diff`
-fixmsg=0
-for bugfix in $AMBUGFIXES; do
-  if test $fixmsg -eq 0; then
-    echo "[correcting automake bugs]"
-    fixmsg=1
-  fi
-  patch -p0 < $bugfix
-done
-
 echo "Running autoconf (generating ./configure)..."
 autoconf
 
 echo "Done."
-
