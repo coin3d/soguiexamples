@@ -57,8 +57,8 @@ main(
 
   (void)fprintf( stdout, "PointSet contains a total of %d points.\n\n", num );
   (void)fprintf( stdout, "Spin the pointset to see the moiré patterns change.\n" );
-  (void)fprintf( stdout, "Change between perspective camera to orthographic camera\n" );
-  (void)fprintf( stdout, "to get different types of patterns.\n" );
+  (void)fprintf( stdout, "You can also change between perspective camera and\n" );
+  (void)fprintf( stdout, "orthographic camera to get different types of patterns.\n" );
   (void)fprintf( stdout, "\n" );
   
   // draw style
