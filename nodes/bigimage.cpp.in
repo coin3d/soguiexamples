@@ -79,6 +79,7 @@ main(int argc, char ** argv)
 #include <Inventor/nodes/SoTexture2.h>
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoFaceSet.h>
+#include <Inventor/nodes/SoMaterial.h>
 #include <Inventor/nodes/SoTextureScalePolicy.h>
 
 // Global constants
@@ -161,8 +162,9 @@ texture(void)
 int
 main (int, char ** argv)
 {
-  (void)printf("This example shows how to use the BigImage functionality in"
-               "Coin to render\nlarge textures. Please wait, generating texture\n");
+  (void)printf("This example shows how to use the BigImage functionality in "
+               "Coin to render\nlarge textures. Please wait, generating a %dx%d Julia texture.\n",
+               texturewidth, textureheight);
 
   bitmap = new unsigned char[texturewidth*textureheight*3];
   // Generate a julia set to use as a texturemap
@@ -183,6 +185,11 @@ main (int, char ** argv)
   // Scene graph
   SoSeparator * root = new SoSeparator;
   root->ref();
+
+  SoMaterial * mat = new SoMaterial;
+  mat->diffuseColor = SbColor(1,1,1);
+
+  root->addChild(mat);
 
   // tell Coin to split the texture into several small textures, and
   // stitch them back together when rendering
@@ -212,11 +219,11 @@ main (int, char ** argv)
   // Setting up the examiner viewer
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
   viewer->setSceneGraph(root);
-  viewer->setTitle("Timer Sensor");
+  viewer->setTitle("BigImage rendering");
   viewer->viewAll();
   viewer->show();
-
   So@Gui@::show(window); // display the main window
+
   So@Gui@::mainLoop();   // main Coin event loop
   delete viewer;
   root->unref();
