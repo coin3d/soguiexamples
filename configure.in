@@ -24,7 +24,7 @@ AC_PROG_LIBTOOL
 # Search and set up necessary stuff to use the GUI library.
 
 AC_ARG_WITH(
-  [toolkit],
+  toolkit,
   AC_HELP_STRING([--with-toolkit=<toolkit>],
                  [select GUI toolkit to use (default=SoXt)]),
   [lwithval=`echo $withval | tr A-Z a-z`
@@ -33,9 +33,9 @@ AC_ARG_WITH(
     qt  | soqt)    sim_ac_gui_toolkit=soqt  ;;
     gtk | sogtk)   sim_ac_gui_toolkit=sogtk ;;
     be  | sobe)    sim_ac_gui_toolkit=sobe  ;;
-    inventorxt)    sim_ac_gui_toolkit=inventorxt  ;;
+    iv  | oiv)     sim_ac_gui_toolkit=oiv   ;;
     *) AC_MSG_ERROR([invalid --with-toolkit value: "$withval"]) ;;
-  esac]
+  esac],
   [sim_ac_gui_toolkit=soxt])
 
 # Environment variables to configure the generic sourcefiles.
