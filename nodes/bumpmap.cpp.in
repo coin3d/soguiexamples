@@ -44,8 +44,8 @@ main(int argc, char ** argv)
   root->ref();
 
   const char * info[] = {
-    "This example depends on a Coin specifc",
-    "extensions. This is just an informational",
+    "This example depends on a Coin specific",
+    "extension. This is just an informational",
     "message and not the real functionality",
     "of the example."
   };
