@@ -391,7 +391,7 @@ int remove( int argc, char ** argv )
   return 0;
 }
 
-int list( int argc, char ** argv )
+int list_command( int argc, char ** argv )
 {
 
   int num_children = selected_separator->getNumChildren( );
@@ -464,7 +464,7 @@ int main( int argc, char ** argv )
   executive.addCommand( "exit", exit );
   executive.addCommand( "add", add );
   executive.addCommand( "remove", remove );
-  executive.addCommand( "list", list );
+  executive.addCommand( "list", list_command );
   executive.addCommand( "select", select );
 
   out.out( "$ " );
