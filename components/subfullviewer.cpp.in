@@ -1,0 +1,81 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of demo programs for the Coin library.
+ *  Copyright (C) 2000-2001 by Systems in Motion. All rights reserved.
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, Prof Brochs gate 6, 7030 Trondheim, NORWAY
+ *  http://www.sim.no support@sim.no Voice: +47 22114160 Fax: +47 22207097
+ *
+\**************************************************************************/
+
+/*
+ * This example shows the approximately minimum amount of code
+ * necessary to subclass the So@Gui@FullViewer class.
+ */
+
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+#include <Inventor/nodes/SoCylinder.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@FullViewer.h>
+
+// *************************************************************************
+
+class SubclassFullViewer : public So@Gui@FullViewer {
+public:
+#if 1 // crash
+  SubclassFullViewer(@WIDGET@ parent) :
+    So@Gui@FullViewer(parent, NULL, TRUE, BUILD_NONE, BROWSER, TRUE)
+  {
+  }
+#else // no crash
+  SubclassFullViewer(@WIDGET@ parent) :
+    So@Gui@FullViewer(parent, NULL, TRUE, BUILD_NONE, BROWSER, FALSE)
+  {
+    @WIDGET@ widget = this->buildWidget( this->getWidget( ) );
+    this->setBaseWidget( widget );
+  }
+#endif
+
+  ~SubclassFullViewer( ) { }
+};
+
+// *************************************************************************
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  @WIDGET@ window = So@Gui@::init( argv[0] );
+  if ( window == NULL )
+    return -1;
+
+  SoNode * root = new SoCylinder;
+
+  SubclassFullViewer * viewer = new SubclassFullViewer( window );
+  viewer->setSceneGraph( root );
+  viewer->getCamera()->viewAll( root, viewer->getViewportRegion() );
+  viewer->show();
+
+  So@Gui@::show( window );
+  So@Gui@::mainLoop();
+
+  delete viewer;
+
+  return 0;
+} // main()
+
+// *************************************************************************
