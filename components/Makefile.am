@@ -165,4 +165,13 @@ grapheditor.cpp: $(srcdir)/grapheditor.cpp.in
 roster.cpp: $(srcdir)/roster.cpp.in
 	@( cd $(top_builddir); ./config.status --file=components/roster.cpp )
 
+directionallighteditor.cpp: $(srcdir)/directionallighteditor.cpp.in
+	@( cd $(top_builddir); ./config.status --file=components/directionallighteditor.cpp )
+
+materialeditor.cpp: $(srcdir)/materialeditor.cpp.in
+	@( cd $(top_builddir); ./config.status --file=components/materialeditor.cpp )
+
+printdialog.cpp: $(srcdir)/printdialog.cpp.in
+	@( cd $(top_builddir); ./config.status --file=components/printdialog.cpp )
+
 ############################################################################
