@@ -11,6 +11,7 @@
 #include <Inventor/nodes/SoCallback.h>
 #include <Inventor/nodes/SoText2.h>
 #include <Inventor/nodes/SoSwitch.h>
+#include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoBaseColor.h>
 #include <Inventor/nodes/SoTranslation.h>
 #include <Inventor/nodes/SoOrthographicCamera.h>
@@ -242,11 +243,13 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
 {
   SoOffscreenRenderer * renderer = new SoOffscreenRenderer(this->getGLSize());
 
-  if ( !THIS->transparency ) {
+  if ( THIS->transparency ) {
+    // FIXME: why has transparency stopped working?
+    // FIXME: transparency - maybe always set white background?
+    renderer->setComponents(SoOffscreenRenderer::RGB_TRANSPARENCY);
+  } else {
     renderer->setComponents(SoOffscreenRenderer::RGB);
     renderer->setBackgroundColor(this->getSceneManager()->getBackgroundColor());
-  } else {
-    renderer->setComponents(SoOffscreenRenderer::RGB_TRANSPARENCY);
   }
 
   if ( THIS->antialiasing ) {
@@ -256,12 +259,11 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
   renderer->render(THIS->realroot);
 
   if ( THIS->autocropping ) {
-    int components = renderer->getComponents();
+    const int components = renderer->getComponents();
     unsigned char * buffer = renderer->getBuffer();
     SbColor background = renderer->getBackgroundColor();
-    SbVec4f bg = SbVec4f(background[0], background[1], background[2], 0);
-    if ( THIS->transparency ) bg[3] = 0;
-    else bg[3] = 255;
+    SbVec4f bg = SbVec4f(background[0], background[1], background[2], 255);
+    if ( THIS->transparency ) bg[3] = 255;
     SbBool loop = TRUE;
     int left = 0;
     for ( ; loop && (left < THIS->viewport[0]); left++ )
@@ -290,27 +292,55 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
 	for ( int c = 0; loop && (c < components); c++ )
 	  if ( buffer[(bottom*components*THIS->viewport[0])+(i*components)+c] != bg[c] )
 	    loop = FALSE;
+    // FIXME: figure out if this is off-by-one, given the for-loop-breaking technique:
     left -= THIS->cropborder;
     right += THIS->cropborder;
     top -= THIS->cropborder;
     bottom += THIS->cropborder;
-    SoDebugError::postInfo("So@Gui@SnapshotViewer::createSnapshot",
-                           "Crop rectangle: (%d, %d) to (%d, %d)\n", left, top, right, bottom);
-    // FIXME: support autocropping
-    SoDebugError::postInfo("So@Gui@SnapshotViewer::createSnapshot",
-                              "Too bad SoOffscreenRenderer doesn't support cropping\n");
-    // renderer->setCropRectangle(left, top, right, bottom);
+
+    // we must hack cropping support
+    SoOffscreenRenderer * cropped = new SoOffscreenRenderer(SbViewportRegion(right-left+1, bottom-top+1));
+    if ( !THIS->transparency ) {
+      cropped->setComponents(SoOffscreenRenderer::RGB);
+    } else {
+      cropped->setComponents(SoOffscreenRenderer::RGB_TRANSPARENCY);
+    }
+    // FIXME: figure out how to fix background when crop-border extends image
+    // cropped->setBackgroundColor(SbColor(bg[0], bg[1], bg[2]));
+    {
+      SoSeparator * empty = new SoSeparator();
+      empty->ref();
+      cropped->render(empty);
+      empty->unref();
+    }
+    unsigned char * newbuf = cropped->getBuffer();
+    for ( int y = top; y <= bottom; y++ ) {
+      if ( (y >= 0) && (y < THIS->viewport[1]) ) {
+        for ( int x = left; x <= right; x++ ) {
+          if ( (x >= 0) && (x < THIS->viewport[0]) ) {
+            for ( int a = 0; a < components; a++ ) {
+              newbuf[((y-top)*components*(right-left+1))+((x-left)*components)+a] =
+                buffer[(y*components*THIS->viewport[0])+(x*components)+a];
+            }
+          }
+        }
+      }
+    }
+    delete renderer;
+    renderer = cropped;
   }
 
   const char * format = strrchr(filename, '.');
   if ( format ) format++;
   else format = "rgb";
   if ( !renderer->isWriteSupported(format) ) {
-    SoDebugError::postWarning("So@Gui@SnapshotViewer::createSnapshot", "\"%s\" is not a supported image file format - writing as rgb\n", format);
+    SoDebugError::postWarning("So@Gui@SnapshotViewer::createSnapshot",
+                              "\"%s\" is not a supported format - writing as rgb\n", format);
     format = "rgb";
   }
   if ( !renderer->writeToFile(filename, format) ) {
-    SoDebugError::post(":So@Gui@SnapshotViewer::createSnapshot", "error writing snapshot with format %s\n", format);
+    SoDebugError::post("So@Gui@SnapshotViewer::createSnapshot",
+                       "error writing snapshot with format %s\n", format);
     THIS->infotext->string.set1Value(STATUS_LINE, "SAVE ERROR");
   } else {
     THIS->infotext->string.set1Value(STATUS_LINE, "SAVE OK");
