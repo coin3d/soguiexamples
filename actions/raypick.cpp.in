@@ -19,6 +19,8 @@
  *
 \**************************************************************************/
 
+// FIXME: not working yet!  20010916 mortene.
+
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SoPickedPoint.h>
