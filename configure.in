@@ -98,14 +98,11 @@ EOF
   EVENT="XAnyEvent *"
   COMPONENTHEADER=
 
-  AM_CONDITIONAL(HAVE_RENDERAREA, true)
   AM_CONDITIONAL(HAVE_EXAMINERVIEWER, true)
   AM_CONDITIONAL(HAVE_PLANEVIEWER, true)
   AM_CONDITIONAL(HAVE_WALKVIEWER, true)
   AM_CONDITIONAL(HAVE_FLYVIEWER, true)
-  AM_CONDITIONAL(HAVE_LIGHTSLIDERSET, true)
-  AM_CONDITIONAL(HAVE_MATERIALSLIDERSET, true)
-  AM_CONDITIONAL(HAVE_TRANSFORMSLIDERSET, true)
+  AM_CONDITIONAL(HAVE_SLIDERSETS, true)
   AM_CONDITIONAL(HAVE_MATERIALEDITOR, true)
   AM_CONDITIONAL(HAVE_DIRECTIONALLIGHTEDITOR, true)
   AM_CONDITIONAL(HAVE_MATERIALLIST, true)
@@ -177,10 +174,6 @@ else
   # Which examples to build. These env vars also taken from
   # libconfigvars.sh of the "parent module".
 
-  AM_CONDITIONAL(HAVE_ROSTER,
-    $soguiconfig --have-feature roster)
-  AM_CONDITIONAL(HAVE_RENDERAREA,
-    $soguiconfig --have-feature renderarea)
   AM_CONDITIONAL(HAVE_EXAMINERVIEWER,
     $soguiconfig --have-feature examinerviewer)
   AM_CONDITIONAL(HAVE_PLANEVIEWER,
@@ -189,14 +182,8 @@ else
     $soguiconfig --have-feature walkviewer)
   AM_CONDITIONAL(HAVE_FLYVIEWER,
     $soguiconfig --have-feature flyviewer)
-  AM_CONDITIONAL(HAVE_CUSTOMVIEWER,
-    $soguiconfig --have-feature customviewer)
-  AM_CONDITIONAL(HAVE_LIGHTSLIDERSET,
-    $soguiconfig --have-feature lightsliderset)
-  AM_CONDITIONAL(HAVE_MATERIALSLIDERSET,
-    $soguiconfig --have-feature materialsliderset)
-  AM_CONDITIONAL(HAVE_TRANSFORMSLIDERSET,
-    $soguiconfig --have-feature transformsliderset)
+  AM_CONDITIONAL(HAVE_SLIDERSETS,
+    $soguiconfig --have-feature sliderset)
   AM_CONDITIONAL(HAVE_MATERIALEDITOR,
     $soguiconfig --have-feature materialeditor)
   AM_CONDITIONAL(HAVE_DIRECTIONALLIGHTEDITOR,
@@ -205,8 +192,6 @@ else
     $soguiconfig --have-feature materiallist)
   AM_CONDITIONAL(HAVE_PRINTDIALOG,
     $soguiconfig --have-feature printdialog)
-  AM_CONDITIONAL(HAVE_GRAPHEDITOR,
-    $soguiconfig --have-feature grapheditor)
 
   CPPFLAGS="`$soguiconfig --cppflags` $CPPFLAGS"
   LDFLAGS="`$soguiconfig --ldflags` $LDFLAGS"

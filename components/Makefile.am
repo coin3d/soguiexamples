@@ -11,12 +11,7 @@ roster_SOURCES = \
 	roster.cpp
 
 ## So@Gui@RenderArea component
-if HAVE_RENDERAREA
 RENDERAREA = renderarea
-else
-RENDERAREA =
-endif
-
 renderarea_SOURCES = \
 	renderarea.cpp \
 	computils.cpp \
@@ -76,11 +71,11 @@ flyviewer_SOURCES = \
 	computils.h
 
 ## So@Gui@CustomViewer component
-if HAVE_CUSTOMVIEWER
-CUSTOMVIEWER = customviewer
-else
+# if HAVE_CUSTOMVIEWER
+# CUSTOMVIEWER = customviewer
+# else
 CUSTOMVIEWER =
-endif
+# endif
 
 customviewer_SOURCES = \
 	customviewer.cpp \
@@ -88,34 +83,18 @@ customviewer_SOURCES = \
 	computils.h
 
 ## So@Gui@LightSliderSet component
-if HAVE_LIGHTSLIDERSET
-LIGHTSLIDERSET = lightsliderset
+if HAVE_SLIDERSETS
+SLIDERSETS = lightsliderset materialsliderset materialsliderset2 transformsliderset
 else
-LIGHTSLIDERSET =
+SLIDERSETS =
 endif
 
 lightsliderset_SOURCES = \
 	lightsliderset.cpp
-
-## So@Gui@MaterialSliderSet component
-if HAVE_MATERIALSLIDERSET
-MATERIALSLIDERSET = materialsliderset materialsliderset2
-else
-MATERIALSLIDERSET =
-endif
-
 materialsliderset_SOURCES = \
 	materialsliderset.cpp
 materialsliderset2_SOURCES = \
 	materialsliderset2.cpp
-
-## So@Gui@TransformSliderSet component
-if HAVE_TRANSFORMSLIDERSET
-TRANSFORMSLIDERSET = transformsliderset
-else
-TRANSFORMSLIDERSET =
-endif
-
 transformsliderset_SOURCES = \
 	transformsliderset.cpp
 
@@ -160,11 +139,11 @@ printdialog_SOURCES = \
 	printdialog.cpp
 
 ## So@Gui@GraphEditor component
-if HAVE_GRAPHEDITOR
-GRAPHEDITOR = grapheditor
-else
+# if HAVE_GRAPHEDITOR
+# GRAPHEDITOR = grapheditor
+# else
 GRAPHEDITOR =
-endif
+# endif
 
 grapheditor_SOURCES = grapheditor.cpp \
 	computils.cpp \
@@ -192,8 +171,7 @@ BUILT_SOURCES = \
 
 noinst_PROGRAMS = $(ROSTER) $(RENDERAREA) $(EXAMINERVIEWER) \
 	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) $(CUSTOMVIEWER) \
-	$(LIGHTSLIDERSET) $(MATERIALSLIDERSET) $(TRANSFORMSLIDERSET) \
-	$(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
+	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
 	$(MATERIALLIST) $(PRINTDIALOG) $(GRAPHEDITOR)
 
 ############################################################################
