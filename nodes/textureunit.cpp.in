@@ -1,8 +1,287 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2003 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+// this example requires the SoTextureUnit node
+#if !defined(HAVE_SOTEXTUREUNIT)
+
+#include <Inventor/nodes/SoText3.h>
 #include <stdio.h>
 
-int main(int argc, char ** argv)
+int
+main(int argc, char ** argv)
 {
-  fprintf(stderr,"example coming soon\n");
-  return 0;
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  const char * info[] = {
+    "This example depends on a Coin specifc",
+    "extensions. This is just an informational",
+    "message and not the real functionality",
+    "of the example."
+  };
+
+  SoText3 * msg = new SoText3;
+  msg->justification = SoText3::CENTER;
+  msg->string.setValues(0, sizeof(info) / sizeof(const char *), info);
+  root->addChild(msg);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->show();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+
+  return 1;
 }
+
+#else // ! HAVE_SOTEXTUREUNIT
+
+#include <stdlib.h> // exit()
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoTextureCoordinate2.h>
+#include <Inventor/nodes/SoFaceSet.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoTextureUnit.h>
+#include <Inventor/nodes/SoTexture2Transform.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+#include <Inventor/nodes/SoComplexity.h>
+
+// Global constants
+const int texturewidth = 512;
+const int textureheight = 512;
+
+// Global variables
+static double cr = 0.33;
+static double ci = 0.43;
+
+// Global pointer
+static unsigned char * bitmap;
+
+// Function to generate a julia set
+// Parameters:
+//  double cr   - real part of the julia set point
+//  double ci   - imaginary part of the julia set point
+//  float zoon  - lenth of the square to display (zoom*zoom), center (0,0)
+//  int width   - width of the bitmap
+//  int height  - height of the bitmap
+//  int mult    - number to multiply each color by.
+//  unsigned char * bmp - pointer to the bitmap
+//  int n       - number of itterations 
+static void
+julia(double crr, double cii, float zoom, int width, int height, int mult, 
+      unsigned char * bmp, int n)
+{
+  double zr, zr_old, zi;
+  int w;
+
+  for (int y=0; y<height/2; y++)
+    for (int x=0; x<width; x++) {
+      zr = ((double)(x)/(double)width)*zoom-zoom/2;
+      zi = ((double)(y)/(double)height)*zoom-zoom/2;
+      for (w = 0; (w < n) && (zr*zr+zi*zi)<n; w++) {
+        zr_old = zr;
+        zr = zr*zr - zi*zi + crr;
+        zi = 2*zr_old*zi + cii;
+      }
+      
+      int c = (255-w*mult);
+
+      unsigned char r, g, b;
+
+      if (c < 128) {
+        c = 128 - c;
+        r = g = b = c * 2;
+      }
+      else {
+        c -= 128;
+        r = (255 * c) >> 7;
+        g = (102 * c) >> 7;
+        b = 0;
+      }
+
+      bmp[3*(y*width+x)] = r;;
+      bmp[3*(y*width+x)+1] = g;
+      bmp[3*(y*width+x)+2] = b;
+
+      bmp[3*(((height-y)*width)-(x+1))] = r;
+      bmp[3*(((height-y)*width)-(x+1))+1] = g;
+      bmp[3*(((height-y)*width)-(x+1))+2] = b;
+    }
+}
+
+// Function that loads a texture from memory, and return a pointer to a
+// SoTexture2 node containing this texture..
+// Return:
+//  SoTexture2 *
+static SoTexture2 *
+texture(void)
+{
+  SoTexture2 * texture = new SoTexture2;
+  texture->image.setValue(SbVec2s(texturewidth, textureheight), 3, bitmap);
+  texture->model = SoTexture2::MODULATE;
+  texture->blendColor.setValue(1.0, 0.0, 0.0);
+  return texture;
+}
+
+static void
+timer_cb(void * closure, SoSensor * s)
+{
+  SoTexture2Transform * ttransform = (SoTexture2Transform*) closure;
+  SoTimerSensor * timer = (SoTimerSensor*) s;
+
+  SbTime t = SbTime::getTimeOfDay();
+  SbTime start = timer->getBaseTime();
+
+  float diff = (float) (t.getValue() - start.getValue());
+  float scale = (float) fmod((double) diff, 4.0);
+
+  // create smooth scale animation
+  if (scale > 2.0f) scale = 4.0f - scale;
+  scale *= 0.5f; // normalize between 0 and 1
+  scale = 1.0f - (float) cos(scale * 2*M_PI);
+  scale *= 8.0f;
+  scale += 1;
+  ttransform->scaleFactor = SbVec2f(scale, scale);
+
+  ttransform->rotation = diff;
+}
+
+int
+main (int, char ** argv)
+{
+  (void)printf("This example shows how to use the TextureUnit functionality in "
+               "Coin to render\nshapes with more than one texture\n");
+
+  bitmap = new unsigned char[texturewidth*textureheight*3];
+  // Generate a julia set to use as a texturemap
+  julia(cr, ci, 2.5, texturewidth, textureheight, 4, bitmap, 64);
+
+  // Initialize
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
+  
+  SoTexture2 * texnode = texture();
+
+  // Enable backface culling
+  SoShapeHints * hints = new SoShapeHints;
+
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  // Scene graph
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  SoMaterial * mat = new SoMaterial;
+  mat->diffuseColor = SbColor(1,1,1);
+
+  root->addChild(mat);
+  root->addChild(hints);
+
+  // add unit 0 texture
+  root->addChild(texnode);
+
+  SoTextureCoordinate2 * tc = new SoTextureCoordinate2;
+  const float tcoords[][2] = {{0.0f,0.0f},{1.0f,0.0f},{1.0f,1.0f},{0.0f, 1.0f}};
+  tc->point.setValues(0, 4, tcoords); 
+  root->addChild(tc);
+
+  SoGroup * unit1 = new SoGroup;
+  SoTextureUnit * tu = new SoTextureUnit;
+  tu->unit = 1;
+  unit1->addChild(tu);
+  unit1->addChild(tc);
+
+  SoComplexity * cmplx = new SoComplexity;
+  cmplx->textureQuality = 0.01f;
+  unit1->addChild(cmplx);
+
+  SoTexture2 * tex1 = new SoTexture2;
+  const unsigned char data[] = {0xff, 0x88, 0x88, 0xff};
+  tex1->image.setValue(SbVec2s(2,2), 1, data);
+  unit1->addChild(tex1);
+
+  SoTexture2Transform * ttransform = new SoTexture2Transform;
+  ttransform->center = SbVec2f(0.5f, 0.5f);
+  unit1->addChild(ttransform);
+  
+  root->addChild(unit1);
+
+  SoCoordinate3 * c3 = new SoCoordinate3;
+  c3->point.setNum(4);
+  SbVec3f * p = c3->point.startEditing();
+  p[0] = SbVec3f(0.0f, 0.0, 0.0f);
+  p[1] = SbVec3f(1.0f, 0.0, 0.0f);
+  p[2] = SbVec3f(1.0f, 1.0, 0.0f);
+  p[3] = SbVec3f(0.0f, 1.0, 0.0f);
+  c3->point.finishEditing();
+  root->addChild(c3);
+
+  SoFaceSet * fs = new SoFaceSet;
+  fs->numVertices = 4;
+
+  root->addChild(fs);
+
+  // Setting up the examiner viewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("TextureUnit");
+  viewer->viewAll();
+  viewer->show();
+  So@Gui@::show(window); // display the main window
+
+  SoTimerSensor * sensor = new SoTimerSensor(timer_cb, ttransform);
+  sensor->setInterval(SbTime(1.0f/30.0f));
+  sensor->setBaseTime(SbTime::getTimeOfDay());
+  sensor->schedule();
+
+  So@Gui@::mainLoop();   // main Coin event loop
+  delete viewer;
+  root->unref();
+
+  delete[] bitmap;
+  return 0;  
+}
+
+#endif // HAVE_SOTEXTUREUNIT
 
