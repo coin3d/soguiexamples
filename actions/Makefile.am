@@ -1,13 +1,14 @@
 ############################################################################
 
-BUILT_SOURCES = search.cpp raypick.cpp
+BUILT_SOURCES = search.cpp raypick.cpp intersection.cpp
 
-noinst_PROGRAMS = search raypick tesselate matrixtransform
+noinst_PROGRAMS = search raypick tesselate matrixtransform intersection
 
 search_SOURCES = search.cpp
 raypick_SOURCES = raypick.cpp
 tesselate_SOURCES = tesselate.cpp
 matrixtransform_SOURCES = matrixtransform.cpp
+intersection_SOURCES = intersection.cpp
 
 ############################################################################
 
@@ -16,5 +17,8 @@ search.cpp: $(srcdir)/search.cpp.in
 
 raypick.cpp: $(srcdir)/raypick.cpp.in
 	@( cd $(top_builddir); ./config.status --file=actions/raypick.cpp)
+
+intersection.cpp: $(srcdir)/intersection.cpp.in
+	@( cd $(top_builddir); ./config.status --file=actions/intersection.cpp)
 
 ############################################################################
