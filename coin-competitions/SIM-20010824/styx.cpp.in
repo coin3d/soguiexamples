@@ -203,9 +203,9 @@ getNodeByName(SoNode * root, const char * name)
   static SoSearchAction * action;
   if ( !action ) action = new SoSearchAction;
   action->reset();
-  action->setFind(SoSearchAction::NODE);
-  action->setInterest(SoSearchAction::FIRST);
+//  action->setFind(SoSearchAction::NAME);
   action->setName(SbName(name));
+  action->setInterest(SoSearchAction::FIRST);
   action->apply(root);
   if ( !action->isFound() ) return NULL;
   return action->getPath()->getTail();
