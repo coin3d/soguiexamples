@@ -10,7 +10,7 @@
 
 DIE=false
 
-AUTOCONF_VER=2.52e  # Autoconf from CVS
+AUTOCONF_VER=2.5
 AUTOMAKE_VER=1.5
 
 MACRODIR=cfg/m4
@@ -75,6 +75,6 @@ echo "Running autoheader (generating config.h.in)..."
 autoheader
 
 echo "Running automake (generating the Makefile.in files)..."
-automake -v $AUTOMAKE_ADD
+automake $AUTOMAKE_ADD
 
 echo "Done."
