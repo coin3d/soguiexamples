@@ -34,14 +34,13 @@
 #include <VolumeViz/nodes/SoVolumeData.h>
 #include <VolumeViz/nodes/SoVolumeRender.h>
 #include <VolumeViz/nodes/SoTransferFunction.h>
-#include <VolumeViz/nodes/SoVolumeFaceSet.h>
 #include <VolumeViz/nodes/SoVolumeTriangleStripSet.h>
 
 // *************************************************************************
 
-#define VOLUMESIZE_X 64
-#define VOLUMESIZE_Y 64
-#define VOLUMESIZE_Z 64
+#define DEFAULTVOLUMESIZE_X 64
+#define DEFAULTVOLUMESIZE_Y 64
+#define DEFAULTVOLUMESIZE_Z 64
 
 SbVec3f manipscalefactor(0.1f, 0.1f, 0.1f); // ManipDragger scaling size 
 int fence_segments = 4; // Default number of fence segments
@@ -209,7 +208,7 @@ int main(int argc, char * argv[])
   if (window == NULL) exit(1);
   SoVolumeRendering::init();
 
-  printf("Volume FaceSet demonstration.\n"
+  printf("Volume fence demonstration.\n"
          " Usage: $ %s [volfile [nr. of fence-segments]]\n", argv[0]);
  
   // Create root separator
@@ -217,7 +216,7 @@ int main(int argc, char * argv[])
   root->ref();
 
   // Setup data to visualize
-  SbVec3s dim(VOLUMESIZE_X, VOLUMESIZE_Y, VOLUMESIZE_Z); 
+  SbVec3s dim(DEFAULTVOLUMESIZE_X, DEFAULTVOLUMESIZE_Y, DEFAULTVOLUMESIZE_Z); 
   SoVolumeData * voldata = new SoVolumeData();  
   unsigned char * voltexture = NULL;
 
