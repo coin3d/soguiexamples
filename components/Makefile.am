@@ -135,6 +135,10 @@ noinst_PROGRAMS = renderarea backgroundimg examinerviewer overlay \
 
 ############################################################################
 
+# FIXME: from what I can gather from some other module, it looks like
+# .cpp.in -> .cpp conversion by config.status is handled automatically
+# by Automake now -- so this can probably be removed. Test. 20030820 mortene.
+
 computils.cpp: $(srcdir)/computils.cpp.in
 	@( cd $(top_builddir); ./config.status --file=components/computils.cpp )
 
