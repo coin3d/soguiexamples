@@ -1,0 +1,79 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of demo programs for the Coin library.
+ *  Copyright (C) 2000-2001 by Systems in Motion. All rights reserved.
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, Prof Brochs gate 6, 7030 Trondheim, NORWAY
+ *  http://www.sim.no support@sim.no Voice: +47 22114160 Fax: +47 22207097
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoBaseColor.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoMarkerSet.h>
+#include <Inventor/nodes/SoSeparator.h>
+
+// FIXME: should add code to show how to set up one's own marker
+// graphics. 20010823 mortene.
+
+// *************************************************************************
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  const float xyz[][3] = {
+    { -1, -1, -1 },
+    { 1, 1, 1 }
+  };
+
+  SoCoordinate3 * coord3 = new SoCoordinate3;
+  coord3->point.setValues(0, sizeof(xyz) / sizeof(float[3]), xyz);
+  root->addChild(coord3);
+
+  const int markeridx[] = {
+    SoMarkerSet::CROSS_9_9,
+    SoMarkerSet::PINE_TREE_FILLED_9_9
+  };
+  SoMarkerSet * markerset = new SoMarkerSet;
+  markerset->markerIndex.setValues(0, sizeof(markeridx) / sizeof(int),
+                                   markeridx);
+  root->addChild(markerset);
+
+  SoBaseColor * cubecol = new SoBaseColor;
+  cubecol->rgb.setValue(SbColor(0.5, 0, 0));
+  root->addChild(cubecol);
+
+  SoCube * cube = new SoCube;
+  root->addChild(cube);
+
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->show();
+  So@Gui@::show(window);
+
+  So@Gui@::mainLoop();
+
+  root->unref();
+  delete viewer;
+  return 0;
+}
