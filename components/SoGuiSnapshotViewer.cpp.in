@@ -423,6 +423,13 @@ So@Gui@SnapshotViewer::processSoEvent(const SoEvent * const event)
     case SoKeyboardEvent::S: // 's' for snapshot
       if ( kbevent->getState() == SoButtonEvent::DOWN ) {
         this->createSnapshot(this->getDefaultSnapshotFilename());
+        this->showInfo(INFO_TIME);
+      }
+      return TRUE;
+    case SoKeyboardEvent::E: // 'e' for eps-snapshot
+      if ( kbevent->getState() == SoButtonEvent::DOWN ) {
+        this->createSnapshot("snapshot.eps");
+        this->showInfo(INFO_TIME);
       }
       return TRUE;
     default:
