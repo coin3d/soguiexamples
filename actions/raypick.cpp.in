@@ -44,8 +44,8 @@ azimuth_angle(SbVec3f north, SbVec3f east, SbVec3f directionvec)
   SbPlane compassplane(SbVec3f(0, 0, 0), north, east);
 
   // Project input vector into the compass plane.
-  float d = compassplane.getDistance(directionvec);
-  directionvec = directionvec - (compassplane.getNormal() * d);
+  float dist2plane = directionvec.dot(compassplane.getNormal()) - compassplane.getDistanceFromOrigin();
+  directionvec = directionvec - (compassplane.getNormal() * dist2plane);
 
   // Find absolute angle in the [0, PI] range versus the north vector.
   directionvec.normalize();
@@ -70,8 +70,8 @@ static float
 elevation_angle(SbPlane groundplane, SbVec3f directionvec)
 {
   // Project input vector into a mirrored vector in the ground plane.
-  float d = groundplane.getDistance(directionvec);
-  SbVec3f groundvec = directionvec - (groundplane.getNormal() * d);
+  float dist2plane = directionvec.dot(groundplane.getNormal()) - groundplane.getDistanceFromOrigin();
+  SbVec3f groundvec = directionvec - (groundplane.getNormal() * dist2plane);
 
   // Find absolute angle in the [0, PI/2] range versus the projected
   // groundplane vector.

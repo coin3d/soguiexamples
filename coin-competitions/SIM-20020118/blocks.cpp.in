@@ -1555,7 +1555,7 @@ main(int argc, char **argv)
   viewer->setViewing(FALSE);
 
   SoTimerSensor * ts = new SoTimerSensor(time_cb, NULL);
-  ts->setInterval(1);
+  ts->setInterval(1.0f);
   ts->schedule();
 
   viewer->show();
