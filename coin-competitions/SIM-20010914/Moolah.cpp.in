@@ -67,7 +67,7 @@ MooOut out;
 MooTokenizer tokenizer;
 MooExecutive executive;
 unsigned int idx;
-MooString * string;
+MooString * str;
 MooString in;
 bool blink = true;
 MooList <SoSeparator *> parents;
@@ -116,12 +116,12 @@ void event_cb( void * userdata, SoEventCallback * node )
 
         // process tokens
         idx = 0;
-        string = NULL;
+        str = NULL;
 
         do {
-          string = tokenizer.gets( idx++ );
-          if ( ! string ) break;
-        } while ( string );
+          str = tokenizer.gets( idx++ );
+          if ( ! str ) break;
+        } while ( str );
 
         if ( executive.execute( tokenizer ) == -1 ) {
           out.out( "command not found\n" );
