@@ -116,6 +116,7 @@ static SoNormal * n;
 static SoCoordinate3 * c;
 static SoTextureCoordinate2 * tc;
 static SoBumpMap * bumpmap;
+static SoMaterial * bumpmaterial;
 static SoRotor * rotor;
 static int nsides = 66;
 static int nrings = 66;
@@ -434,6 +435,16 @@ event_cb(void * userdata, SoEventCallback * node)
   if (SO_KEY_PRESS_EVENT(event, R)) {
     rotor->on = !rotor->on.getValue();
   }
+  if (SO_KEY_PRESS_EVENT(event, S)) {
+    SbColor col = bumpmaterial->specularColor.getValue();
+    if (col[0] > 0.9f) {
+      col = SbColor(0.0f, 0.0f, 0.0f);
+    }
+    else {
+      col = SbColor(1.0f, 1.0f, 1.0f);      
+    }
+    bumpmaterial->specularColor = col;
+  }
   if (SO_KEY_PRESS_EVENT(event, NUMBER_1)) {
     adders[0] += add;
     updatebump = TRUE;
@@ -542,6 +553,7 @@ main(int argc, char **argv)
   (void)printf("  * Use arrow keys to adjust torus resolution.\n");
   (void)printf("  * Use keys 0-9 [SHIFT] to adjust bump map.\n");
   (void)printf("  * Use R to toggle Rotor on/off\n");
+  (void)printf("  * Use S to toggle specular shading on/off\n");
   (void)printf("  * Use ESC to toggle viewing mode on /off.\n\n\n");
 
   srand((unsigned int) time(NULL));
@@ -555,6 +567,7 @@ main(int argc, char **argv)
   mat->diffuseColor = SbColor(0.5f, 0.7f, 0.9f);
   mat->specularColor = SbColor(1.0f, 1.0f, 1.0f);
   mat->shininess = 0.9f;
+  bumpmaterial = mat;
 
   SoBumpMapTransform * bmt = new SoBumpMapTransform;
   bmt->scaleFactor = SbVec2f(4.0f, 4.0f);
