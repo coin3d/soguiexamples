@@ -323,6 +323,17 @@ SIM_AC_HAVE_SMALLCHANGE_IFELSE([
 sim_ac_simvoleon_desired=false
 
 if test x"$sim_ac_gui_toolkit" = x"soqt"; then
+
+  SIM_AC_QT_PROG(MOC, moc)
+  if test x"$MOC" = x"false"; then
+    SIM_AC_ERROR([no-moc])
+  fi
+
+  SIM_AC_QT_PROG(UIC, uic)
+  if test x"$UIC" = x"false"; then
+    SIM_AC_ERROR([no-uic])
+  fi
+
   SIM_AC_HAVE_SIMVOLEON_IFELSE([
     CPPFLAGS="$sim_ac_simvoleon_cppflags $CPPFLAGS"
     CFLAGS="$sim_ac_simvoleon_cflags $CFLAGS"
