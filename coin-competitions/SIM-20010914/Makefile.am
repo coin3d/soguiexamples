@@ -10,14 +10,14 @@ coinhistory_SOURCES = coinhistory.cpp
 kaos_SOURCES = kaos.cpp
 rec_SOURCES = rec.cpp
 
-moolah_SOURCES = Moolah.cpp
-EXTRA_moolah_SOURCES = \
-        MooExecutive.cpp MooExecutive.h \
-        MooList.cpp MooList.h \
-        MooOut.cpp MooOut.h \
-        MooString.cpp MooString.h \
-        MooTokenizer.cpp MooTokenizer.h \
-        font.h
+moolah_SOURCES = \
+	Moolah.cpp \
+	MooExecutive.cpp MooExecutive.h \
+	MooList.cpp MooList.h \
+	MooOut.cpp MooOut.h \
+	MooString.cpp MooString.h \
+	MooTokenizer.cpp MooTokenizer.h \
+	font.h
 
 
 BUILT_SOURCES = \

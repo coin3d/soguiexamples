@@ -101,14 +101,14 @@ coinhistory_SOURCES = coinhistory.cpp
 kaos_SOURCES = kaos.cpp
 rec_SOURCES = rec.cpp
 
-moolah_SOURCES = Moolah.cpp
-EXTRA_moolah_SOURCES = \
-        MooExecutive.cpp MooExecutive.h \
-        MooList.cpp MooList.h \
-        MooOut.cpp MooOut.h \
-        MooString.cpp MooString.h \
-        MooTokenizer.cpp MooTokenizer.h \
-        font.h
+moolah_SOURCES = \
+	Moolah.cpp \
+	MooExecutive.cpp MooExecutive.h \
+	MooList.cpp MooList.h \
+	MooOut.cpp MooOut.h \
+	MooString.cpp MooString.h \
+	MooTokenizer.cpp MooTokenizer.h \
+	font.h
 
 
 BUILT_SOURCES = \
@@ -141,7 +141,9 @@ kaos_OBJECTS = $(am_kaos_OBJECTS)
 kaos_LDADD = $(LDADD)
 kaos_DEPENDENCIES =
 kaos_LDFLAGS =
-am_moolah_OBJECTS = Moolah.$(OBJEXT)
+am_moolah_OBJECTS = Moolah.$(OBJEXT) MooExecutive.$(OBJEXT) \
+	MooList.$(OBJEXT) MooOut.$(OBJEXT) MooString.$(OBJEXT) \
+	MooTokenizer.$(OBJEXT)
 moolah_OBJECTS = $(am_moolah_OBJECTS)
 moolah_LDADD = $(LDADD)
 moolah_DEPENDENCIES =
@@ -175,10 +177,9 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(calculator_SOURCES) $(coinhistory_SOURCES) \
-	$(kaos_SOURCES) $(moolah_SOURCES) $(EXTRA_moolah_SOURCES) \
-	$(rec_SOURCES)
+	$(kaos_SOURCES) $(moolah_SOURCES) $(rec_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(calculator_SOURCES) $(coinhistory_SOURCES) $(kaos_SOURCES) $(moolah_SOURCES) $(EXTRA_moolah_SOURCES) $(rec_SOURCES)
+SOURCES = $(calculator_SOURCES) $(coinhistory_SOURCES) $(kaos_SOURCES) $(moolah_SOURCES) $(rec_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
