@@ -43,6 +43,7 @@
 
 // *************************************************************************
 
+static SoCoordinate3 * volumepoints = NULL;
 static SoCoordinate3 * pickpoints = NULL;
 
 // *************************************************************************
@@ -92,8 +93,8 @@ event_cb(void * ud, SoEventCallback * n)
       SbBool hit = detail->getFirstNonTransparentValue(NULL, NULL, &pos);
       if (hit) {
         // Adds a point marker to the picked point.
-        const int idx = pickpoints->point.getNum();
-        pickpoints->point.set1Value(idx, pos);
+        const int idx = volumepoints->point.getNum();
+        volumepoints->point.set1Value(idx, pos);
       }
       else {
         (void)fprintf(stdout, "fully transparent volume\n");
@@ -128,6 +129,17 @@ pickedPointsSubGraph(void)
   pickpoints = new SoCoordinate3;
   pickpoints->point.setNum(0);
   picksep->addChild(pickpoints);
+
+  picksep->addChild(new SoPointSet);
+
+  pointcolor = new SoBaseColor;
+  pointcolor->rgb.setValue(0, 1, 0);
+  picksep->addChild(pointcolor);
+
+  // The SoCoordinate3 pointer is a global variable.
+  volumepoints = new SoCoordinate3;
+  volumepoints->point.setNum(0);
+  picksep->addChild(volumepoints);
 
   picksep->addChild(new SoPointSet);
 
