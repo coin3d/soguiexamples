@@ -27,8 +27,56 @@
 #include <Inventor/nodes/SoMarkerSet.h>
 #include <Inventor/nodes/SoSeparator.h>
 
-// FIXME: should add code to show how to set up one's own marker
-// graphics. 20010823 mortene.
+// *************************************************************************
+
+// This function shows how to set up one's own marker graphics.
+
+static int
+add_new_somarkerset_marker(void)
+{
+  const int WIDTH = 18;
+  const int HEIGHT = 19;
+  const int BYTEWIDTH = (WIDTH + 7) / 2;
+
+  const char coin_marker[WIDTH * HEIGHT + 1] = {
+    ".+                "
+    "+@.+              "
+    " .@#.+            "
+    " +$@##.+          "
+    "  .%@&##.+        "
+    "  +$@&&*##.+      "
+    "   .%@&&*=##.+    "
+    "   +$@&&&&=-##.+  "
+    "    .%@&&&&&-;#&+ "
+    "    +$@&&&&&&=#.  "
+    "     .%@&&&&*#.   "
+    "     +$@&&&&#.    "
+    "      .%@&@%@#.   "
+    "      +$%@%.$@#.  "
+    "       .%%. .$@#. "
+    "       +$.   .$>#."
+    "        +     .$. "
+    "               .  "
+    "                  " };
+
+  int byteidx = 0;
+  unsigned char bitmapbytes[BYTEWIDTH * HEIGHT];
+  for (int h = 0; h < HEIGHT; h++) {
+    unsigned char bits = 0;
+    for (int w = 0; w < WIDTH; w++) {
+      if (coin_marker[(h * WIDTH) + w] != ' ') { bits |= (0x80 >> (w % 8)); }
+      if ((((w + 1) % 8) == 0) || (w == WIDTH - 1)) {
+        bitmapbytes[byteidx++] = bits;
+        bits = 0;
+      }
+    }
+  }
+
+  int MYAPP_ARROW = SoMarkerSet::getNumDefinedMarkers(); // add at end
+  SoMarkerSet::addMarker(MYAPP_ARROW, SbVec2s(WIDTH, HEIGHT),
+                         bitmapbytes, FALSE, TRUE);
+  return MYAPP_ARROW;
+}
 
 // *************************************************************************
 
@@ -37,12 +85,19 @@ main(int argc, char ** argv)
 {
   @WIDGET@ window = So@Gui@::init(argv[0]);
 
+  int customidx = add_new_somarkerset_marker();
+
   SoSeparator * root = new SoSeparator;
   root->ref();
 
+  SoBaseColor * col = new SoBaseColor;
+  col->rgb = SbColor(0.9f, 0.7f, 0.1f);
+  root->addChild(col);
+
   const float xyz[][3] = {
     { -1, -1, -1 },
-    { 1, 1, 1 }
+    { 1, 1, 1 },
+    { 1, -1, 1 }
   };
 
   SoCoordinate3 * coord3 = new SoCoordinate3;
@@ -51,7 +106,8 @@ main(int argc, char ** argv)
 
   const int markeridx[] = {
     SoMarkerSet::CROSS_9_9,
-    SoMarkerSet::PINE_TREE_FILLED_9_9
+    SoMarkerSet::PINE_TREE_FILLED_9_9,
+    customidx
   };
   SoMarkerSet * markerset = new SoMarkerSet;
   markerset->markerIndex.setValues(0, sizeof(markeridx) / sizeof(int),
