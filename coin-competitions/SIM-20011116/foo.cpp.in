@@ -1,0 +1,369 @@
+/* ------------------------------------------------------------------------
+ *                             F O O 
+ * ------------------------------------------------------------------------
+ * This is probably the most brilliant program you have ever seen,
+ * though unfortunately you are not likely to understand this right away. 
+ * Foo will change your life, but you are not going to notice it. It
+ * might seem to you that this is just a very primitive little
+ * application that shows a view moving cubes. It is not. 
+ * Foo will make you more beautiful, smart, successful, and charming.
+ * You will no longer spill your coffee over your freshly ironed
+ * trousers. You will get a parking slot directly in front of the office
+ * entrance. You will wake up in the morning and feel greeat.
+ * Tons of good things will happen to you just because of Foo. It's hard
+ * to explain, but you'll see for yourself. And the best thing is, you
+ * do not have to send this to everybody in your addressbook because
+ * This Is For Real (TM). Enjoy!
+ * ------------------------------------------------------------------------
+ * Usage:
+ * The goal of Foo is to take your mind off whatever is bothering you at
+ * the moment. I've tried to model it after the Chinese mobiles -- you
+ * know those constructions that have some spinnging wheels which move
+ * in unrelated directions? The point of those is to show that chaos and
+ * order are essentially the same phenomenon (three rotational movements 
+ * following a very simple pattern resulting in a seemingly random motion),
+ * and that sometimes you have to give up thinking to find an answer.
+ * 
+ * Use the mouse to introduce randomness into the system. The mouse
+ * motion will add an additional motion vector. Fool around for a little
+ * while, then lay back, concentrate on one of the little boxes, and
+ * follow its path. (This is the important part.) Follow the box. Don't
+ * look away. If your boss comes in, don't look away. If your phone rings,
+ * don't look away. If your computer crashes, don't look away. Keep staring
+ * at the blank screen and imagine the cube. You might try to disentangle 
+ * the translations involved ;) or just enjoy being unproductive for a 
+ * moment. Try it!
+ * 
+ * Use the mouse to introduce randomness into the system. The mouse
+ * motion will add an additional motion vector. Fool around for a little
+ * while, then lay back, concentrate on one of the little boxes, and
+ * follow its path. You might try to disentangle the translations
+ * involved ;) or just enjoy being unproductive for a moment. 
+ * Press 'q' to quit the program.
+ *
+ * There's an extra bonus to Foo. It can be used as "Hello World"
+ * translator. You know -- "hello world" -- the words that every
+ * programmer has their first program in whatever language spit out? I
+ * think that's boring, so I had my first Coin application say "Hei
+ * verden!" to me. To see some translations of these immortal words,
+ * press <esc> to switch into selection mode, then click on the plane to
+ * toggle the ">|<" logo off. You can now use 'T' to have your hello
+ * world application in your language of choice. Neat, isn't it?
+ *
+ * author:    karin "kyrah" kosina <kyrah@sim.no>
+ * date:      20011115
+ * ------------------------------------------------------------------------
+ */
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoPointLight.h>
+#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoRotor.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoShuttle.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoTransformSeparator.h>
+#include <Inventor/nodes/SoText3.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoSelection.h>
+
+
+// global data
+char* strings [] = {"h a l l o  w e l t !", 
+                      "c i a o  i l  m o n d o !", 
+                      "h e l l o  w o r l d !", 
+                      "h o l a  m u n d o !", 
+                      "b o n j o u r  l e  m o n d e !", 
+                      "h e i  v e r d e n !", 
+                      "o i  m u n d o !"};
+SoText3* text;
+int cur_id = -1;     // current texture id
+
+
+void
+selection_cb(void*, SoPath *selectionPath)
+{
+   if (selectionPath->getTail()->isOfType(SoCube::getClassTypeId())) {
+        if (cur_id != -1) {
+          text->string.setValue("> | <");
+          cur_id = -1;
+        } else {
+          if (++cur_id >=7) cur_id = 0;
+          text->string.setValue(strings[cur_id]);
+        }
+   } 
+}
+
+void
+key_cb(void* userData, SoEventCallback* event_cb)
+{
+   SoSelection* selection = (SoSelection*) userData;
+   const SoEvent* event = event_cb->getEvent();
+
+   if (cur_id == -1) return;
+   if (SO_KEY_PRESS_EVENT(event, T)) {
+      if (++cur_id >=7) cur_id = 0;
+      text->string.setValue(strings[cur_id]);
+      event_cb->setHandled();
+   } 
+}
+
+
+
+SoTransformSeparator*
+light()
+{
+   SoTransformSeparator* tfs = new SoTransformSeparator;
+
+   // moving blue light
+   SoShuttle *sh = new SoShuttle;
+   sh->translation0.setValue(0, -5, 0);
+   sh->translation1.setValue( 0,  5, 0);
+   SoPointLight * pl = new SoPointLight;
+   pl->color.setValue(0, 0, 0.5);
+
+   // moving green light
+   SoShuttle *sh1 = new SoShuttle;
+   sh1->translation0.setValue(5, 5, 0);
+   sh1->translation1.setValue( 0, -5, 3);
+   SoPointLight * pl1 = new SoPointLight;
+   pl1->color.setValue(0, 0.5, 0);
+
+   // moving yellow light
+   SoShuttle *sh2 = new SoShuttle;
+   sh2->translation0.setValue(5, 0, 5);
+   sh2->translation1.setValue(-5, 0, -5);
+   SoPointLight * pl2 = new SoPointLight;
+   pl2->color.setValue(1, 0, 1);
+
+   // two directional white lights from front and back
+   SoDirectionalLight * dl1 = new SoDirectionalLight;
+   dl1->direction.setValue(0, 0, -1);
+   dl1->color.setValue(1, 1, 1);  
+
+   SoDirectionalLight * dl2 = new SoDirectionalLight;
+   dl2->direction.setValue(0.5, 0, 1);
+   dl2->color.setValue(1, 1, 1);     
+
+   tfs->addChild(dl1);
+   tfs->addChild(dl2);
+   tfs->addChild(sh);
+   tfs->addChild(pl);
+   tfs->addChild(sh1);
+   tfs->addChild(pl1);
+   tfs->addChild(sh2);
+   tfs->addChild(pl2);
+
+   return tfs;
+}
+
+
+SoSeparator*
+boxes()
+{
+    SoSeparator* boxes = new SoSeparator;
+
+    SoRotor* rotor = new SoRotor;
+    rotor->speed = (float)0.5;
+    rotor->rotation.setValue(SbVec3f(0, 1, 0), -0.1); // counterclockwise
+    
+    SoCube* sBox = new SoCube;
+    sBox->width = .2;
+    sBox->height = .2;
+    sBox->depth = .2;
+
+    SoSeparator* box1 = new SoSeparator;
+    SoTransform* tfBox1 = new SoTransform;
+    tfBox1->translation.setValue(1.9, 2.0, 1.9);
+    box1->addChild(tfBox1);
+    box1->addChild(sBox);
+
+    SoSeparator* box2 = new SoSeparator;
+    SoTransform* tfBox2 = new SoTransform;
+    tfBox2->translation.setValue(-1.9, 2.0, 1.9);
+    box2->addChild(tfBox2);
+    box2->addChild(sBox);
+
+    SoSeparator* box3 = new SoSeparator;
+    SoTransform* tfBox3 = new SoTransform;
+    tfBox3->translation.setValue(-1.9, 2.0, -1.9);
+    box3->addChild(tfBox3);
+    box3->addChild(sBox);
+
+    SoSeparator* box4 = new SoSeparator;
+    SoTransform* tfBox4 = new SoTransform;
+    tfBox4->translation.setValue(1.9, 2.0, -1.9);
+    box4->addChild(tfBox4);
+    box4->addChild(sBox);
+
+    SoSeparator* box5 = new SoSeparator;
+    SoTransform* tfBox5 = new SoTransform;
+    tfBox5->translation.setValue(1.9, -2.0, 1.9);
+    box5->addChild(tfBox5);
+    box5->addChild(sBox);
+
+    SoSeparator* box6 = new SoSeparator;
+    SoTransform* tfBox6 = new SoTransform;
+    tfBox6->translation.setValue(-1.9, -2.0, 1.9);
+    box6->addChild(tfBox6);
+    box6->addChild(sBox);
+
+    SoSeparator* box7 = new SoSeparator;
+    SoTransform* tfBox7 = new SoTransform;
+    tfBox7->translation.setValue(-1.9, -2.0, -1.9);
+    box7->addChild(tfBox7);
+    box7->addChild(sBox);
+
+    SoSeparator* box8 = new SoSeparator;
+    SoTransform* tfBox8 = new SoTransform;
+    tfBox8->translation.setValue(1.9, -2.0, -1.9);
+    box8->addChild(tfBox8);
+    box8->addChild(sBox);
+
+    boxes->addChild(rotor);
+    boxes->addChild(box1);
+    boxes->addChild(box2);
+    boxes->addChild(box3);
+    boxes->addChild(box4);
+    boxes->addChild(box5);
+    boxes->addChild(box6);
+    boxes->addChild(box7);
+    boxes->addChild(box8);
+
+    return boxes;
+
+}
+
+
+SoSeparator*
+plane()
+{
+
+    SoSeparator* plane = new SoSeparator;
+
+    SoTransform* tfPlane = new SoTransform;
+    SbRotation r (SbVec3f(1., 0., 0.), M_PI/2);
+    tfPlane->translation.setValue(0.0, 0.0, 0.0);
+    tfPlane->rotation = r;
+
+    SoCube* sPlane = new SoCube;
+    sPlane->width = 4;
+    sPlane->height = 4;
+    sPlane->depth = .1;
+
+    SoMaterial* m = new SoMaterial;
+    m->ambientColor.setValue(0, 0, 0);
+    m->diffuseColor.setValue(0, 0, 0);
+    m->shininess = .5;
+
+    SoScale* s1 = new SoScale;
+    s1->scaleFactor.setValue(0.03, 0.015, 0.015);
+    SoTransform* t = new SoTransform;
+    t->translation.setValue(0,0,0.1);
+    SoScale* s2 = new SoScale;
+    s2->scaleFactor.setValue(-1, 1, 1);
+    SoTransform* t2 = new SoTransform;
+    t2->translation.setValue(0,0,-15.1);
+
+    text = new SoText3;
+    text->string.setValue("> | <");
+    text->justification=SoText3::CENTER;
+
+    SoRotor* rotor3 = new SoRotor;
+    rotor3->speed = (float)0.5;
+    rotor3->rotation.setValue(SbVec3f(0, 1, 0), 0.1); // clockwise
+
+    plane->addChild(rotor3);
+    plane->addChild(tfPlane);
+    plane->addChild(sPlane);
+    plane->addChild(m);
+    plane->addChild(t);
+    plane->addChild(s1);
+    plane->addChild(text);
+    plane->addChild(t2);
+    plane->addChild(s2);
+    plane->addChild(text);
+    
+    return plane;
+}
+
+SoSeparator*
+scene()
+{
+    SoSeparator* obj = new SoSeparator;
+
+    SoMaterial* mMetalS = new SoMaterial;
+    mMetalS->ambientColor.setValue(0.5, 0.5, 0.5);
+    mMetalS->diffuseColor.setValue(1, 1, 1);
+    mMetalS->specularColor.setValue(.5, .5, .5);
+    mMetalS->shininess = .5;
+
+    // general rotations for whole compound object
+    SoRotor* rotor1 = new SoRotor;
+    rotor1->speed = (float)0.4;
+    rotor1->rotation.setValue(SbVec3f(1, 0, 0), -0.1); // counterclockwise
+
+    SoRotor* rotor4 = new SoRotor;
+    rotor4->speed = (float)0.05;
+    rotor4->rotation.setValue(SbVec3f(0, 1, 0), 0.1); // clockwise
+
+    obj->addChild(rotor1);
+    obj->addChild(rotor4);
+    obj->addChild(mMetalS);
+    obj->addChild(plane());
+    obj->addChild(boxes());
+    return obj;
+}
+
+int
+main(int, char** argv)
+{
+
+    (void)printf("F O O\n<esc> - click to toggle translation mode, T to switch translations, q to quit.\n");
+
+    @WIDGET@ window = So@Gui@::init(argv[0]); 
+    if (window==NULL) exit(1);
+
+    SoSelection* selection_root = new SoSelection;
+    selection_root->ref();
+    selection_root->policy = SoSelection::SINGLE;
+    selection_root->addSelectionCallback(selection_cb);
+
+    // Create scene graph
+    SoSeparator* root = new SoSeparator;
+    selection_root->addChild(root);
+
+    // event callback node so we can receive key press events
+    SoEventCallback* event_cb = new SoEventCallback;
+    event_cb->addEventCallback(SoKeyboardEvent::getClassTypeId(), key_cb, selection_root);
+    selection_root->addChild(event_cb);
+    
+    root->addChild(light());
+    root->addChild(scene());
+
+    // Set up ExaminerViewer
+    So@Gui@ExaminerViewer* viewer = new So@Gui@ExaminerViewer(window);
+    viewer->setSceneGraph(selection_root);
+    viewer->setTitle(" F O O ");
+    viewer->setHeadlight(FALSE);  
+    viewer->setDecoration(FALSE); 
+    viewer->setFullScreen(TRUE);
+    viewer->viewAll();
+    viewer->show();
+
+    So@Gui@::show(window); // display main window
+    So@Gui@::mainLoop();   // main Coin event loop
+    delete viewer;      // remove the viewer from memory
+    selection_root->unref();     
+    return 0;
+}
