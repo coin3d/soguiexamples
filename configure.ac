@@ -3,15 +3,6 @@ AC_INIT(actions/search.cpp.in)
 AC_CONFIG_AUX_DIR(cfg)
 
 # **************************************************************************
-# Check the CVS repository setup
-
-SIM_AC_CVS_CHANGES([
-  SIM_AC_CVS_CHANGE([
-    rm -rf conf-macros
-    cvs co SoGuiExampleMacros
-  ], [test -d cfg/m4], [test ! -d conf-macros])
-])
-
 # If the Microsoft Visual C++ cl.exe compiler is available, set us up for
 # compiling with it.
 

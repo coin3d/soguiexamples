@@ -191,7 +191,7 @@ distclean-depend:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
+	$(CXXCOMPILE) -c -o $@ `( test -f $< || echo -n '$(srcdir)/'; echo -n $< ) | xargs cygpath -w`
 
 strutils.o: $(srcdir)/../strutils.cpp
 @AMDEP_TRUE@	source='$(srcdir)/../strutils.cpp' object='strutils.o' libtool=no @AMDEPBACKSLASH@
@@ -203,7 +203,7 @@ strutils.obj: $(srcdir)/../strutils.cpp
 @AMDEP_TRUE@	source='$(srcdir)/../strutils.cpp' object='strutils.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/strutils.Po' tmpdepfile='$(DEPDIR)/strutils.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o strutils.obj `cygpath -w $(srcdir)/../strutils.cpp`
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o strutils.obj `( test -f $(srcdir)/../strutils.cpp || echo -n '$(srcdir)/'; echo -n $(srcdir)/../strutils.cpp ) | xargs cygpath -w`
 CXXDEPMODE = @CXXDEPMODE@
 uninstall-info-am:
 

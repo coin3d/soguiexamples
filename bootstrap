@@ -1,70 +1,19 @@
-#! /bin/sh
+#!/bin/sh
 
-############################################################################
-# Regenerate all files which are constructed by the autoconf and automake
-# tool-chain. Note: only developers should need to use this script.
+cat <<EOF
 
-# Authors:
-#   Morten Eriksen, <mortene@sim.no>.
-#   Lars J. Aas, <larsa@sim.no>.
+Error: to bootstrap, invoke the script simacros/bin/bootstrap.
 
-DIE=false
+The simacros CVS module can be fetched by doing:
 
-AUTOCONF_VER=2.5[2-9]
-AUTOMAKE_VER=1.5
+   \$ export CVSROOT=:pserver:cvs@cvs.coin3d.org:/export/cvsroot
+   \$ cvs login
+   [password is 'cvs']
+   \$ cvs checkout simacros
 
-MACRODIR=cfg/m4
-AUTOMAKE_ADD=
 
-if test "$1" = "--clean"; then
-  rm -f aclocal.m4 \
-        config.h.in \
-        configure \
-        stamp-h.in \
-        cfg/config.guess \
-        cfg/config.sub \
-        cfg/depcomp \
-        cfg/install-sh \
-        cfg/missing \
-        cfg/mkinstalldirs
-  find . -name Makefile.in -print | xargs rm
-  exit
-elif test "$1" = "--add"; then
-  AUTOMAKE_ADD="--add-missing --foreign --copy"
-fi
-
-echo "Checking the installed configuration tools..."
-
-if test -z "`autoconf --version | grep \" $AUTOCONF_VER\" 2> /dev/null`"; then
-  cat <<EOF
-
-  Invalid Version of Autoconf
+Exiting..
 
 EOF
-  DIE=true
-fi
 
-if test -z "`automake --version | grep \" $AUTOMAKE_VER\" 2> /dev/null`"; then
-  cat <<EOF
-
-  Invalid Version of Automake
-
-EOF
-  DIE=true
-fi
-
-$DIE && exit 1
-
-echo "Running aclocal (generating aclocal.m4)..."
-aclocal -I $MACRODIR
-
-echo "Running autoconf (generating ./configure)..."
-autoconf
-
-echo "Running autoheader (generating config.h.in)..."
-autoheader
-
-echo "Running automake (generating the Makefile.in files)..."
-automake $AUTOMAKE_ADD
-
-echo "Done."
+exit 1

@@ -212,7 +212,7 @@ distclean-depend:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
+	$(CXXCOMPILE) -c -o $@ `( test -f $< || echo -n '$(srcdir)/'; echo -n $< ) | xargs cygpath -w`
 
 TextureWriter.o: $(top_srcdir)/coin-competitions/TextureWriter.cpp
 @AMDEP_TRUE@	source='$(top_srcdir)/coin-competitions/TextureWriter.cpp' object='TextureWriter.o' libtool=no @AMDEPBACKSLASH@
@@ -224,7 +224,7 @@ TextureWriter.obj: $(top_srcdir)/coin-competitions/TextureWriter.cpp
 @AMDEP_TRUE@	source='$(top_srcdir)/coin-competitions/TextureWriter.cpp' object='TextureWriter.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/TextureWriter.Po' tmpdepfile='$(DEPDIR)/TextureWriter.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o TextureWriter.obj `cygpath -w $(top_srcdir)/coin-competitions/TextureWriter.cpp`
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o TextureWriter.obj `( test -f $(top_srcdir)/coin-competitions/TextureWriter.cpp || echo -n '$(srcdir)/'; echo -n $(top_srcdir)/coin-competitions/TextureWriter.cpp ) | xargs cygpath -w`
 CXXDEPMODE = @CXXDEPMODE@
 uninstall-info-am:
 
