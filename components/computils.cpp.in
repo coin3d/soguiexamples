@@ -52,6 +52,8 @@ get_scene_graph(
   int argc,
   char ** argv )
 {
+  srand( (unsigned int) time(NULL) );
+
   if ( argc > 1 ) {
 #if HAVE_DIME2SO
 #endif
@@ -80,7 +82,6 @@ get_scene_graph(
     return SoDB::readAll( &in );
   }
 
-  srand( (unsigned int) time(NULL) );
   int randval = rand() % 4;
   switch ( randval ) {
   case 0:  return shape_to_scene_graph( new SoCone );
