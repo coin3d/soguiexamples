@@ -1,0 +1,190 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoTextureCoordinateEnvironment.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoTriangleStripSet.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+#include "star.h"
+
+#define N 1000
+
+static char info[] =
+"-------------------------------- Lorenz Attractor ------------------------------\n\
+The so called \"lorenz attractor\" was first studied by Ed N. Lorenz, \n\
+a meterologist, around 1963. It was derived from a simplified model \n\
+of convention in the earths atmosphere. It also arises naturally in \n\
+models of lasers and dynamos. The system is most commonly expressed \n\
+as 3 coupled non-linear differential equations. \n\
+\n\
+dx / dt = a (y - x) \n\
+dy / dt = x (b - z) - y \n\
+\n\
+dz / dt = xy - c z \n\
+\n\
+where a = 10, b = 28, c = 8 / 3.\n\
+\n\
+\"a\" is sometimes known as the Prandtl number and \"b\" the Rayleigh number. \n\
+\n\
+The series does not form limit cyles nor does it ever reach a steady state.\n\
+Instead it is an example of deterministic chaos. As with other chaotic systems\n\
+the Lorenz system is sensitive to the initial conditions, two initial states no\n\
+matter how close will diverge, usually sooner rather than later.\n\n";
+
+
+static float vertices[18][3] =
+{
+  { -0.5, 0.5, 0 }, { 0.5, 0.5, 0 }, { 0.5, -0.5, 0 },
+  { -0.5, 0.5, 0 }, { -0.5, -0.5, 0 }, { 0.5, -0.5, 0 },
+  { -0.5, 0, 0.5 }, { 0.5, 0, 0.5 }, { 0.5, 0, -0.5 },
+  { -0.5, 0, 0.5 }, { -0.5, 0, -0.5 }, { 0.5, 0, -0.5 },
+
+  { 0 ,-0.5, 0.5}, { 0, 0.5, 0.5 }, { 0, 0.5, -0.5 },
+  { 0, -0.5, 0.5 }, { 0, -0.5, -0.5 }, { 0, 0.5, -0.5 }
+};
+
+static int numVertices[3] =
+{
+	6, 6, 6
+};
+
+SoTexture2 *
+create_texture(int width, int height, int bpp, unsigned char * raw, bool blend)
+{
+  SoTexture2 * texture = new SoTexture2;
+  texture->image.setValue(SbVec2s(width, height), bpp, raw);
+  texture->model = (blend?SoTexture2::BLEND:SoTexture2::DECAL);
+  texture->blendColor.setValue(1.0, 0.0, 0.0);
+  return texture;
+}
+
+SoSeparator * create_star(SoTexture2 * texture, SbVec3f pos)
+{
+  SoSeparator * sep = new SoSeparator;
+  sep->ref();
+
+  SoMaterial * mat = new SoMaterial;
+  mat->specularColor.setValue( 1.0f, 1.0f, 1.0f );
+  mat->emissiveColor.setValue( 1.0f, 1.0f, 1.0f );
+  mat->shininess = 0.0f;
+  mat->transparency = 0.7f;
+  sep->addChild(mat);
+
+  sep->addChild(texture);
+
+  SoTranslation * trans = new SoTranslation;
+  trans->translation.setValue(pos);
+  sep->addChild(trans);
+
+  SoCoordinate3 * coords = new SoCoordinate3;
+  coords->point.setValues(0, 6, vertices);
+  sep->addChild(coords);
+
+  SoTriangleStripSet * strip = new SoTriangleStripSet;
+  strip->numVertices.setValues(0, 1, (int *)numVertices);
+  sep->addChild(strip);
+
+  coords = new SoCoordinate3;
+  coords->point.setValues(0, 6, &vertices[6]);
+  sep->addChild(coords);
+
+  strip = new SoTriangleStripSet;
+  strip->numVertices.setValues(0, 1, (int *)&numVertices[1]);
+  sep->addChild(strip);
+
+  coords = new SoCoordinate3;
+  coords->point.setValues(0, 6, &vertices[12]);
+  sep->addChild(coords);
+
+  strip = new SoTriangleStripSet;
+  strip->numVertices.setValues(0, 1, (int *)&numVertices[2]);
+  sep->addChild(strip);
+
+  sep->unrefNoDelete();
+	
+  return sep;
+}
+
+int 
+main (int argc, char ** argv) 
+{
+  int i = 0;
+  double x0, y0, z0, x1, y1, z1;
+  double h = 0.01;
+  double a = 10.0;
+  double b = 28.0;
+  double c = 8.0 / 3.0;
+
+  printf(info);
+
+  if (argc == 5) {
+    h = atof(argv[1]);
+    a = atof(argv[2]);
+    b = atof(argv[3]);
+    c = atof(argv[4]);
+  }
+  else {
+    printf("Usage: %s <h> <a> <b> <c>\n", argv[0]);
+    printf("Default values are: h = 0.01, a = 10.0, b = 28.0, c = 8.0 / 3.0 \n\n");
+  }
+
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window == NULL) exit(1);
+
+  SoSeparator * root = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+
+  hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHints::SOLID;
+
+  root->ref();
+  root->addChild(hints);
+
+  SoSeparator * stars = new SoSeparator;
+
+  printf("Computing...\n");
+
+  x0 = 0.1;
+  y0 = 0;
+  z0 = 0;
+  for (i = 0; i < N; i++) {
+    x1 = x0 + h * a * (y0 - x0);
+    y1 = y0 + h * (x0 * (b - z0) - y0);
+    z1 = z0 + h * (x0 * y0 - c * z0);
+    x0 = x1;
+    y0 = y1;
+    z0 = z1;
+    if (i > 100) {
+	  //printf("#");
+      stars->addChild(
+        create_star(create_texture(64, 64, 4, (unsigned char*)star_raw, false),
+        SbVec3f(x0, y0, z0)));
+	}
+  }
+
+  printf("\nOk, done!\n\n");
+
+  root->addChild(stars);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("Lorenz Attractor");
+  viewer->setTransparencyType( SoGLRenderAction::ADD );
+  viewer->viewAll();
+  viewer->show();
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+
+  return 0;
+}
