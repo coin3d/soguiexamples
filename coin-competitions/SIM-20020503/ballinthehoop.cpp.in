@@ -264,21 +264,21 @@ shoot_cb(void *userdata, SoSensor *)
   }
   if(tmp[2] < -19){
     if(tmp[1] < 16.5 && tmp[1] > 13.5 && tmp[0] > 3.5 && tmp[0] < 6.5){
-       score += scorefactor*(elasticityvalue*powervalue)/20*3;
+       score += (int) (scorefactor*(elasticityvalue*powervalue)/20*3);
        tmpstring = SbString(score);
        scorestring->setValue(tmpstring.getString());
        goal();
        return;
     }
     if(tmp[1] < 11.5 && tmp[1] > 8.5 && tmp[0] > 8.5 && tmp[0] < 11.5){
-       score += scorefactor*(elasticityvalue*powervalue)/20*2;
+       score += (int) (scorefactor*(elasticityvalue*powervalue)/20*2);
        tmpstring = SbString(score);
        scorestring->setValue(tmpstring.getString());
        goal();
        return;
     }
     if(tmp[1] < 6.5 && tmp[1] > 3.5 && tmp[0] > 13.5 && tmp[0] < 16.5){
-       score += scorefactor*(elasticityvalue*powervalue)/20;
+       score += (int) (scorefactor*(elasticityvalue*powervalue)/20);
        tmpstring = SbString(score);
        scorestring->setValue(tmpstring.getString());
        goal();
