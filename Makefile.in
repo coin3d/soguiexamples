@@ -93,7 +93,8 @@ soguiconfig = @soguiconfig@
 
 
 SUBDIRS = \
-  . components actions draggers manipulators nodes sensors eyecandy
+  . components actions draggers manipulators nodes sensors eyecandy \
+  coin-competitions/SIM-20010803
 
 
 ############################################################################

@@ -2,7 +2,8 @@
 ## Process this file with automake to generate Makefile.in.
 
 SUBDIRS = \
-  . components actions draggers manipulators nodes sensors eyecandy
+  . components actions draggers manipulators nodes sensors eyecandy \
+  coin-competitions/SIM-20010803
 
 ############################################################################
 
