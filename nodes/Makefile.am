@@ -34,7 +34,8 @@ BUILT_SOURCES = \
 	levelofdetail.cpp \
 	extselection.cpp \
 	pointset.cpp \
-	markerset.cpp
+	markerset.cpp \
+	image.cpp
 
 
 
@@ -45,7 +46,7 @@ noinst_PROGRAMS = \
         faceset facesetindexed quadmesh trianglestripset \
         camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
-        pointset markerset
+        pointset markerset image
 
 drawstyle_SOURCES = drawstyle.cpp
 material_SOURCES = material.cpp
@@ -81,6 +82,7 @@ levelofdetail_SOURCES = levelofdetail.cpp
 extselection_SOURCES = extselection.cpp
 pointset_SOURCES = pointset.cpp
 markerset_SOURCES = markerset.cpp
+image_SOURCES = image.cpp
 
 ############################################################################
 
@@ -185,5 +187,8 @@ pointset.cpp: $(srcdir)/pointset.cpp.in
 
 markerset.cpp: $(srcdir)/markerset.cpp.in
 	@( cd $(top_builddir); ./config.status --file=nodes/markerset.cpp)
+
+image.cpp: $(srcdir)/image.cpp.in
+	@( cd $(top_builddir); ./config.status --file=nodes/image.cpp)
 
 ############################################################################

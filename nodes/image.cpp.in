@@ -1,0 +1,125 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2002 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+#ifndef HAVE_SOIMAGE
+
+#include <stdio.h>
+
+int
+main(void)
+{
+  (void)fprintf(stderr,
+                "\nThis example needs to be run on top of an Inventor\n"
+                "implementation that has the SoImage node (like for\n"
+                "instance Coin). This does not seem to be the case here.\n"
+                "(Are you perhaps using the old SGI Open Source Inventor?)\n\n");
+  return 0;
+}
+
+#else // HAVE_SOIMAGE
+
+#include <stdlib.h> // exit()
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoCamera.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoImage.h>
+
+// Function to generate a mandelbrot set.
+// Parameters:
+//  double sr           = real part of the start point
+//  double si           = imaginary part of the start point
+//  double width        = width of the mandelbrot
+//  double height       = height of the mandelbrot
+//  int bwidth          = width of the bitmap
+//  int height          = height of the bitmap
+//  int mult            = number to multiply each color by
+//  unsigned char * bmp = pointer to bitmap
+//  int n               = number of itterations.
+void
+mandel(double sr, double si, double width, double height, 
+       int bwidth, int bheight, int mult, unsigned char * bmp, int n)
+{
+  double zr, zr_old, zi, cr, ci;
+  int w;
+
+  for (int y=0; y<bheight; y++)
+    for (int x=0; x<bwidth; x++) {
+      cr = ((double)(x)/(double)(bwidth))*width+sr;
+      ci = ((double)(y)/(double)(bheight))*height+si;
+      zr = zi = 0.0;
+      for (w = 0; (w < n) && (zr*zr + zi*zi)<n; w++) {
+        zr_old = zr;
+        zr = zr*zr - zi*zi + cr;
+        zi = 2*zr_old*zi + ci;    
+      }
+      bmp[y*bwidth+x] = w*mult;
+    }
+}
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ mainwin = So@Gui@::init(argv[0]);
+  
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  const int IMGWIDTH = 256;
+  const int IMGHEIGHT = 256;
+  unsigned char * img = new unsigned char[IMGWIDTH * IMGHEIGHT];
+  mandel(-0.5, 0.6, 0.025, 0.025, IMGWIDTH, IMGHEIGHT, 1, img, 256);
+
+  SoImage * nimage = new SoImage;
+  nimage->vertAlignment = SoImage::HALF;
+  nimage->horAlignment = SoImage::CENTER;
+  nimage->image.setValue(SbVec2s(IMGWIDTH, IMGHEIGHT), 1, img);
+
+  SoCube * cube = new SoCube;
+
+  root->addChild(cube);
+  root->addChild(nimage);
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(mainwin);
+  viewer->setSceneGraph(root);
+  viewer->setTitle("SoImage use");
+  viewer->show();
+
+  SoCamera * cam = viewer->getCamera();
+  cam->position = SbVec3f(0, 0, 50);
+  cam->focalDistance = 50;
+
+  So@Gui@::show(mainwin);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+  delete img;
+  return 0;
+}
+
+#endif // HAVE_SOIMAGE
