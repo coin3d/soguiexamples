@@ -139,7 +139,7 @@ main(int argc, char ** argv)
 
   // These spheres are here just for testing the cutting
   // functionality.
-  if (1) {
+  if (0) { // debug
     const SbBox3f & volumebbox = volumedata->getVolumeSize();
     float dx, dy, dz;
     volumebbox.getSize(dx, dy, dz);
