@@ -178,7 +178,7 @@ void draggerCB(void * data, SoDragger * dragger)
 
 int main(int argc, char * argv[])
 {
-  QWidget * window = So@Gui@::init(argv[0]);
+  @WIDGET@ window = So@Gui@::init(argv[0]);
   if (window == NULL) exit(1);
 
   SoDB::createGlobalField("globalVerts", SoMFVec3f::getClassTypeId());
