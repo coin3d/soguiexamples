@@ -24,11 +24,6 @@ planeviewer_SOURCES = \
 	computils.cpp \
 	computils.h
 
-walkviewer_SOURCES = \
-	walkviewer.cpp \
-	computils.cpp \
-	computils.h
-
 flyviewer_SOURCES = \
 	flyviewer.cpp \
 	computils.cpp \
@@ -102,7 +97,6 @@ BUILT_SOURCES = \
 	backgroundimg.cpp \
 	examinerviewer.cpp \
 	planeviewer.cpp \
-	walkviewer.cpp \
 	flyviewer.cpp \
 	lightsliderset.cpp \
 	materialsliderset.cpp \
@@ -113,7 +107,7 @@ BUILT_SOURCES = \
 	grapheditor.cpp
 
 noinst_PROGRAMS = renderarea backgroundimg examinerviewer overlay \
-	planeviewer flyviewer walkviewer \
+	planeviewer flyviewer \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
 	$(MATERIALLIST) $(PRINTDIALOG)
 
@@ -136,9 +130,6 @@ examinerviewer.cpp: $(srcdir)/examinerviewer.cpp.in
 
 planeviewer.cpp: $(srcdir)/planeviewer.cpp.in
 	@( cd $(top_builddir); ./config.status --file=components/planeviewer.cpp )
-
-walkviewer.cpp: $(srcdir)/walkviewer.cpp.in
-	@( cd $(top_builddir); ./config.status --file=components/walkviewer.cpp )
 
 flyviewer.cpp: $(srcdir)/flyviewer.cpp.in
 	@( cd $(top_builddir); ./config.status --file=components/flyviewer.cpp )

@@ -977,10 +977,12 @@ AC_ARG_ENABLE(
   esac],
   [enable_symbols=yes])
 
+# FIXME: don't mangle options like -fno-gnu-linker and -fvolatile-global
+# 20020104 larsa
 if test x"$enable_symbols" = x"no"; then
-  CFLAGS="`echo $CFLAGS | sed 's/-g//'`"
-  CPPFLAGS="`echo $CPPFLAGS | sed 's/-g//'`"
-  CXXFLAGS="`echo $CXXFLAGS | sed 's/-g//'`"
+  # CPPFLAGS="`echo $CPPFLAGS | sed 's/-g[0-9]//'`"
+  CFLAGS="`echo $CFLAGS | sed 's/-g[0-9]?//'`"
+  CXXFLAGS="`echo $CXXFLAGS | sed 's/-g[0-9]?//'`"
 fi
 ])
 
@@ -1019,7 +1021,7 @@ fi
 ])
 
 # Usage:
-#   SIM_CHECK_EXCEPTION_HANDLING
+#   SIM_AC_EXCEPTION_HANDLING
 #
 # Description:
 #   Let the user decide if C++ exception handling should be compiled
@@ -1035,7 +1037,7 @@ fi
 #   * [mortene:19991114] make this work with compilers other than gcc/g++
 #
 
-AC_DEFUN([SIM_EXCEPTION_HANDLING], [
+AC_DEFUN([SIM_AC_EXCEPTION_HANDLING], [
 AC_PREREQ([2.13])
 AC_ARG_ENABLE(
   [exceptions],
@@ -1122,7 +1124,7 @@ AC_LANG_RESTORE
 ])
 
 # Usage:
-#   SIM_PROFILING_SUPPORT
+#   SIM_AC_PROFILING_SUPPORT
 #
 # Description:
 #   Let the user decide if profiling code should be compiled
@@ -1139,7 +1141,7 @@ AC_LANG_RESTORE
 #   * [mortene:19991114] make this work with compilers other than gcc/g++
 #
 
-AC_DEFUN([SIM_PROFILING_SUPPORT], [
+AC_DEFUN([SIM_AC_PROFILING_SUPPORT], [
 AC_PREREQ([2.13])
 AC_ARG_ENABLE(
   [profile],
@@ -1165,7 +1167,7 @@ fi
 
 
 # Usage:
-#   SIM_COMPILER_WARNINGS
+#   SIM_AC_COMPILER_WARNINGS
 #
 # Description:
 #   Take care of making a sensible selection of warning messages
@@ -1183,7 +1185,7 @@ fi
 #   * [larsa:20010504] rename to SIM_AC_COMPILER_WARNINGS and clean up
 #     the macro
 
-AC_DEFUN([SIM_COMPILER_WARNINGS], [
+AC_DEFUN([SIM_AC_COMPILER_WARNINGS], [
 AC_ARG_ENABLE(
   [warnings],
   AC_HELP_STRING([--enable-warnings],
@@ -1258,27 +1260,6 @@ if test x"$enable_warnings" = x"yes"; then
 fi
 ])
 
-# Usage:
-#  SIM_AC_CHECK_OPENGL([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
-#
-#  Try to find an OpenGL development system, either a native
-#  implementation or the OpenGL-compatible Mesa library. If
-#  it is found, these shell variables are set:
-#
-#    $sim_ac_gl_cppflags (extra flags the preprocessor needs for OpenGL/Mesa)
-#    $sim_ac_gl_ldflags  (extra flags the linker needs for OpenGL/Mesa)
-#    $sim_ac_gl_libs     (link libraries the linker needs for OpenGL/Mesa)
-#
-#  In addition, the variable $sim_ac_gl_avail is set to "yes" if an
-#  OpenGL-compatible development system is found.
-#
-# TODO:
-#   these macros are ripe for a complete rewrite...
-#
-# Authors:
-#   Morten Eriksen <mortene@sim.no>
-#   Lars J. Aas <larsa@sim.no>
-
 # **************************************************************************
 # SIM_AC_CHECK_HEADER_SILENT([header], [if-found], [if-not-found], [includes])
 # 
@@ -1312,10 +1293,21 @@ AC_DEFUN([SIM_AC_CHECK_HEADER_GL],
 AC_MSG_CHECKING([how to include gl.h])
 if test x"$with_opengl" != x"no"; then
   sim_ac_gl_save_CPPFLAGS=$CPPFLAGS
+  sim_ac_gl_cppflags=
+
   if test x"$with_opengl" != xyes && test x"$with_opengl" != x""; then
     sim_ac_gl_cppflags="-I${with_opengl}/include"
-    CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
+  else
+    # On HP-UX platforms, OpenGL headers and libraries are usually installed
+    # at this location.
+    sim_ac_gl_hpux=/opt/graphics/OpenGL
+    if test -d $sim_ac_gl_hpux; then
+      sim_ac_gl_cppflags=-I$sim_ac_gl_hpux/include
+    fi
   fi
+
+  CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
+
   SIM_AC_CHECK_HEADER_SILENT([GL/gl.h], [
     sim_ac_gl_header_avail=true
     sim_ac_gl_header=GL/gl.h
@@ -1327,22 +1319,7 @@ if test x"$with_opengl" != x"no"; then
       AC_DEFINE([HAVE_OPENGL_GL_H], 1, [define if the GL header should be included as OpenGL/gl.h])
     ])
   ])
-  sim_ac_gl_hpux=/opt/graphics/OpenGL
-  if test x$sim_ac_gl_header_avail = xfalse && test -d $sim_ac_gl_hpux; then
-    sim_ac_gl_cppflags=-I$sim_ac_gl_hpux/include
-    CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
-    SIM_AC_CHECK_HEADER_SILENT([GL/gl.h], [
-      sim_ac_gl_header_avail=true
-      sim_ac_gl_header=GL/gl.h
-      AC_DEFINE([HAVE_GL_GL_H], 1, [define if the GL header should be included as GL/gl.h])
-    ], [
-      SIM_AC_CHECK_HEADER_SILENT([OpenGL/gl.h], [
-        sim_ac_gl_header_avail=true
-        sim_ac_gl_header=OpenGL/gl.h
-        AC_DEFINE([HAVE_OPENGL_GL_H], 1, [define if the GL header should be included as OpenGL/gl.h])
-      ])
-    ])
-  fi
+
   CPPFLAGS="$sim_ac_gl_save_CPPFLAGS"
   if $sim_ac_gl_header_avail; then
     if test x"$sim_ac_gl_cppflags" = x""; then
@@ -1373,10 +1350,21 @@ AC_DEFUN([SIM_AC_CHECK_HEADER_GLU],
 AC_MSG_CHECKING([how to include glu.h])
 if test x"$with_opengl" != x"no"; then
   sim_ac_glu_save_CPPFLAGS=$CPPFLAGS
+  sim_ac_glu_cppflags=
+
   if test x"$with_opengl" != xyes && test x"$with_opengl" != x""; then
     sim_ac_glu_cppflags="-I${with_opengl}/include"
-    CPPFLAGS="$CPPFLAGS $sim_ac_glu_cppflags"
+  else
+    # On HP-UX platforms, OpenGL headers and libraries are usually installed
+    # at this location.
+    sim_ac_gl_hpux=/opt/graphics/OpenGL
+    if test -d $sim_ac_gl_hpux; then
+      sim_ac_glu_cppflags=-I$sim_ac_gl_hpux/include
+    fi
   fi
+
+  CPPFLAGS="$CPPFLAGS $sim_ac_glu_cppflags"
+
   SIM_AC_CHECK_HEADER_SILENT([GL/glu.h], [
     sim_ac_glu_header_avail=true
     sim_ac_glu_header=GL/glu.h
@@ -1388,22 +1376,7 @@ if test x"$with_opengl" != x"no"; then
       AC_DEFINE([HAVE_OPENGL_GLU_H], 1, [define if the GLU header should be included as OpenGL/glu.h])
     ])
   ])
-  sim_ac_gl_hpux=/opt/graphics/OpenGL
-  if test x$sim_ac_glu_header_avail = xfalse && test -d $sim_ac_gl_hpux; then
-    sim_ac_glu_cppflags=-I$sim_ac_gl_hpux/include
-    CPPFLAGS="$CPPFLAGS $sim_ac_glu_cppflags"
-    SIM_AC_CHECK_HEADER_SILENT([GL/glu.h], [
-      sim_ac_glu_header_avail=true
-      sim_ac_glu_header=GL/glu.h
-      AC_DEFINE([HAVE_GL_GLU_H], 1, [define if the GLU header should be included as GL/glu.h])
-    ], [
-      SIM_AC_CHECK_HEADER_SILENT([OpenGL/glu.h], [
-        sim_ac_glu_header_avail=true
-        sim_ac_glu_header=OpenGL/glu.h
-        AC_DEFINE([HAVE_OPENGL_GLU_H], 1, [define if the GLU header should be included as OpenGL/glu.h])
-      ])
-    ])
-  fi
+
   CPPFLAGS="$sim_ac_glu_save_CPPFLAGS"
   if $sim_ac_glu_header_avail; then
     if test x"$sim_ac_glu_cppflags" = x""; then
@@ -1423,13 +1396,84 @@ fi
 ])# SIM_AC_CHECK_HEADER_GLU
 
 # **************************************************************************
+# SIM_AC_CHECK_HEADER_GLEXT([IF-FOUND], [IF-NOT-FOUND])
+#
+# This macro detects how to include the GLEXT header file, and gives you the
+# necessary CPPFLAGS in $sim_ac_glext_cppflags, and also sets the config.h
+# defines HAVE_GL_GLEXT_H or HAVE_OPENGL_GLEXT_H if one of them is found.
+
+AC_DEFUN([SIM_AC_CHECK_HEADER_GLEXT],
+[sim_ac_glext_header_avail=false
+AC_MSG_CHECKING([how to include glext.h])
+if test x"$with_opengl" != x"no"; then
+  sim_ac_glext_save_CPPFLAGS=$CPPFLAGS
+  sim_ac_glext_cppflags=
+
+  if test x"$with_opengl" != xyes && test x"$with_opengl" != x""; then
+    sim_ac_glext_cppflags="-I${with_opengl}/include"
+  else
+    # On HP-UX platforms, OpenGL headers and libraries are usually installed
+    # at this location.
+    sim_ac_gl_hpux=/opt/graphics/OpenGL
+    if test -d $sim_ac_gl_hpux; then
+      sim_ac_glext_cppflags=-I$sim_ac_gl_hpux/include
+    fi
+  fi
+
+  CPPFLAGS="$CPPFLAGS $sim_ac_glext_cppflags"
+
+  SIM_AC_CHECK_HEADER_SILENT([GL/glext.h], [
+    sim_ac_glext_header_avail=true
+    sim_ac_glext_header=GL/glext.h
+    AC_DEFINE([HAVE_GL_GLEXT_H], 1, [define if the GLEXT header should be included as GL/glext.h])
+  ], [
+    SIM_AC_CHECK_HEADER_SILENT([OpenGL/gl.h], [
+      sim_ac_glext_header_avail=true
+      sim_ac_glext_header=OpenGL/glext.h
+      AC_DEFINE([HAVE_OPENGL_GLEXT_H], 1, [define if the GLEXT header should be included as OpenGL/glext.h])
+    ])
+  ])
+
+  CPPFLAGS="$sim_ac_glext_save_CPPFLAGS"
+  if $sim_ac_glext_header_avail; then
+    if test x"$sim_ac_glext_cppflags" = x""; then
+      AC_MSG_RESULT([@%:@include <$sim_ac_glext_header>])
+    else
+      AC_MSG_RESULT([$sim_ac_glext_cppflags, @%:@include <$sim_ac_glext_header>])
+    fi
+    $1
+  else
+    AC_MSG_RESULT([not found])
+    $2
+  fi
+else
+  AC_MSG_RESULT([disabled])
+  $2
+fi
+])# SIM_AC_CHECK_HEADER_GLEXT
+
+
+# **************************************************************************
+# SIM_AC_CHECK_OPENGL([IF-FOUND], [IF-NOT-FOUND])
+#
+# This macro detects whether or not it's possible to link against OpenGL
+# (or Mesa), and gives you the necessary modifications to the
+# pre-processor, compiler and linker environment in the envvars
+#
+#                $sim_ac_ogl_cppflags
+#                $sim_ac_ogl_ldflags
+#                $sim_ac_ogl_libs
+#
+# The necessary extra options are also automatically added to CPPFLAGS,
+# LDFLAGS and LIBS.
+#
+# Authors: <larsa@sim.no>, <mortene@sim.no>.
 
 AC_DEFUN(SIM_AC_CHECK_OPENGL, [
 
-sim_ac_gl_cppflags=
-sim_ac_gl_ldflags=
-sim_ac_gl_libs=
-sim_ac_gl_avail=no
+sim_ac_ogl_cppflags=
+sim_ac_ogl_ldflags=
+sim_ac_ogl_libs=
 
 AC_ARG_WITH(
   [mesa],
@@ -1439,15 +1483,15 @@ AC_ARG_WITH(
   [with_mesa=yes])
 
 
-sim_ac_gl_glnames="-lGL -lopengl32"
-sim_ac_gl_mesaglnames=-lMesaGL
+sim_ac_ogl_glnames="-lGL -lopengl32"
+sim_ac_ogl_mesaglnames=-lMesaGL
 
 if test "x$with_mesa" = "xyes"; then
-  sim_ac_gl_first=$sim_ac_gl_mesaglnames
-  sim_ac_gl_second=$sim_ac_gl_glnames
+  sim_ac_ogl_first=$sim_ac_ogl_mesaglnames
+  sim_ac_ogl_second=$sim_ac_ogl_glnames
 else
-  sim_ac_gl_first=$sim_ac_gl_glnames
-  sim_ac_gl_second=$sim_ac_gl_mesaglnames
+  sim_ac_ogl_first=$sim_ac_ogl_glnames
+  sim_ac_ogl_second=$sim_ac_ogl_mesaglnames
 fi
 
 AC_ARG_WITH(
@@ -1458,6 +1502,20 @@ AC_ARG_WITH(
   [with_opengl=yes])
 
 if test x"$with_opengl" != xno; then
+
+  if test x"$with_opengl" != xyes && test x"$with_opengl" != x""; then
+    sim_ac_ogl_ldflags=-L$with_opengl/lib
+    # $sim_ac_ogl_cppflags is set up in the SIM_AC_CHECK_HEADER_GL
+    # invocation further below.
+  else
+    # On HP-UX platforms, OpenGL headers and libraries are usually installed
+    # at this location.
+    sim_ac_gl_hpux=/opt/graphics/OpenGL
+    if test -d $sim_ac_gl_hpux; then
+      sim_ac_ogl_ldflags=-L$sim_ac_gl_hpux/lib
+    fi
+  fi
+
   sim_ac_use_framework_option=false;
   case $host_os in
   darwin*)
@@ -1469,18 +1527,22 @@ if test x"$with_opengl" != xno; then
 
   if $sim_ac_use_framework_option; then
     # hopefully, this is the default behavior and not needed. 20011005 larsa
-    # sim_ac_gl_cppflags="-F/System/Library/Frameworks/OpenGL.framework/"
-    sim_ac_gl_ldflags="-Wl,-framework,OpenGL"
+    # sim_ac_ogl_cppflags="-F/System/Library/Frameworks/OpenGL.framework/"
+    sim_ac_ogl_ldflags="-Wl,-framework,OpenGL"
   fi
-
-  SIM_AC_CHECK_HEADER_GL(, [AC_MSG_ERROR([could not find gl.h])])
 
   sim_ac_save_cppflags=$CPPFLAGS
   sim_ac_save_ldflags=$LDFLAGS
   sim_ac_save_libs=$LIBS
 
-  CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
-  LDFLAGS="$LDFLAGS $sim_ac_gl_ldflags"
+  CPPFLAGS="$CPPFLAGS $sim_ac_ogl_cppflags"
+  LDFLAGS="$LDFLAGS $sim_ac_ogl_ldflags"
+
+  SIM_AC_CHECK_HEADER_GL([
+    CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
+  ], [
+    AC_MSG_WARN([could not find gl.h])
+  ])
 
   AC_CACHE_CHECK(
     [whether OpenGL library is available],
@@ -1488,9 +1550,9 @@ if test x"$with_opengl" != xno; then
     [sim_cv_lib_gl=UNRESOLVED
 
     # Mac OS X uses nada, which is why "" was set first
-    for sim_ac_gl_libcheck in "" $sim_ac_gl_first $sim_ac_gl_second; do
+    for sim_ac_ogl_libcheck in "" $sim_ac_ogl_first $sim_ac_ogl_second; do
       if test "x$sim_cv_lib_gl" = "xUNRESOLVED"; then
-        LIBS="$sim_ac_gl_libcheck $sim_ac_save_libs"
+        LIBS="$sim_ac_ogl_libcheck $sim_ac_save_libs"
         AC_TRY_LINK([
 #ifdef HAVE_WINDOWS_H
 #include <windows.h>
@@ -1507,31 +1569,30 @@ if test x"$with_opengl" != xno; then
                     [
 glPointSize(1.0f);
 ], [
-          if test x"$sim_ac_gl_libcheck" = x""; then
-            sim_cv_lib_gl="$sim_ac_gl_ldflags"
+          if test x"$sim_ac_ogl_libcheck" = x""; then
+            sim_cv_lib_gl="$sim_ac_ogl_ldflags"
           else
-            sim_cv_lib_gl="$sim_ac_gl_libcheck"
+            sim_cv_lib_gl="$sim_ac_ogl_libcheck"
           fi])
       fi
     done
   ])
 
-  LIBS="$sim_ac_save_libs"
-
   case $sim_cv_lib_gl in
   -Wl,-framework,OpenGL)
-    sim_ac_gl_libs=
-    sim_ac_gl_ldflags="$sim_cv_lib_gl"
+    sim_ac_ogl_libs=
+    sim_ac_ogl_ldflags="$sim_cv_lib_gl"
     ;;
   -l*)
-    sim_ac_gl_libs="$sim_cv_lib_gl"
+    sim_ac_ogl_libs="$sim_cv_lib_gl"
     ;;
   *)
     AC_MSG_WARN([couldn't compile or link with OpenGL library -- trying with pthread library in place...])
+    LIBS="$sim_ac_save_libs"
 
     SIM_AC_CHECK_PTHREAD([
-      sim_ac_gl_cppflags="$sim_ac_gl_cppflags $sim_ac_pthread_cppflags"
-      sim_ac_gl_ldflags="$sim_ac_gl_ldflags $sim_ac_pthread_ldflags"],
+      sim_ac_ogl_cppflags="$sim_ac_ogl_cppflags $sim_ac_pthread_cppflags"
+      sim_ac_ogl_ldflags="$sim_ac_ogl_ldflags $sim_ac_pthread_ldflags"],
       [AC_MSG_WARN([couldn't compile or link with pthread library])])
 
     if test "x$sim_ac_pthread_avail" = "xyes"; then
@@ -1540,9 +1601,9 @@ glPointSize(1.0f);
         sim_cv_lib_gl_pthread,
         [sim_cv_lib_gl_pthread=UNRESOLVED
 
-        for sim_ac_gl_libcheck in $sim_ac_gl_first $sim_ac_gl_second; do
+        for sim_ac_ogl_libcheck in $sim_ac_ogl_first $sim_ac_ogl_second; do
           if test "x$sim_cv_lib_gl_pthread" = "xUNRESOLVED"; then
-            LIBS="$sim_ac_gl_libcheck $sim_ac_pthread_libs $sim_ac_save_libs"
+            LIBS="$sim_ac_ogl_libcheck $sim_ac_pthread_libs $sim_ac_save_libs"
             AC_TRY_LINK([
 #ifdef HAVE_GL_GL_H
 #include <GL/gl.h>
@@ -1555,27 +1616,27 @@ glPointSize(1.0f);
                         [
 glPointSize(1.0f);
 ],
-                        [sim_cv_lib_gl_pthread="$sim_ac_gl_libcheck"])
+                        [sim_cv_lib_gl_pthread="$sim_ac_ogl_libcheck"])
           fi
         done
       ])
 
       if test "x$sim_cv_lib_gl_pthread" != "xUNRESOLVED"; then
-        sim_ac_gl_libs="$sim_cv_lib_gl_pthread $sim_ac_pthread_libs"
+        sim_ac_ogl_libs="$sim_cv_lib_gl_pthread $sim_ac_pthread_libs"
       fi
     fi
     ;;
   esac
 
 
-  # MacOS will have empty sim_ac_gl_libs, so don't check if it is empty...
+  # MacOS will have empty sim_ac_ogl_libs, so don't check if it is empty...
   if test x"$sim_cv_gl_libs" != x"UNRESOLVED"; then
-    sim_ac_gl_avail=yes
+    LIBS="$sim_ac_ogl_libs $sim_ac_save_libs"
     $1
   else
-    CPPFLAGS=$sim_ac_save_cppflags
-    LDFLAGS=$sim_ac_save_ldflags
-    LIBS=$sim_ac_save_libs
+    CPPFLAGS="$sim_ac_save_cppflags"
+    LDFLAGS="$sim_ac_save_ldflags"
+    LIBS="$sim_ac_save_libs"
     $2
   fi
 fi
@@ -1623,7 +1684,6 @@ glEnd();
     [sim_cv_glu_ready=true],
     [sim_cv_glu_ready=false])])
 
-CPPFLAGS=$sim_ac_glu_save_CPPFLAGS
 if $sim_cv_glu_ready; then
   ifelse([$1], , :, [$1])
 else
@@ -1642,7 +1702,7 @@ fi
 #    $sim_ac_glu_libs     (link libraries the linker needs for GLU)
 #
 #  The CPPFLAGS, LDFLAGS and LIBS flags will also be modified accordingly.
-#  In addition, the variable $sim_ac_gly_avail is set to "yes" if GLU
+#  In addition, the variable $sim_ac_glu_avail is set to "yes" if GLU
 #  is found.
 #
 #
@@ -3261,5 +3321,50 @@ while test $sim_ac_num_warnings -ge 0; do
 done
 fi
 ]) # SIM_AC_CONFIGURATION_SUMMARY
+
+
+# **************************************************************************
+# SIM_AC_UNIQIFY_LIST( VARIABLE, LIST )
+#
+# This macro filters out redundant items from a list.  This macro was made
+# to avoid having multiple equivalent -I and -L options for the compiler on
+# the command-line, which made compilation quite messy to watch.
+#
+# BUGS:
+#   Items with spaces are probably not supported.
+#
+# Authors:
+#   Lars J. Aas <larsa@sim.no>
+#
+
+AC_DEFUN([SIM_AC_UNIQIFY_LIST], [
+sim_ac_save_prefix=$prefix
+sim_ac_save_exec_prefix=$exec_prefix
+test x"$prefix" = xNONE && prefix=/usr/local
+test x"$exec_prefix" = xNONE && exec_prefix='${prefix}'
+sim_ac_uniqued_list=
+for sim_ac_item in $2; do
+  eval sim_ac_eval_item="$sim_ac_item"
+  eval sim_ac_eval_item="$sim_ac_eval_item"
+  if test x"$sim_ac_uniqued_list" = x; then
+    sim_ac_uniqued_list="$sim_ac_item"
+  else
+    sim_ac_unique=true
+    for sim_ac_uniq in $sim_ac_uniqued_list; do
+      eval sim_ac_eval_uniq="$sim_ac_uniq"
+      eval sim_ac_eval_uniq="$sim_ac_eval_uniq"
+      test x"$sim_ac_eval_item" = x"$sim_ac_eval_uniq" && sim_ac_unique=false
+    done
+    $sim_ac_unique && sim_ac_uniqued_list="$sim_ac_uniqued_list $sim_ac_item"
+  fi
+done
+$1=$sim_ac_uniqued_list
+prefix=$sim_ac_save_prefix
+exec_prefix=$sim_ac_save_exec_prefix
+# unset sim_ac_save_prefix
+# unset sim_ac_save_exec_prefix
+# unset sim_ac_eval_item
+# unset sim_ac_eval_uniq
+]) # SIM_AC_UNIQIFY_LIST
 
 
