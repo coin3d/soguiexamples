@@ -68,3 +68,31 @@
     2003019 mortene.
 
 =====================================================================
+
+004 ShapeScale mis-behavior?
+
+    I don't know if this is a bug, or whether it's just me which does
+    not understand something which should be obvious, but the
+    nodekits/scalemarker example doesn't work on this simple example
+    scene:
+
+    ----8<------ [snip] ----------8<------ [snip] ------
+    #Inventor V2.1 ascii
+    
+    Separator {
+       PerspectiveCamera {
+          position 1.1543471 2.7990139 5.7678552
+          orientation -0.9166351 0.39476845 0.062766649  0.4843637
+          nearDistance 0.1
+          farDistance 10000
+       }
+    
+       Cone { }
+    }
+    ----8<------ [snip] ----------8<------ [snip] ------
+
+    Remove the camera, and everything works fine.
+
+    20031117 mortene.
+
+=====================================================================
