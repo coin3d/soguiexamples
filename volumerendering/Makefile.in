@@ -162,58 +162,157 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 
-noinst_PROGRAMS = readvol
+noinst_PROGRAMS = \
+	readvol changingdataset examine examinerviewer orthoslicer \
+	raypick rgbload simple8bit
+
+
+
+############################################################################
+# Common sources.
+TRANSFERFUNCTIONSRC = \
+	SoTransferFunction_ctrl.cpp SoTransferFunction_ctrl.h moc_SoTransferFunction_ctrl.cpp \
+	TransferFunctionHandler.cpp TransferFunctionHandler.h moc_TransferFunctionHandler.cpp
+
+
+VOLUMERENDERSRC = \
+	SoVolumeRender_ctrl.cpp SoVolumeRender_ctrl.h moc_SoVolumeRender_ctrl.cpp \
+	VolumeRenderHandler.cpp VolumeRenderHandler.h moc_VolumeRenderHandler.cpp
+
+
+ORTHOSLICESRC = \
+	SoOrthoSlice_ctrl.cpp SoOrthoSlice_ctrl.h moc_SoOrthoSlice_ctrl.cpp \
+	OrthoSliceHandler.cpp OrthoSliceHandler.h moc_OrthoSliceHandler.cpp
+
 
 
 ############################################################################
 # A test reader and viewer of VOL files.
-readvol_SOURCES = readvol.cpp \
-	SoTransferFunction_ctrl.cpp SoTransferFunction_ctrl.h moc_SoTransferFunction_ctrl.cpp \
-	TransferFunctionHandler.cpp TransferFunctionHandler.h moc_TransferFunctionHandler.cpp \
-	SoVolumeRender_ctrl.cpp SoVolumeRender_ctrl.h moc_SoVolumeRender_ctrl.cpp \
-	VolumeRenderHandler.cpp VolumeRenderHandler.h moc_VolumeRenderHandler.cpp
+readvol_SOURCES = readvol.cpp $(TRANSFERFUNCTIONSRC) $(VOLUMERENDERSRC)
 
+
+############################################################################
+# For testing orthogonal slicing functionality.
+orthoslicer_SOURCES = \
+	orthoslicer.cpp utility.cpp utility.h \
+	$(TRANSFERFUNCTIONSRC) $(ORTHOSLICESRC)
+
+
+
+############################################################################
+# misc examples
+changingdataset_SOURCES = changingdataset.cpp
+
+examine_SOURCES = examine.cpp utility.cpp utility.h
+
+examinerviewer_SOURCES = examinerviewer.cpp
+
+raypick_SOURCES = raypick.cpp utility.cpp utility.h
+
+rgbload_SOURCES = rgbload.cpp
+
+simple8bit_SOURCES = simple8bit.cpp utility.cpp utility.h
 
 
 ############################################################################
 BUILT_SOURCES = \
 	readvol.cpp \
+	changingdataset.cpp \
+	\
 	SoTransferFunction_ctrl.cpp SoTransferFunction_ctrl.h moc_SoTransferFunction_ctrl.cpp \
 	moc_TransferFunctionHandler.cpp \
+	\
 	SoVolumeRender_ctrl.cpp SoVolumeRender_ctrl.h moc_SoVolumeRender_ctrl.cpp \
-	moc_VolumeRenderHandler.cpp
+	moc_VolumeRenderHandler.cpp \
+	\
+	SoOrthoSlice_ctrl.cpp SoOrthoSlice_ctrl.h moc_SoOrthoSlice_ctrl.cpp \
+	moc_OrthoSliceHandler.cpp
 
 subdir = volumerendering
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES = readvol.cpp
-noinst_PROGRAMS = readvol$(EXEEXT)
+CONFIG_CLEAN_FILES = readvol.cpp changingdataset.cpp examine.cpp \
+	examinerviewer.cpp orthoslicer.cpp raypick.cpp rgbload.cpp \
+	simple8bit.cpp
+noinst_PROGRAMS = readvol$(EXEEXT) changingdataset$(EXEEXT) \
+	examine$(EXEEXT) examinerviewer$(EXEEXT) orthoslicer$(EXEEXT) \
+	raypick$(EXEEXT) rgbload$(EXEEXT) simple8bit$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
-am_readvol_OBJECTS = readvol.$(OBJEXT) SoTransferFunction_ctrl.$(OBJEXT) \
+am_changingdataset_OBJECTS = changingdataset.$(OBJEXT)
+changingdataset_OBJECTS = $(am_changingdataset_OBJECTS)
+changingdataset_LDADD = $(LDADD)
+changingdataset_DEPENDENCIES =
+changingdataset_LDFLAGS =
+am_examine_OBJECTS = examine.$(OBJEXT) utility.$(OBJEXT)
+examine_OBJECTS = $(am_examine_OBJECTS)
+examine_LDADD = $(LDADD)
+examine_DEPENDENCIES =
+examine_LDFLAGS =
+am_examinerviewer_OBJECTS = examinerviewer.$(OBJEXT)
+examinerviewer_OBJECTS = $(am_examinerviewer_OBJECTS)
+examinerviewer_LDADD = $(LDADD)
+examinerviewer_DEPENDENCIES =
+examinerviewer_LDFLAGS =
+am__objects_1 = SoTransferFunction_ctrl.$(OBJEXT) \
 	moc_SoTransferFunction_ctrl.$(OBJEXT) \
 	TransferFunctionHandler.$(OBJEXT) \
-	moc_TransferFunctionHandler.$(OBJEXT) \
-	SoVolumeRender_ctrl.$(OBJEXT) moc_SoVolumeRender_ctrl.$(OBJEXT) \
-	VolumeRenderHandler.$(OBJEXT) moc_VolumeRenderHandler.$(OBJEXT)
+	moc_TransferFunctionHandler.$(OBJEXT)
+am__objects_2 = SoOrthoSlice_ctrl.$(OBJEXT) \
+	moc_SoOrthoSlice_ctrl.$(OBJEXT) OrthoSliceHandler.$(OBJEXT) \
+	moc_OrthoSliceHandler.$(OBJEXT)
+am_orthoslicer_OBJECTS = orthoslicer.$(OBJEXT) utility.$(OBJEXT) \
+	$(am__objects_1) $(am__objects_2)
+orthoslicer_OBJECTS = $(am_orthoslicer_OBJECTS)
+orthoslicer_LDADD = $(LDADD)
+orthoslicer_DEPENDENCIES =
+orthoslicer_LDFLAGS =
+am_raypick_OBJECTS = raypick.$(OBJEXT) utility.$(OBJEXT)
+raypick_OBJECTS = $(am_raypick_OBJECTS)
+raypick_LDADD = $(LDADD)
+raypick_DEPENDENCIES =
+raypick_LDFLAGS =
+am__objects_3 = SoVolumeRender_ctrl.$(OBJEXT) \
+	moc_SoVolumeRender_ctrl.$(OBJEXT) VolumeRenderHandler.$(OBJEXT) \
+	moc_VolumeRenderHandler.$(OBJEXT)
+am_readvol_OBJECTS = readvol.$(OBJEXT) $(am__objects_1) $(am__objects_3)
 readvol_OBJECTS = $(am_readvol_OBJECTS)
 readvol_LDADD = $(LDADD)
 readvol_DEPENDENCIES =
 readvol_LDFLAGS =
+am_rgbload_OBJECTS = rgbload.$(OBJEXT)
+rgbload_OBJECTS = $(am_rgbload_OBJECTS)
+rgbload_LDADD = $(LDADD)
+rgbload_DEPENDENCIES =
+rgbload_LDFLAGS =
+am_simple8bit_OBJECTS = simple8bit.$(OBJEXT) utility.$(OBJEXT)
+simple8bit_OBJECTS = $(am_simple8bit_OBJECTS)
+simple8bit_LDADD = $(LDADD)
+simple8bit_DEPENDENCIES =
+simple8bit_LDFLAGS =
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/SoTransferFunction_ctrl.Po \
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/OrthoSliceHandler.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/SoOrthoSlice_ctrl.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/SoTransferFunction_ctrl.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/SoVolumeRender_ctrl.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/TransferFunctionHandler.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/VolumeRenderHandler.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/changingdataset.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/examine.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/examinerviewer.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/moc_OrthoSliceHandler.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/moc_SoOrthoSlice_ctrl.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/moc_SoTransferFunction_ctrl.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/moc_SoVolumeRender_ctrl.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/moc_TransferFunctionHandler.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/moc_VolumeRenderHandler.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/readvol.Po
+@AMDEP_TRUE@	./$(DEPDIR)/orthoslicer.Po ./$(DEPDIR)/raypick.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/readvol.Po ./$(DEPDIR)/rgbload.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/simple8bit.Po ./$(DEPDIR)/utility.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -223,9 +322,14 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(readvol_SOURCES)
-DIST_COMMON = Makefile.am Makefile.in readvol.cpp.in
-SOURCES = $(readvol_SOURCES)
+DIST_SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) \
+	$(examinerviewer_SOURCES) $(orthoslicer_SOURCES) \
+	$(raypick_SOURCES) $(readvol_SOURCES) $(rgbload_SOURCES) \
+	$(simple8bit_SOURCES)
+DIST_COMMON = Makefile.am Makefile.in changingdataset.cpp.in \
+	examine.cpp.in examinerviewer.cpp.in orthoslicer.cpp.in \
+	raypick.cpp.in readvol.cpp.in rgbload.cpp.in simple8bit.cpp.in
+SOURCES = $(changingdataset_SOURCES) $(examine_SOURCES) $(examinerviewer_SOURCES) $(orthoslicer_SOURCES) $(raypick_SOURCES) $(readvol_SOURCES) $(rgbload_SOURCES) $(simple8bit_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -239,12 +343,47 @@ Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.s
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 readvol.cpp: $(top_builddir)/config.status readvol.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+changingdataset.cpp: $(top_builddir)/config.status changingdataset.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+examine.cpp: $(top_builddir)/config.status examine.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+examinerviewer.cpp: $(top_builddir)/config.status examinerviewer.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+orthoslicer.cpp: $(top_builddir)/config.status orthoslicer.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+raypick.cpp: $(top_builddir)/config.status raypick.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+rgbload.cpp: $(top_builddir)/config.status rgbload.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+simple8bit.cpp: $(top_builddir)/config.status simple8bit.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
+changingdataset$(EXEEXT): $(changingdataset_OBJECTS) $(changingdataset_DEPENDENCIES) 
+	@rm -f changingdataset$(EXEEXT)
+	$(CXXLINK) $(changingdataset_LDFLAGS) $(changingdataset_OBJECTS) $(changingdataset_LDADD) $(LIBS)
+examine$(EXEEXT): $(examine_OBJECTS) $(examine_DEPENDENCIES) 
+	@rm -f examine$(EXEEXT)
+	$(CXXLINK) $(examine_LDFLAGS) $(examine_OBJECTS) $(examine_LDADD) $(LIBS)
+examinerviewer$(EXEEXT): $(examinerviewer_OBJECTS) $(examinerviewer_DEPENDENCIES) 
+	@rm -f examinerviewer$(EXEEXT)
+	$(CXXLINK) $(examinerviewer_LDFLAGS) $(examinerviewer_OBJECTS) $(examinerviewer_LDADD) $(LIBS)
+orthoslicer$(EXEEXT): $(orthoslicer_OBJECTS) $(orthoslicer_DEPENDENCIES) 
+	@rm -f orthoslicer$(EXEEXT)
+	$(CXXLINK) $(orthoslicer_LDFLAGS) $(orthoslicer_OBJECTS) $(orthoslicer_LDADD) $(LIBS)
+raypick$(EXEEXT): $(raypick_OBJECTS) $(raypick_DEPENDENCIES) 
+	@rm -f raypick$(EXEEXT)
+	$(CXXLINK) $(raypick_LDFLAGS) $(raypick_OBJECTS) $(raypick_LDADD) $(LIBS)
 readvol$(EXEEXT): $(readvol_OBJECTS) $(readvol_DEPENDENCIES) 
 	@rm -f readvol$(EXEEXT)
 	$(CXXLINK) $(readvol_LDFLAGS) $(readvol_OBJECTS) $(readvol_LDADD) $(LIBS)
+rgbload$(EXEEXT): $(rgbload_OBJECTS) $(rgbload_DEPENDENCIES) 
+	@rm -f rgbload$(EXEEXT)
+	$(CXXLINK) $(rgbload_LDFLAGS) $(rgbload_OBJECTS) $(rgbload_LDADD) $(LIBS)
+simple8bit$(EXEEXT): $(simple8bit_OBJECTS) $(simple8bit_DEPENDENCIES) 
+	@rm -f simple8bit$(EXEEXT)
+	$(CXXLINK) $(simple8bit_LDFLAGS) $(simple8bit_OBJECTS) $(simple8bit_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -252,15 +391,27 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OrthoSliceHandler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SoOrthoSlice_ctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SoTransferFunction_ctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SoVolumeRender_ctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TransferFunctionHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/VolumeRenderHandler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/changingdataset.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/examine.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/examinerviewer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moc_OrthoSliceHandler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moc_SoOrthoSlice_ctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moc_SoTransferFunction_ctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moc_SoVolumeRender_ctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moc_TransferFunctionHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moc_VolumeRenderHandler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/orthoslicer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/raypick.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readvol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rgbload.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simple8bit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utility.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)
@@ -488,6 +639,20 @@ moc_SoVolumeRender_ctrl.cpp: SoVolumeRender_ctrl.h
 	$(MOC) -o $@ `$(CYGPATH_W) $<`
 
 moc_VolumeRenderHandler.cpp: $(srcdir)/VolumeRenderHandler.h
+	$(MOC) -o $@ `$(CYGPATH_W) $<`
+
+############################################################################
+
+SoOrthoSlice_ctrl.h: $(srcdir)/SoOrthoSlice_ctrl.ui
+	$(UIC) `$(CYGPATH_W) $<` -o $@
+
+SoOrthoSlice_ctrl.cpp: $(srcdir)/SoOrthoSlice_ctrl.ui SoOrthoSlice_ctrl.h
+	$(UIC) -impl $*.h `$(CYGPATH_W) $<` -o $@
+
+moc_SoOrthoSlice_ctrl.cpp: SoOrthoSlice_ctrl.h
+	$(MOC) -o $@ `$(CYGPATH_W) $<`
+
+moc_OrthoSliceHandler.cpp: $(srcdir)/OrthoSliceHandler.h
 	$(MOC) -o $@ `$(CYGPATH_W) $<`
 
 ############################################################################

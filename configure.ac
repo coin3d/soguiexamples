@@ -467,6 +467,13 @@ AC_OUTPUT([
 
 	volumerendering/Makefile
 	volumerendering/readvol.cpp
+	volumerendering/changingdataset.cpp
+	volumerendering/examine.cpp
+	volumerendering/examinerviewer.cpp
+	volumerendering/orthoslicer.cpp
+	volumerendering/raypick.cpp
+	volumerendering/rgbload.cpp
+	volumerendering/simple8bit.cpp
 
 	coin-competitions/Makefile
 
