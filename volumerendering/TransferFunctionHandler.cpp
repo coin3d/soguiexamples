@@ -27,10 +27,11 @@
 #include <qlineedit.h>
 #include <qcombobox.h>
 
-#include <Inventor/Qt/widgets/SoQtGradientDialog.h>
-
 #include <VolumeViz/nodes/SoTransferFunction.h>
 
+#include "Cute/SoQtGradientDialog.h"
+
+// *************************************************************************
 
 TransferFunctionHandler::TransferFunctionHandler(SoTransferFunction * node,
                                                  int remaplow, int remaphigh,
