@@ -110,11 +110,7 @@ examinerviewer_SOURCES = \
 	computils.h
 
 
-overlay_SOURCES = \
-	overlay.cpp \
-	computils.cpp \
-	computils.h
-
+overlay_SOURCES = overlay.cpp
 
 planeviewer_SOURCES = \
 	planeviewer.cpp \
@@ -621,7 +617,7 @@ materialsliderset2_OBJECTS = $(am_materialsliderset2_OBJECTS)
 materialsliderset2_LDADD = $(LDADD)
 materialsliderset2_DEPENDENCIES =
 materialsliderset2_LDFLAGS =
-am_overlay_OBJECTS = overlay.$(OBJEXT) computils.$(OBJEXT)
+am_overlay_OBJECTS = overlay.$(OBJEXT)
 overlay_OBJECTS = $(am_overlay_OBJECTS)
 overlay_LDADD = $(LDADD)
 overlay_DEPENDENCIES =

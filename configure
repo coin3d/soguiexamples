@@ -7046,30 +7046,6 @@ fi
   COMPONENTHEADER=
 
 if true; then
-  HAVE_PLANEVIEWER_TRUE=
-  HAVE_PLANEVIEWER_FALSE='#'
-else
-  HAVE_PLANEVIEWER_TRUE='#'
-  HAVE_PLANEVIEWER_FALSE=
-fi
-
-if true; then
-  HAVE_WALKVIEWER_TRUE=
-  HAVE_WALKVIEWER_FALSE='#'
-else
-  HAVE_WALKVIEWER_TRUE='#'
-  HAVE_WALKVIEWER_FALSE=
-fi
-
-if true; then
-  HAVE_FLYVIEWER_TRUE=
-  HAVE_FLYVIEWER_FALSE='#'
-else
-  HAVE_FLYVIEWER_TRUE='#'
-  HAVE_FLYVIEWER_FALSE=
-fi
-
-if true; then
   HAVE_SLIDERSETS_TRUE=
   HAVE_SLIDERSETS_FALSE='#'
 else
@@ -7157,7 +7133,7 @@ if test "${with_toolkit+set}" = set; then
       gtk | sogtk)   sim_ac_gui_toolkit=sogtk ;;
       be  | sobe)    sim_ac_gui_toolkit=sobe  ;;
       oiv )          sim_ac_gui_toolkit=oivxt ;;
-      *) { { echo "$as_me:7160: error: invalid --with-toolkit value: \"$withval\"" >&5
+      *) { { echo "$as_me:7136: error: invalid --with-toolkit value: \"$withval\"" >&5
 echo "$as_me: error: invalid --with-toolkit value: \"$withval\"" >&2;}
    { (exit 1); exit 1; }; } ;;
     esac
@@ -7174,7 +7150,7 @@ fi;
   sim_ac_gui_configcmd=${sim_ac_gui_toolkit}-config
   # Extract the first word of "$sim_ac_gui_configcmd", so it can be a program name with args.
 set dummy $sim_ac_gui_configcmd; ac_word=$2
-echo "$as_me:7177: checking for $ac_word" >&5
+echo "$as_me:7153: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
 if test "${ac_cv_path_soguiconfig+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -7191,7 +7167,7 @@ for ac_dir in $ac_dummy; do
   test -z "$ac_dir" && ac_dir=.
   if $as_executable_p "$ac_dir/$ac_word"; then
    ac_cv_path_soguiconfig="$ac_dir/$ac_word"
-   echo "$as_me:7194: found $ac_dir/$ac_word" >&5
+   echo "$as_me:7170: found $ac_dir/$ac_word" >&5
    break
 fi
 done
@@ -7203,10 +7179,10 @@ fi
 soguiconfig=$ac_cv_path_soguiconfig
 
 if test -n "$soguiconfig"; then
-  echo "$as_me:7206: result: $soguiconfig" >&5
+  echo "$as_me:7182: result: $soguiconfig" >&5
 echo "${ECHO_T}$soguiconfig" >&6
 else
-  echo "$as_me:7209: result: no" >&5
+  echo "$as_me:7185: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
@@ -7218,36 +7194,12 @@ fi
     EVENT=`$soguiconfig $alternate_option --ac-subst EVENT`
     COMPONENTHEADER=`$soguiconfig $alternate_option --ac-subst COMPONENTHEADER`
   else
-    { { echo "$as_me:7221: error: cannot find required '$sim_ac_gui_configcmd' utility" >&5
+    { { echo "$as_me:7197: error: cannot find required '$sim_ac_gui_configcmd' utility" >&5
 echo "$as_me: error: cannot find required '$sim_ac_gui_configcmd' utility" >&2;}
    { (exit 1); exit 1; }; }
   fi
 
   # Which component examples to build.
-
-if $soguiconfig $alternate_option --have-feature planeviewer; then
-  HAVE_PLANEVIEWER_TRUE=
-  HAVE_PLANEVIEWER_FALSE='#'
-else
-  HAVE_PLANEVIEWER_TRUE='#'
-  HAVE_PLANEVIEWER_FALSE=
-fi
-
-if $soguiconfig $alternate_option --have-feature walkviewer; then
-  HAVE_WALKVIEWER_TRUE=
-  HAVE_WALKVIEWER_FALSE='#'
-else
-  HAVE_WALKVIEWER_TRUE='#'
-  HAVE_WALKVIEWER_FALSE=
-fi
-
-if $soguiconfig $alternate_option --have-feature flyviewer; then
-  HAVE_FLYVIEWER_TRUE=
-  HAVE_FLYVIEWER_FALSE='#'
-else
-  HAVE_FLYVIEWER_TRUE='#'
-  HAVE_FLYVIEWER_FALSE=
-fi
 
 if $soguiconfig $alternate_option --have-feature sliderset; then
   HAVE_SLIDERSETS_TRUE=
@@ -7316,13 +7268,13 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 # Check for the availability of this node (it is used in the hidden
 # line rendering), which is not part of older Inventor implementations.
 
-echo "$as_me:7319: checking if the Open Inventor SoPolygonOffset node is available" >&5
+echo "$as_me:7271: checking if the Open Inventor SoPolygonOffset node is available" >&5
 echo $ECHO_N "checking if the Open Inventor SoPolygonOffset node is available... $ECHO_C" >&6
 if test "${sim_cv_have_oiv_sopolygonoffset_node+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
-#line 7325 "configure"
+#line 7277 "configure"
 #include "confdefs.h"
 #include <Inventor/nodes/SoPolygonOffset.h>
 int
@@ -7334,16 +7286,16 @@ SoPolygonOffset * p = new SoPolygonOffset;
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:7337: \"$ac_link\"") >&5
+if { (eval echo "$as_me:7289: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:7340: \$? = $ac_status" >&5
+  echo "$as_me:7292: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:7343: \"$ac_try\"") >&5
+  { (eval echo "$as_me:7295: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:7346: \$? = $ac_status" >&5
+  echo "$as_me:7298: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   sim_cv_have_oiv_sopolygonoffset_node=true
 else
@@ -7353,7 +7305,7 @@ sim_cv_have_oiv_sopolygonoffset_node=false
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
 fi
-echo "$as_me:7356: result: $sim_cv_have_oiv_sopolygonoffset_node" >&5
+echo "$as_me:7308: result: $sim_cv_have_oiv_sopolygonoffset_node" >&5
 echo "${ECHO_T}$sim_cv_have_oiv_sopolygonoffset_node" >&6
 
 if $sim_cv_have_oiv_sopolygonoffset_node; then
@@ -7366,13 +7318,13 @@ else
   :
 fi
 
-echo "$as_me:7369: checking for SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND" >&5
+echo "$as_me:7321: checking for SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND" >&5
 echo $ECHO_N "checking for SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND... $ECHO_C" >&6
 if test "${sim_cv_have_oiv_have_soglrenderaction_sorted_object_sorted_triangle_blend+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
-#line 7375 "configure"
+#line 7327 "configure"
 #include "confdefs.h"
 #include <Inventor/actions/SoGLRenderAction.h>
 int
@@ -7385,16 +7337,16 @@ main ()
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:7388: \"$ac_link\"") >&5
+if { (eval echo "$as_me:7340: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:7391: \$? = $ac_status" >&5
+  echo "$as_me:7343: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:7394: \"$ac_try\"") >&5
+  { (eval echo "$as_me:7346: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:7397: \$? = $ac_status" >&5
+  echo "$as_me:7349: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   sim_cv_have_oiv_have_soglrenderaction_sorted_object_sorted_triangle_blend=true
 else
@@ -7404,7 +7356,7 @@ sim_cv_have_oiv_have_soglrenderaction_sorted_object_sorted_triangle_blend=false
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
 fi
-echo "$as_me:7407: result: $sim_cv_have_oiv_have_soglrenderaction_sorted_object_sorted_triangle_blend" >&5
+echo "$as_me:7359: result: $sim_cv_have_oiv_have_soglrenderaction_sorted_object_sorted_triangle_blend" >&5
 echo "${ECHO_T}$sim_cv_have_oiv_have_soglrenderaction_sorted_object_sorted_triangle_blend" >&6
 
 if $sim_cv_have_oiv_have_soglrenderaction_sorted_object_sorted_triangle_blend; then
@@ -7417,13 +7369,13 @@ else
   :
 fi
 
-echo "$as_me:7420: checking for So${Gui}Component::setFullScreen()" >&5
+echo "$as_me:7372: checking for So${Gui}Component::setFullScreen()" >&5
 echo $ECHO_N "checking for So${Gui}Component::setFullScreen()... $ECHO_C" >&6
 if test "${sim_cv_have_oiv_have_socomponent_setfullscreen+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
-#line 7426 "configure"
+#line 7378 "configure"
 #include "confdefs.h"
 #include <Inventor/${Gui}/viewers/So${Gui}ExaminerViewer.h>
 int
@@ -7437,16 +7389,16 @@ main ()
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:7440: \"$ac_link\"") >&5
+if { (eval echo "$as_me:7392: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:7443: \$? = $ac_status" >&5
+  echo "$as_me:7395: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:7446: \"$ac_try\"") >&5
+  { (eval echo "$as_me:7398: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:7449: \$? = $ac_status" >&5
+  echo "$as_me:7401: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   sim_cv_have_oiv_have_socomponent_setfullscreen=true
 else
@@ -7456,7 +7408,7 @@ sim_cv_have_oiv_have_socomponent_setfullscreen=false
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
 fi
-echo "$as_me:7459: result: $sim_cv_have_oiv_have_socomponent_setfullscreen" >&5
+echo "$as_me:7411: result: $sim_cv_have_oiv_have_socomponent_setfullscreen" >&5
 echo "${ECHO_T}$sim_cv_have_oiv_have_socomponent_setfullscreen" >&6
 
 if $sim_cv_have_oiv_have_socomponent_setfullscreen; then
@@ -7469,13 +7421,13 @@ else
   :
 fi
 
-echo "$as_me:7472: checking for So${Gui}Viewer::setStereoViewing()" >&5
+echo "$as_me:7424: checking for So${Gui}Viewer::setStereoViewing()" >&5
 echo $ECHO_N "checking for So${Gui}Viewer::setStereoViewing()... $ECHO_C" >&6
 if test "${sim_cv_have_oiv_have_viewer_stereo_viewing+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
-#line 7478 "configure"
+#line 7430 "configure"
 #include "confdefs.h"
 #include <Inventor/${Gui}/viewers/So${Gui}ExaminerViewer.h>
 int
@@ -7489,16 +7441,16 @@ main ()
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:7492: \"$ac_link\"") >&5
+if { (eval echo "$as_me:7444: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:7495: \$? = $ac_status" >&5
+  echo "$as_me:7447: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:7498: \"$ac_try\"") >&5
+  { (eval echo "$as_me:7450: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:7501: \$? = $ac_status" >&5
+  echo "$as_me:7453: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   sim_cv_have_oiv_have_viewer_stereo_viewing=true
 else
@@ -7508,7 +7460,7 @@ sim_cv_have_oiv_have_viewer_stereo_viewing=false
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
 fi
-echo "$as_me:7511: result: $sim_cv_have_oiv_have_viewer_stereo_viewing" >&5
+echo "$as_me:7463: result: $sim_cv_have_oiv_have_viewer_stereo_viewing" >&5
 echo "${ECHO_T}$sim_cv_have_oiv_have_viewer_stereo_viewing" >&6
 
 if $sim_cv_have_oiv_have_viewer_stereo_viewing; then
@@ -7521,13 +7473,13 @@ else
   :
 fi
 
-echo "$as_me:7524: checking for So${Gui}Viewer::setQuadBufferStereo()" >&5
+echo "$as_me:7476: checking for So${Gui}Viewer::setQuadBufferStereo()" >&5
 echo $ECHO_N "checking for So${Gui}Viewer::setQuadBufferStereo()... $ECHO_C" >&6
 if test "${sim_cv_have_oiv_have_viewer_quadbuffer_stereo+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
-#line 7530 "configure"
+#line 7482 "configure"
 #include "confdefs.h"
 #include <Inventor/${Gui}/viewers/So${Gui}ExaminerViewer.h>
 int
@@ -7541,16 +7493,16 @@ main ()
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:7544: \"$ac_link\"") >&5
+if { (eval echo "$as_me:7496: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:7547: \$? = $ac_status" >&5
+  echo "$as_me:7499: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:7550: \"$ac_try\"") >&5
+  { (eval echo "$as_me:7502: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:7553: \$? = $ac_status" >&5
+  echo "$as_me:7505: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   sim_cv_have_oiv_have_viewer_quadbuffer_stereo=true
 else
@@ -7560,7 +7512,7 @@ sim_cv_have_oiv_have_viewer_quadbuffer_stereo=false
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
 fi
-echo "$as_me:7563: result: $sim_cv_have_oiv_have_viewer_quadbuffer_stereo" >&5
+echo "$as_me:7515: result: $sim_cv_have_oiv_have_viewer_quadbuffer_stereo" >&5
 echo "${ECHO_T}$sim_cv_have_oiv_have_viewer_quadbuffer_stereo" >&6
 
 if $sim_cv_have_oiv_have_viewer_quadbuffer_stereo; then
@@ -7656,7 +7608,7 @@ DEFS=-DHAVE_CONFIG_H
 : ${CONFIG_STATUS=./config.status}
 ac_clean_files_save=$ac_clean_files
 ac_clean_files="$ac_clean_files $CONFIG_STATUS"
-{ echo "$as_me:7659: creating $CONFIG_STATUS" >&5
+{ echo "$as_me:7611: creating $CONFIG_STATUS" >&5
 echo "$as_me: creating $CONFIG_STATUS" >&6;}
 cat >$CONFIG_STATUS <<_ACEOF
 #! $SHELL
@@ -7832,7 +7784,7 @@ cat >>$CONFIG_STATUS <<\EOF
     echo "$ac_cs_version"; exit 0 ;;
   --he | --h)
     # Conflict between --help and --header
-    { { echo "$as_me:7835: error: ambiguous option: $1
+    { { echo "$as_me:7787: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -7851,7 +7803,7 @@ Try \`$0 --help' for more information." >&2;}
     ac_need_defaults=false;;
 
   # This is an error.
-  -*) { { echo "$as_me:7854: error: unrecognized option: $1
+  -*) { { echo "$as_me:7806: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -7912,7 +7864,7 @@ do
   "sensors/Makefile" ) CONFIG_FILES="$CONFIG_FILES sensors/Makefile" ;;
   "default-1" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default-1" ;;
   "config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
-  *) { { echo "$as_me:7915: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:7867: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -8050,12 +8002,6 @@ s,@X_CFLAGS@,$X_CFLAGS,;t t
 s,@X_PRE_LIBS@,$X_PRE_LIBS,;t t
 s,@X_LIBS@,$X_LIBS,;t t
 s,@X_EXTRA_LIBS@,$X_EXTRA_LIBS,;t t
-s,@HAVE_PLANEVIEWER_TRUE@,$HAVE_PLANEVIEWER_TRUE,;t t
-s,@HAVE_PLANEVIEWER_FALSE@,$HAVE_PLANEVIEWER_FALSE,;t t
-s,@HAVE_WALKVIEWER_TRUE@,$HAVE_WALKVIEWER_TRUE,;t t
-s,@HAVE_WALKVIEWER_FALSE@,$HAVE_WALKVIEWER_FALSE,;t t
-s,@HAVE_FLYVIEWER_TRUE@,$HAVE_FLYVIEWER_TRUE,;t t
-s,@HAVE_FLYVIEWER_FALSE@,$HAVE_FLYVIEWER_FALSE,;t t
 s,@HAVE_SLIDERSETS_TRUE@,$HAVE_SLIDERSETS_TRUE,;t t
 s,@HAVE_SLIDERSETS_FALSE@,$HAVE_SLIDERSETS_FALSE,;t t
 s,@HAVE_MATERIALEDITOR_TRUE@,$HAVE_MATERIALEDITOR_TRUE,;t t
@@ -8187,7 +8133,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:8190: creating $ac_file" >&5
+    { echo "$as_me:8136: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -8205,7 +8151,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:8208: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:8154: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -8218,7 +8164,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:8221: error: cannot find input file: $f" >&5
+           { { echo "$as_me:8167: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -8279,7 +8225,7 @@ for ac_file in : $CONFIG_HEADERS; do test "x$ac_file" = x: && continue
   * )   ac_file_in=$ac_file.in ;;
   esac
 
-  test x"$ac_file" != x- && { echo "$as_me:8282: creating $ac_file" >&5
+  test x"$ac_file" != x- && { echo "$as_me:8228: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
 
   # First look for the input files in the build tree, otherwise in the
@@ -8290,7 +8236,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:8293: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:8239: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -8303,7 +8249,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:8306: error: cannot find input file: $f" >&5
+           { { echo "$as_me:8252: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -8420,7 +8366,7 @@ cat >>$CONFIG_STATUS <<\EOF
   rm -f $tmp/in
   if test x"$ac_file" != x-; then
     if cmp -s $ac_file $tmp/config.h 2>/dev/null; then
-      { echo "$as_me:8423: $ac_file is unchanged" >&5
+      { echo "$as_me:8369: $ac_file is unchanged" >&5
 echo "$as_me: $ac_file is unchanged" >&6;}
     else
       ac_dir=`$as_expr X"$ac_file" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \

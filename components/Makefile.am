@@ -17,10 +17,7 @@ examinerviewer_SOURCES = \
 	computils.cpp \
 	computils.h
 
-overlay_SOURCES = \
-	overlay.cpp \
-	computils.cpp \
-	computils.h
+overlay_SOURCES = overlay.cpp
 
 planeviewer_SOURCES = \
 	planeviewer.cpp \
