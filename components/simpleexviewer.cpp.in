@@ -1,0 +1,49 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SoInput.h>
+#include <Inventor/nodes/SoText3.h>
+
+// *************************************************************************
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+
+  SoNode * root;
+  SbString err("");
+  if (argc == 2) {
+    SoInput in;
+    SbBool ok = in.openFile(argv[1]);
+    if (ok) {
+      ok = SoDB::read(&in, root);
+      if (!ok) { err.sprintf("Couldn't read file '%s'", argv[1]); }
+    }
+    else {
+      err.sprintf("Couldn't open file '%s'", argv[1]);
+    }
+  }
+  else {
+    err.sprintf("Usage: %s [modelfile.iv]",
+                (argc > 0) ?
+                (argv[0] ? argv[0] : "examinerviewer") :
+                "examinerviewer");
+  }
+
+  if (err.getLength() > 0) {
+    SoText3 * t3 = new SoText3;
+    t3->string.setValue(err);
+    root = t3;
+  }
+
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
+
+  viewer->setSceneGraph(root);
+  viewer->show();
+  So@Gui@::show(window);
+
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  return 0;
+}
