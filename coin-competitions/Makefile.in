@@ -89,7 +89,7 @@ gui = @gui@
 install_sh = @install_sh@
 soguiconfig = @soguiconfig@
 
-SUBDIRS = SIM-20020118 \
+SUBDIRS = SIM-20020503 SIM-20020118 \
           SIM-20011116 SIM-20011005 SIM-20010914 SIM-20010824 SIM-20010803
 
 subdir = coin-competitions
@@ -107,7 +107,7 @@ DIST_SUBDIRS = $(SUBDIRS)
 all: all-recursive
 
 .SUFFIXES:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  coin-competitions/Makefile
 Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status

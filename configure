@@ -9329,7 +9329,7 @@ exec_prefix=$sim_ac_save_exec_prefix
 # **************************************************************************
 # All files configure must automatically generate.
 
-ac_config_files="$ac_config_files Makefile components/Makefile coin-competitions/Makefile coin-competitions/SIM-20020118/Makefile coin-competitions/SIM-20011116/Makefile coin-competitions/SIM-20011005/Makefile coin-competitions/SIM-20010914/Makefile coin-competitions/SIM-20010824/Makefile coin-competitions/SIM-20010803/Makefile eyecandy/Makefile actions/Makefile draggers/Makefile engines/Makefile manipulators/Makefile nodes/Makefile sensors/Makefile nodekits/Makefile"
+ac_config_files="$ac_config_files Makefile components/Makefile coin-competitions/Makefile coin-competitions/SIM-20020503/Makefile coin-competitions/SIM-20020118/Makefile coin-competitions/SIM-20011116/Makefile coin-competitions/SIM-20011005/Makefile coin-competitions/SIM-20010914/Makefile coin-competitions/SIM-20010824/Makefile coin-competitions/SIM-20010803/Makefile eyecandy/Makefile actions/Makefile draggers/Makefile engines/Makefile manipulators/Makefile nodes/Makefile sensors/Makefile nodekits/Makefile"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -9815,6 +9815,7 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "components/Makefile" ) CONFIG_FILES="$CONFIG_FILES components/Makefile" ;;
   "coin-competitions/Makefile" ) CONFIG_FILES="$CONFIG_FILES coin-competitions/Makefile" ;;
+  "coin-competitions/SIM-20020503/Makefile" ) CONFIG_FILES="$CONFIG_FILES coin-competitions/SIM-20020503/Makefile" ;;
   "coin-competitions/SIM-20020118/Makefile" ) CONFIG_FILES="$CONFIG_FILES coin-competitions/SIM-20020118/Makefile" ;;
   "coin-competitions/SIM-20011116/Makefile" ) CONFIG_FILES="$CONFIG_FILES coin-competitions/SIM-20011116/Makefile" ;;
   "coin-competitions/SIM-20011005/Makefile" ) CONFIG_FILES="$CONFIG_FILES coin-competitions/SIM-20011005/Makefile" ;;
