@@ -30,18 +30,19 @@
 int
 main(int argc, char ** argv)
 {
-  @WIDGET@ w = So@Gui@::init("SnapshotViewer");
+  @WIDGET@ w = So@Gui@::init(argv[0]);
 
   SoNode * root = get_scene_graph( argc, argv );
   if ( ! root ) return -1;
 
   So@Gui@SnapshotViewer * viewer = new So@Gui@SnapshotViewer(w);
+  config_viewer(viewer, argc, argv);
 
   So@Gui@::show(w);
   viewer->show();
 
   viewer->setSceneGraph(root);
-  viewer->setTitle("SnapshotViewer");
+  viewer->setTitle("Snapshot Viewer");
 
   So@Gui@::mainLoop();
 
