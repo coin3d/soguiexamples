@@ -40,8 +40,11 @@ AC_ARG_WITH(
 
 # Environment variables to configure the generic sourcefiles.
 
+sim_ac_path=$PATH
+test x"$prefix" = xNONE || sim_ac_path=$prefix/bin:$sim_ac_path
+
 sim_ac_gui_configcmd=${sim_ac_gui_toolkit}-config
-AC_PATH_PROG(soguiconfig, $sim_ac_gui_configcmd, false, $PATH)
+AC_PATH_PROG(soguiconfig, $sim_ac_gui_configcmd, false, $sim_ac_path)
 if $soguiconfig; then
   GUI=`$soguiconfig --ac-subst GUI`
   Gui=`$soguiconfig --ac-subst Gui`

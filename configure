@@ -2470,10 +2470,13 @@ fi
 
 # Environment variables to configure the generic sourcefiles.
 
+sim_ac_path=$PATH
+test x"$prefix" = xNONE || sim_ac_path=$prefix/bin:$sim_ac_path
+
 sim_ac_gui_configcmd=${sim_ac_gui_toolkit}-config
 # Extract the first word of "$sim_ac_gui_configcmd", so it can be a program name with args.
 set dummy $sim_ac_gui_configcmd; ac_word=$2
-echo "configure:2254: checking for $ac_word" >&5
+echo "configure:2256: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
 if test "${ac_cv_path_soguiconfig+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -2484,7 +2487,7 @@ else
   ;;
   *)
   ac_save_IFS=$IFS; IFS=':'
-ac_dummy="$PATH"
+ac_dummy="$sim_ac_path"
 for ac_dir in $ac_dummy; do
   IFS=$ac_save_IFS
   test -z "$ac_dir" && ac_dir=.
@@ -2500,10 +2503,10 @@ esac
 fi
 soguiconfig=$ac_cv_path_soguiconfig
 if test -n "$soguiconfig"; then
-  echo "configure:2280: result: $soguiconfig" >&5
+  echo "configure:2282: result: $soguiconfig" >&5
 echo "${ECHO_T}$soguiconfig" >&6
 else
-  echo "configure:2283: result: no" >&5
+  echo "configure:2285: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
@@ -2712,13 +2715,13 @@ ac_compile='${CXX-g++} -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='${CXX-g++} -o conftest${ac_exeext} $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_gnu_compiler=$ac_cv_prog_gxx
 
-echo "configure:2464: checking whether $CXX accepts -fno-exceptions" >&5
+echo "configure:2466: checking whether $CXX accepts -fno-exceptions" >&5
 echo $ECHO_N "checking whether $CXX accepts -fno-exceptions... $ECHO_C" >&6
 
 sim_ac_save_cppflags=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS -fno-exceptions"
 cat >conftest.$ac_ext <<EOF
-#line 2469 "configure"
+#line 2471 "configure"
 #include "confdefs.h"
 #ifdef __cplusplus
 extern "C" void exit (int);
@@ -2732,7 +2735,7 @@ main ()
   return 0;
 }
 EOF
-if { (eval echo configure:2481: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:2483: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
   sim_ac_accept_result=yes
 else
   echo "configure: failed program was:" >&5
@@ -2740,7 +2743,7 @@ else
   sim_ac_accept_result=no
 fi
 rm -f conftest*
-echo "configure:2489: result: $sim_ac_accept_result" >&5
+echo "configure:2491: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
 # This need to go last, in case CPPFLAGS is modified in _exception_flag=-fno-exceptions or .
@@ -2766,13 +2769,13 @@ ac_compile='${CXX-g++} -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='${CXX-g++} -o conftest${ac_exeext} $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_gnu_compiler=$ac_cv_prog_gxx
 
-echo "configure:2511: checking whether $CXX accepts -fno-handle-exceptions" >&5
+echo "configure:2513: checking whether $CXX accepts -fno-handle-exceptions" >&5
 echo $ECHO_N "checking whether $CXX accepts -fno-handle-exceptions... $ECHO_C" >&6
 
 sim_ac_save_cppflags=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS -fno-handle-exceptions"
 cat >conftest.$ac_ext <<EOF
-#line 2516 "configure"
+#line 2518 "configure"
 #include "confdefs.h"
 #ifdef __cplusplus
 extern "C" void exit (int);
@@ -2786,7 +2789,7 @@ main ()
   return 0;
 }
 EOF
-if { (eval echo configure:2528: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:2530: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
   sim_ac_accept_result=yes
 else
   echo "configure: failed program was:" >&5
@@ -2794,7 +2797,7 @@ else
   sim_ac_accept_result=no
 fi
 rm -f conftest*
-echo "configure:2536: result: $sim_ac_accept_result" >&5
+echo "configure:2538: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
 # This need to go last, in case CPPFLAGS is modified in _exception_flag=-fno-handle-exceptions or .
@@ -2873,13 +2876,13 @@ ac_compile='${CXX-g++} -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='${CXX-g++} -o conftest${ac_exeext} $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_gnu_compiler=$ac_cv_prog_gxx
 
-echo "configure:2607: checking whether $CXX accepts -Wno-multichar" >&5
+echo "configure:2609: checking whether $CXX accepts -Wno-multichar" >&5
 echo $ECHO_N "checking whether $CXX accepts -Wno-multichar... $ECHO_C" >&6
 
 sim_ac_save_cppflags=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS -Wno-multichar"
 cat >conftest.$ac_ext <<EOF
-#line 2612 "configure"
+#line 2614 "configure"
 #include "confdefs.h"
 #ifdef __cplusplus
 extern "C" void exit (int);
@@ -2893,7 +2896,7 @@ main ()
   return 0;
 }
 EOF
-if { (eval echo configure:2624: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:2626: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
   sim_ac_accept_result=yes
 else
   echo "configure: failed program was:" >&5
@@ -2901,7 +2904,7 @@ else
   sim_ac_accept_result=no
 fi
 rm -f conftest*
-echo "configure:2632: result: $sim_ac_accept_result" >&5
+echo "configure:2634: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
 # This need to go last, in case CPPFLAGS is modified in CPPFLAGS="$CPPFLAGS -Wno-multichar" or .
@@ -2928,13 +2931,13 @@ ac_compile='${CC-cc} -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='${CC-cc} -o conftest${ac_exeext} $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_gnu_compiler=$ac_cv_prog_gcc
 
-echo "configure:2655: checking whether $CC accepts -Wno-multichar" >&5
+echo "configure:2657: checking whether $CC accepts -Wno-multichar" >&5
 echo $ECHO_N "checking whether $CC accepts -Wno-multichar... $ECHO_C" >&6
 
 sim_ac_save_cppflags=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS -Wno-multichar"
 cat >conftest.$ac_ext <<EOF
-#line 2660 "configure"
+#line 2662 "configure"
 #include "confdefs.h"
 
 int
@@ -2945,7 +2948,7 @@ main ()
   return 0;
 }
 EOF
-if { (eval echo configure:2669: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:2671: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
   sim_ac_accept_result=yes
 else
   echo "configure: failed program was:" >&5
@@ -2953,7 +2956,7 @@ else
   sim_ac_accept_result=no
 fi
 rm -f conftest*
-echo "configure:2677: result: $sim_ac_accept_result" >&5
+echo "configure:2679: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
 # This need to go last, in case CPPFLAGS is modified in CFLAGS="$CFLAGS -Wno-multichar" or .
@@ -2979,13 +2982,13 @@ ac_compile='${CXX-g++} -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='${CXX-g++} -o conftest${ac_exeext} $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_gnu_compiler=$ac_cv_prog_gxx
 
-echo "configure:2699: checking whether $CXX accepts -Wno-multichar" >&5
+echo "configure:2701: checking whether $CXX accepts -Wno-multichar" >&5
 echo $ECHO_N "checking whether $CXX accepts -Wno-multichar... $ECHO_C" >&6
 
 sim_ac_save_cppflags=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS -Wno-multichar"
 cat >conftest.$ac_ext <<EOF
-#line 2704 "configure"
+#line 2706 "configure"
 #include "confdefs.h"
 #ifdef __cplusplus
 extern "C" void exit (int);
@@ -2999,7 +3002,7 @@ main ()
   return 0;
 }
 EOF
-if { (eval echo configure:2716: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:2718: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
   sim_ac_accept_result=yes
 else
   echo "configure: failed program was:" >&5
@@ -3007,7 +3010,7 @@ else
   sim_ac_accept_result=no
 fi
 rm -f conftest*
-echo "configure:2724: result: $sim_ac_accept_result" >&5
+echo "configure:2726: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
 # This need to go last, in case CPPFLAGS is modified in CXXFLAGS="$CXXFLAGS -Wno-multichar" or .
@@ -3040,13 +3043,13 @@ ac_compile='${CC-cc} -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='${CC-cc} -o conftest${ac_exeext} $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_gnu_compiler=$ac_cv_prog_gcc
 
-echo "configure:2753: checking whether $CC accepts -fullwarn" >&5
+echo "configure:2755: checking whether $CC accepts -fullwarn" >&5
 echo $ECHO_N "checking whether $CC accepts -fullwarn... $ECHO_C" >&6
 
 sim_ac_save_cppflags=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS -fullwarn"
 cat >conftest.$ac_ext <<EOF
-#line 2758 "configure"
+#line 2760 "configure"
 #include "confdefs.h"
 
 int
@@ -3057,7 +3060,7 @@ main ()
   return 0;
 }
 EOF
-if { (eval echo configure:2767: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:2769: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
   sim_ac_accept_result=yes
 else
   echo "configure: failed program was:" >&5
@@ -3065,7 +3068,7 @@ else
   sim_ac_accept_result=no
 fi
 rm -f conftest*
-echo "configure:2775: result: $sim_ac_accept_result" >&5
+echo "configure:2777: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
 # This need to go last, in case CPPFLAGS is modified in CPPFLAGS="$CPPFLAGS -fullwarn" or .
@@ -3107,13 +3110,13 @@ ac_compile='${CC-cc} -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='${CC-cc} -o conftest${ac_exeext} $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_gnu_compiler=$ac_cv_prog_gcc
 
-echo "configure:2811: checking whether $CC accepts $sim_ac_bogus_warnings" >&5
+echo "configure:2813: checking whether $CC accepts $sim_ac_bogus_warnings" >&5
 echo $ECHO_N "checking whether $CC accepts $sim_ac_bogus_warnings... $ECHO_C" >&6
 
 sim_ac_save_cppflags=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $sim_ac_bogus_warnings"
 cat >conftest.$ac_ext <<EOF
-#line 2816 "configure"
+#line 2818 "configure"
 #include "confdefs.h"
 
 int
@@ -3124,7 +3127,7 @@ main ()
   return 0;
 }
 EOF
-if { (eval echo configure:2825: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:2827: \"$ac_compile\") >&5; (eval $ac_compile) 2>&5; }; then
   sim_ac_accept_result=yes
 else
   echo "configure: failed program was:" >&5
@@ -3132,7 +3135,7 @@ else
   sim_ac_accept_result=no
 fi
 rm -f conftest*
-echo "configure:2833: result: $sim_ac_accept_result" >&5
+echo "configure:2835: result: $sim_ac_accept_result" >&5
 echo "${ECHO_T}$sim_ac_accept_result" >&6
 CPPFLAGS=$sim_ac_save_cppflags
 # This need to go last, in case CPPFLAGS is modified in CPPFLAGS="$CPPFLAGS $sim_ac_bogus_warnings" or .
