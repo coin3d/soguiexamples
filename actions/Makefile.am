@@ -2,10 +2,11 @@
 
 BUILT_SOURCES = search.cpp raypick.cpp
 
-noinst_PROGRAMS = search raypick
+noinst_PROGRAMS = search raypick tesselate
 
 search_SOURCES = search.cpp
 raypick_SOURCES = raypick.cpp
+tesselate_SOURCES = tesselate.cpp
 
 ############################################################################
 

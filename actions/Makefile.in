@@ -93,15 +93,16 @@ soguiconfig = @soguiconfig@
 
 BUILT_SOURCES = search.cpp raypick.cpp
 
-noinst_PROGRAMS = search raypick
+noinst_PROGRAMS = search raypick tesselate
 
 search_SOURCES = search.cpp
 raypick_SOURCES = raypick.cpp
+tesselate_SOURCES = tesselate.cpp
 subdir = actions
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-noinst_PROGRAMS = search$(EXEEXT) raypick$(EXEEXT)
+noinst_PROGRAMS = search$(EXEEXT) raypick$(EXEEXT) tesselate$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_raypick_OBJECTS = raypick.$(OBJEXT)
@@ -114,6 +115,11 @@ search_OBJECTS = $(am_search_OBJECTS)
 search_LDADD = $(LDADD)
 search_DEPENDENCIES =
 search_LDFLAGS =
+am_tesselate_OBJECTS = tesselate.$(OBJEXT)
+tesselate_OBJECTS = $(am_tesselate_OBJECTS)
+tesselate_LDADD = $(LDADD)
+tesselate_DEPENDENCIES =
+tesselate_LDFLAGS =
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -121,16 +127,17 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/raypick.Po $(DEPDIR)/search.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/raypick.Po $(DEPDIR)/search.Po \
+@AMDEP_TRUE@	$(DEPDIR)/tesselate.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 CXXFLAGS = @CXXFLAGS@
-DIST_SOURCES = $(raypick_SOURCES) $(search_SOURCES)
+DIST_SOURCES = $(raypick_SOURCES) $(search_SOURCES) $(tesselate_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(raypick_SOURCES) $(search_SOURCES)
+SOURCES = $(raypick_SOURCES) $(search_SOURCES) $(tesselate_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -153,6 +160,9 @@ raypick$(EXEEXT): $(raypick_OBJECTS) $(raypick_DEPENDENCIES)
 search$(EXEEXT): $(search_OBJECTS) $(search_DEPENDENCIES) 
 	@rm -f search$(EXEEXT)
 	$(CXXLINK) $(search_LDFLAGS) $(search_OBJECTS) $(search_LDADD) $(LIBS)
+tesselate$(EXEEXT): $(tesselate_OBJECTS) $(tesselate_DEPENDENCIES) 
+	@rm -f tesselate$(EXEEXT)
+	$(CXXLINK) $(tesselate_LDFLAGS) $(tesselate_OBJECTS) $(tesselate_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -162,6 +172,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/raypick.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/search.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tesselate.Po@am__quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
