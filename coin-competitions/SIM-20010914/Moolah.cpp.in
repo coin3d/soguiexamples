@@ -1,0 +1,522 @@
+// File: Moolah.cpp
+
+// Coin stuff
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoFaceSet.h>
+#include <Inventor/nodes/SoNormal.h>
+#include <Inventor/nodes/SoNormalBinding.h>
+#include <Inventor/nodes/SoTextureCoordinate2.h>
+#include <Inventor/nodes/SoTextureCoordinateBinding.h>
+#include <Inventor/nodes/SoScale.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoCube.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/nodes/SoCylinder.h>
+
+So@Gui@ExaminerViewer * viewer;
+SoSeparator * scene_root;
+SoSeparator * selected_separator;
+SoTexture2 * consol_texture;
+
+// Moolah classes
+#include "MooOut.h"
+#include "MooString.h"
+#include "MooTokenizer.h"
+#include "MooExecutive.h"
+
+MooOut out;
+MooTokenizer tokenizer;
+MooExecutive executive;
+unsigned int idx;
+MooString * string;
+MooString in;
+bool blink = true;
+MooList <SoSeparator *> parents;
+
+// Coin callbacks
+
+void timer_cb( void * userdata, SoSensor * )
+{
+  if ( viewer->isViewing( ) ) {
+    return;
+  }
+
+  out.cursor( );
+  consol_texture->image.setValue( SbVec2s( 640, 300 ), 4,
+      ( const unsigned char * ) out.pixels( ) );
+}
+
+void event_cb( void * userdata, SoEventCallback * node )
+{
+  const SoEvent * event = node->getEvent( );
+
+  if ( SO_KEY_PRESS_EVENT( event, ANY ) ) {
+
+    SoKeyboardEvent * kb_event = ( SoKeyboardEvent * ) event;
+
+    char c = kb_event->getPrintableCharacter( );
+
+    if ( c == 46 ) { // nonprinable char
+      unsigned int k = kb_event->getKey( );
+
+      if ( k == SoKeyboardEvent::PERIOD ) {
+        in.append( '.' );
+        out.out( '.' );
+      }
+      if ( k == SoKeyboardEvent::BACKSPACE ) {
+        in.remove( );
+        out.back( );
+      }
+      if ( k == SoKeyboardEvent::RETURN || k == SoKeyboardEvent::ENTER ) {
+        
+        out.nl( );
+
+        // execute command
+        tokenizer.clear( );
+        tokenizer.tokenize( in );
+
+        // process tokens
+        idx = 0;
+        string = NULL;
+
+        do {
+          string = tokenizer.gets( idx++ );
+          if ( ! string ) break;
+        } while ( string );
+
+        if ( executive.execute( tokenizer ) == -1 ) {
+          out.out( "command not found\n" );
+        }
+
+        // ready for new input
+        out.out( "$ " );
+        in.clear( );
+
+      }
+    }
+    else {  // printabel char
+      in.append( c );
+      out.out( c );
+    }
+  
+    consol_texture->image.setValue( SbVec2s( 640, 300 ), 4,
+      ( const unsigned char * ) out.pixels( ) );
+
+    node->setHandled( );
+
+  }
+
+}
+
+// Moolah commands
+
+int test( int argc, char ** argv )
+{
+  for ( int i = 0; i < argc; i++ ) {
+    out.out( argv[i] );
+    out.out( "\n" );
+  }
+
+  return 0;
+}
+
+int help( int argc, char ** argv )
+{
+  out.out( "Available commands are:\n" );
+  out.out( " help                      this message.\n" );
+  out.out( " add <type> <name> <...>   add node to graph tree.\n" );
+  out.out( " remove <name>             remove node from graph tree.\n" );
+  out.out( " select <name>             select separator node\n" );
+  out.out( " list                      list nodes connected to selected separator.\n" );
+  out.out( " exit                      exit program.\n" );
+  out.out( "For detailed info on a command, write <command> and press <enter>.\n" );
+  out.out( "To enter examiner mode, press <esc>.\n" );
+
+  return 0;
+}
+
+int exit( int argc, char ** argv )
+{
+  So@Gui@::exitMainLoop( );
+
+  return 0;
+}
+
+int add( int argc, char ** argv )
+{
+  if ( argc < 3 ) {
+    out.out( "Usage: add <type> <name> <...>\n" );
+    out.out( "Available node types are:\n" );
+    out.out( " separator <name>\n" );
+    out.out( " translation <name> <x> <y> <z>\n" );
+    out.out( " rotation <name> <x> <y> <z> <r>\n" );
+    out.out( " scale <name> <x> <y> <z>\n" );
+    out.out( " cube <name> <width> <height> <depth>\n" );
+    out.out( " sphere <name> <radius>\n" );
+    out.out( " cone <name> <radius> <height>\n" );
+    out.out( " cylinder <name> <radius> <height>\n" );
+    return -1;
+  }
+
+  MooString type( argv[1] );
+
+  // separator
+  if ( type.equals( "separator" ) ) {
+
+    if ( argc < 3 ) {
+      out.out( "Usage: add separator <name>\n" );
+      return -1;
+    }
+
+    SoSeparator * separator = new SoSeparator;
+
+    separator->setName( argv[2] );
+    selected_separator->addChild( separator );
+
+    return 0;
+
+  }
+
+  // translation
+  if ( type.equals( "translation" ) ) {
+
+    if ( argc < 6 ) {
+      out.out( "Usage: add translation <name> <x> <y> <z>\n" );
+      return -1;
+    }
+
+    SoTranslation * translation = new SoTranslation;
+
+    translation->setName( argv[2] );
+    selected_separator->addChild( translation );
+    
+    float x = ( float ) atof( argv[3] );
+    float y = ( float ) atof( argv[4] );
+    float z = ( float ) atof( argv[5] );
+    translation->translation.setValue( SbVec3f( x, y, z ) );
+
+    return 0;
+
+  }
+
+  // rotation
+  if ( type.equals( "rotation" ) ) {
+
+    if ( argc < 7 ) {
+      out.out( "Usage: add rotation <name> <x> <y> <z> <r>\n" );
+      return -1;
+    }
+
+    SoRotation * rotation = new SoRotation;
+
+    rotation->setName( argv[2] );
+    selected_separator->addChild( rotation );
+    
+    float x = ( float ) atof( argv[3] );
+    float y = ( float ) atof( argv[4] );
+    float z = ( float ) atof( argv[5] );
+    float r = ( float ) atof( argv[6] );
+    rotation->rotation.setValue( SbVec3f( x, y, z ), r );
+
+    return 0;
+
+  }
+
+  // scale
+  if ( type.equals( "scale" ) ) {
+
+    if ( argc < 6 ) {
+      out.out( "Usage: add scale <name> <x> <y> <z>\n" );
+      return -1;
+    }
+
+    SoScale * scale = new SoScale;
+
+    scale->setName( argv[2] );
+    selected_separator->addChild( scale );
+    
+    float x = ( float ) atof( argv[3] );
+    float y = ( float ) atof( argv[4] );
+    float z = ( float ) atof( argv[5] );
+    scale->scaleFactor.setValue( SbVec3f( x, y, z ) );
+
+    return 0;
+
+  }
+
+  // cube
+  if ( type.equals( "cube" ) ) {
+
+    if ( argc < 6 ) {
+      out.out( "Usage: add cube <name> <width> <height> <depth>\n" );
+      return -1;
+    }
+
+    SoCube * cube = new SoCube;
+
+    cube->setName( argv[2] );
+    selected_separator->addChild( cube );
+    
+    float width = ( float ) atof( argv[3] );
+    cube->width.setValue( width );
+
+    float height = ( float ) atof( argv[4] );
+    cube->height.setValue( height );
+
+    float depth = ( float ) atof( argv[5] );
+    cube->depth.setValue( depth );
+
+    return 0;
+
+  }
+
+  // sphere
+  if ( type.equals( "sphere" ) ) {
+
+    if ( argc < 4 ) {
+      out.out( "Usage: add sphere <name> <radius>\n" );
+      return -1;
+    }
+
+    SoSphere * sphere = new SoSphere;
+
+    sphere->setName( argv[2] );
+    selected_separator->addChild( sphere );
+    
+    float radius = ( float ) atof( argv[3] );
+    sphere->radius.setValue( radius );
+
+    return 0;
+
+  }
+
+  // cone
+  if ( type.equals( "cone" ) ) {
+
+    if ( argc < 5 ) {
+      out.out( "Usage: add cone <name> <radius> <height>\n" );
+      return -1;
+    }
+
+    SoCone * cone = new SoCone;
+
+    cone->setName( argv[2] );
+    selected_separator->addChild( cone );
+    
+    float radius = ( float ) atof( argv[3] );
+    cone->bottomRadius.setValue( radius );
+
+    float height = ( float ) atof( argv[4] );
+    cone->height.setValue( height );
+
+    return 0;
+
+  }
+
+  // cylinder
+  if ( type.equals( "cylinder" ) ) {
+
+    if ( argc < 5 ) {
+      out.out( "Usage: add cylinder <name> <radius> <height>\n" );
+      return -1;
+    }
+
+    SoCylinder * cylinder = new SoCylinder;
+
+    cylinder->setName( argv[2] );
+    selected_separator->addChild( cylinder );
+    
+    float radius = ( float ) atof( argv[3] );
+    cylinder->radius.setValue( radius );
+
+    float height = ( float ) atof( argv[4] );
+    cylinder->height.setValue( height );
+
+    return 0;
+
+  }
+
+  out.out( "Unknown node type.\n" );
+  return -1;
+}
+
+int remove( int argc, char ** argv )
+{
+  if ( argc < 2 ) {
+    out.out( "Usage: remove <name>\n" );
+    return -1;
+  }
+
+  SoNode * node;
+  node = (SoNode *)SoNode::getByName( argv[1] );
+  selected_separator->removeChild( node );
+
+  return 0;
+}
+
+int list( int argc, char ** argv )
+{
+
+  int num_children = selected_separator->getNumChildren( );
+  SoNode * node;
+  //uint32_t node_id;
+
+  if ( selected_separator != scene_root ) {
+    out.out( "parent\n" );
+  }
+
+  for ( int i = 0; i < num_children; i++ ) {
+    node = selected_separator->getChild( i );
+    
+    out.out( " " );
+    out.out( node->getName( ).getString( ) );
+    out.out( "\n" );
+    //node_id = node->getNodeId( );
+  }
+
+  return 0;
+}
+
+int select( int argc, char ** argv )
+{
+  if ( argc < 2 ) {
+    out.out( "Usage: select <name>\n" );
+    return -1;
+  }
+
+  MooString name( argv[1] );
+  if ( name.equals( "parent" ) ) {
+    selected_separator = parents.get( );
+    parents.remove( );
+    return 0;
+  }
+
+  SoNode * node = (SoNode *)SoNode::getByName( argv[1] );
+
+  if ( node->getTypeId( ) != SoSeparator::getClassTypeId( ) ) {
+    out.out( argv[1] );
+    out.out( " is not a separator.\n" );
+    return -1;
+  }
+
+  parents.append( selected_separator );
+  selected_separator = ( SoSeparator * ) node;
+
+  return 0;
+}
+
+// Moolah main
+
+int main( int argc, char ** argv )
+{
+  // Coin stuff
+
+  @WIDGET@ window = So@Gui@::init( argv[0] );
+  if ( window == NULL ) exit( 1 );
+
+  scene_root = new SoSeparator;
+  scene_root->ref( );
+
+  // Moolah stuff
+
+  out.out( "Moolah Shell 0.01a for Coin.\n" );
+  out.out( "For more info, type 'help' and press <enter>.\n\n" );
+
+  executive.addCommand( "test", test );
+  executive.addCommand( "help", help );
+  executive.addCommand( "exit", exit );
+  executive.addCommand( "add", add );
+  executive.addCommand( "remove", remove );
+  executive.addCommand( "list", list );
+  executive.addCommand( "select", select );
+
+  out.out( "$ " );
+  in.clear( );
+
+  // Coin stuff
+
+  SoSeparator * root = new SoSeparator;
+  root->ref( );
+  root->addChild( scene_root );
+  selected_separator = scene_root;
+
+  out.render( );
+
+  // Add texture
+  consol_texture = new SoTexture2;
+  consol_texture->image.setValue( SbVec2s( 640, 300 ), 4, ( const unsigned char * ) out.pixels( ) );
+
+  // Add event cb
+  SoEventCallback * ecb = new SoEventCallback;
+  ecb->addEventCallback( SoKeyboardEvent::getClassTypeId( ), event_cb, NULL );
+  root->addChild( ecb );
+
+  // Add timer ( for cursor )
+  SoTimerSensor * timer = new SoTimerSensor( timer_cb, NULL );
+  timer->setInterval( 0.20 );
+  timer->schedule();
+
+  root->addChild( consol_texture );
+
+  // Define the consol's spatial coordinates ( 4:3 )
+  SoCoordinate3 * coord = new SoCoordinate3;
+  root->addChild(coord);
+  coord->point.set1Value(0, SbVec3f(-4, -3, 0));
+  coord->point.set1Value(1, SbVec3f( 4, -3, 0));
+  coord->point.set1Value(2, SbVec3f( 4, 3, 0));
+  coord->point.set1Value(3, SbVec3f(-4, 3, 0));
+
+  // Define the consol normal
+  SoNormal * normal = new SoNormal;
+  root->addChild( normal );
+  normal->vector.set1Value( 0, SbVec3f( 0, 0, 1 ) );
+
+  // Define the consol texture coordinates
+  SoTextureCoordinate2 * tex_coord = new SoTextureCoordinate2;
+  root->addChild( tex_coord );
+  tex_coord->point.set1Value( 0, SbVec2f( 0, 1 ) );
+  tex_coord->point.set1Value( 1, SbVec2f( 1, 1 ) );
+  tex_coord->point.set1Value( 2, SbVec2f( 1, 0 ) );
+  tex_coord->point.set1Value( 3, SbVec2f( 0, 0 ) );
+
+  // Define normal and texture coordinate bindings
+  SoNormalBinding * normal_bind = new SoNormalBinding;
+  SoTextureCoordinateBinding * tex_bind = new SoTextureCoordinateBinding;
+  root->addChild( normal_bind );
+  root->addChild( tex_bind );
+  normal_bind->value.setValue( SoNormalBinding::OVERALL );
+  tex_bind->value.setValue( SoTextureCoordinateBinding::PER_VERTEX );
+
+  // Define a face set
+  SoFaceSet * face_set = new SoFaceSet;
+  root->addChild( face_set );
+  face_set->numVertices.set1Value( 0, 4 );
+
+  viewer = new So@Gui@ExaminerViewer( window );
+  viewer->setSceneGraph( root );
+  viewer->setTitle( "Moolah" );
+  viewer->show( );
+  viewer->setFullScreen( TRUE );
+  viewer->setDecoration( FALSE );
+  viewer->setViewing( FALSE );
+
+  So@Gui@::show( window );
+  So@Gui@::mainLoop( );
+
+  delete viewer;
+  root->unref( );
+
+  return 0;
+
+}
+
