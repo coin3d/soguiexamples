@@ -307,7 +307,6 @@ main(
   ts.schedule();
   So@Gui@::show(window);
   So@Gui@::mainLoop();
-  viewer->hide();
   delete viewer;
   return 0;
 }

@@ -46,7 +46,6 @@ main(int argc, char ** argv)
 
   So@Gui@::mainLoop();
 
-  viewer->hide();
   delete viewer;
   return 0;
 }

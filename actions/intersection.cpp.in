@@ -284,7 +284,6 @@ main(int argc, char ** argv)
   So@Gui@::show(w);
   v->show();
   So@Gui@::mainLoop();
-  v->hide();
   delete v;
   return 0;
 }
