@@ -1,3 +1,4 @@
+#include <assert.h>
 
 #include <Inventor/SbBasic.h>
 #include <Inventor/nodes/SoSeparator.h>
