@@ -1739,7 +1739,6 @@ AC_ARG_WITH(
   [],
   [with_mesa=yes])
 
-# It's usually libGL.so on UNIX systems and opengl32.lib on MSWindows.
 sim_ac_gl_glnames="-lGL -lopengl32"
 sim_ac_gl_mesaglnames=-lMesaGL
 
@@ -1763,7 +1762,7 @@ if test x"$with_opengl" != xno; then
     sim_ac_gl_cppflags="-I${with_opengl}/include"
     sim_ac_gl_ldflags="-L${with_opengl}/lib"
   else
-    # This is a common location for the OpenGL library on HPUX.
+    ## This is a common location for the OpenGL library on HPUX.
     sim_ac_gl_hpux=/opt/graphics/OpenGL
     if test -d $sim_ac_gl_hpux; then
       sim_ac_gl_cppflags=-I$sim_ac_gl_hpux/include
@@ -1777,6 +1776,10 @@ if test x"$with_opengl" != xno; then
 
   CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
   LDFLAGS="$LDFLAGS $sim_ac_gl_ldflags"
+
+  ## This must be done after include-paths have been set up for CPPFLAGS.
+  AC_CHECK_HEADERS([GL/gl.h OpenGL/gl.h])
+
 
   AC_CACHE_CHECK(
     [whether OpenGL library is available],

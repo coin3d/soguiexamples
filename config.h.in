@@ -9,11 +9,17 @@
 /* Define this to use OpenGL widget from <GL/GLwMDrawA.h> */
 #undef HAVE_GL_GLWMDRAWA_H
 
+/* Define if you have the <GL/gl.h> header file. */
+#undef HAVE_GL_GL_H
+
 /* Define if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
 /* Define if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
+
+/* Define if you have the <OpenGL/gl.h> header file. */
+#undef HAVE_OPENGL_GL_H
 
 /* Define if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
