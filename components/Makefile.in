@@ -925,49 +925,49 @@ uninstall-am: uninstall-info-am
 ############################################################################
 
 computils.cpp: $(srcdir)/computils.cpp.in
-	@( cd ..; $(MAKE) computils.cpp )
+	@( cd ..; $(MAKE) components/computils.cpp )
 
 computils.h: $(srcdir)/computils.h.in
-	@( cd ..; $(MAKE) computils.h )
+	@( cd ..; $(MAKE) components/computils.h )
 
 renderarea.cpp: $(srcdir)/renderarea.cpp.in
-	@( cd ..; $(MAKE) renderarea.cpp )
+	@( cd ..; $(MAKE) components/renderarea.cpp )
 
 examinerviewer.cpp: $(srcdir)/examinerviewer.cpp.in
-	@( cd ..; $(MAKE) examinerviewer.cpp )
+	@( cd ..; $(MAKE) components/examinerviewer.cpp )
 
 planeviewer.cpp: $(srcdir)/planeviewer.cpp.in
-	@( cd ..; $(MAKE) planeviewer.cpp )
+	@( cd ..; $(MAKE) components/planeviewer.cpp )
 
 walkviewer.cpp: $(srcdir)/walkviewer.cpp.in
-	@( cd ..; $(MAKE) walkviewer.cpp )
+	@( cd ..; $(MAKE) components/walkviewer.cpp )
 
 flyviewer.cpp: $(srcdir)/flyviewer.cpp.in
-	@( cd ..; $(MAKE) flyviewer.cpp )
+	@( cd ..; $(MAKE) components/flyviewer.cpp )
 
 overlay.cpp: $(srcdir)/overlay.cpp.in
 	@( cd ..; $(MAKE) components/overlay.cpp )
 
 lightsliderset.cpp: $(srcdir)/lightsliderset.cpp.in
-	@( cd ..; $(MAKE) lightsliderset.cpp )
+	@( cd ..; $(MAKE) components/lightsliderset.cpp )
 
 materialsliderset.cpp: $(srcdir)/materialsliderset.cpp.in
-	@( cd ..; $(MAKE) materialsliderset.cpp )
+	@( cd ..; $(MAKE) components/materialsliderset.cpp )
 
 materialsliderset2.cpp: $(srcdir)/materialsliderset2.cpp.in
-	@( cd ..; $(MAKE) materialsliderset2.cpp )
+	@( cd ..; $(MAKE) components/materialsliderset2.cpp )
 
 transformsliderset.cpp: $(srcdir)/transformsliderset.cpp.in
-	@( cd ..; $(MAKE) transformsliderset.cpp )
+	@( cd ..; $(MAKE) components/transformsliderset.cpp )
 
 materiallist.cpp: $(srcdir)/materiallist.cpp.in
-	@( cd ..; $(MAKE) materiallist.cpp )
+	@( cd ..; $(MAKE) components/materiallist.cpp )
 
 materiallist2.cpp: $(srcdir)/materiallist2.cpp.in
-	@( cd ..; $(MAKE) materiallist2.cpp )
+	@( cd ..; $(MAKE) components/materiallist2.cpp )
 
 grapheditor.cpp: $(srcdir)/grapheditor.cpp.in
-	@( cd ..; $(MAKE) grapheditor.cpp )
+	@( cd ..; $(MAKE) components/grapheditor.cpp )
 
 ############################################################################
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
