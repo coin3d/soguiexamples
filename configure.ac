@@ -2,6 +2,8 @@
 AC_INIT(actions/search.cpp.in)
 AC_CONFIG_AUX_DIR(cfg)
 
+SIM_AC_MSVC_DSPEX_ENABLE_OPTION
+
 # **************************************************************************
 # If the Microsoft Visual C++ cl.exe compiler is available, set us up for
 # compiling with it.
@@ -382,6 +384,23 @@ SIM_AC_UNIQIFY_LIST(CXXFLAGS, $CXXFLAGS)
 SIM_AC_UNIQIFY_LIST(CFLAGS, $CFLAGS)
 SIM_AC_UNIQIFY_LIST(LDFLAGS, $LDFLAGS)
 SIM_AC_UNIQIFY_LIST(LIBS, $LIBS)
+
+# **************************************************************************
+# Support for generating VisualStudio project files
+
+soguiexamples_src_dir=`cd "$srcdir"; pwd`
+soguiexamples_build_dir=`pwd`
+AC_SUBST([soguiexamples_src_dir])
+AC_SUBST([soguiexamples_build_dir])
+
+if $sim_ac_make_dspex; then
+  soguiexamples_subst="\\\$\$\\(COIN3DDIR\\)=`cygpath -u $COIN3DDIR`"
+  SIM_AC_MSVC_DSPEX_SETUP([So${Gui}Examples], [$soguiexamples_src_dir], 
+                          [vc6], [$soguiexamples_subst])
+  SIM_AC_MSVC_DSPEX_PREPARE([$soguiexamples_src_dir], 
+                            [$soguiexamples_build_dir])
+fi
+
 
 # **************************************************************************
 # All files configure must automatically generate.
