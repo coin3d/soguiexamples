@@ -342,6 +342,7 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
     LIBS="$sim_ac_simvoleon_libs $LIBS"
 
     SIM_AC_CONFIGURATION_SETTING([SimVoleon], [is being used])
+    AC_DEFINE(HAVE_SIMVOLEON_LIBRARY, 1, [Define to enable use of SimVoleon library])
   ], [
   if $sim_ac_simvoleon_desired; then
     SIM_AC_ERROR([simvoleon-unavailable])
@@ -349,10 +350,28 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
     SIM_AC_CONFIGURATION_SETTING([SimVoleon], [not used (enable with --with-simvoleon)])
   fi
   ])
+else
+  SIM_AC_CONFIGURATION_SETTING([SimVoleon], [not used (examples only works with SoQt)])
 fi
 
 AM_CONDITIONAL(HAVE_SIMVOLEON, $sim_ac_simvoleon_avail)
 
+# **************************************************************************
+# At least one of the SimVoleon examples needs simage. Will just do a
+# general check for it, in case other examples pops up which uses it.
+
+SIM_AC_HAVE_SIMAGE_IFELSE([
+  CPPFLAGS="$sim_ac_simage_cppflags $CPPFLAGS"
+  LDFLAGS="$sim_ac_simage_ldflags $LDFLAGS"
+  LIBS="$sim_ac_simage_libs $LIBS"
+  SIM_AC_CONFIGURATION_SETTING([simage], [is being used])
+  AC_DEFINE(HAVE_SIMAGE_LIBRARY, 1, [Define to enable explicit use of simage library])
+],
+[
+  SIM_AC_CONFIGURATION_SETTING([simage], [not found (some example programs will not be built)])
+])
+
+AM_CONDITIONAL(HAVE_SIMAGE, $sim_ac_simvoleon_avail)
 
 # **************************************************************************
 # Remove redundant options from certain option lists, to clean up the
@@ -469,7 +488,6 @@ AC_OUTPUT([
 	volumerendering/readvol.cpp
 	volumerendering/changingdataset.cpp
 	volumerendering/examine.cpp
-	volumerendering/examinerviewer.cpp
 	volumerendering/orthoslicer.cpp
 	volumerendering/raypick.cpp
 	volumerendering/rgbload.cpp

@@ -1,9 +1,18 @@
 ############################################################################
+# Conditional build.
+
+if HAVE_SIMAGE
+SIMAGE_DEPENDENTS = rgbload
+else
+SIMAGE_DEPENDENTS = 
+endif
+
+############################################################################
 # Executables.
 
 noinst_PROGRAMS = \
-	readvol changingdataset examine examinerviewer orthoslicer \
-	raypick rgbload simple8bit
+	readvol changingdataset examine orthoslicer \
+	raypick simple8bit $(SIMAGE_DEPENDENTS)
 
 ############################################################################
 # Common sources.
@@ -38,8 +47,6 @@ orthoslicer_SOURCES = \
 changingdataset_SOURCES = changingdataset.cpp
 
 examine_SOURCES = examine.cpp utility.cpp utility.h
-
-examinerviewer_SOURCES = examinerviewer.cpp
 
 raypick_SOURCES = raypick.cpp utility.cpp utility.h
 
