@@ -1,0 +1,57 @@
+#VRML V1.0 ascii
+
+Separator {
+
+  # Listener
+  TransformSeparator {
+    Listener {
+      orientation 0 1 0 3.1415927
+    }     
+    File {
+      name "head.iv"
+    }
+  }
+
+  # Clock
+  Separator {
+    Translation {
+      translation 0 0 5
+    }
+    Transform {
+      rotation 1 0 0 1.570796
+    }
+    Separator {
+      Translation {
+        translation 0 0 -1
+      }
+      DEF DragClock Translate2Dragger {
+      }
+    }
+    Translation {
+      translation 0 0 0 = USE DragClock.translation
+    }
+    DEF clip_clock VRMLAudioClip {
+      url "clips/ticktack.wav"
+      stopTime 0.0
+      startTime 0.0
+      loop TRUE
+      pitch 1.0
+    }
+    VRMLSound {
+      source USE clip_clock
+      spatialize TRUE
+      intensity 0.9
+    }     
+    # FIXME: Create better graphics for the clock. 2002-11-19 thammer.
+    Cylinder {
+      radius 0.5
+      height 0.2
+    }
+  }
+}
+
+
+
+
+
+
