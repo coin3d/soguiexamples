@@ -60,7 +60,8 @@ BUILT_SOURCES = \
 	nodes/translation.cpp \
 	nodes/trianglestripset.cpp \
 	sensors/timersensor.cpp \
-	eyecandy/moirepatterns.cpp
+	eyecandy/moirepatterns.cpp \
+	eyecandy/juliaanim.cpp
 
 noinst_DATA = $(BUILT_SOURCES)
 

@@ -92,12 +92,15 @@ install_sh = @install_sh@
 soguiconfig = @soguiconfig@
 
 
-noinst_PROGRAMS = moirepatterns
+noinst_PROGRAMS = moirepatterns juliaanim
 
 moirepatterns_SOURCES = moirepatterns.cpp
 
+juliaanim_SOURCES = juliaanim.cpp
+
 BUILT_SOURCES = \
-	moirepatterns.cpp
+	moirepatterns.cpp \
+	juliaanim.cpp
 
 subdir = eyecandy
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -110,6 +113,11 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
+am_juliaanim_OBJECTS =  juliaanim.o
+juliaanim_OBJECTS =  $(am_juliaanim_OBJECTS)
+juliaanim_LDADD = $(LDADD)
+juliaanim_DEPENDENCIES = 
+juliaanim_LDFLAGS = 
 am_moirepatterns_OBJECTS =  moirepatterns.o
 moirepatterns_OBJECTS =  $(am_moirepatterns_OBJECTS)
 moirepatterns_LDADD = $(LDADD)
@@ -120,17 +128,17 @@ LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAG
 CXXFLAGS = @CXXFLAGS@
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES =  $(moirepatterns_SOURCES)
+DIST_SOURCES =  $(juliaanim_SOURCES) $(moirepatterns_SOURCES)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-DEP_FILES =  @AMDEP@ $(DEPDIR)/moirepatterns.Po
+DEP_FILES =  @AMDEP@ $(DEPDIR)/juliaanim.Po $(DEPDIR)/moirepatterns.Po
 DIST_COMMON =  README Makefile.am Makefile.in
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
-SOURCES = $(moirepatterns_SOURCES)
-OBJECTS = $(am_moirepatterns_OBJECTS)
+SOURCES = $(juliaanim_SOURCES) $(moirepatterns_SOURCES)
+OBJECTS = $(am_juliaanim_OBJECTS) $(am_moirepatterns_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -172,6 +180,10 @@ distclean-libtool:
 
 maintainer-clean-libtool:
 
+juliaanim: $(juliaanim_OBJECTS) $(juliaanim_DEPENDENCIES)
+	@rm -f juliaanim
+	$(CXXLINK) $(juliaanim_LDFLAGS) $(juliaanim_OBJECTS) $(juliaanim_LDADD) $(LIBS)
+
 moirepatterns: $(moirepatterns_OBJECTS) $(moirepatterns_DEPENDENCIES)
 	@rm -f moirepatterns
 	$(CXXLINK) $(moirepatterns_LDFLAGS) $(moirepatterns_OBJECTS) $(moirepatterns_LDADD) $(LIBS)
@@ -209,6 +221,7 @@ distclean-tags:
 
 maintainer-clean-tags:
 
+@AMDEP@include $(DEPDIR)/juliaanim.Po
 @AMDEP@include $(DEPDIR)/moirepatterns.Po
 
 mostlyclean-depend:
