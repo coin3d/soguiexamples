@@ -117,6 +117,8 @@ main(int argc, char ** argv)
   SoSeparator* root = new SoSeparator();
   root->ref();
 
+  SoInput::addDirectoryLast("@srcdir@");
+
   SoTexture2 * texture1 = new SoTexture2();
   texture1->filename.setValue("textures/stone2.jpg");
 
