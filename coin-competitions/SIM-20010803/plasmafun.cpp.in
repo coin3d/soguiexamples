@@ -72,7 +72,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-typedef struct 
+typedef struct
 {
   unsigned char r,g,b,a;
 } myrgb;
@@ -104,11 +104,11 @@ gentorus(double r, double R, int nsides, int rings,
 
   qm->verticesPerColumn = rings+1;
   qm->verticesPerRow = nsides+1;
-  
+
   tc->point.setNum((rings+1)*(nsides+1));
   c->point.setNum((rings+1)*(nsides+1));
   n->vector.setNum((rings+1)*(nsides+1));
-  
+
   SbVec3f * cptr = c->point.startEditing();
   SbVec3f * nptr = n->vector.startEditing();
   SbVec2f * tcptr = tc->point.startEditing();
@@ -119,11 +119,11 @@ gentorus(double r, double R, int nsides, int rings,
   theta = 0.0;
   costheta = 1.0;
   sintheta = 0.0;
-  
+
   double tmul = 0.9f / (M_PI*2.0);
   double tadd = 0.05f;
   double nt = R + r;
-  
+
   int cnt = 0;
   while (rings-- >= 0) {
     costheta = cos(theta);
@@ -134,17 +134,17 @@ gentorus(double r, double R, int nsides, int rings,
       cosPhi = cos(phi);
       sinPhi = sin(phi);
       dist = R + r * cosPhi;
-      
+
       nptr[cnt] =
-        SbVec3f((float) (costheta * cosPhi), 
-                (float)(-sintheta * cosPhi), 
+        SbVec3f((float) (costheta * cosPhi),
+                (float)(-sintheta * cosPhi),
                 (float)sinPhi);
 
-      cptr[cnt] = 
+      cptr[cnt] =
         SbVec3f((float) (costheta * dist),
-                (float)(-sintheta * dist), 
+                (float)(-sintheta * dist),
                 (float)(r * sinPhi));
-      
+
       float tx = (float) (phi * tmul);
       float ty = (float) (theta * tmul);
 #if 0
@@ -162,15 +162,15 @@ gentorus(double r, double R, int nsides, int rings,
   }
 
   c->point.finishEditing();
-  n->vector.finishEditing();  
+  n->vector.finishEditing();
   tc->point.finishEditing();
 }
 
-void 
+void
 event_cb(void * userdata, SoEventCallback * node)
 {
   const SoEvent * event = node->getEvent();
-  
+
   int add = 1;
   if (event->wasShiftDown()) add = -1;
 
@@ -241,14 +241,14 @@ redraw_plasma(unsigned char * buffer)
   unsigned short rtpos1,rtpos2, rtpos3,rtpos4;
   unsigned short gtpos1,gtpos2, gtpos3,gtpos4;
   unsigned short btpos1,btpos2, btpos3,btpos4;
-  
+
   rtpos3 = rpos3;
   rtpos4 = rpos4;
   gtpos3 = gpos3;
   gtpos4 = gpos4;
   btpos3 = bpos3;
   btpos4 = bpos4;
-  
+
   unsigned char * ptr = buffer;
   unsigned int * c = (unsigned int*)colors;
 
@@ -261,20 +261,20 @@ redraw_plasma(unsigned char * buffer)
     gtpos2 = gpos2;
     btpos1 = bpos1;
     btpos2 = bpos2;
-    for (j = 0; j < imagewidth; j++) { 
+    for (j = 0; j < imagewidth; j++) {
       color = plasma[rtpos1]+plasma[rtpos2]+plasma[rtpos3]+
 	plasma[rtpos4]+plasma[i%0xff]+plasma[j&0xff];
-      
+
       col = palette[color];
 
       color = plasma[gtpos1]+plasma[gtpos2]+plasma[gtpos3]+
   	plasma[gtpos4]+plasma[i%0xff]+plasma[j&0xff];
-      
+
       col |= palette[color]<<8;
 
       color = plasma[btpos1]+plasma[btpos2]+plasma[btpos3]+
  	plasma[btpos4]+plasma[i%0xff]+plasma[j&0xff];
-      
+
       col |= palette[color]<<16;
 
       if (bigendian) {
@@ -317,13 +317,13 @@ setup_plasma(void)
 {
   rpos1 = rand();
   rpos2 = rand();
-  rpos3 = rand(); 
+  rpos3 = rand();
   rpos4 = rand();
   gpos1 = rand();
   gpos2 = rand();
   gpos3 = rand();
   gpos4 = rand();
-  bpos1 = rand(); 
+  bpos1 = rand();
   bpos2 = rand();
   bpos3 = rand();
   bpos4 = rand();
@@ -357,14 +357,14 @@ setup_plasma(void)
   int maxval3 = random(24);
 
   for (i = 0; i < 18; i++) {
-    if ((i % 6) < 2) 
+    if ((i % 6) < 2)
       adders[i] = random(maxval) - maxval/2;
-    else if ((i % 6) < 4) 
+    else if ((i % 6) < 4)
       adders[i] = random(maxval2) - maxval2/2;
     else
       adders[i] = random(maxval3) - maxval3/2;
   }
-    
+
   for (i = 0; i < 128; i++) {
       palette[i] = (i*2);
       palette[i+128] = (255-i*2);
@@ -412,7 +412,7 @@ setup_plasma(void)
     colors[i+192].g = 255 - i*4;
     colors[i+192].b = 255 - i*4;
     colors[i+192].a = 255;
-  } 
+  }
 }
 
 static double scnt1 = 0.1;
@@ -434,7 +434,7 @@ timersensorcallback(void * data, SoSensor *)
   SbVec2s size;
   int nc;
   unsigned char * image = texnode->image.startEditing(size, nc);
-  
+
   redraw_plasma(image);
   texnode->image.finishEditing();
 
@@ -451,12 +451,12 @@ timersensorcallback(void * data, SoSensor *)
   bigr += 1.0;  // between 1 and 2
   bcnt1 += badd1;
   bcnt2 += badd2;
-  
+
   gentorus(smallr, bigr, nsides, nrings, c, n, qm, tc);
 }
 
 #ifdef __COIN__
-void 
+void
 pre_render(void * userdata, class SoGLRenderAction * action)
 {
   static int first = 1;
@@ -467,14 +467,14 @@ pre_render(void * userdata, class SoGLRenderAction * action)
                                               major, minor);
     if (major > 1 || (major == 1 && minor >= 2)) {
 //        (void)printf("OpenGL v1.2 detected, using separate specular color\n");
-      glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, 
+      glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL,
                     GL_SEPARATE_SPECULAR_COLOR);
     }
   }
 }
 #endif
 
-int 
+int
 main(int argc, char **argv)
 {
   // Initialize
@@ -483,6 +483,13 @@ main(int argc, char **argv)
 
   SoSeparator * root = new SoSeparator;
   root->ref();
+
+  // enable backface culling
+  SoShapeHints * sh = new SoShapeHints;
+  sh->vertexOrdering = SoShapeHints::CLOCKWISE;
+  sh->shapeType = SoShapeHints::SOLID;
+  sh->faceType = SoShapeHints::CONVEX;
+  root->addChild(sh);
 
   SoEventCallback * cb = new SoEventCallback;
   cb->addEventCallback(SoKeyboardEvent::getClassTypeId(),
@@ -516,7 +523,7 @@ main(int argc, char **argv)
   mat->diffuseColor = SbColor(0.8f, 0.8f, 0.8f);
   mat->specularColor = SbColor(1.0f, 1.0f, 1.0f);
   mat->shininess = 0.9f;
-  
+
   // Timer sensor
   SoTimerSensor * texturetimer = new SoTimerSensor(timersensorcallback, texnode);
   texturetimer->setInterval(0.05);
