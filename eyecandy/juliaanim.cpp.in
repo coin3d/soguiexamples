@@ -1,0 +1,340 @@
+
+#include <Inventor/SbBasic.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoTexture2.h>
+#include <Inventor/nodes/SoQuadMesh.h>
+#include <Inventor/nodes/SoShapeHints.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoComplexity.h>
+#include <Inventor/sensors/SoTimerSensor.h>
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+// *************************************************************************
+
+// big is better ;)
+#define SMALL 0
+
+#if SMALL
+#include "stone42a.h"
+#include "sky10a.h"
+#else
+#include "stone42b.h"
+#include "sky10b.h"
+#endif
+
+#if SMALL
+const int landscapewidth  = 64;
+const int landscapeheight = 64;
+#else
+const int landscapewidth  = 128;
+const int landscapeheight = 128;
+#endif
+const int landscapexstep  = 16;
+const int landscapeystep  = 16;
+const int waterlevel      = 30;
+
+static void timerSensorCallback( void * data, SoSensor * );
+
+// *************************************************************************
+
+class Landscape {
+public:
+  Landscape( const int, const int );
+  ~Landscape(void);
+  SoSeparator * createScene(void);
+  void createJulia( double, double, float, int );
+  void smooth(void);
+  void createCoords(void);
+  void createTexture(void);
+  SoCoordinate3 * getCoords(void);
+  SoTexture2 * getTexture(void);
+  void updateCoords(void);
+  void printFile(void);
+
+  void shadeColor( uint32_t & col, int x, int z );
+
+private:
+  double cr, ci;
+  float * heightbuffer, * smoothbuffer;
+  float maxheight;
+  int width, height;
+  unsigned char * texturebuffer;
+
+  SoCoordinate3 * coords;
+  SoTexture2 * texture;
+  SoQuadMesh * mesh;
+
+}; // class Landscape
+
+// *************************************************************************
+
+Landscape::Landscape(
+  int w,
+  int h )
+: width(w)
+, height(h)
+{
+  coords = new SoCoordinate3;
+  texture = new SoTexture2;
+  mesh=NULL;
+  heightbuffer = new float[ w * h ];
+  smoothbuffer = new float[ w * h ];
+  texturebuffer = new unsigned char[ w * h * 4 ];
+  cr = 0.33;
+  ci = 0.43;
+} // Landscape()
+
+Landscape::~Landscape(
+  void )
+{
+  delete heightbuffer;
+  delete smoothbuffer;
+  delete texturebuffer;
+} // ~Landscape()
+
+void
+Landscape::createJulia(
+  double cr,
+  double ci,
+  float zoom,
+  int n )
+{
+  double zr, zr_old, zi;
+  int w;
+
+  for ( int y = 0; y < (height/2); y++ ) {
+    for ( int x = 0; x < width; x++ ) {
+      zr = ((double) x / (double) width) * zoom - zoom / 2.0f;
+      zi = ((double) y / (double) height) * zoom - zoom / 2.0f;
+      for ( w = 0; (w < n) && (zr * zr + zi * zi) < n; w++ ) {
+        zr_old = zr;
+        zr = zr * zr - zi * zi + cr;
+        zi = 2.0f * zr_old * zi + ci;
+      }
+      heightbuffer[y * width + x] = (float) w;
+      heightbuffer[((height - y) * width - 1) - x] = (float) w;
+    }
+  }
+} // createJulia()
+
+void
+Landscape::smooth(void) {
+  int i;
+  memset( (void *) smoothbuffer, 0, width*height );
+  maxheight = 0.0;
+  for (int y = 1; y < height - 2; y++) {
+    for (int x = 1; x < width - 2; x++) {
+      i = y*width + x;
+      smoothbuffer[i] = ( heightbuffer[i] * 2 +
+                          heightbuffer[i-1] +
+                          heightbuffer[i+1] +
+                          heightbuffer[i-width-1] +
+                          heightbuffer[i-width] +
+                          heightbuffer[i-width+1] +
+                          heightbuffer[i+width-1] +
+                          heightbuffer[i+width] +
+                          heightbuffer[i+width+1])/10.0;
+      if (smoothbuffer[i] > maxheight)
+        maxheight = smoothbuffer[i];
+    }
+  }
+} // smooth()
+
+void
+Landscape::createCoords(void) {
+  int i, lx, ly, w = width - 1;
+  static int first = 1;
+  if ( first ) {
+    coords->point.setNum( width*height );
+    first = 0;
+  }
+
+  SbVec3f * ptr = coords->point.startEditing();
+  for ( int y = 0; y < height; y++ ) {
+    for ( int x = 0; x < w; x++ ) {
+      i = y * width + x;
+      lx = x * landscapexstep;
+      ly = y * landscapeystep;
+      ptr[i].setValue( lx, smoothbuffer[i] * 2, ly );
+      ptr[i+1].setValue( lx + landscapexstep, smoothbuffer[i+1] * 2, ly );
+    }
+  }
+  coords->point.finishEditing();
+} // createCoords()
+
+void
+Landscape::createTexture(void)
+{
+  float elevation;
+  float elevation_limit_hi = 0.75 * maxheight;
+  int byte_width = width * 4;
+  int byte_height = height * 4;
+  int x, y, i, j;
+
+  memcpy( texturebuffer, stone42, width * height * 4 );
+ 
+  for ( y = 0; y < byte_height; y += 4 ) {
+    for ( x = 0; x < byte_width; x += 4 ) {
+      i =  y * width + x;
+      j = x * height + y;
+      elevation = smoothbuffer[ j / 4 ];
+      if ( elevation >= elevation_limit_hi ) {
+        texturebuffer[ i ] = 255;
+        texturebuffer[ i + 1 ] = 255;
+        texturebuffer[ i + 2 ] = 255;
+      }
+    }
+  }
+  texture->image.setValue( SbVec2s(width, height), 4, (UBYTE *) texturebuffer );
+} // createTexture()
+
+SoCoordinate3 *
+Landscape::getCoords(void) {
+  return coords;
+}
+
+SoTexture2 *
+Landscape::getTexture(void) {
+  return texture;
+}
+
+void
+Landscape::updateCoords(void) {
+  static SbBool direction = FALSE;
+  assert( mesh != NULL );
+
+#if SMALL
+  float add = 0.0001;
+#else
+  float add = 0.0005;
+#endif
+
+  if ( ! direction ) {
+    cr -= add;
+    ci += add;
+  } else {
+    cr += add;
+    ci -= add;
+  }
+
+  if ( ci < 0.30 )      direction = ! direction;
+  else if ( ci > 0.83 ) direction = ! direction;
+
+  SbVec3f * coordinates = coords->point.startEditing();
+  createJulia( cr, ci, 1.0, 64 );
+  smooth();
+  createCoords();
+  createTexture();
+  coords->point.finishEditing();
+} // updateCoords()
+
+SoSeparator *
+Landscape::createScene(
+  void )
+{
+  SoSeparator * sep = new SoSeparator;
+  SoShapeHints * hints = new SoShapeHints;
+
+  SoComplexity * cmplx = new SoComplexity;
+  cmplx->textureQuality = 0.4f;
+  sep->addChild( cmplx );
+
+  hints->vertexOrdering = SoShapeHintsElement::COUNTERCLOCKWISE;
+  hints->shapeType = SoShapeHintsElement::SOLID;
+
+  // add landscape
+  sep->addChild( hints );
+  sep->addChild( getTexture() );
+  sep->addChild( getCoords() );
+
+  mesh = new SoQuadMesh;
+  mesh->verticesPerRow = landscapewidth;
+  mesh->verticesPerColumn = landscapeheight;
+  sep->addChild( mesh );
+
+  // add timer sensor
+  SoTimerSensor * landscapetimer = new SoTimerSensor( timerSensorCallback, this );
+  landscapetimer->setInterval( 0.05 );
+  landscapetimer->schedule();
+
+  // new separator
+  SoSeparator * sep2 = new SoSeparator;
+
+  // add sea
+  SoTexture2 * water_texture = new SoTexture2;
+  water_texture->image.setValue( SbVec2s(landscapewidth, landscapeheight), 4, (UBYTE *) sky10 );
+  sep2->addChild( water_texture );
+
+  SoMaterial * water_material = new SoMaterial;
+  water_material->specularColor.setValue( 1.0f, 1.0f, 1.0f );
+  water_material->emissiveColor.setValue( 0.0f, 0.0f, 0.0f );
+  water_material->shininess = 0.7f;
+  water_material->transparency = 0.6f;
+
+  sep2->addChild( water_material );
+
+  SoQuadMesh * sea = new SoQuadMesh;
+  SoCoordinate3 * coordinates = new SoCoordinate3;
+  coordinates->point.set1Value( 0, landscapewidth * landscapexstep, 30.0f, landscapeheight * landscapeystep );
+  coordinates->point.set1Value( 1, 0.0f, waterlevel, landscapeheight * landscapeystep );
+  coordinates->point.set1Value( 2, landscapewidth * landscapexstep, 30.0f, 0.0f );
+  coordinates->point.set1Value( 3, 0.0f, waterlevel, 0.0f );
+  sep2->addChild( coordinates );
+  sea->verticesPerRow = 2;
+  sea->verticesPerColumn = 2;
+  sep2->addChild( sea );
+  sep->addChild( sep2 );
+  return sep;
+} // createScene()
+
+// *************************************************************************
+
+static void
+timerSensorCallback(
+  void * data,
+  SoSensor * )
+{
+  Landscape * landscape = (Landscape *) data;
+  landscape->updateCoords();
+} // timerSensorCallback()
+
+// *************************************************************************
+
+int
+main(
+  int argc,
+  char ** argv )
+{
+  @WIDGET@ window = So@Gui@::init( argv[0] );
+  if ( ! window )
+    exit( 1 );
+
+  Landscape * landscape = new Landscape( landscapewidth, landscapeheight );
+  landscape->createJulia( 0.128, 0.651, 1.0, 256 );
+  landscape->smooth();
+  landscape->createCoords();
+  landscape->createTexture();
+ 
+  SoSeparator * root = new SoSeparator;
+  root->addChild( landscape->createScene() );
+ 
+  // set up examinerviewer
+  So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
+  viewer->setTransparencyType( SoGLRenderAction::BLEND );
+  viewer->setSceneGraph( root );
+  viewer->setTitle( "Factal Landscape Demo" );
+  viewer->viewAll();
+  viewer->show();
+  So@Gui@::show( window );
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  delete landscape;
+  return 0;
+} // main()
+
+// *************************************************************************
