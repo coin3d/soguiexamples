@@ -337,21 +337,21 @@ event_cb(void *userdata, SoEventCallback *node)
       }
     }
   }
-  else if (SO_KEY_PRESS_EVENT(event, F1)) {
+  else if (SO_KEY_PRESS_EVENT(event, NUMBER_1)) {
     if (game->start(RED, true)) {
       clear_board();
       enable_token(game->getWhoseTurn());
       move_token(0,0);
     }
   }
-  else if (SO_KEY_PRESS_EVENT(event, F2)) {
+  else if (SO_KEY_PRESS_EVENT(event, NUMBER_2)) {
     if (game->start(RED, false)) {
       clear_board();
       enable_token(game->getWhoseTurn());
       move_token(0,0);
     }
   }
-  else if (SO_KEY_PRESS_EVENT(event, F12)) {
+  else if (SO_KEY_PRESS_EVENT(event, H)) {
     sceneswitch->whichChild.setValue(1);
   }
   else if (SO_KEY_PRESS_EVENT(event, Q)) {
@@ -364,7 +364,7 @@ help_key_cb(void *userdata, SoEventCallback *node)
 {
   const SoEvent *event = node->getEvent();
 
-  if (!SO_KEY_RELEASE_EVENT(event, F12)) {
+  if (!SO_KEY_RELEASE_EVENT(event, H)) {
     sceneswitch->whichChild.setValue(0);
   }
 }
@@ -698,8 +698,8 @@ SoSeparator *create_helpscene()
     "Instructions\n",
     "============\n",
     "\n",
-    "F1                - Start 1-player game (player vs. computer)\n",
-    "F2                - Start 2-player game\n",
+    "1                 - Start 1-player game (player vs. computer)\n",
+    "2                 - Start 2-player game\n",
     "Backspace         - Undo last move\n",
     "Arrows/Mouse      - Move token\n",
     "Enter/Left button - Place token\n",
@@ -909,7 +909,7 @@ main(int argc, char **argv)
 
   SoText2 *instructions = new SoText2;
   const char *str[] = {
-    "For instructions, press F12"
+    "For instructions, press 'h'"
   };
   instructions->string.setValues(0, sizeof(str) / sizeof(char *), str);
   instructions->justification = SoText2::LEFT;
