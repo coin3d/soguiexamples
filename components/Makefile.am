@@ -1,11 +1,11 @@
 ############################################################################
 
 ## So@Gui@Roster component
-if HAVE_ROSTER
-ROSTER = roster
-else
+#if HAVE_ROSTER
+#ROSTER = roster
+#else
 ROSTER =
-endif
+#endif
 
 roster_SOURCES = \
 	roster.cpp

@@ -1,7 +1,6 @@
-# Makefile.in generated automatically by automake 1.4c from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
 
-# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
-# Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -10,6 +9,13 @@
 # but WITHOUT ANY WARRANTY, to the extent permitted by law; without
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
+
+############################################################################
+
+#if HAVE_ROSTER
+#ROSTER = roster
+#else
+
 
 SHELL = @SHELL@
 
@@ -32,6 +38,8 @@ mandir = @mandir@
 includedir = @includedir@
 oldincludedir = /usr/include
 
+DESTDIR =
+
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -44,10 +52,9 @@ AUTOMAKE = @AUTOMAKE@
 AUTOHEADER = @AUTOHEADER@
 
 INSTALL = @INSTALL@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
-INSTALL_STRIP_FLAG =
 transform = @program_transform_name@
 
 NORMAL_INSTALL = :
@@ -56,179 +63,122 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-
-@SET_MAKE@
 build_alias = @build_alias@
 build_triplet = @build@
 host_alias = @host_alias@
 host_triplet = @host@
 target_alias = @target_alias@
 target_triplet = @target@
-AMDEP = @AMDEP@
-AMTAR = @AMTAR@
-AWK = @AWK@
+AS = @AS@
 BUILD_WITH_MSVC = @BUILD_WITH_MSVC@
 CC = @CC@
 COMPONENTHEADER = @COMPONENTHEADER@
-CPP = @CPP@
 CXX = @CXX@
-CXXCPP = @CXXCPP@
-DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DSUFFIX = @DSUFFIX@
 EVENT = @EVENT@
 GUI = @GUI@
 Gui = @Gui@
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
+RANLIB = @RANLIB@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
 gui = @gui@
-install_sh = @install_sh@
 soguiconfig = @soguiconfig@
 
-############################################################################
+ROSTER = 
+#endif
 
-@HAVE_ROSTER_TRUE@ROSTER = @HAVE_ROSTER_TRUE@roster
-@HAVE_ROSTER_FALSE@ROSTER = 
+roster_SOURCES =  	roster.cpp
 
-roster_SOURCES = \
-	roster.cpp
-
-@HAVE_RENDERAREA_TRUE@RENDERAREA = @HAVE_RENDERAREA_TRUE@renderarea
+@HAVE_RENDERAREA_TRUE@RENDERAREA = renderarea
 @HAVE_RENDERAREA_FALSE@RENDERAREA = 
 
-renderarea_SOURCES = \
-	renderarea.cpp \
-	computils.cpp \
-	computils.h
+renderarea_SOURCES =  	renderarea.cpp 	computils.cpp 	computils.h
 
-@HAVE_EXAMINERVIEWER_TRUE@EXAMINERVIEWER = @HAVE_EXAMINERVIEWER_TRUE@examinerviewer overlay
+@HAVE_EXAMINERVIEWER_TRUE@EXAMINERVIEWER = examinerviewer overlay
 @HAVE_EXAMINERVIEWER_FALSE@EXAMINERVIEWER = 
 
-examinerviewer_SOURCES = \
-	examinerviewer.cpp \
-	computils.cpp \
-	computils.h
+examinerviewer_SOURCES =  	examinerviewer.cpp 	computils.cpp 	computils.h
 
 
-overlay_SOURCES = \
-	overlay.cpp \
-	computils.cpp \
-	computils.h
+overlay_SOURCES =  	overlay.cpp 	computils.cpp 	computils.h
 
-@HAVE_PLANEVIEWER_TRUE@PLANEVIEWER = @HAVE_PLANEVIEWER_TRUE@planeviewer
+@HAVE_PLANEVIEWER_TRUE@PLANEVIEWER = planeviewer
 @HAVE_PLANEVIEWER_FALSE@PLANEVIEWER = 
 
-planeviewer_SOURCES = \
-	planeviewer.cpp \
-	computils.cpp \
-	computils.h
+planeviewer_SOURCES =  	planeviewer.cpp 	computils.cpp 	computils.h
 
-@HAVE_WALKVIEWER_TRUE@WALKVIEWER = @HAVE_WALKVIEWER_TRUE@walkviewer
+@HAVE_WALKVIEWER_TRUE@WALKVIEWER = walkviewer
 @HAVE_WALKVIEWER_FALSE@WALKVIEWER = 
 
-walkviewer_SOURCES = \
-	walkviewer.cpp \
-	computils.cpp \
-	computils.h
+walkviewer_SOURCES =  	walkviewer.cpp 	computils.cpp 	computils.h
 
-@HAVE_FLYVIEWER_TRUE@FLYVIEWER = @HAVE_FLYVIEWER_TRUE@flyviewer
+@HAVE_FLYVIEWER_TRUE@FLYVIEWER = flyviewer
 @HAVE_FLYVIEWER_FALSE@FLYVIEWER = 
 
-flyviewer_SOURCES = \
-	flyviewer.cpp \
-	computils.cpp \
-	computils.h
+flyviewer_SOURCES =  	flyviewer.cpp 	computils.cpp 	computils.h
 
-@HAVE_CUSTOMVIEWER_TRUE@CUSTOMVIEWER = @HAVE_CUSTOMVIEWER_TRUE@customviewer
+@HAVE_CUSTOMVIEWER_TRUE@CUSTOMVIEWER = customviewer
 @HAVE_CUSTOMVIEWER_FALSE@CUSTOMVIEWER = 
 
-customviewer_SOURCES = \
-	customviewer.cpp \
-	computils.cpp \
-	computils.h
+customviewer_SOURCES =  	customviewer.cpp 	computils.cpp 	computils.h
 
-@HAVE_LIGHTSLIDERSET_TRUE@LIGHTSLIDERSET = @HAVE_LIGHTSLIDERSET_TRUE@lightsliderset
+@HAVE_LIGHTSLIDERSET_TRUE@LIGHTSLIDERSET = lightsliderset
 @HAVE_LIGHTSLIDERSET_FALSE@LIGHTSLIDERSET = 
 
-lightsliderset_SOURCES = \
-	lightsliderset.cpp
+lightsliderset_SOURCES =  	lightsliderset.cpp
 
-@HAVE_MATERIALSLIDERSET_TRUE@MATERIALSLIDERSET = @HAVE_MATERIALSLIDERSET_TRUE@materialsliderset materialsliderset2
+@HAVE_MATERIALSLIDERSET_TRUE@MATERIALSLIDERSET = materialsliderset materialsliderset2
 @HAVE_MATERIALSLIDERSET_FALSE@MATERIALSLIDERSET = 
 
-materialsliderset_SOURCES = \
-	materialsliderset.cpp
+materialsliderset_SOURCES =  	materialsliderset.cpp
 
-materialsliderset2_SOURCES = \
-	materialsliderset2.cpp
+materialsliderset2_SOURCES =  	materialsliderset2.cpp
 
-@HAVE_TRANSFORMSLIDERSET_TRUE@TRANSFORMSLIDERSET = @HAVE_TRANSFORMSLIDERSET_TRUE@transformsliderset
+@HAVE_TRANSFORMSLIDERSET_TRUE@TRANSFORMSLIDERSET = transformsliderset
 @HAVE_TRANSFORMSLIDERSET_FALSE@TRANSFORMSLIDERSET = 
 
-transformsliderset_SOURCES = \
-	transformsliderset.cpp
+transformsliderset_SOURCES =  	transformsliderset.cpp
 
-@HAVE_DIRECTIONALLIGHTEDITOR_TRUE@DIRECTIONALLIGHTEDITOR = @HAVE_DIRECTIONALLIGHTEDITOR_TRUE@directionallighteditor
+@HAVE_DIRECTIONALLIGHTEDITOR_TRUE@DIRECTIONALLIGHTEDITOR = directionallighteditor
 @HAVE_DIRECTIONALLIGHTEDITOR_FALSE@DIRECTIONALLIGHTEDITOR = 
 
-directionallighteditor_SOURCES = \
-	directionallighteditor.cpp
+directionallighteditor_SOURCES =  	directionallighteditor.cpp
 
-@HAVE_MATERIALEDITOR_TRUE@MATERIALEDITOR = @HAVE_MATERIALEDITOR_TRUE@materialeditor
+@HAVE_MATERIALEDITOR_TRUE@MATERIALEDITOR = materialeditor
 @HAVE_MATERIALEDITOR_FALSE@MATERIALEDITOR = 
 
-materialeditor_SOURCES = \
-	materialeditor.cpp
+materialeditor_SOURCES =  	materialeditor.cpp
 
-@HAVE_MATERIALLIST_TRUE@MATERIALLIST = @HAVE_MATERIALLIST_TRUE@materiallist materiallist2
+@HAVE_MATERIALLIST_TRUE@MATERIALLIST = materiallist materiallist2
 @HAVE_MATERIALLIST_FALSE@MATERIALLIST = 
 
 materiallist_SOURCES = materiallist.cpp
 materiallist2_SOURCES = materiallist2.cpp
-@HAVE_PRINTDIALOG_TRUE@PRINTDIALOG = @HAVE_PRINTDIALOG_TRUE@printdialog
+@HAVE_PRINTDIALOG_TRUE@PRINTDIALOG = printdialog
 @HAVE_PRINTDIALOG_FALSE@PRINTDIALOG = 
 
-printdialog_SOURCES = \
-	printdialog.cpp
+printdialog_SOURCES =  	printdialog.cpp
 
-@HAVE_GRAPHEDITOR_TRUE@GRAPHEDITOR = @HAVE_GRAPHEDITOR_TRUE@grapheditor
+@HAVE_GRAPHEDITOR_TRUE@GRAPHEDITOR = grapheditor
 @HAVE_GRAPHEDITOR_FALSE@GRAPHEDITOR = 
 
-grapheditor_SOURCES = grapheditor.cpp \
-	computils.cpp \
-	computils.h
+grapheditor_SOURCES = grapheditor.cpp 	computils.cpp 	computils.h
 
 
 ############################################################################
 
-BUILT_SOURCES = \
-	computils.cpp \
-	computils.h \
-	roster.cpp \
-	renderarea.cpp \
-	examinerviewer.cpp \
-	planeviewer.cpp \
-	walkviewer.cpp \
-	flyviewer.cpp \
-	customviewer.cpp \
-	lightsliderset.cpp \
-	materialsliderset.cpp \
-	materialsliderset2.cpp \
-	transformsliderset.cpp \
-	materiallist.cpp \
-	materiallist2.cpp \
-	grapheditor.cpp
+BUILT_SOURCES =  	computils.cpp 	computils.h 	roster.cpp 	renderarea.cpp 	examinerviewer.cpp 	planeviewer.cpp 	walkviewer.cpp 	flyviewer.cpp 	customviewer.cpp 	lightsliderset.cpp 	materialsliderset.cpp 	materialsliderset2.cpp 	transformsliderset.cpp 	materiallist.cpp 	materiallist2.cpp 	grapheditor.cpp
 
 
-noinst_PROGRAMS = $(ROSTER) $(RENDERAREA) $(EXAMINERVIEWER) \
-	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) $(CUSTOMVIEWER) \
-	$(LIGHTSLIDERSET) $(MATERIALSLIDERSET) $(TRANSFORMSLIDERSET) \
-	$(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
-	$(MATERIALLIST) $(PRINTDIALOG) $(GRAPHEDITOR)
+noinst_PROGRAMS = $(ROSTER) $(RENDERAREA) $(EXAMINERVIEWER) 	$(PLANEVIEWER) $(FLYVIEWER) $(WALKVIEWER) $(CUSTOMVIEWER) 	$(LIGHTSLIDERSET) $(MATERIALSLIDERSET) $(TRANSFORMSLIDERSET) 	$(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) 	$(MATERIALLIST) $(PRINTDIALOG) $(GRAPHEDITOR)
 
-subdir = components
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -243,138 +193,106 @@ X_CFLAGS = @X_CFLAGS@
 X_LIBS = @X_LIBS@
 X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_PRE_LIBS = @X_PRE_LIBS@
-am_customviewer_OBJECTS =  customviewer.o computils.o
-customviewer_OBJECTS =  $(am_customviewer_OBJECTS)
-customviewer_LDADD = $(LDADD)
-customviewer_DEPENDENCIES = 
-customviewer_LDFLAGS = 
-am_directionallighteditor_OBJECTS =  directionallighteditor.o
-directionallighteditor_OBJECTS =  $(am_directionallighteditor_OBJECTS)
-directionallighteditor_LDADD = $(LDADD)
-directionallighteditor_DEPENDENCIES = 
-directionallighteditor_LDFLAGS = 
-am_examinerviewer_OBJECTS =  examinerviewer.o computils.o
-examinerviewer_OBJECTS =  $(am_examinerviewer_OBJECTS)
-examinerviewer_LDADD = $(LDADD)
-examinerviewer_DEPENDENCIES = 
-examinerviewer_LDFLAGS = 
-am_flyviewer_OBJECTS =  flyviewer.o computils.o
-flyviewer_OBJECTS =  $(am_flyviewer_OBJECTS)
-flyviewer_LDADD = $(LDADD)
-flyviewer_DEPENDENCIES = 
-flyviewer_LDFLAGS = 
-am_grapheditor_OBJECTS =  grapheditor.o computils.o
-grapheditor_OBJECTS =  $(am_grapheditor_OBJECTS)
-grapheditor_LDADD = $(LDADD)
-grapheditor_DEPENDENCIES = 
-grapheditor_LDFLAGS = 
-am_lightsliderset_OBJECTS =  lightsliderset.o
-lightsliderset_OBJECTS =  $(am_lightsliderset_OBJECTS)
-lightsliderset_LDADD = $(LDADD)
-lightsliderset_DEPENDENCIES = 
-lightsliderset_LDFLAGS = 
-am_materialeditor_OBJECTS =  materialeditor.o
-materialeditor_OBJECTS =  $(am_materialeditor_OBJECTS)
-materialeditor_LDADD = $(LDADD)
-materialeditor_DEPENDENCIES = 
-materialeditor_LDFLAGS = 
-am_materiallist_OBJECTS =  materiallist.o
-materiallist_OBJECTS =  $(am_materiallist_OBJECTS)
-materiallist_LDADD = $(LDADD)
-materiallist_DEPENDENCIES = 
-materiallist_LDFLAGS = 
-am_materiallist2_OBJECTS =  materiallist2.o
-materiallist2_OBJECTS =  $(am_materiallist2_OBJECTS)
-materiallist2_LDADD = $(LDADD)
-materiallist2_DEPENDENCIES = 
-materiallist2_LDFLAGS = 
-am_materialsliderset_OBJECTS =  materialsliderset.o
-materialsliderset_OBJECTS =  $(am_materialsliderset_OBJECTS)
-materialsliderset_LDADD = $(LDADD)
-materialsliderset_DEPENDENCIES = 
-materialsliderset_LDFLAGS = 
-am_materialsliderset2_OBJECTS =  materialsliderset2.o
-materialsliderset2_OBJECTS =  $(am_materialsliderset2_OBJECTS)
-materialsliderset2_LDADD = $(LDADD)
-materialsliderset2_DEPENDENCIES = 
-materialsliderset2_LDFLAGS = 
-am_overlay_OBJECTS =  overlay.o computils.o
-overlay_OBJECTS =  $(am_overlay_OBJECTS)
-overlay_LDADD = $(LDADD)
-overlay_DEPENDENCIES = 
-overlay_LDFLAGS = 
-am_planeviewer_OBJECTS =  planeviewer.o computils.o
-planeviewer_OBJECTS =  $(am_planeviewer_OBJECTS)
-planeviewer_LDADD = $(LDADD)
-planeviewer_DEPENDENCIES = 
-planeviewer_LDFLAGS = 
-am_printdialog_OBJECTS =  printdialog.o
-printdialog_OBJECTS =  $(am_printdialog_OBJECTS)
-printdialog_LDADD = $(LDADD)
-printdialog_DEPENDENCIES = 
-printdialog_LDFLAGS = 
-am_renderarea_OBJECTS =  renderarea.o computils.o
-renderarea_OBJECTS =  $(am_renderarea_OBJECTS)
+renderarea_OBJECTS =  renderarea.o computils.o
 renderarea_LDADD = $(LDADD)
 renderarea_DEPENDENCIES = 
 renderarea_LDFLAGS = 
-am_roster_OBJECTS =  roster.o
-roster_OBJECTS =  $(am_roster_OBJECTS)
-roster_LDADD = $(LDADD)
-roster_DEPENDENCIES = 
-roster_LDFLAGS = 
-am_transformsliderset_OBJECTS =  transformsliderset.o
-transformsliderset_OBJECTS =  $(am_transformsliderset_OBJECTS)
-transformsliderset_LDADD = $(LDADD)
-transformsliderset_DEPENDENCIES = 
-transformsliderset_LDFLAGS = 
-am_walkviewer_OBJECTS =  walkviewer.o computils.o
-walkviewer_OBJECTS =  $(am_walkviewer_OBJECTS)
+examinerviewer_OBJECTS =  examinerviewer.o computils.o
+examinerviewer_LDADD = $(LDADD)
+examinerviewer_DEPENDENCIES = 
+examinerviewer_LDFLAGS = 
+overlay_OBJECTS =  overlay.o computils.o
+overlay_LDADD = $(LDADD)
+overlay_DEPENDENCIES = 
+overlay_LDFLAGS = 
+planeviewer_OBJECTS =  planeviewer.o computils.o
+planeviewer_LDADD = $(LDADD)
+planeviewer_DEPENDENCIES = 
+planeviewer_LDFLAGS = 
+flyviewer_OBJECTS =  flyviewer.o computils.o
+flyviewer_LDADD = $(LDADD)
+flyviewer_DEPENDENCIES = 
+flyviewer_LDFLAGS = 
+walkviewer_OBJECTS =  walkviewer.o computils.o
 walkviewer_LDADD = $(LDADD)
 walkviewer_DEPENDENCIES = 
 walkviewer_LDFLAGS = 
-CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+customviewer_OBJECTS =  customviewer.o computils.o
+customviewer_LDADD = $(LDADD)
+customviewer_DEPENDENCIES = 
+customviewer_LDFLAGS = 
+lightsliderset_OBJECTS =  lightsliderset.o
+lightsliderset_LDADD = $(LDADD)
+lightsliderset_DEPENDENCIES = 
+lightsliderset_LDFLAGS = 
+materialsliderset_OBJECTS =  materialsliderset.o
+materialsliderset_LDADD = $(LDADD)
+materialsliderset_DEPENDENCIES = 
+materialsliderset_LDFLAGS = 
+materialsliderset2_OBJECTS =  materialsliderset2.o
+materialsliderset2_LDADD = $(LDADD)
+materialsliderset2_DEPENDENCIES = 
+materialsliderset2_LDFLAGS = 
+transformsliderset_OBJECTS =  transformsliderset.o
+transformsliderset_LDADD = $(LDADD)
+transformsliderset_DEPENDENCIES = 
+transformsliderset_LDFLAGS = 
+directionallighteditor_OBJECTS =  directionallighteditor.o
+directionallighteditor_LDADD = $(LDADD)
+directionallighteditor_DEPENDENCIES = 
+directionallighteditor_LDFLAGS = 
+materialeditor_OBJECTS =  materialeditor.o
+materialeditor_LDADD = $(LDADD)
+materialeditor_DEPENDENCIES = 
+materialeditor_LDFLAGS = 
+materiallist_OBJECTS =  materiallist.o
+materiallist_LDADD = $(LDADD)
+materiallist_DEPENDENCIES = 
+materiallist_LDFLAGS = 
+materiallist2_OBJECTS =  materiallist2.o
+materiallist2_LDADD = $(LDADD)
+materiallist2_DEPENDENCIES = 
+materiallist2_LDFLAGS = 
+printdialog_OBJECTS =  printdialog.o
+printdialog_LDADD = $(LDADD)
+printdialog_DEPENDENCIES = 
+printdialog_LDFLAGS = 
+grapheditor_OBJECTS =  grapheditor.o computils.o
+grapheditor_LDADD = $(LDADD)
+grapheditor_DEPENDENCIES = 
+grapheditor_LDFLAGS = 
 CXXFLAGS = @CXXFLAGS@
+CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
-CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES =  $(customviewer_SOURCES) \
-$(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) \
-$(flyviewer_SOURCES) $(grapheditor_SOURCES) $(lightsliderset_SOURCES) \
-$(materialeditor_SOURCES) $(materiallist_SOURCES) \
-$(materiallist2_SOURCES) $(materialsliderset_SOURCES) \
-$(materialsliderset2_SOURCES) $(overlay_SOURCES) $(planeviewer_SOURCES) \
-$(printdialog_SOURCES) $(renderarea_SOURCES) $(roster_SOURCES) \
-$(transformsliderset_SOURCES) $(walkviewer_SOURCES)
-depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-DEP_FILES =  @AMDEP@ $(DEPDIR)/computils.Po $(DEPDIR)/customviewer.Po \
-$(DEPDIR)/directionallighteditor.Po $(DEPDIR)/examinerviewer.Po \
-$(DEPDIR)/flyviewer.Po $(DEPDIR)/grapheditor.Po \
-$(DEPDIR)/lightsliderset.Po $(DEPDIR)/materialeditor.Po \
-$(DEPDIR)/materiallist.Po $(DEPDIR)/materiallist2.Po \
-$(DEPDIR)/materialsliderset.Po $(DEPDIR)/materialsliderset2.Po \
-$(DEPDIR)/overlay.Po $(DEPDIR)/planeviewer.Po $(DEPDIR)/printdialog.Po \
-$(DEPDIR)/renderarea.Po $(DEPDIR)/roster.Po \
-$(DEPDIR)/transformsliderset.Po $(DEPDIR)/walkviewer.Po
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
 DIST_COMMON =  README Makefile.am Makefile.in
 
 
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
+TAR = gtar
 GZIP_ENV = --best
-SOURCES = $(customviewer_SOURCES) $(directionallighteditor_SOURCES) $(examinerviewer_SOURCES) $(flyviewer_SOURCES) $(grapheditor_SOURCES) $(lightsliderset_SOURCES) $(materialeditor_SOURCES) $(materiallist_SOURCES) $(materiallist2_SOURCES) $(materialsliderset_SOURCES) $(materialsliderset2_SOURCES) $(overlay_SOURCES) $(planeviewer_SOURCES) $(printdialog_SOURCES) $(renderarea_SOURCES) $(roster_SOURCES) $(transformsliderset_SOURCES) $(walkviewer_SOURCES)
-OBJECTS = $(am_customviewer_OBJECTS) $(am_directionallighteditor_OBJECTS) $(am_examinerviewer_OBJECTS) $(am_flyviewer_OBJECTS) $(am_grapheditor_OBJECTS) $(am_lightsliderset_OBJECTS) $(am_materialeditor_OBJECTS) $(am_materiallist_OBJECTS) $(am_materiallist2_OBJECTS) $(am_materialsliderset_OBJECTS) $(am_materialsliderset2_OBJECTS) $(am_overlay_OBJECTS) $(am_planeviewer_OBJECTS) $(am_printdialog_OBJECTS) $(am_renderarea_OBJECTS) $(am_roster_OBJECTS) $(am_transformsliderset_OBJECTS) $(am_walkviewer_OBJECTS)
+DEP_FILES =  .deps/computils.P .deps/customviewer.P \
+.deps/directionallighteditor.P .deps/examinerviewer.P .deps/flyviewer.P \
+.deps/grapheditor.P .deps/lightsliderset.P .deps/materialeditor.P \
+.deps/materiallist.P .deps/materiallist2.P .deps/materialsliderset.P \
+.deps/materialsliderset2.P .deps/overlay.P .deps/planeviewer.P \
+.deps/printdialog.P .deps/renderarea.P .deps/roster.P \
+.deps/transformsliderset.P .deps/walkviewer.P
+SOURCES = $(renderarea_SOURCES) $(examinerviewer_SOURCES) $(overlay_SOURCES) $(planeviewer_SOURCES) $(flyviewer_SOURCES) $(walkviewer_SOURCES) $(customviewer_SOURCES) $(lightsliderset_SOURCES) $(materialsliderset_SOURCES) $(materialsliderset2_SOURCES) $(transformsliderset_SOURCES) $(directionallighteditor_SOURCES) $(materialeditor_SOURCES) $(materiallist_SOURCES) $(materiallist2_SOURCES) $(printdialog_SOURCES) $(grapheditor_SOURCES)
+OBJECTS = $(renderarea_OBJECTS) $(examinerviewer_OBJECTS) $(overlay_OBJECTS) $(planeviewer_OBJECTS) $(flyviewer_OBJECTS) $(walkviewer_OBJECTS) $(customviewer_OBJECTS) $(lightsliderset_OBJECTS) $(materialsliderset_OBJECTS) $(materialsliderset2_OBJECTS) $(transformsliderset_OBJECTS) $(directionallighteditor_OBJECTS) $(materialeditor_OBJECTS) $(materiallist_OBJECTS) $(materiallist2_OBJECTS) $(printdialog_OBJECTS) $(grapheditor_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .cpp .h .o
+.SUFFIXES: .S .c .cpp .o .s
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --foreign components/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu components/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -388,6 +306,12 @@ distclean-noinstPROGRAMS:
 
 maintainer-clean-noinstPROGRAMS:
 
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
+
 mostlyclean-compile:
 	-rm -f *.o core *.core
 
@@ -398,29 +322,53 @@ distclean-compile:
 
 maintainer-clean-compile:
 
-customviewer: $(customviewer_OBJECTS) $(customviewer_DEPENDENCIES)
-	@rm -f customviewer
-	$(CXXLINK) $(customviewer_LDFLAGS) $(customviewer_OBJECTS) $(customviewer_LDADD) $(LIBS)
-
-directionallighteditor: $(directionallighteditor_OBJECTS) $(directionallighteditor_DEPENDENCIES)
-	@rm -f directionallighteditor
-	$(CXXLINK) $(directionallighteditor_LDFLAGS) $(directionallighteditor_OBJECTS) $(directionallighteditor_LDADD) $(LIBS)
+renderarea: $(renderarea_OBJECTS) $(renderarea_DEPENDENCIES)
+	@rm -f renderarea
+	$(CXXLINK) $(renderarea_LDFLAGS) $(renderarea_OBJECTS) $(renderarea_LDADD) $(LIBS)
 
 examinerviewer: $(examinerviewer_OBJECTS) $(examinerviewer_DEPENDENCIES)
 	@rm -f examinerviewer
 	$(CXXLINK) $(examinerviewer_LDFLAGS) $(examinerviewer_OBJECTS) $(examinerviewer_LDADD) $(LIBS)
 
+overlay: $(overlay_OBJECTS) $(overlay_DEPENDENCIES)
+	@rm -f overlay
+	$(CXXLINK) $(overlay_LDFLAGS) $(overlay_OBJECTS) $(overlay_LDADD) $(LIBS)
+
+planeviewer: $(planeviewer_OBJECTS) $(planeviewer_DEPENDENCIES)
+	@rm -f planeviewer
+	$(CXXLINK) $(planeviewer_LDFLAGS) $(planeviewer_OBJECTS) $(planeviewer_LDADD) $(LIBS)
+
 flyviewer: $(flyviewer_OBJECTS) $(flyviewer_DEPENDENCIES)
 	@rm -f flyviewer
 	$(CXXLINK) $(flyviewer_LDFLAGS) $(flyviewer_OBJECTS) $(flyviewer_LDADD) $(LIBS)
 
-grapheditor: $(grapheditor_OBJECTS) $(grapheditor_DEPENDENCIES)
-	@rm -f grapheditor
-	$(CXXLINK) $(grapheditor_LDFLAGS) $(grapheditor_OBJECTS) $(grapheditor_LDADD) $(LIBS)
+walkviewer: $(walkviewer_OBJECTS) $(walkviewer_DEPENDENCIES)
+	@rm -f walkviewer
+	$(CXXLINK) $(walkviewer_LDFLAGS) $(walkviewer_OBJECTS) $(walkviewer_LDADD) $(LIBS)
+
+customviewer: $(customviewer_OBJECTS) $(customviewer_DEPENDENCIES)
+	@rm -f customviewer
+	$(CXXLINK) $(customviewer_LDFLAGS) $(customviewer_OBJECTS) $(customviewer_LDADD) $(LIBS)
 
 lightsliderset: $(lightsliderset_OBJECTS) $(lightsliderset_DEPENDENCIES)
 	@rm -f lightsliderset
 	$(CXXLINK) $(lightsliderset_LDFLAGS) $(lightsliderset_OBJECTS) $(lightsliderset_LDADD) $(LIBS)
+
+materialsliderset: $(materialsliderset_OBJECTS) $(materialsliderset_DEPENDENCIES)
+	@rm -f materialsliderset
+	$(CXXLINK) $(materialsliderset_LDFLAGS) $(materialsliderset_OBJECTS) $(materialsliderset_LDADD) $(LIBS)
+
+materialsliderset2: $(materialsliderset2_OBJECTS) $(materialsliderset2_DEPENDENCIES)
+	@rm -f materialsliderset2
+	$(CXXLINK) $(materialsliderset2_LDFLAGS) $(materialsliderset2_OBJECTS) $(materialsliderset2_LDADD) $(LIBS)
+
+transformsliderset: $(transformsliderset_OBJECTS) $(transformsliderset_DEPENDENCIES)
+	@rm -f transformsliderset
+	$(CXXLINK) $(transformsliderset_LDFLAGS) $(transformsliderset_OBJECTS) $(transformsliderset_LDADD) $(LIBS)
+
+directionallighteditor: $(directionallighteditor_OBJECTS) $(directionallighteditor_DEPENDENCIES)
+	@rm -f directionallighteditor
+	$(CXXLINK) $(directionallighteditor_LDFLAGS) $(directionallighteditor_OBJECTS) $(directionallighteditor_LDADD) $(LIBS)
 
 materialeditor: $(materialeditor_OBJECTS) $(materialeditor_DEPENDENCIES)
 	@rm -f materialeditor
@@ -434,70 +382,35 @@ materiallist2: $(materiallist2_OBJECTS) $(materiallist2_DEPENDENCIES)
 	@rm -f materiallist2
 	$(CXXLINK) $(materiallist2_LDFLAGS) $(materiallist2_OBJECTS) $(materiallist2_LDADD) $(LIBS)
 
-materialsliderset: $(materialsliderset_OBJECTS) $(materialsliderset_DEPENDENCIES)
-	@rm -f materialsliderset
-	$(CXXLINK) $(materialsliderset_LDFLAGS) $(materialsliderset_OBJECTS) $(materialsliderset_LDADD) $(LIBS)
-
-materialsliderset2: $(materialsliderset2_OBJECTS) $(materialsliderset2_DEPENDENCIES)
-	@rm -f materialsliderset2
-	$(CXXLINK) $(materialsliderset2_LDFLAGS) $(materialsliderset2_OBJECTS) $(materialsliderset2_LDADD) $(LIBS)
-
-overlay: $(overlay_OBJECTS) $(overlay_DEPENDENCIES)
-	@rm -f overlay
-	$(CXXLINK) $(overlay_LDFLAGS) $(overlay_OBJECTS) $(overlay_LDADD) $(LIBS)
-
-planeviewer: $(planeviewer_OBJECTS) $(planeviewer_DEPENDENCIES)
-	@rm -f planeviewer
-	$(CXXLINK) $(planeviewer_LDFLAGS) $(planeviewer_OBJECTS) $(planeviewer_LDADD) $(LIBS)
-
 printdialog: $(printdialog_OBJECTS) $(printdialog_DEPENDENCIES)
 	@rm -f printdialog
 	$(CXXLINK) $(printdialog_LDFLAGS) $(printdialog_OBJECTS) $(printdialog_LDADD) $(LIBS)
 
-renderarea: $(renderarea_OBJECTS) $(renderarea_DEPENDENCIES)
-	@rm -f renderarea
-	$(CXXLINK) $(renderarea_LDFLAGS) $(renderarea_OBJECTS) $(renderarea_LDADD) $(LIBS)
-
-roster: $(roster_OBJECTS) $(roster_DEPENDENCIES)
-	@rm -f roster
-	$(CXXLINK) $(roster_LDFLAGS) $(roster_OBJECTS) $(roster_LDADD) $(LIBS)
-
-transformsliderset: $(transformsliderset_OBJECTS) $(transformsliderset_DEPENDENCIES)
-	@rm -f transformsliderset
-	$(CXXLINK) $(transformsliderset_LDFLAGS) $(transformsliderset_OBJECTS) $(transformsliderset_LDADD) $(LIBS)
-
-walkviewer: $(walkviewer_OBJECTS) $(walkviewer_DEPENDENCIES)
-	@rm -f walkviewer
-	$(CXXLINK) $(walkviewer_LDFLAGS) $(walkviewer_OBJECTS) $(walkviewer_LDADD) $(LIBS)
+grapheditor: $(grapheditor_OBJECTS) $(grapheditor_DEPENDENCIES)
+	@rm -f grapheditor
+	$(CXXLINK) $(grapheditor_LDFLAGS) $(grapheditor_OBJECTS) $(grapheditor_LDADD) $(LIBS)
+.cpp.o:
+	$(CXXCOMPILE) -c $<
 
 tags: TAGS
 
-ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
-	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '    { files[$$0] = 1; } \
+ID: $(HEADERS) $(SOURCES) $(LISP)
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
-	mkid -fID $$unique $(LISP)
+	here=`pwd` && cd $(srcdir) \
+	  && mkid -f$$here/ID $$unique $(LISP)
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
-		$(TAGS_FILES) $(LISP)
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
 	tags=; \
 	here=`pwd`; \
-	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '    { files[$$0] = 1; } \
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
-
-GTAGS:
-	here=`CDPATH=: && cd $(top_builddir) && pwd` \
-	  && cd $(top_srcdir) \
-	  && gtags -i $$here
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
 
 mostlyclean-tags:
 
@@ -508,58 +421,77 @@ distclean-tags:
 
 maintainer-clean-tags:
 
-@AMDEP@include $(DEPDIR)/computils.Po
-@AMDEP@include $(DEPDIR)/customviewer.Po
-@AMDEP@include $(DEPDIR)/directionallighteditor.Po
-@AMDEP@include $(DEPDIR)/examinerviewer.Po
-@AMDEP@include $(DEPDIR)/flyviewer.Po
-@AMDEP@include $(DEPDIR)/grapheditor.Po
-@AMDEP@include $(DEPDIR)/lightsliderset.Po
-@AMDEP@include $(DEPDIR)/materialeditor.Po
-@AMDEP@include $(DEPDIR)/materiallist.Po
-@AMDEP@include $(DEPDIR)/materiallist2.Po
-@AMDEP@include $(DEPDIR)/materialsliderset.Po
-@AMDEP@include $(DEPDIR)/materialsliderset2.Po
-@AMDEP@include $(DEPDIR)/overlay.Po
-@AMDEP@include $(DEPDIR)/planeviewer.Po
-@AMDEP@include $(DEPDIR)/printdialog.Po
-@AMDEP@include $(DEPDIR)/renderarea.Po
-@AMDEP@include $(DEPDIR)/roster.Po
-@AMDEP@include $(DEPDIR)/transformsliderset.Po
-@AMDEP@include $(DEPDIR)/walkviewer.Po
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = components
+
+distdir: $(DISTFILES)
+	here=`cd $(top_builddir) && pwd`; \
+	top_distdir=`cd $(top_distdir) && pwd`; \
+	distdir=`cd $(distdir) && pwd`; \
+	cd $(top_srcdir) \
+	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu components/Makefile
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+
+DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
+
+-include $(DEP_FILES)
 
 mostlyclean-depend:
 
 clean-depend:
 
 distclean-depend:
-	-rm -rf $(DEPDIR)
+	-rm -rf .deps
 
 maintainer-clean-depend:
 
-@AMDEP@CXXDEPMODE = @CXXDEPMODE@
+%.o: %.c
+	@echo '$(COMPILE) -c $<'; \
+	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm .deps/$(*F).pp
 
-.cpp.o:
-@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+%.lo: %.c
+	@echo '$(LTCOMPILE) -c $<'; \
+	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+	  < .deps/$(*F).pp > .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm -f .deps/$(*F).pp
 
+%.o: %.cpp
+	@echo '$(CXXCOMPILE) -c $<'; \
+	$(CXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm .deps/$(*F).pp
 
-distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-distdir: $(DISTFILES)
-	@for file in $(DISTFILES); do \
-	  d=$(srcdir); \
-	  if test -d $$d/$$file; then \
-	    cp -pR $$d/$$file $(distdir) \
-	    || exit 1; \
-	  else \
-	    test -f $(distdir)/$$file \
-	    || cp -p $$d/$$file $(distdir)/$$file \
-	    || exit 1; \
-	  fi; \
-	done
+%.lo: %.cpp
+	@echo '$(LTCXXCOMPILE) -c $<'; \
+	$(LTCXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+	  < .deps/$(*F).pp > .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm -f .deps/$(*F).pp
 info-am:
 info: info-am
 dvi-am:
@@ -568,9 +500,6 @@ check-am: all-am
 check: check-am
 installcheck-am:
 installcheck: installcheck-am
-all-recursive-am: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) all-recursive
-
 install-exec-am:
 install-exec: install-exec-am
 
@@ -585,7 +514,7 @@ uninstall: uninstall-am
 all-am: Makefile $(PROGRAMS)
 all-redirect: all-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs:
 
 
@@ -598,7 +527,6 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
-	-rm -f Makefile.in
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean-am:  mostlyclean-noinstPROGRAMS mostlyclean-compile \
 		mostlyclean-tags mostlyclean-depend mostlyclean-generic
@@ -628,12 +556,12 @@ maintainer-clean: maintainer-clean-am
 clean-noinstPROGRAMS maintainer-clean-noinstPROGRAMS \
 mostlyclean-compile distclean-compile clean-compile \
 maintainer-clean-compile tags mostlyclean-tags distclean-tags \
-clean-tags maintainer-clean-tags mostlyclean-depend distclean-depend \
-clean-depend maintainer-clean-depend distdir info-am info dvi-am dvi \
-check check-am installcheck-am installcheck all-recursive-am \
-install-exec-am install-exec install-data-am install-data install-am \
-install uninstall-am uninstall all-redirect all-am all install-strip \
-installdirs mostlyclean-generic distclean-generic clean-generic \
+clean-tags maintainer-clean-tags distdir mostlyclean-depend \
+distclean-depend clean-depend maintainer-clean-depend info-am info \
+dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
+install-exec install-data-am install-data install-am install \
+uninstall-am uninstall all-redirect all-am all installdirs \
+mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 

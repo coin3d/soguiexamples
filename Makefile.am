@@ -40,6 +40,7 @@ BUILT_SOURCES = \
 	nodes/directionallight.cpp \
 	nodes/drawstyle.cpp \
 	nodes/environment.cpp \
+	nodes/extselection.cpp \
 	nodes/faceset.cpp \
 	nodes/facesetindexed.cpp \
 	nodes/levelofdetail.cpp \
@@ -190,6 +191,9 @@ nodes/drawstyle.cpp: $(srcdir)/nodes/drawstyle.cpp.in
 	@./config.status --file=$@
 
 nodes/environment.cpp: $(srcdir)/nodes/environment.cpp.in
+	@./config.status --file=$@
+
+nodes/extselection.cpp: $(srcdir)/nodes/extselection.cpp.in
 	@./config.status --file=$@
 
 nodes/faceset.cpp: $(srcdir)/nodes/faceset.cpp.in

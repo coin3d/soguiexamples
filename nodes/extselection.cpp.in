@@ -1,0 +1,234 @@
+/**************************************************************************\
+ *
+ *  Copyright (C) 2000 by Systems in Motion.  All rights reserved.
+ *
+ *  This file is part of the Coin library.
+ *
+ *  This file may be distributed under the terms of the Q Public License
+ *  as defined by Troll Tech AS of Norway and appearing in the file
+ *  LICENSE.QPL included in the packaging of this file.
+ *
+ *  If you want to use Coin in applications not covered by licenses
+ *  compatible with the QPL, you can contact SIM to aquire a
+ *  Professional Edition license for Coin.
+ *
+ *  Systems in Motion AS, Prof. Brochs gate 6, N-7030 Trondheim, NORWAY
+ *  http://www.sim.no/ sales@sim.no Voice: +47 73540378 Fax: +47 73943861
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/SoDB.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <Inventor/nodes/SoExtSelection.h>
+#include <Inventor/nodes/SoCamera.h>
+#include <Inventor/nodes/SoIndexedLineSet.h>
+#include <Inventor/nodes/SoCoordinate3.h>
+#include <Inventor/nodes/SoLightModel.h>
+#include <Inventor/nodes/SoBaseColor.h>
+#include <Inventor/actions/SoGetBoundingBoxAction.h>
+#include <Inventor/actions/SoSearchAction.h>
+#include <Inventor/SoInput.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoTransform.h>
+#include <Inventor/nodes/SoPolygonOffset.h>
+#include <Inventor/nodes/SoDrawStyle.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/manips/SoTrackballManip.h>
+#include <Inventor/nodes/SoCone.h>
+#include <Inventor/actions/SoCallbackAction.h>
+#include <Inventor/sensors/SoIdleSensor.h>
+#include <assert.h>
+#include <Inventor/SoInput.h>
+#include <Inventor/SoOutput.h>
+#include <Inventor/actions/SoBoxHighlightRenderAction.h>
+#include <Inventor/actions/SoWriteAction.h>
+#include <Inventor/SoPrimitiveVertex.h>
+#include <Inventor/SbBSPTree.h>
+#include <Inventor/details/SoFaceDetail.h>
+#include <Inventor/details/SoPointDetail.h>
+
+#include <string.h>
+
+// *************************************************************************
+
+
+// This is not how it should be done, since triangles might be
+// selected multiple times. We just wrote this piece of crap for demo
+// purposes.
+
+SbBSPTree mybsptree;
+SbList <int32_t> myidxlist;
+
+SoCoordinate3 * mycoords = NULL;
+SoIndexedLineSet * mylineset = NULL;
+
+static void
+start_callback(void * userdata, SoSelection * sel)
+{
+  if (sel->policy.getValue() == SoSelection::SINGLE ||
+      (sel->policy.getValue() == SoSelection::SHIFT && !((SoExtSelection*)sel)->wasShiftDown())) {
+    mybsptree.clear();
+    myidxlist.truncate(0);
+  }
+}
+
+static void
+finish_callback(void * userdata, SoSelection * sel)
+{
+  int n = mybsptree.numPoints();
+  
+  mycoords->point.setNum(n);
+  memcpy(mycoords->point.startEditing(), mybsptree.getPointsArrayPtr(), n*sizeof(SbVec3f));
+  mycoords->point.finishEditing();
+
+  n = myidxlist.getLength();
+  mylineset->coordIndex.setNum(n);
+  memcpy(mylineset->coordIndex.startEditing(), myidxlist.getArrayPtr(), n*sizeof(int32_t));
+  mylineset->coordIndex.finishEditing();
+}
+
+static SbBool 
+triangleCB(void * userdata, 
+           SoCallbackAction * action, 
+           const SoPrimitiveVertex * v1, 
+           const SoPrimitiveVertex * v2, 
+           const SoPrimitiveVertex * v3)
+{
+  // FIXME: need to test if face has already been added
+  const SbMatrix & mm = action->getModelMatrix();
+
+  SbVec3f op;
+  SbVec3f wp;
+
+  
+  const SoDetail * detail = v1->getDetail();
+  // if not face, select entire object
+  if (!detail || !detail->isOfType(SoFaceDetail::getClassTypeId())) 
+    return TRUE;
+  
+  const SoFaceDetail * fd = (const SoFaceDetail*) detail;
+  assert(fd->isOfType(SoFaceDetail::getClassTypeId()));
+  assert(fd);
+  const SoPointDetail * pd;
+
+  for (int i = 0; i <= fd->getNumPoints(); i++) {
+    pd = fd->getPoint(i%fd->getNumPoints());
+    assert(pd);
+    assert(pd->getCoordinateIndex() < action->getNumCoordinates());
+    op = action->getCoordinate3(pd->getCoordinateIndex());
+    mm.multVecMatrix(op, wp);
+    myidxlist.append(mybsptree.addPoint(wp));
+  }
+  
+  myidxlist.append(-1);
+  
+  return FALSE;
+}
+
+static SoNode * 
+make_line_sg(void)
+{
+  SoSeparator * sep = new SoSeparator;
+  SoLightModel * lm = new SoLightModel;
+  lm->model = SoLightModel::BASE_COLOR;
+  sep->addChild(lm);
+  SoBaseColor * col = new SoBaseColor;
+  col->rgb = SbColor(1.0f, 0.0f, 0.0f);
+  sep->addChild(col);
+  SoDrawStyle * ds = new SoDrawStyle;
+  ds->lineWidth = 1;
+  sep->addChild(ds);
+
+  mycoords = new SoCoordinate3;
+  mylineset = new SoIndexedLineSet;
+  sep->addChild(mycoords);
+  sep->addChild(mylineset);
+  return sep;
+}
+
+// Print a quick instructions notice on stdout.
+void
+show_instructions( void )
+{
+  (void)fprintf(stdout, 
+                "\nThis example program demonstrates the use of the SoExtSelection node type.\n"
+                "\nQuick instructions:\n\n"
+                "  * draw a polygon by selecting vertices with the left mouse button\n"
+                "  * terminate polygon either by selecting the same point twice,\n"
+                "    or by clicking the right mouse button.\n"
+                "  * hold SHIFT to avoid clearing selection when selecting new triangles\n"
+                "  * hit ESC to toggle back and forth to view mode\n\n");
+}
+
+int
+main(int argc, char ** argv)
+{
+  if (argc != 2) {
+    (void) fprintf(stderr,"\nSpecify an Inventor file as argument.\n");
+    return -1;
+  }
+
+  @WIDGET@ window = So@Gui@::init( argv[0] );
+
+  So@Gui@ExaminerViewer * ex1 = new So@Gui@ExaminerViewer( window );
+  
+  SoInput input;
+  SbBool ok = input.openFile(argv[1]);
+  if (!ok) {
+    (void) fprintf(stderr, "Unable to open file: %s\n", argv[1]);
+    return -1;
+  }
+
+  SoSeparator *root = SoDB::readAll(&input); 
+  
+  if (root == NULL) {
+    (void) fprintf(stderr, "Unable to read file: %s\n", argv[1]);
+    return -1;
+  }
+
+  show_instructions();
+
+  SoPolygonOffset * po = new SoPolygonOffset;
+  po->styles = SoPolygonOffset::FILLED;
+  po->factor = 1.0f;
+  po->units = 1.0f;
+  po->on = TRUE;
+  root->insertChild(po, 0);
+
+  SoExtSelection * selection = new SoExtSelection;
+  selection->lassoPolicy = SoExtSelection::PART;
+  selection->policy = SoSelection::SHIFT;
+  selection->lassoType = SoExtSelection::LASSO;
+  // selection->lassoType = SoExtSelection::RECTANGLE;
+  selection->setLassoColor(SbColor(0.9f,0.7f,0.2f));
+  selection->setLassoWidth(3);
+  selection->setOverlayLassoPattern(0xf0f0);  // 0011 0011 0011 0011
+  selection->animateOverlayLasso(TRUE);
+  selection->addStartCallback(start_callback);
+  selection->addFinishCallback(finish_callback);
+  selection->setTriangleFilterCallback(triangleCB, NULL);
+  selection->addChild(root);
+
+  SoSeparator * newroot = new SoSeparator;
+  newroot->ref();
+  newroot->addChild(selection);
+  newroot->addChild(make_line_sg());
+
+  ex1->setSceneGraph(newroot);
+  ex1->setTransparencyType(SoGLRenderAction::SORTED_OBJECT_BLEND);
+  ex1->setGLRenderAction(new SoBoxHighlightRenderAction(SbViewportRegion()));
+  ex1->setViewing(FALSE);
+  
+  ex1->show();
+  So@Gui@::show( window );
+
+  So@Gui@::mainLoop();
+  delete ex1;
+
+  selection->unref();
+  return 0;
+} // main()
+
