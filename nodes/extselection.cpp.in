@@ -285,11 +285,8 @@ show_instructions( void )
                 "     'r' = Rectangle mode\n"
                 "     'n' = Pick/NoLasso mode\n"
                 "     's' = Single selection\n"
-                "     'h' = Shift selection\n\n");
-  // FIXME: toggle is not functional yet in the example
-  // program. 20020808 mortene.
-
-  //                 "     't' = toggle selection \n\n");
+                "     'h' = Shift selection\n",
+                "     't' = toggle selection \n\n");
 }
 
 void
@@ -341,14 +338,13 @@ event_cb(void * userdata, SoEventCallback * node)
     selection->policy = SoSelection::SHIFT;
     fprintf(stdout,"Shift selection\n");
   }
-  // FIXME: toggle is not functional yet in the example
-  // program. 20020808 mortene.
-
-//   if (SO_KEY_PRESS_EVENT(event, T)) {
-//     selection->policy = SoSelection::TOGGLE;
-//     fprintf(stdout,"Toggle selection\n");
-//   }
-
+  if (SO_KEY_PRESS_EVENT(event, T)) {
+    selection->policy = SoSelection::TOGGLE;
+    // FIXME: should write up the necessary code in this example to
+    // make toggle work for polygon/line/point primitive sets
+    // aswell. 20020808 mortene.
+    fprintf(stdout,"Toggle selection (note: only works for full shapes)\n");
+  }
 }
 
 
