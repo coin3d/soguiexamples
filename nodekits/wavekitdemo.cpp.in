@@ -144,6 +144,8 @@ main(int argc, char ** argv)
   ecb->addEventCallback(SoEvent::getClassTypeId(), event_cb, eviewer);
   root->addChild(ecb);
 
+  eviewer->setTransparencyType(SoGLRenderAction::SORTED_OBJECT_BLEND);
+
   //  eviewer->setFullScreen(TRUE);
   //eviewer->setDecoration(FALSE);
   eviewer->show();
