@@ -1,0 +1,348 @@
+#VRML V1.0 ascii
+
+Separator {
+
+  # DEF GUI-elements, forward declaration
+  Switch {
+    whichChild -1
+
+    DEF intensity Translate1Dragger {
+      translation 1.0 0.0 0.0 
+    }
+
+    DEF minFront Translate1Dragger {
+      translation 3.0 0.0 0.0 
+    }
+
+    DEF minBack Translate1Dragger {
+      translation 1.0 0.0 0.0 
+    }
+
+    DEF maxFront Translate1Dragger {
+      translation 8.0 0.0 0.0 
+    }
+
+    DEF maxBack Translate1Dragger {
+      translation 2.0 0.0 0.0 
+    }
+
+    DEF direction Translate2Dragger {
+      translation 0.0 1.0 0.0
+    }
+
+  }
+
+  # Default camera
+  PerspectiveCamera {
+    position 0.0 15.0 6.0
+    orientation 1 0 0 -1.4
+  }
+
+  # Listener
+  TransformSeparator {
+    Listener {
+      orientation 0 1 0 3.1415927
+    }     
+    File {
+      name "head.iv"
+    }
+  }
+
+  # Clock (sound source)
+  Separator {
+    Translation {
+      translation 0 0 5
+    }
+    Rotation {
+      rotation 0 1 0 3.1415926535
+    }
+    
+    Separator {
+      Transform {
+        translation 0 1 0
+        rotation 1 0 0 1.570796
+      }
+      DEF DragClock Translate2Dragger {
+      }
+    }
+    Translation {
+      translation = ComposeVec3f { 
+	  x = DecomposeVec3f { vector = USE DragClock.translation } . x
+	  y 0.0
+	  z = DecomposeVec3f { vector = USE DragClock.translation } . y
+	} . vector
+    }
+    DEF clip_clock VRMLAudioClip {
+      url "clips/ticktack.wav"
+      stopTime 0.0
+      startTime 0.0
+      loop TRUE
+      pitch 1.0
+    }
+    DEF sound VRMLSound {
+      source USE clip_clock
+      spatialize TRUE
+      intensity 1.0 = DecomposeVec3f { vector 1.0 0.0 0.0 = USE intensity.translation } . x
+      minFront  3.0 = DecomposeVec3f { vector 1.0 0.0 0.0 = USE minFront.translation } . x
+      minBack   1.0 = DecomposeVec3f { vector 1.0 0.0 0.0 = USE minBack.translation } . x
+      maxFront  8.0 = DecomposeVec3f { vector 10.0 0.0 0.0 = USE maxFront.translation } . x
+      maxBack   2.0 = DecomposeVec3f { vector 10.0 0.0 0.0 = USE maxBack.translation } . x
+      direction 0.0 0.0 1.0 = ComposeVec3f { 
+	  x 0.0 = Calculator {
+	            a 0.0 = DecomposeVec3f { vector 0.0 0.0 1.0 = USE direction.translation } . x
+		    expression [ "oa = -a" ] } . oa
+	  y 0.0
+	  z 1.0 = DecomposeVec3f { vector 0.0 0.0 1.0 = USE direction.translation } . y
+	} . vector
+    }     
+    # FIXME: Create better graphics for the clock. 2002-11-19 thammer.
+    DEF clock Separator {
+      Transform {
+        rotation 1 0 0 1.570796
+      }
+      Cylinder {
+	radius 0.5
+	height 0.2
+      }
+      Material {
+	diffuseColor 0.6 0 0
+      }
+      Translation {
+	translation 0 0.1 0
+      }
+      Cylinder {
+	radius 0.05
+	height 0.2
+      }
+    }
+    # Ellipses
+    Separator {
+      Rotation {
+	rotation = ComposeRotationFromTo {
+	  from 0.0 0.0 1.0
+	  to 0.0 0.0 1.0 = USE sound.direction
+	} . rotation
+      }
+      # Outer ellipse (maxBack <--> maxFront)
+      Separator {
+	PickStyle {
+	  style UNPICKABLE
+	}
+	Material {
+	  diffuseColor 1 0 0
+	  transparency 0.5
+	}
+	Translation {
+	  translation = ComposeVec3f {
+	    x 0.0
+	    y 0.0
+	    z = Calculator {
+	      a = USE sound.maxFront
+	      b = USE sound.maxBack
+	      expression [ "oc = (a - b) / 2.0" ] } .oc  # "c"
+	  } . vector
+	}
+	Scale {
+	  scaleFactor = ComposeVec3f {
+	    x = Calculator {
+	      a = USE sound.maxFront
+	      b = USE sound.maxBack
+	      expression [ "oa = sqrt(1 - pow( ((a - b) / (a + b)), 2))" ] } .oa
+	    # factor "b/a = sqrt(1-e^2), e=c/a"	
+	    y = Calculator {
+	      a = USE sound.maxFront
+	      b = USE sound.maxBack
+	      expression [ "oa = sqrt(1 - pow( ((a - b) / (a + b)), 2))" ] } .oa
+	    # factor "b/a = sqrt(1-e^2), e=c/a"
+	    z 1.0
+	  } . vector
+	}
+	Sphere {
+	  radius = Calculator { 
+	    a 8.0 = USE sound.maxFront
+	    b 2.0 = USE sound.maxBack
+	    expression [ "oa = (a + b) / 2.0" ] } .oa  # "a"
+	}
+      }
+      # Inner ellipse (minBack <--> minFront)
+      Separator {
+	PickStyle {
+	  style UNPICKABLE
+	}
+	Material {
+	  diffuseColor 0 1 0
+	  transparency 0.5
+	}
+	Translation {
+	  translation = ComposeVec3f {
+	    x 0.0
+	    y 0.0
+	    z = Calculator {
+	      a = USE sound.minFront
+	      b = USE sound.minBack
+	      expression [ "oc = (a - b) / 2.0" ] } .oc  # "c"
+	  } . vector
+	}
+	Scale {
+	  scaleFactor = ComposeVec3f {
+	    x = Calculator {
+	      a = USE sound.minFront
+	      b = USE sound.minBack
+	      expression [ "oa = sqrt(1 - pow( ((a - b) / (a + b)), 2))" ] } .oa
+	    # factor "b/a = sqrt(1-e^2), e=c/a"	
+	    y = Calculator {
+	      a = USE sound.minFront
+	      b = USE sound.minBack
+	      expression [ "oa = sqrt(1 - pow( ((a - b) / (a + b)), 2))" ] } .oa
+	    # factor "b/a = sqrt(1-e^2), e=c/a"
+	    z 1.0
+	  } . vector
+	}
+	Sphere {
+	  radius = Calculator { 
+	    a = USE sound.minFront
+	    b = USE sound.minBack
+	    expression [ "oa = (a + b) / 2.0" ] } .oa  # "a"
+	}
+      }
+    } # Ellipses
+  }
+
+  # UI
+  Separator {
+    OrthographicCamera {
+      position 0 0 5
+    }
+    Scale {
+      scaleFactor 0.15 0.1 0.1
+    }
+    Translation {
+      translation -3.0 3.0 0.0
+    }
+    
+    # intensity
+    Separator {
+      Translation {
+	translation -4.0 4.0 0.0
+      }
+      USE intensity
+      Translation {
+	translation -1.5 0.25 0.0
+      }
+      Text2 {
+	string "intensity"
+      }
+      Translation {
+	translation 2.0 0.0 0.0
+      }
+      Text2 {
+	string = USE sound.intensity
+      }
+    }
+    # minFront
+    Separator {
+      Translation {
+	translation -4.0 3.0 0.0
+      }
+      USE minFront
+      Translation {
+	translation -1.5 0.25 0.0
+      }
+      Text2 {
+	string "minFront"
+      }
+      Translation {
+	translation 2.0 0.0 0.0
+      }
+      Text2 {
+	string = USE sound.minFront
+      }
+    }
+    # minBack
+    Separator {
+      Translation {
+	translation -4.0 2.0 0.0
+      }
+      USE minBack
+      Translation {
+	translation -1.5 0.25 0.0
+      }
+      Text2 {
+	string "minBack"
+      }
+      Translation {
+	translation 2.0 0.0 0.0
+      }
+      Text2 {
+	string = USE sound.minBack
+      }
+    }
+    # maxFront
+    Separator {
+      Translation {
+	translation -4.0 1.0 0.0
+      }
+      USE maxFront
+      Translation {
+	translation -1.5 0.25 0.0
+      }
+      Text2 {
+	string "maxFront"
+      }
+      Translation {
+	translation 2.0 0.0 0.0
+      }
+      Text2 {
+	string = USE sound.maxFront
+      }
+    }
+    # maxBack
+    Separator {
+      Translation {
+	translation -4.0 0.0 0.0
+      }
+      USE maxBack
+      Translation {
+	translation -1.5 0.25 0.0
+      }
+      Text2 {
+	string "maxBack"
+      }
+      Translation {
+	translation 2.0 0.0 0.0
+      }
+      Text2 {
+	string = USE sound.maxBack
+      }
+    }
+    # direction
+    Separator {
+      Translation {
+	translation -4.0 -2.0 0.0
+      }
+      Separator {
+	Translation {
+	  translation 0.0 0.0 1.0
+	}
+        Transform {
+          rotation 1 0 0 -1.570796
+        }
+	USE clock
+      }
+      USE direction
+      Translation {
+	translation -1.5 0.25 0.0
+      }
+      Text2 {
+	string "direction"
+      }
+      Translation {
+	translation 2.0 0.0 0.0
+      }
+      Text2 {
+	string = USE sound.direction
+      }
+    }
+  }
+
+}
