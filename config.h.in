@@ -60,6 +60,9 @@
 /* Define to enable use of Inventor feature */
 #undef HAVE_SOEXTSELECTION_LASSOMODE
 
+/* Define to enable use of the Open Inventor SoFragmentShader node */
+#undef HAVE_SOFRAGMENTSHADER
+
 /* Define to enable use of Inventor feature */
 #undef HAVE_SOGLRENDERACTION_SORTED_OBJECT_SORTED_TRIANGLE_BLEND
 
@@ -81,11 +84,17 @@
 /* Define to enable use of the Open Inventor SoSceneTexture2 node */
 #undef HAVE_SOSCENETEXTURE2
 
+/* Define to enable use of the Open Inventor SoShaderProgram node */
+#undef HAVE_SOSHADERPROGRAM
+
 /* Define to enable use of the Open Inventor SoTextureScalePolicy node */
 #undef HAVE_SOTEXTURESCALEPOLICY
 
 /* Define to enable use of the Open Inventor SoTextureUnit node */
 #undef HAVE_SOTEXTUREUNIT
+
+/* Define to enable use of the Open Inventor SoVertexShader node */
+#undef HAVE_SOVERTEXSHADER
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H

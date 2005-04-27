@@ -3,7 +3,8 @@ noinst_PROGRAMS = \
 	juliaanim \
 	mandelzoom \
 	blob \
-	simbuoy
+	simbuoy \
+	toonshader 
 
 
 moirepatterns_SOURCES = moirepatterns.cpp
@@ -18,12 +19,15 @@ blob_SOURCES = blob.cpp
 
 simbuoy_SOURCES = simbuoy.cpp
 
+toonshader_SOURCES = toonshader.cpp
+
 BUILT_SOURCES = \
 	moirepatterns.cpp \
 	juliaanim.cpp \
 	mandelzoom.cpp \
 	blob.cpp \
-	simbuoy.cpp
+	simbuoy.cpp \
+	toonshader.cpp
 
 # Create Mac OS X application bundles.
 install-exec-local:

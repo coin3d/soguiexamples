@@ -180,7 +180,8 @@ noinst_PROGRAMS = \
 	juliaanim \
 	mandelzoom \
 	blob \
-	simbuoy
+	simbuoy \
+	toonshader 
 
 
 moirepatterns_SOURCES = moirepatterns.cpp
@@ -195,21 +196,25 @@ blob_SOURCES = blob.cpp
 
 simbuoy_SOURCES = simbuoy.cpp
 
+toonshader_SOURCES = toonshader.cpp
+
 BUILT_SOURCES = \
 	moirepatterns.cpp \
 	juliaanim.cpp \
 	mandelzoom.cpp \
 	blob.cpp \
-	simbuoy.cpp
+	simbuoy.cpp \
+	toonshader.cpp
 
 subdir = eyecandy
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES = moirepatterns.cpp juliaanim.cpp mandelzoom.cpp \
-	blob.cpp simbuoy.cpp
+	blob.cpp simbuoy.cpp toonshader.cpp
 noinst_PROGRAMS = moirepatterns$(EXEEXT) juliaanim$(EXEEXT) \
-	mandelzoom$(EXEEXT) blob$(EXEEXT) simbuoy$(EXEEXT)
+	mandelzoom$(EXEEXT) blob$(EXEEXT) simbuoy$(EXEEXT) \
+	toonshader$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_blob_OBJECTS = blob.$(OBJEXT)
@@ -237,13 +242,19 @@ simbuoy_OBJECTS = $(am_simbuoy_OBJECTS)
 simbuoy_LDADD = $(LDADD)
 simbuoy_DEPENDENCIES =
 simbuoy_LDFLAGS =
+am_toonshader_OBJECTS = toonshader.$(OBJEXT)
+toonshader_OBJECTS = $(am_toonshader_OBJECTS)
+toonshader_LDADD = $(LDADD)
+toonshader_DEPENDENCIES =
+toonshader_LDFLAGS =
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/blob.Po ./$(DEPDIR)/juliaanim.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/mandelzoom.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/moirepatterns.Po ./$(DEPDIR)/simbuoy.Po
+@AMDEP_TRUE@	./$(DEPDIR)/moirepatterns.Po ./$(DEPDIR)/simbuoy.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/toonshader.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -256,11 +267,11 @@ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(blob_SOURCES) $(juliaanim_SOURCES) \
 	$(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) \
 	$(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES) \
-	$(simbuoy_SOURCES)
+	$(simbuoy_SOURCES) $(toonshader_SOURCES)
 DIST_COMMON = README Makefile.am Makefile.in blob.cpp.in \
 	juliaanim.cpp.in mandelzoom.cpp.in moirepatterns.cpp.in \
-	simbuoy.cpp.in
-SOURCES = $(blob_SOURCES) $(juliaanim_SOURCES) $(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) $(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES) $(simbuoy_SOURCES)
+	simbuoy.cpp.in toonshader.cpp.in
+SOURCES = $(blob_SOURCES) $(juliaanim_SOURCES) $(EXTRA_juliaanim_SOURCES) $(mandelzoom_SOURCES) $(EXTRA_mandelzoom_SOURCES) $(moirepatterns_SOURCES) $(simbuoy_SOURCES) $(toonshader_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -282,6 +293,8 @@ blob.cpp: $(top_builddir)/config.status blob.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 simbuoy.cpp: $(top_builddir)/config.status simbuoy.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+toonshader.cpp: $(top_builddir)/config.status toonshader.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -300,6 +313,9 @@ moirepatterns$(EXEEXT): $(moirepatterns_OBJECTS) $(moirepatterns_DEPENDENCIES)
 simbuoy$(EXEEXT): $(simbuoy_OBJECTS) $(simbuoy_DEPENDENCIES) 
 	@rm -f simbuoy$(EXEEXT)
 	$(CXXLINK) $(simbuoy_LDFLAGS) $(simbuoy_OBJECTS) $(simbuoy_LDADD) $(LIBS)
+toonshader$(EXEEXT): $(toonshader_OBJECTS) $(toonshader_DEPENDENCIES) 
+	@rm -f toonshader$(EXEEXT)
+	$(CXXLINK) $(toonshader_LDFLAGS) $(toonshader_OBJECTS) $(toonshader_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -312,6 +328,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mandelzoom.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moirepatterns.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simbuoy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/toonshader.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)

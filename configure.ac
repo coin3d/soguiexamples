@@ -319,6 +319,9 @@ SIM_AC_HAVE_INVENTOR_NODE(SoExtSelection, [
      sel->lassoMode = SoExtSelection::VISIBLE_SHAPES; ],
     [HAVE_SOEXTSELECTION_LASSOMODE])
   ])
+SIM_AC_HAVE_INVENTOR_NODE(SoShaderProgram)
+SIM_AC_HAVE_INVENTOR_NODE(SoFragmentShader)
+SIM_AC_HAVE_INVENTOR_NODE(SoVertexShader)
 
 SIM_AC_HAVE_INVENTOR_FEATURE(
   [for SoGLRenderAction::SORTED_OBJECT_SORTED_TRIANGLE_BLEND],
@@ -618,6 +621,7 @@ AC_CONFIG_FILES(
         eyecandy/mandelzoom.cpp
         eyecandy/blob.cpp
         eyecandy/simbuoy.cpp
+        eyecandy/toonshader.cpp
 
         manipulators/Makefile
         manipulators/pointlightmanip.cpp

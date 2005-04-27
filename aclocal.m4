@@ -1394,12 +1394,10 @@ AC_ARG_ENABLE(
   esac],
   [enable_symbols=yes])
 
-# FIXME: don't mangle options like -fno-gnu-linker and -fvolatile-global
-# 20020104 larsa
+# weird seds to don't mangle options like -fno-gnu-linker and -fvolatile-global
 if test x"$enable_symbols" = x"no"; then
-  # CPPFLAGS="`echo $CPPFLAGS | sed 's/-g\>//'`"
-  CFLAGS="`echo $CFLAGS | sed 's/ -g //' | sed 's/^-g //' | sed 's/ -g$//'`"
-  CXXFLAGS="`echo $CXXFLAGS | sed 's/ -g //' | sed 's/^-g //' | sed 's/ -g$//'`"
+  CFLAGS="`echo $CFLAGS | sed 's/ -g //g' | sed 's/^-g //g' | sed 's/ -g$//g' | sed 's/^-g$//'`"
+  CXXFLAGS="`echo $CXXFLAGS | sed 's/ -g //g' | sed 's/^-g //g' | sed 's/ -g$//g' | sed 's/^-g$//'`"
 fi
 ]) # SIM_AC_DEBUGSYMBOLS
 
@@ -2116,17 +2114,19 @@ fi
 #
 #                $sim_ac_ogl_cppflags
 #                $sim_ac_ogl_ldflags
-#                $sim_ac_ogl_libs
+#                $sim_ac_ogl_libs (OpenGL library and all dependencies)
+#                $sim_ac_ogl_lib (basename of OpenGL library)
 #
 # The necessary extra options are also automatically added to CPPFLAGS,
 # LDFLAGS and LIBS.
 #
 # Authors: <larsa@sim.no>, <mortene@sim.no>.
 
-AC_DEFUN(SIM_AC_CHECK_OPENGL, [
+AC_DEFUN([SIM_AC_CHECK_OPENGL], [
 
 sim_ac_ogl_cppflags=
 sim_ac_ogl_ldflags=
+sim_ac_ogl_lib=
 sim_ac_ogl_libs=
 
 AC_ARG_WITH(
@@ -2137,8 +2137,8 @@ AC_ARG_WITH(
   [with_mesa=yes])
 
 
-sim_ac_ogl_glnames="-lGL -lopengl32"
-sim_ac_ogl_mesaglnames=-lMesaGL
+sim_ac_ogl_glnames="GL opengl32"
+sim_ac_ogl_mesaglnames=MesaGL
 
 if test "x$with_mesa" = "xyes"; then
   sim_ac_ogl_first=$sim_ac_ogl_mesaglnames
@@ -2191,6 +2191,7 @@ if test x"$with_opengl" != xno; then
     # hopefully, this is the default behavior and not needed. 20011005 larsa
     # sim_ac_ogl_cppflags="-F/System/Library/Frameworks/OpenGL.framework/"
     sim_ac_ogl_ldflags="-Wl,-framework,OpenGL"
+    sim_ac_ogl_lib=OpenGL
   fi
 
   sim_ac_save_cppflags=$CPPFLAGS
@@ -2224,7 +2225,11 @@ if test x"$with_opengl" != xno; then
       # Mac OS X uses nada (only LDFLAGS), which is why "" was set first
       for sim_ac_ogl_libcheck in "" $sim_ac_ogl_first $sim_ac_ogl_second; do
         if $sim_ac_glchk_hit; then :; else
-          LIBS="$sim_ac_ogl_libcheck $sim_ac_oglchk_pthreadslib $sim_ac_save_libs"
+          if test -n "${sim_ac_ogl_libcheck}"; then
+            LIBS="-l${sim_ac_ogl_libcheck} $sim_ac_oglchk_pthreadslib $sim_ac_save_libs"
+          else
+            LIBS="$sim_ac_oglchk_pthreadslib $sim_ac_save_libs"
+          fi
           AC_TRY_LINK(
             [#ifdef HAVE_WINDOWS_H
              #include <windows.h>
@@ -2240,7 +2245,11 @@ if test x"$with_opengl" != xno; then
             [glPointSize(1.0f);],
             [
              sim_ac_glchk_hit=true
-             sim_ac_ogl_libs="$sim_ac_ogl_libcheck $sim_ac_oglchk_pthreadslib"
+             sim_ac_ogl_libs=$sim_ac_oglchk_pthreadslib
+             if test -n "${sim_ac_ogl_libcheck}"; then
+               sim_ac_ogl_lib=$sim_ac_ogl_libcheck
+               sim_ac_ogl_libs="-l${sim_ac_ogl_libcheck} $sim_ac_oglchk_pthreadslib"
+             fi
             ]
           )
         fi
@@ -2452,7 +2461,7 @@ fi
 #
 # Author: Morten Eriksen, <mortene@sim.no>.
 
-AC_DEFUN(SIM_AC_GLU_NURBSOBJECT, [
+AC_DEFUN([SIM_AC_GLU_NURBSOBJECT], [
 AC_CACHE_CHECK(
   [what structure to use in the GLU NURBS interface],
   sim_cv_func_glu_nurbsobject,
@@ -3075,49 +3084,6 @@ else
 fi
 ]) # SIM_AC_X11_READY()
 
-
-# **************************************************************************
-
-AC_DEFUN([SIM_AC_HAVE_LIBX11_IFELSE], [
-: ${sim_ac_have_libx11=false}
-AC_REQUIRE([AC_PATH_X])
-
-# prevent multiple runs
-$sim_ac_have_libx11 || {
-  if test x"$no_x" != xyes; then
-    sim_ac_libx11_cppflags=
-    sim_ac_libx11_ldflags=
-    test x"$x_includes" != x && sim_ac_libx11_cppflags="-I$x_includes"
-    test x"$x_libraries" != x && sim_ac_libx11_ldflags="-L$x_libraries"
-    sim_ac_libx11_libs="-lX11"
-
-    sim_ac_libx11_save_cppflags=$CPPFLAGS
-    sim_ac_libx11_save_ldflags=$LDFLAGS
-    sim_ac_libx11_save_libs=$LIBS
-
-    CPPFLAGS="$CPPFLAGS $sim_ac_libx11_cppflags"
-    LDFLAGS="$LDFLAGS $sim_ac_libx11_ldflags"
-    LIBS="$sim_ac_libx11_libs $LIBS"
-
-    AC_TRY_LINK(
-      [#include <X11/Xlib.h>],
-      [(void)XOpenDisplay(0L);],
-      [sim_ac_have_libx11=true])
-
-    CPPFLAGS=$sim_ac_libx11_save_cppflags
-    LDFLAGS=$sim_ac_libx11_save_ldflags
-    LIBS=$sim_ac_libx11_save_libs
-  fi
-}
-
-if $sim_ac_have_libx11; then
-  ifelse([$1], , :, [$1])
-else
-  ifelse([$2], , :, [$2])
-fi
-]) # SIM_AC_HAVE_LIBX11_IFELSE
-
-
 # Usage:
 #  SIM_AC_CHECK_PTHREAD([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
 #
@@ -3700,7 +3666,7 @@ known to contain some serious bugs on MacOS X. We strongly recommend you to
 upgrade. (See $srcdir/README.MAC for details.)])
       fi
 
-      if test x"$sim_ac_want_x11" = xno; then   
+      if test x$sim_ac_enable_darwin_x11 = xfalse; then
       # Using Qt/X11 but option --enable-darwin-x11 not given
       AC_TRY_LINK([#include <qapplication.h>],
                   [#if defined(__APPLE__) && defined(Q_WS_X11)
@@ -3871,18 +3837,20 @@ recommend you to upgrade.])
     ;;
   esac
 
+  # We should only *test* availability, not mutate the LIBS/CPPFLAGS
+  # variables ourselves inside this macro. 20041021 larsa
+  CPPFLAGS=$sim_ac_save_cppflags
+  LDFLAGS=$sim_ac_save_ldflags
+  LIBS=$sim_ac_save_libs
   if test ! x"$sim_ac_qt_libs" = xUNRESOLVED; then
     sim_ac_qt_avail=yes
-    CPPFLAGS="$sim_ac_qt_cppflags $sim_ac_save_cppflags"
-    LIBS="$sim_ac_qt_libs $sim_ac_save_libs"
+    #CPPFLAGS="$sim_ac_qt_cppflags $sim_ac_save_cppflags"
+    #LIBS="$sim_ac_qt_libs $sim_ac_save_libs"
     $1
   else
     if test -z "$QTDIR"; then
       AC_MSG_WARN([QTDIR environment variable not set -- this might be an indication of a problem])
     fi
-    CPPFLAGS=$sim_ac_save_cppflags
-    LDFLAGS=$sim_ac_save_ldflags
-    LIBS=$sim_ac_save_libs
     $2
   fi
 fi
