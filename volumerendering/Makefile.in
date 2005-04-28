@@ -71,6 +71,8 @@ EVENT = @EVENT@
 EXEEXT = @EXEEXT@
 GUI = @GUI@
 Gui = @Gui@
+HAVE_COINSCENERY_FALSE = @HAVE_COINSCENERY_FALSE@
+HAVE_COINSCENERY_TRUE = @HAVE_COINSCENERY_TRUE@
 HAVE_DIRECTIONALLIGHTEDITOR_FALSE = @HAVE_DIRECTIONALLIGHTEDITOR_FALSE@
 HAVE_DIRECTIONALLIGHTEDITOR_TRUE = @HAVE_DIRECTIONALLIGHTEDITOR_TRUE@
 HAVE_MATERIALEDITOR_FALSE = @HAVE_MATERIALEDITOR_FALSE@
@@ -87,6 +89,8 @@ HAVE_SLIDERSETS_FALSE = @HAVE_SLIDERSETS_FALSE@
 HAVE_SLIDERSETS_TRUE = @HAVE_SLIDERSETS_TRUE@
 HAVE_SMALLCHANGE_FALSE = @HAVE_SMALLCHANGE_FALSE@
 HAVE_SMALLCHANGE_TRUE = @HAVE_SMALLCHANGE_TRUE@
+HAVE_VOLUMEVIZ_FALSE = @HAVE_VOLUMEVIZ_FALSE@
+HAVE_VOLUMEVIZ_TRUE = @HAVE_VOLUMEVIZ_TRUE@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -156,6 +160,7 @@ prefix = @prefix@
 program_transform_name = @program_transform_name@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
+sim_ac_coinscenery_configcmd = @sim_ac_coinscenery_configcmd@
 sim_ac_mks_make = @sim_ac_mks_make@
 sim_ac_qt_cygpath = @sim_ac_qt_cygpath@
 sim_ac_simage_configcmd = @sim_ac_simage_configcmd@
@@ -197,6 +202,9 @@ noinst_PROGRAMS = \
 @BUILD_WITH_MSVC_TRUE@CUTEARCHIVE = Cute/Cute.lst
 @BUILD_WITH_MSVC_FALSE@CUTEARCHIVE = Cute/Cute.a
 
+# FIXME: only these three examples actually have dependencies on Qt / SoQt,
+# and we should fix so the other examples can be built even when not using
+# SoQt. 20041021 mortene.
 readvol_LDADD = $(CUTEARCHIVE)
 orthoslicer_LDADD = $(CUTEARCHIVE)
 voleonexplore_LDADD = $(CUTEARCHIVE)
