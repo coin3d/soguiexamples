@@ -12,6 +12,9 @@ renderarea_SOURCES = \
 	computils.cpp \
 	renderarea.cpp
 
+simpleexviewer_SOURCES = \
+	simpleexviewer.cpp
+
 examinerviewer_SOURCES = \
 	computils.h \
 	computils.cpp \
@@ -114,6 +117,7 @@ BUILT_SOURCES = \
 	computils.cpp \
 	roster.cpp \
 	renderarea.cpp \
+	simpleexviewer.cpp \
 	backgroundimg.cpp \
 	examinerviewer.cpp \
 	planeviewer.cpp \
@@ -134,8 +138,8 @@ BUILT_SOURCES = \
 # 	SoGuiCutterViewer.h \
 # 	SoGuiCutterViewer.cpp
 
-noinst_PROGRAMS = renderarea backgroundimg examinerviewer overlay \
-	planeviewer flyviewer snapshotviewer spaceballdemo \
+noinst_PROGRAMS = renderarea simpleexviewer backgroundimg examinerviewer \
+	overlay planeviewer flyviewer snapshotviewer spaceballdemo \
 	multifileviewer \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
 	$(MATERIALLIST) $(PRINTDIALOG)

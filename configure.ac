@@ -592,6 +592,7 @@ AC_CONFIG_FILES(
         components/overlay.cpp
         components/planeviewer.cpp
         components/renderarea.cpp
+        components/simpleexviewer.cpp
         components/roster.cpp
         components/snapshotviewer.cpp
         components/spaceballdemo.cpp 

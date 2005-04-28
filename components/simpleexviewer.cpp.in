@@ -36,16 +36,6 @@ main(int argc, char ** argv)
   SoSeparator * root = new SoSeparator;
   root->ref();
 
-  float scalex = 1.0/10;
-//   float scaley = 1.0/4293;
-//   float scaley = 1.0/429;
-  float scaley = 1.0/42;
-  SoScale * scale = new SoScale;
-  scale->scaleFactor.setValue(scalex, scaley,1.0);
-  scale->scaleFactor.setIgnored(TRUE);
-
-  root->addChild(scale);
-  
   SoText3 * t3 = new SoText3;
   t3->parts = SoText3::ALL;
   t3->string.setValue("tjo-bing");
@@ -53,8 +43,8 @@ main(int argc, char ** argv)
 
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
   viewer->setSceneGraph(root);
-
   viewer->show();
+
   So@Gui@::show(window);
   So@Gui@::mainLoop();
 
