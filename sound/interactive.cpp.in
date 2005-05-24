@@ -1,0 +1,166 @@
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#include <Inventor/SoDB.h>
+#include <Inventor/actions/SoSearchAction.h>
+#include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/VRMLnodes/SoVRMLAudioClip.h>
+#include <Inventor/VRMLnodes/SoVRMLSound.h>
+
+SoVRMLAudioClip *clip = NULL;
+char **files;
+int numfiles = 0;
+
+void
+print_keyboard_actions()
+{
+  printf("\n");
+  printf("  Keyboard actions for the viewer\n");
+  printf("  -------------------------------\n\n");
+  printf("  0 Print this list of keyboard actions\n");
+  printf("  1 Start playing\n");
+  printf("  2 Stop playing\n");
+  printf("  3 Looping ON\n");
+  printf("  4 Looping OFF\n");
+  printf("  5 Clear list of audioclips\n");
+  printf("  6 Print list of audioclips\n");
+  printf("\n");
+
+  for (int c = 0; c < numfiles; c++) 
+    printf("  %c Add file '%s' to list of audioclips\n", 'a' + c,
+           files[c]);
+
+  printf("\n");
+}
+
+void
+keyCB(void *userData, SoEventCallback *eventCB) 
+{
+  const SoKeyboardEvent *event = (SoKeyboardEvent *)eventCB->getEvent();
+
+  if (SO_KEY_PRESS_EVENT(event, NUMBER_0)) {
+    print_keyboard_actions();
+    eventCB->setHandled();
+  }
+  else if (SO_KEY_PRESS_EVENT(event, NUMBER_1)) {
+    printf("Playing started\n");
+    clip->stopTime = 1.0f;
+    clip->startTime = SbTime::getTimeOfDay();
+    eventCB->setHandled();
+  }
+  else if (SO_KEY_PRESS_EVENT(event, NUMBER_2)) {
+    printf("Playing stopped\n");
+    clip->startTime = 0.0f;
+    clip->stopTime = 1.0f;
+    eventCB->setHandled();
+  }
+  else if (SO_KEY_PRESS_EVENT(event, NUMBER_3)) {
+    printf("Looping is ON\n");
+    clip->loop = TRUE;
+    eventCB->setHandled();
+  }
+  else if (SO_KEY_PRESS_EVENT(event, NUMBER_4)) {
+    printf("Looping is OFF\n");
+    clip->loop = FALSE;
+    eventCB->setHandled();
+  }
+  else if (SO_KEY_PRESS_EVENT(event, NUMBER_5)) {
+    printf("List of clips cleared\n");
+    clip->url = "";
+    eventCB->setHandled();
+  }
+  else if (SO_KEY_PRESS_EVENT(event, NUMBER_6)) {
+    if (clip->url.getNum() == 0)
+      printf("  audioclip.url = \"\"");
+    else {
+      printf("  audioclip.url = ");
+      for (int i = 0; i < clip->url.getNum(); i++)
+        printf("%s\n                  ", clip->url[i]);
+      printf("\n");
+    }
+    eventCB->setHandled();
+  }
+  else if ( (SoKeyboardEvent::isKeyPressEvent(event, event->getKey())) &&
+       (event->getKey() >= SoKeyboardEvent::A) && 
+       (event->getKey() < SoKeyboardEvent::A + numfiles) ) {
+    printf("Adding file '%s' to list of audioclips\n", 
+           files[event->getKey() - SoKeyboardEvent::A]);
+    if ((clip->url.getNum() == 1) && (clip->url[0] == SbString("")))
+      clip->url = files[event->getKey() - SoKeyboardEvent::A];
+    else
+      clip->url.set1Value(clip->url.getNum(), 
+                          files[event->getKey() - SoKeyboardEvent::A]);
+    eventCB->setHandled(); 
+  }
+}
+
+int 
+main(int argc, char *argv[]) 
+{
+  if (argc < 3) {
+    fprintf(stderr, "Usage: interactive.exe filename.iv <audioclips>\n");
+    fprintf(stderr, "       filename.iv must contain a Sound and an\n");
+    fprintf(stderr, "       AudioClip node.\n");
+    return 0;
+  }
+
+  @WIDGET@ win = So@Gui@::init(argc, argv, argv[0]);
+
+  SoInput in;
+  if (!in.openFile(argv[1])) { 
+    fprintf(stderr, "Error: Couldn't open file '%s'\n", argv[1]);
+    return 0;
+  }
+
+  SoSeparator * root = SoDB::readAll(&in);
+  if (!root) { 
+    fprintf(stderr, "Error: Couldn't parse file '%s'\n", argv[1]);
+    return 0;
+  }
+
+  root->ref();
+
+  SoSearchAction sa;
+  sa.setType(SoVRMLAudioClip::getClassTypeId());
+  sa.setSearchingAll(TRUE);
+  sa.apply(root);
+
+  SoPath *clippath = sa.getPath();
+  if (!clippath) {
+    fprintf(stderr, "Error: The file '%s' does not contain any "
+            "AudioClip nodes.\n", argv[1]);
+    return 0;
+  }
+
+  clip = (SoVRMLAudioClip *)clippath->getTail();
+  files = &argv[2];
+  numfiles = argc - 2;
+
+  clip->url = "";
+  clip->loop = FALSE;
+
+  SoEventCallback *e = new SoEventCallback;
+  root->addChild(e);
+  e->addEventCallback(SoKeyboardEvent::getClassTypeId(), keyCB, NULL);
+
+  printf("Interactive triggering of sound\n");
+  printf("===============================\n");
+
+  print_keyboard_actions();
+
+  So@Gui@ExaminerViewer *viewer = new So@Gui@ExaminerViewer(win);
+  viewer->setSceneGraph(root);
+  viewer->show();
+  
+  So@Gui@::show(win);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+  return 1;
+}
+
+
+
