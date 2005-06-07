@@ -1309,6 +1309,8 @@ AU_DEFUN([jm_MAINTAINER_MODE], [AM_MAINTAINER_MODE])
 #
 
 AC_DEFUN([SIM_AC_COMPILE_DEBUG], [
+AC_REQUIRE([SIM_AC_CHECK_SIMIAN_IFELSE])
+
 AC_ARG_ENABLE(
   [debug],
   AC_HELP_STRING([--enable-debug], [compile in debug mode [[default=yes]]]),
@@ -1322,6 +1324,19 @@ AC_ARG_ENABLE(
 
 if $enable_debug; then
   DSUFFIX=d
+  if $sim_ac_simian; then
+    case $CXX in
+    *wrapmsvc* )
+      # uninitialized checks
+      SIM_AC_CC_COMPILER_OPTION([/RTCu], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /RTCu"])
+      SIM_AC_CXX_COMPILER_OPTION([/RTCu], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /RTCu"])
+      # stack frame checks
+      SIM_AC_CC_COMPILER_OPTION([/RTCs], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /RTCs"])
+      SIM_AC_CXX_COMPILER_OPTION([/RTCs], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /RTCs"])
+      ;;
+    esac
+  fi
+
   ifelse([$1], , :, [$1])
 else
   DSUFFIX=
@@ -1366,6 +1381,115 @@ else
   CFLAGS="`echo $CFLAGS | sed 's/-O[[0-9]]*[[ ]]*//'`"
   CXXFLAGS="`echo $CXXFLAGS | sed 's/-O[[0-9]]*[[ ]]*//'`"
 fi
+])
+
+#
+# SIM_AC_CHECK_SIMIAN_IFELSE( IF-SIMIAN, IF-NOT-SIMIAN )
+#
+# Sets $sim_ac_simian to true or false
+#
+
+AC_DEFUN([SIM_AC_CHECK_SIMIAN_IFELSE], [
+AC_MSG_CHECKING([if user is simian])
+case `hostname -d 2>/dev/null || domainname 2>/dev/null || hostname` in
+*.sim.no | sim.no )
+  sim_ac_simian=true
+  ;;
+* )
+  if grep -ls "domain.*sim\\.no" /etc/resolv.conf >/dev/null; then
+    sim_ac_simian=true
+    :
+  else
+    sim_ac_simian=false
+    :
+  fi
+  ;;
+esac
+
+if $sim_ac_simian; then
+  AC_MSG_RESULT([probably])
+  ifelse($1, [], :, $1)
+else
+  AC_MSG_RESULT([probably not])
+  ifelse($2, [], :, $2)
+fi])
+
+
+#   Use this file to store miscellaneous macros related to checking
+#   compiler features.
+
+# Usage:
+#   SIM_AC_CC_COMPILER_OPTION(OPTION-TO-TEST, ACTION-IF-TRUE [, ACTION-IF-FALSE])
+#   SIM_AC_CXX_COMPILER_OPTION(OPTION-TO-TEST, ACTION-IF-TRUE [, ACTION-IF-FALSE])
+#
+# Description:
+#
+#   Check whether the current C or C++ compiler can handle a
+#   particular command-line option.
+#
+#
+# Author: Morten Eriksen, <mortene@sim.no>.
+#
+#   * [mortene:19991218] improve macros by catching and analyzing
+#     stderr (at least to see if there was any output there)?
+#
+
+AC_DEFUN([SIM_AC_COMPILER_OPTION], [
+sim_ac_save_cppflags=$CPPFLAGS
+CPPFLAGS="$CPPFLAGS $1"
+AC_TRY_COMPILE([], [], [sim_ac_accept_result=yes], [sim_ac_accept_result=no])
+AC_MSG_RESULT([$sim_ac_accept_result])
+CPPFLAGS=$sim_ac_save_cppflags
+# This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
+if test $sim_ac_accept_result = yes; then
+  ifelse([$2], , :, [$2])
+else
+  ifelse([$3], , :, [$3])
+fi
+])
+
+AC_DEFUN([SIM_AC_COMPILER_BEHAVIOR_OPTION_QUIET], [
+sim_ac_save_cppflags=$CPPFLAGS
+CPPFLAGS="$CPPFLAGS $1"
+AC_TRY_COMPILE([], [$2], [sim_ac_accept_result=yes], [sim_ac_accept_result=no])
+CPPFLAGS=$sim_ac_save_cppflags
+# This need to go last, in case CPPFLAGS is modified in arg 3 or arg 4.
+if test $sim_ac_accept_result = yes; then
+  ifelse([$3], , :, [$3])
+else
+  ifelse([$4], , :, [$4])
+fi
+])
+
+
+AC_DEFUN([SIM_AC_CC_COMPILER_OPTION], [
+AC_LANG_SAVE
+AC_LANG(C)
+AC_MSG_CHECKING([whether $CC accepts $1])
+SIM_AC_COMPILER_OPTION([$1], [$2], [$3])
+AC_LANG_RESTORE
+])
+
+AC_DEFUN([SIM_AC_CC_COMPILER_BEHAVIOR_OPTION_QUIET], [
+AC_LANG_SAVE
+AC_LANG(C)
+SIM_AC_COMPILER_BEHAVIOR_OPTION_QUIET([$1], [$2], [$3], [$4])
+AC_LANG_RESTORE
+])
+
+AC_DEFUN([SIM_AC_CXX_COMPILER_OPTION], [
+AC_LANG_SAVE
+AC_LANG(C++)
+AC_MSG_CHECKING([whether $CXX accepts $1])
+SIM_AC_COMPILER_OPTION([$1], [$2], [$3])
+AC_LANG_RESTORE
+])
+
+AC_DEFUN([SIM_AC_CXX_COMPILER_BEHAVIOR_OPTION_QUIET], [
+AC_LANG_SAVE
+AC_LANG(C++)
+SIM_AC_COMPILER_BEHAVIOR_OPTION_QUIET([$1], [$2], [$3], [$4])
+AC_LANG_RESTORE
 ])
 
 # Usage:
@@ -1489,83 +1613,6 @@ else
 fi
 ])
 
-
-#   Use this file to store miscellaneous macros related to checking
-#   compiler features.
-
-# Usage:
-#   SIM_AC_CC_COMPILER_OPTION(OPTION-TO-TEST, ACTION-IF-TRUE [, ACTION-IF-FALSE])
-#   SIM_AC_CXX_COMPILER_OPTION(OPTION-TO-TEST, ACTION-IF-TRUE [, ACTION-IF-FALSE])
-#
-# Description:
-#
-#   Check whether the current C or C++ compiler can handle a
-#   particular command-line option.
-#
-#
-# Author: Morten Eriksen, <mortene@sim.no>.
-#
-#   * [mortene:19991218] improve macros by catching and analyzing
-#     stderr (at least to see if there was any output there)?
-#
-
-AC_DEFUN([SIM_AC_COMPILER_OPTION], [
-sim_ac_save_cppflags=$CPPFLAGS
-CPPFLAGS="$CPPFLAGS $1"
-AC_TRY_COMPILE([], [], [sim_ac_accept_result=yes], [sim_ac_accept_result=no])
-AC_MSG_RESULT([$sim_ac_accept_result])
-CPPFLAGS=$sim_ac_save_cppflags
-# This need to go last, in case CPPFLAGS is modified in arg 2 or arg 3.
-if test $sim_ac_accept_result = yes; then
-  ifelse([$2], , :, [$2])
-else
-  ifelse([$3], , :, [$3])
-fi
-])
-
-AC_DEFUN([SIM_AC_COMPILER_BEHAVIOR_OPTION_QUIET], [
-sim_ac_save_cppflags=$CPPFLAGS
-CPPFLAGS="$CPPFLAGS $1"
-AC_TRY_COMPILE([], [$2], [sim_ac_accept_result=yes], [sim_ac_accept_result=no])
-CPPFLAGS=$sim_ac_save_cppflags
-# This need to go last, in case CPPFLAGS is modified in arg 3 or arg 4.
-if test $sim_ac_accept_result = yes; then
-  ifelse([$3], , :, [$3])
-else
-  ifelse([$4], , :, [$4])
-fi
-])
-
-
-AC_DEFUN([SIM_AC_CC_COMPILER_OPTION], [
-AC_LANG_SAVE
-AC_LANG(C)
-AC_MSG_CHECKING([whether $CC accepts $1])
-SIM_AC_COMPILER_OPTION([$1], [$2], [$3])
-AC_LANG_RESTORE
-])
-
-AC_DEFUN([SIM_AC_CC_COMPILER_BEHAVIOR_OPTION_QUIET], [
-AC_LANG_SAVE
-AC_LANG(C)
-SIM_AC_COMPILER_BEHAVIOR_OPTION_QUIET([$1], [$2], [$3], [$4])
-AC_LANG_RESTORE
-])
-
-AC_DEFUN([SIM_AC_CXX_COMPILER_OPTION], [
-AC_LANG_SAVE
-AC_LANG(C++)
-AC_MSG_CHECKING([whether $CXX accepts $1])
-SIM_AC_COMPILER_OPTION([$1], [$2], [$3])
-AC_LANG_RESTORE
-])
-
-AC_DEFUN([SIM_AC_CXX_COMPILER_BEHAVIOR_OPTION_QUIET], [
-AC_LANG_SAVE
-AC_LANG(C++)
-SIM_AC_COMPILER_BEHAVIOR_OPTION_QUIET([$1], [$2], [$3], [$4])
-AC_LANG_RESTORE
-])
 
 # Usage:
 #   SIM_AC_PROFILING_SUPPORT
@@ -1776,6 +1823,10 @@ SIM_AC_COMPILE_DEBUG([
       # warning level 3
       SIM_AC_CC_COMPILER_OPTION([/W3], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /W3"])
       SIM_AC_CXX_COMPILER_OPTION([/W3], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /W3"])
+
+      # 64-bit porting warnings
+      SIM_AC_CC_COMPILER_OPTION([/Wp64], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /Wp64"])
+      SIM_AC_CXX_COMPILER_OPTION([/Wp64], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /Wp64"])
       ;;
     esac
   fi
@@ -1830,38 +1881,6 @@ case $VERSION in
   ;;
 esac
 ])
-
-
-#
-# SIM_AC_CHECK_SIMIAN_IFELSE( IF-SIMIAN, IF-NOT-SIMIAN )
-#
-# Sets $sim_ac_simian to true or false
-#
-
-AC_DEFUN([SIM_AC_CHECK_SIMIAN_IFELSE], [
-AC_MSG_CHECKING([if user is simian])
-case `hostname -d 2>/dev/null || domainname 2>/dev/null || hostname` in
-*.sim.no | sim.no )
-  sim_ac_simian=true
-  ;;
-* )
-  if grep -ls "domain.*sim\\.no" /etc/resolv.conf >/dev/null; then
-    sim_ac_simian=true
-    :
-  else
-    sim_ac_simian=false
-    :
-  fi
-  ;;
-esac
-
-if $sim_ac_simian; then
-  AC_MSG_RESULT([probably])
-  ifelse($1, [], :, $1)
-else
-  AC_MSG_RESULT([probably not])
-  ifelse($2, [], :, $2)
-fi])
 
 
 # **************************************************************************
@@ -2639,12 +2658,15 @@ sim_ac_agl_ldflags="-Wl,-framework,ApplicationServices -Wl,-framework,AGL"
 
 LDFLAGS="$LDFLAGS $sim_ac_agl_ldflags"
 
+# see comment in Coin/src/glue/gl_agl.c: regarding __CARBONSOUND__ define 
+
 AC_CACHE_CHECK(
   [whether AGL is on the system],
   sim_cv_have_agl,
   AC_TRY_LINK(
     [#include <AGL/agl.h>
-#include <Carbon/Carbon.h>],
+     #define __CARBONSOUND__ 
+     #include <Carbon/Carbon.h>],
     [aglGetCurrentContext();],
     [sim_cv_have_agl=true],
     [sim_cv_have_agl=false]))
@@ -3668,14 +3690,14 @@ upgrade. (See $srcdir/README.MAC for details.)])
 
       if test x$sim_ac_enable_darwin_x11 = xfalse; then
       # Using Qt/X11 but option --enable-darwin-x11 not given
-      AC_TRY_LINK([#include <qapplication.h>],
+      AC_TRY_COMPILE([#include <qapplication.h>],
                   [#if defined(__APPLE__) && defined(Q_WS_X11)
                    #error blah!
                    #endif],[],
                   [SIM_AC_ERROR([x11-qt-but-no-x11-requested])])
       else 
       # --enable-darwin-x11 specified but attempting Qt/Mac linkage
-      AC_TRY_LINK([#include <qapplication.h>],
+      AC_TRY_COMPILE([#include <qapplication.h>],
                   [#if defined(__APPLE__) && defined(Q_WS_MAC)
                    #error blah!
                    #endif],[],
@@ -4976,6 +4998,155 @@ else
   ifelse([$2], , :, [$2])
 fi
 ]) # SIM_AC_HAVE_SMALLCHANGE_IFELSE()
+
+
+# Usage:
+#   SIM_AC_HAVE_SIMARUBA_IFELSE( IF-FOUND, IF-NOT-FOUND )
+#
+# Description:
+#   This macro locates the SIM Aruba development system.  If it is found,
+#   the set of variables listed below are set up as described and made
+#   available to the configure script.
+#
+#   The $sim_ac_simaruba_desired variable can be set to false externally to
+#   make SIM Aruba default to be excluded.
+#
+# Autoconf Variables:
+# > $sim_ac_simaruba_desired     true | false (defaults to true)
+# < $sim_ac_simaruba_avail       true | false
+# < $sim_ac_simaruba_cppflags    (extra flags the preprocessor needs)
+# < $sim_ac_simaruba_cflags      (extra flags the C compiler needs)
+# < $sim_ac_simaruba_cxxflags    (extra flags the C++ compiler needs)
+# < $sim_ac_simaruba_ldflags     (extra flags the linker needs)
+# < $sim_ac_simaruba_libs        (link library flags the linker needs)
+# < $sim_ac_simaruba_version     (the libSIMAruba version)
+# < $sim_ac_simaruba_msvcrt      (the MSVC++ C library SIM Aruba was built with)
+# < $sim_ac_simaruba_configcmd   (the path to simaruba-config or "false")
+#
+# Authors:
+#   Lars J. Aas, <larsa@sim.no>
+#   Morten Eriksen, <mortene@sim.no>
+#
+
+# FIXME: setting up this file was just done by copying the
+# 'coin.m4' file + search'n'replace to simaruba. Should really
+# rather collect them in a common template (and the same probably
+# goes for at least the so*.m4 files aswell, probably other SIM libraries
+# too). 20031017 mortene.
+
+
+AC_DEFUN([SIM_AC_HAVE_SIMARUBA_IFELSE], [
+AC_PREREQ([2.14a])
+
+# official variables
+sim_ac_simaruba_avail=false
+sim_ac_simaruba_cppflags=
+sim_ac_simaruba_cflags=
+sim_ac_simaruba_cxxflags=
+sim_ac_simaruba_ldflags=
+sim_ac_simaruba_libs=
+sim_ac_simaruba_version=
+
+# internal variables
+: ${sim_ac_simaruba_desired=true}
+sim_ac_simaruba_extrapath=
+
+AC_ARG_WITH([simaruba],
+AC_HELP_STRING([--with-simaruba], [enable use of SIM Aruba [[default=yes]]])
+AC_HELP_STRING([--with-simaruba=DIR], [give prefix location of SIM Aruba]),
+  [ case $withval in
+    no)  sim_ac_simaruba_desired=false ;;
+    yes) sim_ac_simaruba_desired=true ;;
+    *)   sim_ac_simaruba_desired=true
+         sim_ac_simaruba_extrapath=$withval ;;
+    esac],
+  [])
+
+case $build in
+*-mks ) sim_ac_pathsep=";" ;;
+* )     sim_ac_pathsep="${PATH_SEPARATOR}" ;;
+esac
+
+if $sim_ac_simaruba_desired; then
+  sim_ac_path=$PATH
+  test -z "$sim_ac_simaruba_extrapath" || ## search in --with-simaruba path
+    sim_ac_path="$sim_ac_simaruba_extrapath/bin${sim_ac_pathsep}$sim_ac_path"
+  test x"$prefix" = xNONE ||          ## search in --prefix path
+    sim_ac_path="$sim_ac_path${sim_ac_pathsep}$prefix/bin"
+
+  AC_PATH_PROG(sim_ac_simaruba_configcmd, simaruba-config, false, $sim_ac_path)
+
+  if test "X$sim_ac_simaruba_configcmd" = "Xfalse"; then :; else
+    test -n "$CONFIG" &&
+      $sim_ac_simaruba_configcmd --alternate=$CONFIG >/dev/null 2>/dev/null &&
+      sim_ac_simaruba_configcmd="$sim_ac_simaruba_configcmd --alternate=$CONFIG"
+  fi
+
+  if $sim_ac_simaruba_configcmd; then
+    sim_ac_simaruba_version=`$sim_ac_simaruba_configcmd --version`
+    sim_ac_simaruba_cppflags=`$sim_ac_simaruba_configcmd --cppflags`
+    sim_ac_simaruba_cflags=`$sim_ac_simaruba_configcmd --cflags 2>/dev/null`
+    sim_ac_simaruba_cxxflags=`$sim_ac_simaruba_configcmd --cxxflags`
+    sim_ac_simaruba_ldflags=`$sim_ac_simaruba_configcmd --ldflags`
+    sim_ac_simaruba_libs=`$sim_ac_simaruba_configcmd --libs`
+    sim_ac_simaruba_msvcrt=`$sim_ac_simaruba_configcmd --msvcrt`
+    sim_ac_simaruba_cflags=`$sim_ac_simaruba_configcmd --cflags`
+    AC_CACHE_CHECK(
+      [if we can compile and link with the SIM Aruba library],
+      sim_cv_simaruba_avail,
+      [sim_ac_save_cppflags=$CPPFLAGS
+      sim_ac_save_cxxflags=$CXXFLAGS
+      sim_ac_save_ldflags=$LDFLAGS
+      sim_ac_save_libs=$LIBS
+      CPPFLAGS="$CPPFLAGS $sim_ac_simaruba_cppflags"
+      CXXFLAGS="$CXXFLAGS $sim_ac_simaruba_cxxflags"
+      LDFLAGS="$LDFLAGS $sim_ac_simaruba_ldflags"
+      LIBS="$sim_ac_simaruba_libs $LIBS"
+      AC_LANG_PUSH(C++)
+
+      AC_TRY_LINK(
+        [#include <DataViz/PoDataViz.h>],
+        [PoDataViz::init(); const char * c = PoDataViz::getVersion();],
+        [sim_cv_simaruba_avail=true],
+        [sim_cv_simaruba_avail=false])
+
+      AC_LANG_POP
+      CPPFLAGS=$sim_ac_save_cppflags
+      CXXFLAGS=$sim_ac_save_cxxflags
+      LDFLAGS=$sim_ac_save_ldflags
+      LIBS=$sim_ac_save_libs
+    ])
+    sim_ac_simaruba_avail=$sim_cv_simaruba_avail
+    if $sim_ac_simaruba_avail; then :; else
+      AC_MSG_WARN([
+Compilation and/or linking with the SIM Aruba main library SDK failed, for
+unknown reason. If you are familiar with configure-based configuration
+and building, investigate the 'config.log' file for clues.
+
+If you can not figure out what went wrong, please forward the 'config.log'
+file to the email address <coin-support@coin3d.org> and ask for help by
+describing the situation where this failed.
+])
+    fi
+  else # no 'simaruba-config' found
+    locations=`IFS="${sim_ac_pathsep}"; for p in $sim_ac_path; do echo " -> $p/simaruba-config"; done`
+    AC_MSG_WARN([cannot find 'simaruba-config' at any of these locations:
+$locations])
+    AC_MSG_WARN([
+Need to be able to run 'simaruba-config' to figure out how to build and link
+against the SIM Aruba library. To rectify this problem, you most likely need
+to a) install SIM Aruba if it has not been installed, b) add the SIM Aruba install
+bin/ directory to your PATH environment variable.
+])
+  fi
+fi
+
+if $sim_ac_simaruba_avail; then
+  ifelse([$1], , :, [$1])
+else
+  ifelse([$2], , :, [$2])
+fi
+]) # SIM_AC_HAVE_SIMARUBA_IFELSE()
 
 
 # Usage:

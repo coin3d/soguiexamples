@@ -39,6 +39,9 @@
 /* Define to enable explicit use of simage library */
 #undef HAVE_SIMAGE_LIBRARY
 
+/* Define to enable use of SIM Aruba library */
+#undef HAVE_SIMARUBA_LIBRARY
+
 /* Define to enable use of SIM Voleon library */
 #undef HAVE_SIMVOLEON_LIBRARY
 
