@@ -394,6 +394,29 @@ SIM_AC_HAVE_SMALLCHANGE_IFELSE([
 AM_CONDITIONAL(HAVE_SMALLCHANGE, $sim_ac_smallchange_avail)
 
 # **************************************************************************
+# Use SIM Aruba if available.
+
+sim_ac_simaruba_desired=false
+
+SIM_AC_HAVE_SIMARUBA_IFELSE([
+  CPPFLAGS="$CPPFLAGS `$sim_ac_simaruba_configcmd $alternate_option --cppflags`"
+  CXXFLAGS="$CXXFLAGS `$sim_ac_simaruba_configcmd $alternate_option --cxxflags`"
+  CFLAGS="$CFLAGS `$sim_ac_simaruba_configcmd $alternate_option --cflags`"
+  LDFLAGS="$LDFLAGS `$sim_ac_simaruba_configcmd $alternate_option --ldflags`"
+  LIBS="`$sim_ac_simaruba_configcmd $alternate_option --libs` $LIBS"
+  AC_DEFINE(HAVE_SIMARUBA_LIBRARY, 1, [Define to enable use of SIM Aruba library])
+  SIM_AC_CONFIGURATION_SETTING([SIM Aruba], [is being used])
+], [
+  if $sim_ac_simaruba_desired; then
+    SIM_AC_ERROR([simaruba-unavailable])
+  else
+    SIM_AC_CONFIGURATION_SETTING([SIM Aruba], [not used (enable with --with-simaruba)])
+  fi
+])
+
+AM_CONDITIONAL(HAVE_SIMARUBA, $sim_ac_simaruba_avail)
+
+# **************************************************************************
 # Use libcoinscenery if available.
 
 sim_ac_coinscenery_desired=false

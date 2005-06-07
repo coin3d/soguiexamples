@@ -64,6 +64,10 @@
 #include <sim/coinscenery/SmScenery.h>
 #endif // HAVE_COINSCENERY_LIBRARY
 
+#ifdef HAVE_SIMARUBA_LIBRARY
+#include <DataViz/PoDataViz.h>
+#endif // HAVE_SIMARUBA_LIBRARY
+
 // *************************************************************************
 
 void
@@ -77,10 +81,16 @@ init_extra_libraries(void)
 #endif // HAVE_SMALLCHANGE_LIBRARY
 
 #ifdef HAVE_SIMVOLEON_LIBRARY
-  // Inits SimVoleon, if available, for the same reason as for
+  // Inits SIM Voleon, if available, for the same reason as for
   // SmallChange above.
   SoVolumeRendering::init();
 #endif // HAVE_SIMVOLEON_LIBRARY
+
+#ifdef HAVE_SIMARUBA_LIBRARY
+  // Inits SIM Aruba, if available, for the same reason as for
+  // SmallChange above.
+  PoDataViz::init();
+#endif // HAVE_SIMARUBA_LIBRARY
 
 #ifdef HAVE_COINSCENERY_LIBRARY
   // Inits the Coin nodes binding to SIM Scenery.
