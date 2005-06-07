@@ -53,7 +53,7 @@ int main(int argc,char **argv)
   eviewer->setBackgroundColor(SbColor(0.051, 0.051, 0.35));
   eviewer->setStereoOffset(200.0f);	
   eviewer->setAlphaChannel(TRUE);
-  
+
   // Setup the ARB shader programs
   SbString fpshaderprogram = 
     "!!ARBfp1.0\n" // Fragment program
@@ -80,6 +80,15 @@ int main(int argc,char **argv)
     "MOV result.color.w, c0.x;\n"
     "END\n";
 
+  // FIXME: I'm getting the following error on my development system,
+  // when having only the SoVertexShader node in the scene graph:
+  //
+  //   Coin error in SoGLARBShaderObject::load(): Error at position:
+  //   383 (line 13, column 21: error: invalid texture coordinate
+  //   reference)
+  //
+  // 20050513 mortene.
+  
   SbString vpshaderprogram = 
     "!!ARBvp1.0\n" // Vertex program
     "PARAM c1 = { 0, 1, 2, 0 };\n"
@@ -132,10 +141,14 @@ int main(int argc,char **argv)
   SoSeparator *root = new SoSeparator;
   root->ref();
 
+  // FIXME: should check whether fragment programs are supported or
+  // not, and exit if not. 20050513 mortene.
   SoFragmentShader * fragmentshader = new SoFragmentShader;
   fragmentshader->sourceType = SoShaderObject::ARB_PROGRAM;
   fragmentshader->sourceProgram.setValue(fpshaderprogram);
 
+  // FIXME: should check whether vertex programs are supported or not,
+  // and exit if not. 20050513 mortene.
   SoVertexShader * vertexshader = new SoVertexShader;
   vertexshader->sourceType = SoShaderObject::ARB_PROGRAM;
   vertexshader->sourceProgram.setValue(vpshaderprogram);
