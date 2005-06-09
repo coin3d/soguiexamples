@@ -4219,7 +4219,7 @@ sim_ac_oivqt_libs="-lInventorQt"
 sim_ac_save_libs=$LIBS
 LIBS="$sim_ac_oivqt_libs $LIBS"
 
-AC_CACHE_CHECK([for Qt glue library in the Open Inventor developer kit],
+AC_CACHE_CHECK([for InventorQt glue library],
   sim_cv_lib_oivqt_avail,
   [AC_TRY_LINK([#include <Inventor/Qt/SoQt.h>],
                [(void)SoQt::init(0L, 0L);],

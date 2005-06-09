@@ -8312,7 +8312,7 @@ fi
 
   fi
 
-  # InventorXt (SGI or TGS) needs a heap of libs
+  # InventorQt (SGI or TGS) needs a heap of libs
   if $sim_ac_want_inventorqt; then
 
 sim_ac_qtdir=
@@ -9093,11 +9093,16 @@ echo "${ECHO_T}ok" >&6
     #CPPFLAGS="$sim_ac_qt_cppflags $sim_ac_save_cppflags"
     #LIBS="$sim_ac_qt_libs $sim_ac_save_libs"
 
+      CPPFLAGS="$CPPFLAGS $sim_ac_qt_cppflags"
+      LDFLAGS="$LDFLAGS $sim_ac_qt_ldflags"
+      LIBS="$sim_ac_qt_libs $LIBS"
+
   else
     if test -z "$QTDIR"; then
       { echo "$as_me:$LINENO: WARNING: QTDIR environment variable not set -- this might be an indication of a problem" >&5
 echo "$as_me: WARNING: QTDIR environment variable not set -- this might be an indication of a problem" >&2;}
     fi
+
 
 echo >&2 ""
 
@@ -9125,8 +9130,10 @@ echo >&2 ""
 echo "$as_me: error: aborting" >&2;}
    { (exit 1); exit 1; }; }
 
+
   fi
 fi
+
 
 
 
@@ -9197,6 +9204,10 @@ echo "${ECHO_T}$sim_cv_lib_qgl_integrated" >&6
   if test x"$sim_cv_lib_qgl_integrated" = xyes; then
     sim_ac_qgl_avail=yes
 
+      CPPFLAGS="$CPPFLAGS $sim_ac_qgl_cppflags"
+      LDFLAGS="$LDFLAGS $sim_ac_qgl_ldflags"
+      LIBS="$sim_ac_qgl_libs $LIBS"
+
   else
     sim_ac_save_LIBS=$LIBS
     LIBS="$sim_ac_qgl_libs $LIBS"
@@ -9261,10 +9272,15 @@ rm -f conftest.err conftest.$ac_objext \
 echo "${ECHO_T}$sim_ac_qgl_libs" >&6
       sim_ac_qgl_avail=yes
 
+      CPPFLAGS="$CPPFLAGS $sim_ac_qgl_cppflags"
+      LDFLAGS="$LDFLAGS $sim_ac_qgl_ldflags"
+      LIBS="$sim_ac_qgl_libs $LIBS"
+
     else
       echo "$as_me:$LINENO: result: unavailable" >&5
 echo "${ECHO_T}unavailable" >&6
       LIBS=$sim_ac_save_LIBS
+
 
 echo >&2 ""
 
@@ -9291,6 +9307,7 @@ echo >&2 ""
 { { echo "$as_me:$LINENO: error: aborting" >&5
 echo "$as_me: error: aborting" >&2;}
    { (exit 1); exit 1; }; }
+
 
     fi
   fi
@@ -11257,8 +11274,8 @@ sim_ac_oivqt_libs="-lInventorQt"
 sim_ac_save_libs=$LIBS
 LIBS="$sim_ac_oivqt_libs $LIBS"
 
-echo "$as_me:$LINENO: checking for Qt glue library in the Open Inventor developer kit" >&5
-echo $ECHO_N "checking for Qt glue library in the Open Inventor developer kit... $ECHO_C" >&6
+echo "$as_me:$LINENO: checking for InventorQt glue library" >&5
+echo $ECHO_N "checking for InventorQt glue library... $ECHO_C" >&6
 if test "${sim_cv_lib_oivqt_avail+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
