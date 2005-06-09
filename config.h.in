@@ -27,6 +27,9 @@
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
+/* Define to enable use of TGS MeshViz library */
+#undef HAVE_MESHVIZ_LIBRARY
+
 /* define if the GLU header should be included as OpenGL/glu.h */
 #undef HAVE_OPENGL_GLU_H
 
