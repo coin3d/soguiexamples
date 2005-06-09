@@ -65,8 +65,16 @@
 #endif // HAVE_COINSCENERY_LIBRARY
 
 #ifdef HAVE_SIMARUBA_LIBRARY
-#include <DataViz/PoDataViz.h>
+#define GRAPH_MESH_EXTENSIONLIBRARY
 #endif // HAVE_SIMARUBA_LIBRARY
+
+#ifdef HAVE_MESHVIZ_LIBRARY
+#define GRAPH_MESH_EXTENSIONLIBRARY
+#endif // HAVE_MESHVIZ_LIBRARY
+
+#ifdef GRAPH_MESH_EXTENSIONLIBRARY
+#include <DataViz/PoDataViz.h>
+#endif // GRAPH_MESH_EXTENSIONLIBRARY
 
 // *************************************************************************
 
@@ -86,11 +94,11 @@ init_extra_libraries(void)
   SoVolumeRendering::init();
 #endif // HAVE_SIMVOLEON_LIBRARY
 
-#ifdef HAVE_SIMARUBA_LIBRARY
-  // Inits SIM Aruba, if available, for the same reason as for
-  // SmallChange above.
+#ifdef GRAPH_MESH_EXTENSIONLIBRARY
+  // Inits SIM Aruba or TGS MeshViz, if available, for the same reason
+  // as for SmallChange above.
   PoDataViz::init();
-#endif // HAVE_SIMARUBA_LIBRARY
+#endif // GRAPH_MESH_EXTENSIONLIBRARY
 
 #ifdef HAVE_COINSCENERY_LIBRARY
   // Inits the Coin nodes binding to SIM Scenery.
