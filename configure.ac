@@ -116,10 +116,23 @@ if $sim_ac_guiexamples_use_inventor; then
     SIM_AC_CHECK_X_INTRINSIC
   fi
 
-  # InventorXt (SGI or TGS) needs a heap of libs
+  # InventorQt (SGI or TGS) needs a heap of libs
   if $sim_ac_want_inventorqt; then
-    SIM_AC_CHECK_QT(, [ SIM_AC_ERROR([no-qt]) ])
-    SIM_AC_CHECK_QGL(, [ SIM_AC_ERROR([no-qgl]) ])
+    SIM_AC_CHECK_QT([
+      CPPFLAGS="$CPPFLAGS $sim_ac_qt_cppflags"
+      LDFLAGS="$LDFLAGS $sim_ac_qt_ldflags"
+      LIBS="$sim_ac_qt_libs $LIBS"
+    ], [
+      SIM_AC_ERROR([no-qt])
+    ])
+  
+    SIM_AC_CHECK_QGL([
+      CPPFLAGS="$CPPFLAGS $sim_ac_qgl_cppflags"
+      LDFLAGS="$LDFLAGS $sim_ac_qgl_ldflags"
+      LIBS="$sim_ac_qgl_libs $LIBS"
+    ], [
+      SIM_AC_ERROR([no-qgl])
+    ])
   fi
   
   SIM_AC_CHECK_OPENGL([ ], [SIM_AC_ERROR([no-opengl])])
