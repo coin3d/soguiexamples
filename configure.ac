@@ -543,6 +543,35 @@ fi
 AM_CONDITIONAL(HAVE_VOLUMEVIZ, $sim_ac_volumeviz_avail)
 
 # **************************************************************************
+# If we're using Mercury/TGS Inventor, check to see if MeshViz is
+# also available.
+
+sim_ac_meshviz_avail=false
+if $sim_ac_guiexamples_use_inventor; then
+  sim_ac_save_libs=$LIBS
+  LIBS="-lMeshViz $LIBS"
+  AC_MSG_CHECKING(for TGS MeshViz)
+  AC_LANG_PUSH(C++)
+  AC_TRY_LINK(
+    [#include <DataViz/PoDataViz.h>],
+    [PoDataViz::init();],
+    [sim_ac_meshviz_avail=true],
+    [sim_ac_meshviz_avail=false])
+  AC_LANG_POP
+  AC_MSG_RESULT($sim_ac_meshviz_avail)
+
+  if $sim_ac_meshviz_avail; then
+    SIM_AC_CONFIGURATION_SETTING([TGS MeshViz], [is being used])
+    AC_DEFINE(HAVE_MESHVIZ_LIBRARY, 1, [Define to enable use of TGS MeshViz library])
+  else
+    SIM_AC_CONFIGURATION_SETTING([TGS MeshViz], [is not being used -- failed to build])
+    LIBS=$sim_ac_save_libs
+  fi
+fi
+
+AM_CONDITIONAL(HAVE_MESHVIZ, $sim_ac_meshviz_avail)
+
+# **************************************************************************
 # At least one of the SIM Voleon examples needs simage. Will just do a
 # general check for it, in case other examples pops up which uses it.
 
