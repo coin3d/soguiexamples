@@ -16,11 +16,11 @@ read_callback(void *datasource, void *buffer,
               void * userdataptr)
 {
   static int counter = 0;
-  short int *ibuffer = (short int *)buffer;
-  double a = 880.0 * 2.0 * 3.14159265 / 44100.0;
+  short *ibuffer = (short *)buffer;
+  double a = 880.0 * 2.0 * M_PI / 44100.0;
 
   for (int i=0; i< numframes; i++) {
-    ibuffer[i] = 32000.0 * sin( (float)(counter + i) * a );
+    ibuffer[i] = short(32000.0 * sin((counter + i) * a));
   }
   counter += numframes;
 
