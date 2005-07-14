@@ -83,11 +83,12 @@ SIM_AC_CHECK_HEADER_GL(CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags")
 # **************************************************************************
 # Search and set up necessary stuff to use the Inventor implementation.
 
-sim_ac_guiexamples_use_inventor=true
-if test x"$with_inventor" = x; then sim_ac_guiexamples_use_inventor=false; fi
-if test x"$with_inventor" = xno; then sim_ac_guiexamples_use_inventor=false; fi
+# These needs to be called so the "--with-*" options have an effect.
+SIM_AC_WITH_INVENTOR
+SIM_AC_WITH_INVENTORXT
+SIM_AC_WITH_INVENTORQT
 
-if $sim_ac_guiexamples_use_inventor; then
+if $sim_ac_want_inventor; then
   # If we want to compile and link against Inventor, we
   # need to check for these libraries.
 
@@ -498,7 +499,7 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
   ])
 else
   sim_ac_simvoleon_avail=false
-  if $sim_ac_guiexamples_use_inventor; then
+  if $sim_ac_want_inventor; then
     :  # don't warn if we're using SGI or TGS Inventor, as SIM Voleon is an obvious no-go then
   else
     SIM_AC_CONFIGURATION_SETTING([SIM Voleon], [not used (examples only works with SoQt)])
@@ -556,11 +557,11 @@ fi
 AM_CONDITIONAL(HAVE_VOLUMEVIZ, $sim_ac_volumeviz_avail)
 
 # **************************************************************************
-# If we're using Mercury/TGS Inventor, check to see if MeshViz is
+# If we're using a non-SIM Inventor, check to see if MeshViz is
 # also available.
 
 sim_ac_meshviz_avail=false
-if $sim_ac_guiexamples_use_inventor; then
+if $sim_ac_want_inventor; then
   sim_ac_save_libs=$LIBS
   LIBS="-lMeshViz $LIBS"
   AC_MSG_CHECKING(for TGS MeshViz)

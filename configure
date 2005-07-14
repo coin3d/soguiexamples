@@ -889,15 +889,6 @@ Optional Packages:
   --with-alternate=keyword
                           use keyword-configuration of GUI toolkit
   --with-x                use the X Window System
-  --with-dl=DIR           include support for the dynamic link loader library
-                          [default=yes]
-  --with-qt=true|false|DIR
-                          specify if Qt should be used, and optionally the
-                          location of the Qt library default=true
-  --with-mesa             prefer MesaGL (if found) over OpenGL [default=yes]
-  --with-opengl=DIR       OpenGL/Mesa installation directory
-  --with-pthread=DIR      pthread installation directory
-  --with-glu=DIR          use the OpenGL utility library [default=yes]
   --with-inventor         use SGI or TGS Open Inventor rather than Coin
                           [default=no]
   --with-inventor=PATH    specify where SGI or TGS Open Inventor resides
@@ -907,6 +898,15 @@ Optional Packages:
   --with-inventor-qt      use InventorQt when using SGI or TGS Open Inventor
                           [default=yes]
   --with-inventor-qt=PATH specify where InventorQt resides
+  --with-dl=DIR           include support for the dynamic link loader library
+                          [default=yes]
+  --with-qt=true|false|DIR
+                          specify if Qt should be used, and optionally the
+                          location of the Qt library default=true
+  --with-mesa             prefer MesaGL (if found) over OpenGL [default=yes]
+  --with-opengl=DIR       OpenGL/Mesa installation directory
+  --with-pthread=DIR      pthread installation directory
+  --with-glu=DIR          use the OpenGL utility library [default=yes]
   --with-motif=DIR        use the Motif library default=yes
   --with-soxt             build against the SoXt toolkit
   --with-soqt             build against the SoQt toolkit
@@ -7360,11 +7360,60 @@ fi
 # **************************************************************************
 # Search and set up necessary stuff to use the Inventor implementation.
 
-sim_ac_guiexamples_use_inventor=true
-if test x"$with_inventor" = x; then sim_ac_guiexamples_use_inventor=false; fi
-if test x"$with_inventor" = xno; then sim_ac_guiexamples_use_inventor=false; fi
+# These needs to be called so the "--with-*" options have an effect.
 
-if $sim_ac_guiexamples_use_inventor; then
+: ${sim_ac_want_inventor=false}
+
+# Check whether --with-inventor or --without-inventor was given.
+if test "${with_inventor+set}" = set; then
+  withval="$with_inventor"
+  case "$withval" in
+  no)  sim_ac_want_inventor=false ;;
+  yes) sim_ac_want_inventor=true
+       test -n "$OIVHOME" &&
+
+eval "sim_ac_inventor_path=\"`echo "$OIVHOME" | sed -e 's%\\\\%\\/%g'`\""
+ ;;
+  *)   sim_ac_want_inventor=true; sim_ac_inventor_path="$withval" ;;
+  esac
+fi;
+
+
+: ${sim_ac_want_inventorxt=true}
+
+# Check whether --with-inventor-xt or --without-inventor-xt was given.
+if test "${with_inventor_xt+set}" = set; then
+  withval="$with_inventor_xt"
+  case "$withval" in
+  no)  sim_ac_want_inventorxt=false ;;
+  yes) sim_ac_want_inventorxt=true
+       test -n "$OIVHOME" &&
+
+eval "sim_ac_inventorxt_path=\"`echo "$OIVHOME" | sed -e 's%\\\\%\\/%g'`\""
+ ;;
+  *)   sim_ac_want_inventorxt=true; sim_ac_inventorxt_path="$withval" ;;
+  esac
+fi;
+
+
+: ${sim_ac_want_inventorqt=false}
+
+# Check whether --with-inventor-qt or --without-inventor-qt was given.
+if test "${with_inventor_qt+set}" = set; then
+  withval="$with_inventor_qt"
+  case "$withval" in
+  no)  sim_ac_want_inventorqt=false ;;
+  yes) sim_ac_want_inventorqt=true
+       test -n "$OIVHOME" &&
+
+eval "sim_ac_inventorqt_path=\"`echo "$OIVHOME" | sed -e 's%\\\\%\\/%g'`\""
+ ;;
+  *)   sim_ac_want_inventorqt=true; sim_ac_inventorqt_path="$withval" ;;
+  esac
+fi;
+
+
+if $sim_ac_want_inventor; then
   # If we want to compile and link against Inventor, we
   # need to check for these libraries.
 
@@ -10332,57 +10381,6 @@ echo "$as_me: error: needs the GLU library functions" >&2;}
    { (exit 1); exit 1; }; }
   fi
 fi
-
-
-: ${sim_ac_want_inventor=false}
-
-# Check whether --with-inventor or --without-inventor was given.
-if test "${with_inventor+set}" = set; then
-  withval="$with_inventor"
-  case "$withval" in
-  no)  sim_ac_want_inventor=false ;;
-  yes) sim_ac_want_inventor=true
-       test -n "$OIVHOME" &&
-
-eval "sim_ac_inventor_path=\"`echo "$OIVHOME" | sed -e 's%\\\\%\\/%g'`\""
- ;;
-  *)   sim_ac_want_inventor=true; sim_ac_inventor_path="$withval" ;;
-  esac
-fi;
-
-
-: ${sim_ac_want_inventorxt=true}
-
-# Check whether --with-inventor-xt or --without-inventor-xt was given.
-if test "${with_inventor_xt+set}" = set; then
-  withval="$with_inventor_xt"
-  case "$withval" in
-  no)  sim_ac_want_inventorxt=false ;;
-  yes) sim_ac_want_inventorxt=true
-       test -n "$OIVHOME" &&
-
-eval "sim_ac_inventorxt_path=\"`echo "$OIVHOME" | sed -e 's%\\\\%\\/%g'`\""
- ;;
-  *)   sim_ac_want_inventorxt=true; sim_ac_inventorxt_path="$withval" ;;
-  esac
-fi;
-
-
-: ${sim_ac_want_inventorqt=false}
-
-# Check whether --with-inventor-qt or --without-inventor-qt was given.
-if test "${with_inventor_qt+set}" = set; then
-  withval="$with_inventor_qt"
-  case "$withval" in
-  no)  sim_ac_want_inventorqt=false ;;
-  yes) sim_ac_want_inventorqt=true
-       test -n "$OIVHOME" &&
-
-eval "sim_ac_inventorqt_path=\"`echo "$OIVHOME" | sed -e 's%\\\\%\\/%g'`\""
- ;;
-  *)   sim_ac_want_inventorqt=true; sim_ac_inventorqt_path="$withval" ;;
-  esac
-fi;
 
 
 
@@ -14419,7 +14417,7 @@ fi
 
 else
   sim_ac_simvoleon_avail=false
-  if $sim_ac_guiexamples_use_inventor; then
+  if $sim_ac_want_inventor; then
     :  # don't warn if we're using SGI or TGS Inventor, as SIM Voleon is an obvious no-go then
   else
 
@@ -14748,11 +14746,11 @@ fi
 
 
 # **************************************************************************
-# If we're using Mercury/TGS Inventor, check to see if MeshViz is
+# If we're using a non-SIM Inventor, check to see if MeshViz is
 # also available.
 
 sim_ac_meshviz_avail=false
-if $sim_ac_guiexamples_use_inventor; then
+if $sim_ac_want_inventor; then
   sim_ac_save_libs=$LIBS
   LIBS="-lMeshViz $LIBS"
   echo "$as_me:$LINENO: checking for TGS MeshViz" >&5
