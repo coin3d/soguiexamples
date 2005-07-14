@@ -7,6 +7,9 @@
 ROSTER =
 #endif
 
+simplerenderarea_SOURCES = \
+	simplerenderarea.cpp
+
 renderarea_SOURCES = \
 	computils.h \
 	computils.cpp \
@@ -117,6 +120,7 @@ BUILT_SOURCES = \
 	computils.cpp \
 	roster.cpp \
 	renderarea.cpp \
+	simplerenderarea.cpp \
 	simpleexviewer.cpp \
 	backgroundimg.cpp \
 	examinerviewer.cpp \
@@ -138,7 +142,8 @@ BUILT_SOURCES = \
 # 	SoGuiCutterViewer.h \
 # 	SoGuiCutterViewer.cpp
 
-noinst_PROGRAMS = renderarea simpleexviewer backgroundimg examinerviewer \
+noinst_PROGRAMS = renderarea simplerenderarea \
+	simpleexviewer backgroundimg examinerviewer \
 	overlay planeviewer flyviewer snapshotviewer spaceballdemo \
 	multifileviewer \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \

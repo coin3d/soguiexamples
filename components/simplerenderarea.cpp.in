@@ -1,0 +1,67 @@
+/**************************************************************************\
+ *
+ *  This file is part of a set of example programs for the Coin library.
+ *  Copyright (C) 2000-2003 by Systems in Motion. All rights reserved.
+ *
+ *                   <URL:http://www.coin3d.org>
+ *
+ *  This sourcecode can be redistributed and/or modified under the
+ *  terms of the GNU General Public License version 2 as published by
+ *  the Free Software Foundation. See the file COPYING at the root
+ *  directory of the distribution for more details.
+ *
+ *  As a special exception, all sourcecode of the demo examples can be
+ *  used for any purpose for licensees of the Coin Professional
+ *  Edition License, without the restrictions of the GNU GPL. See our
+ *  web pages for information about how to acquire a Professional Edition
+ *  License.
+ *
+ *  Systems in Motion, <URL:http://www.sim.no>, <mailto:support@sim.no>
+ *
+\**************************************************************************/
+
+#include <Inventor/@Gui@/So@Gui@.h>
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoSphere.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/nodes/SoPerspectiveCamera.h>
+
+// *************************************************************************
+
+int
+main(int argc, char ** argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+
+  SoSeparator * root = new SoSeparator;
+  root->ref();
+
+  SoPerspectiveCamera * cam = new SoPerspectiveCamera;
+  root->addChild(cam);
+
+  SoDirectionalLight * light = new SoDirectionalLight;
+  light->direction.setValue(0.25, 0.25, -0.8);
+  root->addChild(light);
+
+  SoSeparator * geomroot = new SoSeparator;
+
+  SoSphere * s = new SoSphere;
+  geomroot->addChild(s);
+
+  root->addChild(geomroot);
+
+  So@Gui@RenderArea * viewer = new So@Gui@RenderArea(window);
+  viewer->setSceneGraph(root);
+  viewer->show();
+
+  cam->viewAll(geomroot, viewer->getViewportRegion());
+
+  So@Gui@::show(window);
+  So@Gui@::mainLoop();
+
+  delete viewer;
+  root->unref();
+
+  return 0;
+}
