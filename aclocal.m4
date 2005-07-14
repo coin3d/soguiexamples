@@ -226,6 +226,17 @@ AC_ARG_ENABLE([msvc],
 ])
 
 # **************************************************************************
+
+AC_DEFUN([SIM_AC_MSVC_VERSION], [
+AC_MSG_CHECKING([Visual Studio C++ version])
+AC_TRY_COMPILE([],
+  [long long number = 0;],
+  [sim_ac_msvc_version=7]
+  [sim_ac_msvc_version=6])
+AC_MSG_RESULT($sim_ac_msvc_version)
+])
+
+# **************************************************************************
 # Note: the SIM_AC_SETUP_MSVC_IFELSE macro has been OBSOLETED and
 # replaced by the one below.
 #
@@ -252,6 +263,7 @@ if $sim_ac_try_msvc; then
       export CC CXX
       BUILD_WITH_MSVC=true
       AC_MSG_RESULT([working])
+      # SIM_AC_MSVC_VERSION
     else
       case $host in
       *-cygwin)
@@ -1328,11 +1340,13 @@ if $enable_debug; then
     case $CXX in
     *wrapmsvc* )
       # uninitialized checks
-      SIM_AC_CC_COMPILER_OPTION([/RTCu], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /RTCu"])
-      SIM_AC_CXX_COMPILER_OPTION([/RTCu], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /RTCu"])
-      # stack frame checks
-      SIM_AC_CC_COMPILER_OPTION([/RTCs], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /RTCs"])
-      SIM_AC_CXX_COMPILER_OPTION([/RTCs], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /RTCs"])
+      if test ${sim_ac_msvc_version-0} -gt 6; then
+        SIM_AC_CC_COMPILER_OPTION([/RTCu], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /RTCu"])
+        SIM_AC_CXX_COMPILER_OPTION([/RTCu], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /RTCu"])
+        # stack frame checks
+        SIM_AC_CC_COMPILER_OPTION([/RTCs], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /RTCs"])
+        SIM_AC_CXX_COMPILER_OPTION([/RTCs], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /RTCs"])
+      fi
       ;;
     esac
   fi
@@ -1824,9 +1838,11 @@ SIM_AC_COMPILE_DEBUG([
       SIM_AC_CC_COMPILER_OPTION([/W3], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /W3"])
       SIM_AC_CXX_COMPILER_OPTION([/W3], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /W3"])
 
-      # 64-bit porting warnings
-      SIM_AC_CC_COMPILER_OPTION([/Wp64], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /Wp64"])
-      SIM_AC_CXX_COMPILER_OPTION([/Wp64], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /Wp64"])
+      if test ${sim_ac_msvc_version-0} -gt 6; then
+        # 64-bit porting warnings
+        SIM_AC_CC_COMPILER_OPTION([/Wp64], [sim_ac_compiler_CFLAGS="$sim_ac_compiler_CFLAGS /Wp64"])
+        SIM_AC_CXX_COMPILER_OPTION([/Wp64], [sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS /Wp64"])
+      fi
       ;;
     esac
   fi
@@ -1839,15 +1855,17 @@ ifelse($1, [], :, $1)
 AC_DEFUN([SIM_AC_COMPILER_NOBOOL], [
 sim_ac_nobool_CXXFLAGS=
 sim_ac_have_nobool=false
-AC_MSG_CHECKING([whether $CXX accepts /noBool])
-SIM_AC_CXX_COMPILER_BEHAVIOR_OPTION_QUIET(
-  [/noBool],
-  [int temp],
-  [SIM_AC_CXX_COMPILER_BEHAVIOR_OPTION_QUIET(
+if $BUILD_WITH_MSVC && test x$sim_ac_msvc_version = x6; then
+  AC_MSG_CHECKING([whether $CXX accepts /noBool])
+  SIM_AC_CXX_COMPILER_BEHAVIOR_OPTION_QUIET(
     [/noBool],
-    [bool res = true],
-    [],
-    [sim_ac_have_nobool=true])])
+    [int temp],
+    [SIM_AC_CXX_COMPILER_BEHAVIOR_OPTION_QUIET(
+      [/noBool],
+      [bool res = true],
+      [],
+      [sim_ac_have_nobool=true])])
+fi
  
 if $sim_ac_have_nobool; then
   sim_ac_nobool_CXXFLAGS="/noBool"
@@ -3619,11 +3637,11 @@ if $sim_ac_with_qt; then
   sim_ac_save_libs=$LIBS
 
   if test -n "$sim_ac_qtdir"; then
-    sim_ac_qt_incflags="-I$sim_ac_qtdir/include"
+    sim_ac_qt_incpath="-I$sim_ac_qtdir/include"
     sim_ac_qt_ldflags="-L$sim_ac_qtdir/lib"
   fi
 
-  CPPFLAGS="$sim_ac_qt_incflags $CPPFLAGS"
+  CPPFLAGS="$sim_ac_qt_incpath $CPPFLAGS"
   LDFLAGS="$LDFLAGS $sim_ac_qt_ldflags"
 
   sim_ac_qt_libs=UNRESOLVED
@@ -3631,21 +3649,32 @@ if $sim_ac_with_qt; then
   sim_ac_qglobal=false
   SIM_AC_CHECK_HEADER_SILENT([qglobal.h],
     [sim_ac_qglobal=true],
-    # Debian Linux and Darwin fink have the Qt-dev installation headers in 
-    # a separate subdir.
-    [sim_ac_debian_qtheaders=/usr/include/qt
+    [
+     # Debian Linux and Darwin fink have the Qt-dev installation headers in 
+     # a separate subdir, so we reset CPPFLAGS and try with those.
+     CPPFLAGS="$sim_ac_save_cppflags"
+     sim_ac_debian_qtheaders=/usr/include/qt
      if test -d $sim_ac_debian_qtheaders; then
-       sim_ac_qt_incflags="-I$sim_ac_debian_qtheaders $sim_ac_qt_incflags"
+       sim_ac_qt_incpath="-I$sim_ac_debian_qtheaders $sim_ac_qt_incpath"
        CPPFLAGS="-I$sim_ac_debian_qtheaders $CPPFLAGS"
        SIM_AC_CHECK_HEADER_SILENT([qglobal.h], [sim_ac_qglobal=true])
      else
      sim_ac_fink_qtheaders=/sw/include/qt
      if test -d $sim_ac_fink_qtheaders; then
-       sim_ac_qt_incflags="-I$sim_ac_fink_qtheaders $sim_ac_qt_incflags"
+       sim_ac_qt_incpath="-I$sim_ac_fink_qtheaders $sim_ac_qt_incpath"
        CPPFLAGS="-I$sim_ac_fink_qtheaders $CPPFLAGS"
        SIM_AC_CHECK_HEADER_SILENT([qglobal.h], [sim_ac_qglobal=true])
      fi
      fi])
+
+  # Qt 4 has the headers in various new subdirectories vs Qt 3.
+  if $sim_ac_qglobal; then :; else
+    CPPFLAGS="$sim_ac_qt_incpath/Qt $sim_ac_save_cppflags"
+    SIM_AC_CHECK_HEADER_SILENT([qglobal.h],
+                               [sim_ac_qglobal=true
+                                sim_ac_qt_incpath="$sim_ac_qt_incpath/Qt $sim_ac_qt_incpath/QtOpenGL"
+                                ])
+  fi
 
   if $sim_ac_qglobal; then
 
@@ -3739,13 +3768,18 @@ recommend you to upgrade.])
       AC_MSG_CHECKING([for Qt linking with $CONFIG_QTLIBS])
 
       for sim_ac_qt_cppflags_loop in "" "-DQT_DLL"; do
-        CPPFLAGS="$sim_ac_qt_incflags $sim_ac_qt_cppflags_loop $sim_ac_save_cppflags"
+        CPPFLAGS="$sim_ac_qt_incpath $sim_ac_qt_cppflags_loop $sim_ac_save_cppflags"
         LIBS="$CONFIG_QTLIBS $sim_ac_save_libs"
         AC_TRY_LINK([#include <qapplication.h>],
-                    [qApp = NULL; /* QT_DLL must be defined for assignment to global variables to work */
+                    [
+                     // FIXME: assignment to qApp does no longer work with Qt 4,
+                     // should try to find another way to do the same thing. 20050629 mortene.
+                     #if QT_VERSION < 0x040000
+                     qApp = NULL; /* QT_DLL must be defined for assignment to global variables to work */
+                     #endif
                      qApp->exit(0);],
                     [sim_ac_qt_libs="$CONFIG_QTLIBS"
-                     sim_ac_qt_cppflags="$sim_ac_qt_incflags $sim_ac_qt_cppflags_loop"])
+                     sim_ac_qt_cppflags="$sim_ac_qt_incpath $sim_ac_qt_cppflags_loop"])
       done
 
       if test "x$sim_ac_qt_libs" = "xUNRESOLVED"; then
@@ -3759,6 +3793,9 @@ recommend you to upgrade.])
 
       ## Test all known possible combinations of linking against the
       ## Troll Tech Qt library:
+      ##
+      ## * "-lQtGui -lQt3Support": Qt 4 on UNIX-like systems (with some
+      ##   obsoleted Qt 3 widgets)
       ##
       ## * "-lqt-gl": links against the standard Debian version of the
       ##   Qt library with embedded QGL
@@ -3814,6 +3851,7 @@ recommend you to upgrade.])
 
       for sim_ac_qt_cppflags_loop in "" "-DQT_DLL"; do
         for sim_ac_qt_libcheck in \
+            "-lQtGui -lQt3Support" \
             "-lqt-gl" \
             "-lqt-mt" \
             "-lqt" \
@@ -3828,13 +3866,18 @@ recommend you to upgrade.])
             "-lqt-mtnc${sim_ac_qt_version}"
         do
           if test "x$sim_ac_qt_libs" = "xUNRESOLVED"; then
-            CPPFLAGS="$sim_ac_qt_incflags $sim_ac_qt_cppflags_loop $sim_ac_save_cppflags"
+            CPPFLAGS="$sim_ac_qt_incpath $sim_ac_qt_cppflags_loop $sim_ac_save_cppflags"
             LIBS="$sim_ac_qt_libcheck $sim_ac_save_libs"
             AC_TRY_LINK([#include <qapplication.h>],
-                        [qApp = NULL; /* QT_DLL must be defined for assignment to global variables to work */
+                        [
+                         // FIXME: assignment to qApp does no longer work with Qt 4,
+                         // should try to find another way to do the same thing. 20050629 mortene.
+                         #if QT_VERSION < 0x040000
+                         qApp = NULL; /* QT_DLL must be defined for assignment to global variables to work */
+                         #endif
                          qApp->exit(0);],
                         [sim_ac_qt_libs="$sim_ac_qt_libcheck"
-                         sim_ac_qt_cppflags="$sim_ac_qt_incflags $sim_ac_qt_cppflags_loop"])
+                         sim_ac_qt_cppflags="$sim_ac_qt_incpath $sim_ac_qt_cppflags_loop"])
           fi
         done
       done
@@ -3846,19 +3889,6 @@ recommend you to upgrade.])
     AC_MSG_WARN([header file qglobal.h not found, can not compile Qt code])
   fi
 
-  sim_ac_qt_install=`cd $sim_ac_qtdir; pwd`/bin/install
-
-  AC_MSG_CHECKING(install sanity)
-  case $INSTALL in
-  "${sim_ac_qt_install}"* )
-    AC_MSG_RESULT(bogus)
-    SIM_AC_ERROR([qt-install])
-    ;;
-  * )
-    AC_MSG_RESULT(ok)
-    ;;
-  esac
-
   # We should only *test* availability, not mutate the LIBS/CPPFLAGS
   # variables ourselves inside this macro. 20041021 larsa
   CPPFLAGS=$sim_ac_save_cppflags
@@ -3869,6 +3899,19 @@ recommend you to upgrade.])
     #CPPFLAGS="$sim_ac_qt_cppflags $sim_ac_save_cppflags"
     #LIBS="$sim_ac_qt_libs $sim_ac_save_libs"
     $1
+
+    sim_ac_qt_install=`cd $sim_ac_qtdir; pwd`/bin/install
+    AC_MSG_CHECKING([whether Qt's install tool shadows the system install])
+    case $INSTALL in
+    "${sim_ac_qt_install}"* )
+      AC_MSG_RESULT(yes)
+      SIM_AC_ERROR([qt-install])
+      ;;
+    * )
+      AC_MSG_RESULT(no)
+      ;;
+    esac
+
   else
     if test -z "$QTDIR"; then
       AC_MSG_WARN([QTDIR environment variable not set -- this might be an indication of a problem])
@@ -3929,7 +3972,7 @@ if $sim_ac_with_qt; then
     AC_MSG_CHECKING([for the QGL extension library])
 
     sim_ac_qgl_libs=UNRESOLVED
-    for sim_ac_qgl_libcheck in "-lqgl" "-lqgl -luser32"; do
+    for sim_ac_qgl_libcheck in "-lQtOpenGL" "-lqgl" "-lqgl -luser32"; do
       if test "x$sim_ac_qgl_libs" = "xUNRESOLVED"; then
         LIBS="$sim_ac_qgl_libcheck $sim_ac_save_LIBS"
         AC_TRY_LINK([#include <qgl.h>],
@@ -3996,7 +4039,12 @@ AC_CACHE_CHECK(
   [whether QGLFormat::setOverlay() is available],
   sim_cv_func_qglformat_setoverlay,
   [AC_TRY_LINK([#include <qgl.h>],
-               [QGLFormat f; f.setOverlay(TRUE);],
+               [/* The basics: */
+                QGLFormat f; f.setOverlay(TRUE);
+                /* We've had a bug report about soqt.dll linking fail due
+                   to missing the QGLWidget::overlayContext() symbol: */
+                QGLWidget * w = NULL; (void)w->overlayContext();
+               ],
                [sim_cv_func_qglformat_setoverlay=yes],
                [sim_cv_func_qglformat_setoverlay=no])])
 

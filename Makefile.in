@@ -185,6 +185,8 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 
+# FIXME: this shouldn't be like this -- some examples under
+# volumerendering/ doesn't need SoQt. 20050622 mortene.
 @HAVE_SIMVOLEON_TRUE@VOLUMERENDERINGDIR = volumerendering
 @HAVE_SIMVOLEON_FALSE@VOLUMERENDERINGDIR = 
 

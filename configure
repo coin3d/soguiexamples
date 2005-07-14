@@ -1531,6 +1531,7 @@ echo $ECHO_N "checking setup for wrapmsvc.exe... $ECHO_C" >&6
       BUILD_WITH_MSVC=true
       echo "$as_me:$LINENO: result: working" >&5
 echo "${ECHO_T}working" >&6
+      # SIM_AC_MSVC_VERSION
     else
       case $host in
       *-cygwin)
@@ -3930,6 +3931,7 @@ if $enable_debug; then
     case $CXX in
     *wrapmsvc* )
       # uninitialized checks
+      if test ${sim_ac_msvc_version-0} -gt 6; then
 
 
 
@@ -4082,7 +4084,7 @@ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ex
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
-      # stack frame checks
+        # stack frame checks
 
 
 
@@ -4235,6 +4237,7 @@ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ex
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
+      fi
       ;;
     esac
   fi
@@ -8424,11 +8427,11 @@ if $sim_ac_with_qt; then
   sim_ac_save_libs=$LIBS
 
   if test -n "$sim_ac_qtdir"; then
-    sim_ac_qt_incflags="-I$sim_ac_qtdir/include"
+    sim_ac_qt_incpath="-I$sim_ac_qtdir/include"
     sim_ac_qt_ldflags="-L$sim_ac_qtdir/lib"
   fi
 
-  CPPFLAGS="$sim_ac_qt_incflags $CPPFLAGS"
+  CPPFLAGS="$sim_ac_qt_incpath $CPPFLAGS"
   LDFLAGS="$LDFLAGS $sim_ac_qt_ldflags"
 
   sim_ac_qt_libs=UNRESOLVED
@@ -8472,11 +8475,13 @@ rm -f conftest.err conftest.$ac_ext
 if test $ac_cv_header_qglobal_h = yes; then
   sim_ac_qglobal=true
 else
-  # Debian Linux and Darwin fink have the Qt-dev installation headers in
-    # a separate subdir.
-    sim_ac_debian_qtheaders=/usr/include/qt
+
+     # Debian Linux and Darwin fink have the Qt-dev installation headers in
+     # a separate subdir, so we reset CPPFLAGS and try with those.
+     CPPFLAGS="$sim_ac_save_cppflags"
+     sim_ac_debian_qtheaders=/usr/include/qt
      if test -d $sim_ac_debian_qtheaders; then
-       sim_ac_qt_incflags="-I$sim_ac_debian_qtheaders $sim_ac_qt_incflags"
+       sim_ac_qt_incpath="-I$sim_ac_debian_qtheaders $sim_ac_qt_incpath"
        CPPFLAGS="-I$sim_ac_debian_qtheaders $CPPFLAGS"
 
 cat >conftest.$ac_ext <<_ACEOF
@@ -8522,7 +8527,7 @@ fi
      else
      sim_ac_fink_qtheaders=/sw/include/qt
      if test -d $sim_ac_fink_qtheaders; then
-       sim_ac_qt_incflags="-I$sim_ac_fink_qtheaders $sim_ac_qt_incflags"
+       sim_ac_qt_incpath="-I$sim_ac_fink_qtheaders $sim_ac_qt_incpath"
        CPPFLAGS="-I$sim_ac_fink_qtheaders $CPPFLAGS"
 
 cat >conftest.$ac_ext <<_ACEOF
@@ -8571,6 +8576,54 @@ fi
 
 
 
+
+  # Qt 4 has the headers in various new subdirectories vs Qt 3.
+  if $sim_ac_qglobal; then :; else
+    CPPFLAGS="$sim_ac_qt_incpath/Qt $sim_ac_save_cppflags"
+
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <qglobal.h>
+_ACEOF
+if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
+  (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null; then
+  if test -s conftest.err; then
+    ac_cpp_err=$ac_cxx_preproc_warn_flag
+    ac_cpp_err=$ac_cpp_err$ac_cxx_werror_flag
+  else
+    ac_cpp_err=
+  fi
+else
+  ac_cpp_err=yes
+fi
+if test -z "$ac_cpp_err"; then
+  ac_cv_header_qglobal_h=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+  ac_cv_header_qglobal_h=no
+fi
+rm -f conftest.err conftest.$ac_ext
+if test $ac_cv_header_qglobal_h = yes; then
+  sim_ac_qglobal=true
+                                sim_ac_qt_incpath="$sim_ac_qt_incpath/Qt $sim_ac_qt_incpath/QtOpenGL"
+
+fi
+
+
+
+  fi
 
   if $sim_ac_qglobal; then
 
@@ -8845,7 +8898,7 @@ fi
 echo $ECHO_N "checking for Qt linking with $CONFIG_QTLIBS... $ECHO_C" >&6
 
       for sim_ac_qt_cppflags_loop in "" "-DQT_DLL"; do
-        CPPFLAGS="$sim_ac_qt_incflags $sim_ac_qt_cppflags_loop $sim_ac_save_cppflags"
+        CPPFLAGS="$sim_ac_qt_incpath $sim_ac_qt_cppflags_loop $sim_ac_save_cppflags"
         LIBS="$CONFIG_QTLIBS $sim_ac_save_libs"
         cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
@@ -8857,7 +8910,12 @@ cat >>conftest.$ac_ext <<_ACEOF
 int
 main ()
 {
-qApp = NULL; /* QT_DLL must be defined for assignment to global variables to work */
+
+                     // FIXME: assignment to qApp does no longer work with Qt 4,
+                     // should try to find another way to do the same thing. 20050629 mortene.
+                     #if QT_VERSION < 0x040000
+                     qApp = NULL; /* QT_DLL must be defined for assignment to global variables to work */
+                     #endif
                      qApp->exit(0);
   ;
   return 0;
@@ -8886,7 +8944,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   sim_ac_qt_libs="$CONFIG_QTLIBS"
-                     sim_ac_qt_cppflags="$sim_ac_qt_incflags $sim_ac_qt_cppflags_loop"
+                     sim_ac_qt_cppflags="$sim_ac_qt_incpath $sim_ac_qt_cppflags_loop"
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
@@ -8910,6 +8968,9 @@ echo $ECHO_N "checking for Qt library devkit... $ECHO_C" >&6
 
       ## Test all known possible combinations of linking against the
       ## Troll Tech Qt library:
+      ##
+      ## * "-lQtGui -lQt3Support": Qt 4 on UNIX-like systems (with some
+      ##   obsoleted Qt 3 widgets)
       ##
       ## * "-lqt-gl": links against the standard Debian version of the
       ##   Qt library with embedded QGL
@@ -8965,6 +9026,7 @@ echo $ECHO_N "checking for Qt library devkit... $ECHO_C" >&6
 
       for sim_ac_qt_cppflags_loop in "" "-DQT_DLL"; do
         for sim_ac_qt_libcheck in \
+            "-lQtGui -lQt3Support" \
             "-lqt-gl" \
             "-lqt-mt" \
             "-lqt" \
@@ -8979,7 +9041,7 @@ echo $ECHO_N "checking for Qt library devkit... $ECHO_C" >&6
             "-lqt-mtnc${sim_ac_qt_version}"
         do
           if test "x$sim_ac_qt_libs" = "xUNRESOLVED"; then
-            CPPFLAGS="$sim_ac_qt_incflags $sim_ac_qt_cppflags_loop $sim_ac_save_cppflags"
+            CPPFLAGS="$sim_ac_qt_incpath $sim_ac_qt_cppflags_loop $sim_ac_save_cppflags"
             LIBS="$sim_ac_qt_libcheck $sim_ac_save_libs"
             cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
@@ -8991,7 +9053,12 @@ cat >>conftest.$ac_ext <<_ACEOF
 int
 main ()
 {
-qApp = NULL; /* QT_DLL must be defined for assignment to global variables to work */
+
+                         // FIXME: assignment to qApp does no longer work with Qt 4,
+                         // should try to find another way to do the same thing. 20050629 mortene.
+                         #if QT_VERSION < 0x040000
+                         qApp = NULL; /* QT_DLL must be defined for assignment to global variables to work */
+                         #endif
                          qApp->exit(0);
   ;
   return 0;
@@ -9020,7 +9087,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   sim_ac_qt_libs="$sim_ac_qt_libcheck"
-                         sim_ac_qt_cppflags="$sim_ac_qt_incflags $sim_ac_qt_cppflags_loop"
+                         sim_ac_qt_cppflags="$sim_ac_qt_incpath $sim_ac_qt_cppflags_loop"
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
@@ -9041,14 +9108,28 @@ echo "${ECHO_T}$sim_ac_qt_cppflags $sim_ac_qt_libs" >&6
 echo "$as_me: WARNING: header file qglobal.h not found, can not compile Qt code" >&2;}
   fi
 
-  sim_ac_qt_install=`cd $sim_ac_qtdir; pwd`/bin/install
+  # We should only *test* availability, not mutate the LIBS/CPPFLAGS
+  # variables ourselves inside this macro. 20041021 larsa
+  CPPFLAGS=$sim_ac_save_cppflags
+  LDFLAGS=$sim_ac_save_ldflags
+  LIBS=$sim_ac_save_libs
+  if test ! x"$sim_ac_qt_libs" = xUNRESOLVED; then
+    sim_ac_qt_avail=yes
+    #CPPFLAGS="$sim_ac_qt_cppflags $sim_ac_save_cppflags"
+    #LIBS="$sim_ac_qt_libs $sim_ac_save_libs"
 
-  echo "$as_me:$LINENO: checking install sanity" >&5
-echo $ECHO_N "checking install sanity... $ECHO_C" >&6
-  case $INSTALL in
-  "${sim_ac_qt_install}"* )
-    echo "$as_me:$LINENO: result: bogus" >&5
-echo "${ECHO_T}bogus" >&6
+      CPPFLAGS="$CPPFLAGS $sim_ac_qt_cppflags"
+      LDFLAGS="$LDFLAGS $sim_ac_qt_ldflags"
+      LIBS="$sim_ac_qt_libs $LIBS"
+
+
+    sim_ac_qt_install=`cd $sim_ac_qtdir; pwd`/bin/install
+    echo "$as_me:$LINENO: checking whether Qt's install tool shadows the system install" >&5
+echo $ECHO_N "checking whether Qt's install tool shadows the system install... $ECHO_C" >&6
+    case $INSTALL in
+    "${sim_ac_qt_install}"* )
+      echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
 
 echo >&2 ""
 
@@ -9076,26 +9157,12 @@ echo >&2 ""
 echo "$as_me: error: aborting" >&2;}
    { (exit 1); exit 1; }; }
 
-    ;;
-  * )
-    echo "$as_me:$LINENO: result: ok" >&5
-echo "${ECHO_T}ok" >&6
-    ;;
-  esac
-
-  # We should only *test* availability, not mutate the LIBS/CPPFLAGS
-  # variables ourselves inside this macro. 20041021 larsa
-  CPPFLAGS=$sim_ac_save_cppflags
-  LDFLAGS=$sim_ac_save_ldflags
-  LIBS=$sim_ac_save_libs
-  if test ! x"$sim_ac_qt_libs" = xUNRESOLVED; then
-    sim_ac_qt_avail=yes
-    #CPPFLAGS="$sim_ac_qt_cppflags $sim_ac_save_cppflags"
-    #LIBS="$sim_ac_qt_libs $sim_ac_save_libs"
-
-      CPPFLAGS="$CPPFLAGS $sim_ac_qt_cppflags"
-      LDFLAGS="$LDFLAGS $sim_ac_qt_ldflags"
-      LIBS="$sim_ac_qt_libs $LIBS"
+      ;;
+    * )
+      echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+      ;;
+    esac
 
   else
     if test -z "$QTDIR"; then
@@ -9216,7 +9283,7 @@ echo "${ECHO_T}$sim_cv_lib_qgl_integrated" >&6
 echo $ECHO_N "checking for the QGL extension library... $ECHO_C" >&6
 
     sim_ac_qgl_libs=UNRESOLVED
-    for sim_ac_qgl_libcheck in "-lqgl" "-lqgl -luser32"; do
+    for sim_ac_qgl_libcheck in "-lQtOpenGL" "-lqgl" "-lqgl -luser32"; do
       if test "x$sim_ac_qgl_libs" = "xUNRESOLVED"; then
         LIBS="$sim_ac_qgl_libcheck $sim_ac_save_LIBS"
         cat >conftest.$ac_ext <<_ACEOF
@@ -15211,7 +15278,7 @@ fi
 # **************************************************************************
 # All files configure must automatically generate.
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ac_config_files="$ac_config_files Makefile components/Makefile components/SoGuiSnapshotViewer.cpp components/SoGuiSnapshotViewer.h components/backgroundimg.cpp components/computils.cpp components/computils.h components/examinerviewer.cpp components/flyviewer.cpp components/grapheditor.cpp components/lightsliderset.cpp components/materiallist.cpp components/materiallist2.cpp components/materialsliderset.cpp components/materialsliderset2.cpp components/multifileviewer.cpp components/overlay.cpp components/planeviewer.cpp components/renderarea.cpp components/simpleexviewer.cpp components/roster.cpp components/snapshotviewer.cpp components/spaceballdemo.cpp components/transformsliderset.cpp actions/Makefile actions/search.cpp actions/raypick.cpp actions/intersection.cpp annex/Makefile annex/hardcopy.cpp draggers/Makefile draggers/jackdragger.cpp draggers/translate1.cpp draggers/translate2.cpp draggers/dragpoint.cpp engines/Makefile engines/computebbox.cpp engines/computexfbbox.cpp eyecandy/Makefile eyecandy/moirepatterns.cpp eyecandy/juliaanim.cpp eyecandy/mandelzoom.cpp eyecandy/blob.cpp eyecandy/simbuoy.cpp eyecandy/toonshader.cpp manipulators/Makefile manipulators/pointlightmanip.cpp manipulators/tabboxmanip.cpp nodekits/Makefile nodekits/scalemarker.cpp nodekits/wavekitdemo.cpp nodes/Makefile nodes/drawstyle.cpp nodes/material.cpp nodes/selection.cpp nodes/slideshow.cpp nodes/sphere.cpp nodes/spherecolor.cpp nodes/rotation.cpp nodes/scale.cpp nodes/translation.cpp nodes/transform.cpp nodes/rotor.cpp nodes/directionallight.cpp nodes/pointlight.cpp nodes/spotlight.cpp nodes/lights.cpp nodes/faceset.cpp nodes/facesetindexed.cpp nodes/quadmesh.cpp nodes/trianglestripset.cpp nodes/camera.cpp nodes/blinker.cpp nodes/texture.cpp nodes/texture3.cpp nodes/environment.cpp nodes/atmospheric.cpp nodes/shuttle.cpp nodes/complexity.cpp nodes/text2.cpp nodes/text3.cpp nodes/clipplane.cpp nodes/levelofdetail.cpp nodes/extselection.cpp nodes/pointset.cpp nodes/markerset.cpp nodes/image.cpp nodes/bigimage.cpp nodes/textureunit.cpp nodes/bumpmap.cpp nodes/scenetexture.cpp sensors/Makefile sensors/timersensor.cpp sound/Makefile sound/audiocallback.cpp sound/manysources.cpp volumerendering/Makefile volumerendering/Cute/Makefile volumerendering/readvol.cpp volumerendering/changingdataset.cpp volumerendering/examine.cpp volumerendering/orthoslicer.cpp volumerendering/raypick.cpp volumerendering/rgbload.cpp volumerendering/simple8bit.cpp coin-competitions/Makefile coin-competitions/SIM-20010803/Makefile coin-competitions/SIM-20010803/chart.cpp coin-competitions/SIM-20010803/plasmafun.cpp coin-competitions/SIM-20010803/stars.cpp coin-competitions/SIM-20010824/Makefile coin-competitions/SIM-20010824/smiley.cpp coin-competitions/SIM-20010824/plasmaball.cpp coin-competitions/SIM-20010824/styx.cpp coin-competitions/SIM-20010824/stars2.cpp coin-competitions/SIM-20010914/Makefile coin-competitions/SIM-20010914/Moolah.cpp coin-competitions/SIM-20010914/calculator.cpp coin-competitions/SIM-20010914/coinhistory.cpp coin-competitions/SIM-20010914/kaos.cpp coin-competitions/SIM-20010914/rec.cpp coin-competitions/SIM-20011005/Makefile coin-competitions/SIM-20011005/lorenz.cpp coin-competitions/SIM-20011005/nurbscurve.cpp coin-competitions/SIM-20011005/cubes.cpp coin-competitions/SIM-20011116/Makefile coin-competitions/SIM-20011116/25bc5bb.cpp coin-competitions/SIM-20011116/foo.cpp coin-competitions/SIM-20011116/shaker.cpp coin-competitions/SIM-20020118/Makefile coin-competitions/SIM-20020118/blocks.cpp coin-competitions/SIM-20020503/Makefile coin-competitions/SIM-20020503/ballinthehoop.cpp coin-competitions/SIM-20020503/flow.cpp coin-competitions/SIM-20020503/typeomatic.cpp"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ac_config_files="$ac_config_files Makefile components/Makefile components/SoGuiSnapshotViewer.cpp components/SoGuiSnapshotViewer.h components/backgroundimg.cpp components/computils.cpp components/computils.h components/examinerviewer.cpp components/flyviewer.cpp components/grapheditor.cpp components/lightsliderset.cpp components/materiallist.cpp components/materiallist2.cpp components/materialsliderset.cpp components/materialsliderset2.cpp components/multifileviewer.cpp components/overlay.cpp components/planeviewer.cpp components/renderarea.cpp components/simplerenderarea.cpp components/simpleexviewer.cpp components/roster.cpp components/snapshotviewer.cpp components/spaceballdemo.cpp components/transformsliderset.cpp actions/Makefile actions/search.cpp actions/raypick.cpp actions/intersection.cpp annex/Makefile annex/hardcopy.cpp draggers/Makefile draggers/jackdragger.cpp draggers/translate1.cpp draggers/translate2.cpp draggers/dragpoint.cpp engines/Makefile engines/computebbox.cpp engines/computexfbbox.cpp eyecandy/Makefile eyecandy/moirepatterns.cpp eyecandy/juliaanim.cpp eyecandy/mandelzoom.cpp eyecandy/blob.cpp eyecandy/simbuoy.cpp eyecandy/toonshader.cpp manipulators/Makefile manipulators/pointlightmanip.cpp manipulators/tabboxmanip.cpp nodekits/Makefile nodekits/scalemarker.cpp nodekits/wavekitdemo.cpp nodes/Makefile nodes/drawstyle.cpp nodes/material.cpp nodes/selection.cpp nodes/slideshow.cpp nodes/sphere.cpp nodes/spherecolor.cpp nodes/rotation.cpp nodes/scale.cpp nodes/translation.cpp nodes/transform.cpp nodes/rotor.cpp nodes/directionallight.cpp nodes/pointlight.cpp nodes/spotlight.cpp nodes/lights.cpp nodes/faceset.cpp nodes/facesetindexed.cpp nodes/quadmesh.cpp nodes/trianglestripset.cpp nodes/camera.cpp nodes/blinker.cpp nodes/texture.cpp nodes/texture3.cpp nodes/environment.cpp nodes/atmospheric.cpp nodes/shuttle.cpp nodes/complexity.cpp nodes/text2.cpp nodes/text3.cpp nodes/clipplane.cpp nodes/levelofdetail.cpp nodes/extselection.cpp nodes/pointset.cpp nodes/markerset.cpp nodes/image.cpp nodes/bigimage.cpp nodes/textureunit.cpp nodes/bumpmap.cpp nodes/scenetexture.cpp sensors/Makefile sensors/timersensor.cpp sound/Makefile sound/audiocallback.cpp sound/manysources.cpp volumerendering/Makefile volumerendering/Cute/Makefile volumerendering/readvol.cpp volumerendering/changingdataset.cpp volumerendering/examine.cpp volumerendering/orthoslicer.cpp volumerendering/raypick.cpp volumerendering/rgbload.cpp volumerendering/simple8bit.cpp coin-competitions/Makefile coin-competitions/SIM-20010803/Makefile coin-competitions/SIM-20010803/chart.cpp coin-competitions/SIM-20010803/plasmafun.cpp coin-competitions/SIM-20010803/stars.cpp coin-competitions/SIM-20010824/Makefile coin-competitions/SIM-20010824/smiley.cpp coin-competitions/SIM-20010824/plasmaball.cpp coin-competitions/SIM-20010824/styx.cpp coin-competitions/SIM-20010824/stars2.cpp coin-competitions/SIM-20010914/Makefile coin-competitions/SIM-20010914/Moolah.cpp coin-competitions/SIM-20010914/calculator.cpp coin-competitions/SIM-20010914/coinhistory.cpp coin-competitions/SIM-20010914/kaos.cpp coin-competitions/SIM-20010914/rec.cpp coin-competitions/SIM-20011005/Makefile coin-competitions/SIM-20011005/lorenz.cpp coin-competitions/SIM-20011005/nurbscurve.cpp coin-competitions/SIM-20011005/cubes.cpp coin-competitions/SIM-20011116/Makefile coin-competitions/SIM-20011116/25bc5bb.cpp coin-competitions/SIM-20011116/foo.cpp coin-competitions/SIM-20011116/shaker.cpp coin-competitions/SIM-20020118/Makefile coin-competitions/SIM-20020118/blocks.cpp coin-competitions/SIM-20020503/Makefile coin-competitions/SIM-20020503/ballinthehoop.cpp coin-competitions/SIM-20020503/flow.cpp coin-competitions/SIM-20020503/typeomatic.cpp"
 
 
 # MKS will have "\c" as $ECHO_C, but that string in the config.status
@@ -15932,6 +15999,7 @@ do
   "components/overlay.cpp" ) CONFIG_FILES="$CONFIG_FILES components/overlay.cpp" ;;
   "components/planeviewer.cpp" ) CONFIG_FILES="$CONFIG_FILES components/planeviewer.cpp" ;;
   "components/renderarea.cpp" ) CONFIG_FILES="$CONFIG_FILES components/renderarea.cpp" ;;
+  "components/simplerenderarea.cpp" ) CONFIG_FILES="$CONFIG_FILES components/simplerenderarea.cpp" ;;
   "components/simpleexviewer.cpp" ) CONFIG_FILES="$CONFIG_FILES components/simpleexviewer.cpp" ;;
   "components/roster.cpp" ) CONFIG_FILES="$CONFIG_FILES components/roster.cpp" ;;
   "components/snapshotviewer.cpp" ) CONFIG_FILES="$CONFIG_FILES components/snapshotviewer.cpp" ;;
