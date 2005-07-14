@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS sim_ac_mks_make BUILD_WITH_MSVC BUILD_WITH_MSVC_TRUE BUILD_WITH_MSVC_FALSE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT RANLIB ac_ct_RANLIB DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS sim_ac_qt_cygpath HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd HAVE_SMALLCHANGE_TRUE HAVE_SMALLCHANGE_FALSE sim_ac_simaruba_configcmd HAVE_SIMARUBA_TRUE HAVE_SIMARUBA_FALSE sim_ac_coinscenery_configcmd HAVE_COINSCENERY_TRUE HAVE_COINSCENERY_FALSE MOC UIC sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE HAVE_VOLUMEVIZ_TRUE HAVE_VOLUMEVIZ_FALSE HAVE_MESHVIZ_TRUE HAVE_MESHVIZ_FALSE sim_ac_simage_configcmd HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE soguiexamples_src_dir soguiexamples_build_dir LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS sim_ac_mks_make BUILD_WITH_MSVC BUILD_WITH_MSVC_TRUE BUILD_WITH_MSVC_FALSE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT RANLIB ac_ct_RANLIB DSUFFIX CXXCPP EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS sim_ac_qt_cygpath HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd HAVE_SMALLCHANGE_TRUE HAVE_SMALLCHANGE_FALSE sim_ac_simaruba_configcmd HAVE_SIMARUBA_TRUE HAVE_SIMARUBA_FALSE sim_ac_coinscenery_configcmd HAVE_COINSCENERY_TRUE HAVE_COINSCENERY_FALSE MOC UIC sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE HAVE_VOLUMEVIZ_TRUE HAVE_VOLUMEVIZ_FALSE HAVE_MESHVIZ_TRUE HAVE_MESHVIZ_FALSE HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE sim_ac_simage_configcmd soguiexamples_src_dir soguiexamples_build_dir LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -14856,6 +14856,18 @@ fi
 # At least one of the SIM Voleon examples needs simage. Will just do a
 # general check for it, in case other examples pops up which uses it.
 
+if $sim_ac_want_inventor; then
+
+
+if false; then
+  HAVE_SIMAGE_TRUE=
+  HAVE_SIMAGE_FALSE='#'
+else
+  HAVE_SIMAGE_TRUE='#'
+  HAVE_SIMAGE_FALSE=
+fi
+
+else
 
 
 # official variables
@@ -15017,9 +15029,9 @@ fi
 
 if $sim_ac_simage_avail; then
 
-  CPPFLAGS="$sim_ac_simage_cppflags $CPPFLAGS"
-  LDFLAGS="$sim_ac_simage_ldflags $LDFLAGS"
-  LIBS="$sim_ac_simage_libs $LIBS"
+    CPPFLAGS="$sim_ac_simage_cppflags $CPPFLAGS"
+    LDFLAGS="$sim_ac_simage_ldflags $LDFLAGS"
+    LIBS="$sim_ac_simage_libs $LIBS"
 
 if test x"${sim_ac_configuration_settings+set}" = x"set"; then
   sim_ac_configuration_settings="$sim_ac_configuration_settings|simage:is being used"
@@ -15047,7 +15059,6 @@ fi
 
 
 
-
 if $sim_ac_simage_avail; then
   HAVE_SIMAGE_TRUE=
   HAVE_SIMAGE_FALSE='#'
@@ -15056,6 +15067,7 @@ else
   HAVE_SIMAGE_FALSE=
 fi
 
+fi
 
 # **************************************************************************
 # Remove redundant options from certain option lists, to clean up the
@@ -15524,6 +15536,13 @@ if test -z "${HAVE_MESHVIZ_TRUE}" && test -z "${HAVE_MESHVIZ_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"HAVE_MESHVIZ\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"HAVE_MESHVIZ\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${HAVE_SIMAGE_TRUE}" && test -z "${HAVE_SIMAGE_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"HAVE_SIMAGE\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"HAVE_SIMAGE\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -16307,9 +16326,9 @@ s,@HAVE_VOLUMEVIZ_TRUE@,$HAVE_VOLUMEVIZ_TRUE,;t t
 s,@HAVE_VOLUMEVIZ_FALSE@,$HAVE_VOLUMEVIZ_FALSE,;t t
 s,@HAVE_MESHVIZ_TRUE@,$HAVE_MESHVIZ_TRUE,;t t
 s,@HAVE_MESHVIZ_FALSE@,$HAVE_MESHVIZ_FALSE,;t t
-s,@sim_ac_simage_configcmd@,$sim_ac_simage_configcmd,;t t
 s,@HAVE_SIMAGE_TRUE@,$HAVE_SIMAGE_TRUE,;t t
 s,@HAVE_SIMAGE_FALSE@,$HAVE_SIMAGE_FALSE,;t t
+s,@sim_ac_simage_configcmd@,$sim_ac_simage_configcmd,;t t
 s,@soguiexamples_src_dir@,$soguiexamples_src_dir,;t t
 s,@soguiexamples_build_dir@,$soguiexamples_build_dir,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
