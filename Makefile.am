@@ -2,6 +2,8 @@
 # Conditionally build SimVoleon examples if the library was found by the
 # configure process.
 
+# FIXME: this shouldn't be like this -- some examples under
+# volumerendering/ doesn't need SoQt. 20050622 mortene.
 if HAVE_SIMVOLEON
 VOLUMERENDERINGDIR = volumerendering
 else

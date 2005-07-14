@@ -54,6 +54,8 @@ main(int argc, char ** argv)
 
   delete viewer;
 
+  // FIXME: should rather check for and use common TGS and Coin
+  // function SoDB::finish(). 20050630 mortene.
 #ifdef __COIN__
   SoDB::cleanup();
 #endif // __COIN__
