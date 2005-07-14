@@ -589,18 +589,21 @@ AM_CONDITIONAL(HAVE_MESHVIZ, $sim_ac_meshviz_avail)
 # At least one of the SIM Voleon examples needs simage. Will just do a
 # general check for it, in case other examples pops up which uses it.
 
-SIM_AC_HAVE_SIMAGE_IFELSE([
-  CPPFLAGS="$sim_ac_simage_cppflags $CPPFLAGS"
-  LDFLAGS="$sim_ac_simage_ldflags $LDFLAGS"
-  LIBS="$sim_ac_simage_libs $LIBS"
-  SIM_AC_CONFIGURATION_SETTING([simage], [is being used])
-  AC_DEFINE(HAVE_SIMAGE_LIBRARY, 1, [Define to enable explicit use of simage library])
-],
-[
-  SIM_AC_CONFIGURATION_SETTING([simage], [not found (some example programs will not be built)])
-])
-
-AM_CONDITIONAL(HAVE_SIMAGE, $sim_ac_simage_avail)
+if $sim_ac_want_inventor; then
+  AM_CONDITIONAL(HAVE_SIMAGE, false)
+else
+  SIM_AC_HAVE_SIMAGE_IFELSE([
+    CPPFLAGS="$sim_ac_simage_cppflags $CPPFLAGS"
+    LDFLAGS="$sim_ac_simage_ldflags $LDFLAGS"
+    LIBS="$sim_ac_simage_libs $LIBS"
+    SIM_AC_CONFIGURATION_SETTING([simage], [is being used])
+    AC_DEFINE(HAVE_SIMAGE_LIBRARY, 1, [Define to enable explicit use of simage library])
+  ],
+  [
+    SIM_AC_CONFIGURATION_SETTING([simage], [not found (some example programs will not be built)])
+  ])
+  AM_CONDITIONAL(HAVE_SIMAGE, $sim_ac_simage_avail)
+fi
 
 # **************************************************************************
 # Remove redundant options from certain option lists, to clean up the
