@@ -40,8 +40,8 @@ main(int argc, char ** argv)
   So@Gui@SnapshotViewer * viewer = new So@Gui@SnapshotViewer(w);
   config_viewer(viewer, argc, argv);
 
-  So@Gui@::show(w);
   viewer->show();
+  So@Gui@::show(w);
 
   viewer->setSceneGraph(root);
   viewer->setTitle("Snapshot Viewer");
