@@ -121,6 +121,7 @@ int main(int argc,char **argv)
 
   vwr->setSceneGraph(sep);
   vwr->viewAll();
+  vwr->show();
 
   So@Gui@::show(window);
   So@Gui@::mainLoop();

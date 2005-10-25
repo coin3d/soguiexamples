@@ -291,9 +291,9 @@ main(int argc, char ** argv)
   v->setSceneGraph(root);
   v->setViewing(FALSE);
   v->redrawOnSelectionChange(root);
+  v->show();
 
   So@Gui@::show(w);
-  v->show();
   So@Gui@::mainLoop();
   delete v;
   return 0;
