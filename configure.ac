@@ -742,6 +742,7 @@ AC_CONFIG_FILES(
         nodes/textureunit.cpp
         nodes/bumpmap.cpp
         nodes/scenetexture.cpp
+        nodes/nurbssurface.cpp
 
         sensors/Makefile
         sensors/timersensor.cpp

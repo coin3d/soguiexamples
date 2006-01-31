@@ -37,8 +37,8 @@ BUILT_SOURCES = \
 	bigimage.cpp \
 	textureunit.cpp \
 	bumpmap.cpp \
-	scenetexture.cpp
-
+	scenetexture.cpp \
+	nurbssurface.cpp 
 
 
 noinst_PROGRAMS = \
@@ -49,7 +49,7 @@ noinst_PROGRAMS = \
         camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
         pointset markerset image bigimage textureunit bumpmap \
-	scenetexture
+	scenetexture nurbssurface
 
 drawstyle_SOURCES = drawstyle.cpp
 material_SOURCES = material.cpp
@@ -90,6 +90,7 @@ bigimage_SOURCES = bigimage.cpp
 textureunit_SOURCES = textureunit.cpp
 bumpmap_SOURCES = bumpmap.cpp
 scenetexture_SOURCES = scenetexture.cpp
+nurbssurface_SOURCES = nurbssurface.cpp
 
 
 # Create Mac OS X application bundles.
