@@ -454,12 +454,15 @@ SIM_AC_HAVE_COINSCENERY_IFELSE([
 AM_CONDITIONAL(HAVE_COINSCENERY, $sim_ac_coinscenery_avail)
 
 # **************************************************************************
-# If we're using SoQt, check to see if SIM Voleon is also available.
-# Those are the two dependencies of the examples under the
-# volumerendering/ directory.
+# Some particular tests are needed if Qt is the GUI toolkit.
 
-if test x"$sim_ac_gui_toolkit" = x"soqt"; then
+sim_ac_using_qt=false
+if test x"$sim_ac_gui_toolkit" = x"soqt"; then sim_ac_using_qt=true; fi
+if test x"$sim_ac_gui_toolkit" = x"inventorqt"; then sim_ac_using_qt=true; fi
 
+sim_ac_using_qt_4=false
+
+if $sim_ac_using_qt; then
   SIM_AC_QT_PROG(MOC, moc)
   if test x"$MOC" = x"false"; then
     SIM_AC_ERROR([no-moc])
@@ -469,6 +472,19 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
   if test x"$UIC" = x"false"; then
     SIM_AC_ERROR([no-uic])
   fi
+
+  SIM_AC_QT_VERSION
+  if test "$sim_ac_qt_major_version" = "4"; then sim_ac_using_qt_4=true; fi
+fi
+
+AM_CONDITIONAL(USING_QT_4, $sim_ac_using_qt_4)
+
+# **************************************************************************
+# If we're using SoQt, check to see if SIM Voleon is also available.
+# Those are the two dependencies of the examples under the
+# volumerendering/ directory.
+
+if test x"$sim_ac_gui_toolkit" = x"soqt"; then
 
   # Default to not look for SIM Voleon, as we'll get lots of warnings
   # from configure in the common case that it is _not_ available.
@@ -515,16 +531,6 @@ AM_CONDITIONAL(HAVE_SIMVOLEON, $sim_ac_simvoleon_avail)
 
 sim_ac_volumeviz_avail=false
 if test x"$sim_ac_gui_toolkit" = x"inventorqt"; then
-
-  SIM_AC_QT_PROG(MOC, moc)
-  if test x"$MOC" = x"false"; then
-    SIM_AC_ERROR([no-moc])
-  fi
-
-  SIM_AC_QT_PROG(UIC, uic)
-  if test x"$UIC" = x"false"; then
-    SIM_AC_ERROR([no-uic])
-  fi
 
   sim_ac_save_libs=$LIBS
   LIBS="-lInventorVR $LIBS"
