@@ -263,7 +263,29 @@ if $sim_ac_try_msvc; then
       export CC CXX
       BUILD_WITH_MSVC=true
       AC_MSG_RESULT([working])
+
+      # FIXME: why is this here, larsa? 20050714 mortene.
       # SIM_AC_MSVC_VERSION
+
+      # Robustness: we had multiple reports of Cygwin ''link'' getting in
+      # the way of MSVC link.exe, so do a little sanity check for that.
+      #
+      # FIXME: a better fix would be to call link.exe with full path from
+      # the wrapmsvc wrapper, to avoid any trouble with this -- I believe
+      # that should be possible, using the dirname of the full cl.exe path.
+      # 20050714 mortene.
+      sim_ac_check_link=`type link`
+      AC_MSG_CHECKING([whether Cygwin's /usr/bin/link shadows MSVC link.exe])
+      case x"$sim_ac_check_link" in
+      x"link is /usr/bin/link"* )
+        AC_MSG_RESULT(yes)
+        SIM_AC_ERROR([cygwin-link])
+        ;;
+      * )
+        AC_MSG_RESULT(no)
+        ;;
+      esac
+
     else
       case $host in
       *-cygwin)
@@ -2169,9 +2191,9 @@ sim_ac_ogl_libs=
 AC_ARG_WITH(
   [mesa],
   AC_HELP_STRING([--with-mesa],
-                 [prefer MesaGL (if found) over OpenGL [[default=yes]]]),
+                 [prefer MesaGL (if found) over OpenGL [[default=no]]]),
   [],
-  [with_mesa=yes])
+  [with_mesa=no])
 
 
 sim_ac_ogl_glnames="GL opengl32"
@@ -3184,7 +3206,10 @@ if test x"$with_pthread" != xno; then
   for sim_ac_pthreads_libcheck in "-lpthread" "-pthread"; do
     if $sim_ac_pthread_avail; then :; else
       LIBS="$sim_ac_pthreads_libcheck $sim_ac_save_libs"
-      AC_TRY_LINK([#include <pthread.h>],
+      AC_TRY_LINK([#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+#include <pthread.h>],
                   [(void)pthread_create(0L, 0L, 0L, 0L);],
                   [sim_ac_pthread_avail=true
                    sim_ac_pthread_libs="$sim_ac_pthreads_libcheck"
@@ -3202,7 +3227,10 @@ if test x"$with_pthread" != xno; then
     AC_CACHE_CHECK(
       [the struct timespec resolution],
       sim_cv_lib_pthread_timespec_resolution,
-      [AC_TRY_COMPILE([#include <pthread.h>],
+      [AC_TRY_COMPILE([#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+#include <pthread.h>],
                       [struct timespec timeout;
                        timeout.tv_nsec = 0;],
                       [sim_cv_lib_pthread_timespec_resolution=nsecs],
@@ -4101,6 +4129,41 @@ fi
 ])
 
 # Usage:
+#  SIM_AC_QT_VERSION
+#
+# Find version number of the Qt library. sim_ac_qt_version will contain
+# the full version number string, and sim_ac_qt_major_version will contain
+# only the major version number.
+
+AC_DEFUN([SIM_AC_QT_VERSION], [
+
+AC_MSG_CHECKING([version of Qt library])
+
+cat > conftest.c << EOF
+#include <qglobal.h>
+int VerQt = QT_VERSION;
+EOF
+
+# The " *"-parts of the last sed-expression on the next line are necessary
+# because at least the Solaris/CC preprocessor adds extra spaces before and
+# after the trailing semicolon.
+sim_ac_qt_version=`$CXXCPP $CPPFLAGS conftest.c 2>/dev/null | grep '^int VerQt' | sed 's%^int VerQt = %%' | sed 's% *; *$%%'`
+
+case $sim_ac_qt_version in
+0x* )
+  sim_ac_qt_version=`echo $sim_ac_qt_version | sed -e 's/^0x.\(.\).\(.\).\(.\)/\1\2\3/;'`
+  ;;
+* )
+  # nada
+  ;;
+esac
+sim_ac_qt_major_version=`echo $sim_ac_qt_version | cut -c1`
+
+rm -f conftest.c
+AC_MSG_RESULT($sim_ac_qt_version)
+])
+
+# Usage:
 #  SIM_AC_CHECK_QT([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
 #
 #  Try to find the Qt development system. If it is found, these
@@ -4149,6 +4212,25 @@ if $sim_ac_with_qt; then
 
   sim_ac_qt_libs=UNRESOLVED
 
+  # Check for Mac OS framework installation
+  if test -z "$QTDIR"; then
+    sim_ac_qt_framework_dir=/Library/Frameworks
+    # FIXME: Should we also look for the Qt framework in other  
+    # default framework locations (such as ~/Library/Frameworks)?
+    # Or require the user to specify this explicitly, e.g. by
+    # passing --with-qt-framework=xxx? 20050802 kyrah.
+  else
+    sim_ac_qt_framework_dir=$sim_ac_qtdir/lib
+  fi
+
+  SIM_AC_HAVE_QT_FRAMEWORK
+
+  if $sim_ac_have_qt_framework; then 
+    sim_ac_qt_cppflags="-I$sim_ac_qt_framework_dir/QtCore.framework/Headers -I$sim_ac_qt_framework_dir/QtOpenGL.framework/Headers -I$sim_ac_qt_framework_dir/QtGui.framework/Headers -I$sim_ac_qt_framework_dir/Qt3Support.framework/Headers -F$sim_ac_qt_framework_dir"
+    sim_ac_qt_libs="-Wl,-F$sim_ac_qt_framework_dir -Wl,-framework,QtGui -Wl,-framework,QtOpenGL -Wl,-framework,QtCore -Wl,-framework,Qt3Support -Wl,-framework,QtXml -Wl,-framework,QtNetwork -Wl,-framework,QtSql"
+
+  else
+
   sim_ac_qglobal=false
   SIM_AC_CHECK_HEADER_SILENT([qglobal.h],
     [sim_ac_qglobal=true],
@@ -4162,48 +4244,37 @@ if $sim_ac_with_qt; then
        CPPFLAGS="-I$sim_ac_debian_qtheaders $CPPFLAGS"
        SIM_AC_CHECK_HEADER_SILENT([qglobal.h], [sim_ac_qglobal=true])
      else
-     sim_ac_fink_qtheaders=/sw/include/qt
-     if test -d $sim_ac_fink_qtheaders; then
-       sim_ac_qt_incpath="-I$sim_ac_fink_qtheaders $sim_ac_qt_incpath"
-       CPPFLAGS="-I$sim_ac_fink_qtheaders $CPPFLAGS"
-       SIM_AC_CHECK_HEADER_SILENT([qglobal.h], [sim_ac_qglobal=true])
-     fi
+       sim_ac_fink_qtheaders=/sw/include/qt
+       if test -d $sim_ac_fink_qtheaders; then
+         sim_ac_qt_incpath="-I$sim_ac_fink_qtheaders $sim_ac_qt_incpath"
+         CPPFLAGS="-I$sim_ac_fink_qtheaders $CPPFLAGS"
+         SIM_AC_CHECK_HEADER_SILENT([qglobal.h], [sim_ac_qglobal=true])
+       else
+       sim_ac_darwinports_qtheaders=/opt/local/include/qt3
+         if test -d $sim_ac_darwinports_qtheaders; then
+           sim_ac_qt_incpath="-I$sim_ac_darwinports_qtheaders $sim_ac_qt_incpath"
+           sim_ac_qt_ldflags="-L/opt/local/lib $sim_ac_qt_ldflags"
+           CPPFLAGS="-I$sim_ac_darwinports_qtheaders $CPPFLAGS"
+           LDFLAGS="$LDFLAGS $sim_ac_qt_ldflags"
+           SIM_AC_CHECK_HEADER_SILENT([qglobal.h], [sim_ac_qglobal=true])
+         fi     
+       fi
      fi])
 
   # Qt 4 has the headers in various new subdirectories vs Qt 3.
   if $sim_ac_qglobal; then :; else
-    CPPFLAGS="$sim_ac_qt_incpath/Qt $sim_ac_save_cppflags"
+    AC_MSG_CHECKING([if Qt4 include paths must be used])
+    CPPFLAGS="$sim_ac_qt_incpath $sim_ac_qt_incpath/Qt $sim_ac_save_cppflags"
     SIM_AC_CHECK_HEADER_SILENT([qglobal.h],
                                [sim_ac_qglobal=true
-                                sim_ac_qt_incpath="$sim_ac_qt_incpath/Qt $sim_ac_qt_incpath/QtOpenGL"
+                                sim_ac_qt_incpath="$sim_ac_qt_incpath $sim_ac_qt_incpath/Qt $sim_ac_qt_incpath/QtOpenGL $sim_ac_qt_incpath/QtGui"
                                 ])
+    AC_MSG_RESULT($sim_ac_qglobal)
   fi
 
   if $sim_ac_qglobal; then
 
-    # Find version of the Qt library (MSWindows .dll is named with the
-    # version number.)
-    AC_MSG_CHECKING([version of Qt library])
-    cat > conftest.c << EOF
-#include <qglobal.h>
-int VerQt = QT_VERSION;
-EOF
-    # The " *"-parts of the last sed-expression on the next line are necessary
-    # because at least the Solaris/CC preprocessor adds extra spaces before and
-    # after the trailing semicolon.
-    sim_ac_qt_version=`$CXXCPP $CPPFLAGS conftest.c 2>/dev/null | grep '^int VerQt' | sed 's%^int VerQt = %%' | sed 's% *; *$%%'`
-
-    case $sim_ac_qt_version in
-    0x* )
-      sim_ac_qt_version=`echo $sim_ac_qt_version | sed -e 's/^0x.\(.\).\(.\).\(.\)/\1\2\3/;'`
-      ;;
-    * )
-      # nada
-      ;;
-    esac
-
-    rm -f conftest.c
-    AC_MSG_RESULT($sim_ac_qt_version)
+    SIM_AC_QT_VERSION
 
     if test $sim_ac_qt_version -lt 200; then
       SIM_AC_ERROR([too-old-qt])
@@ -4354,6 +4425,7 @@ recommend you to upgrade.])
 
       for sim_ac_qt_cppflags_loop in "" "-DQT_DLL"; do
         for sim_ac_qt_libcheck in \
+            "-lQtGui${sim_ac_qt_suffix}${sim_ac_qt_major_version} -lQtCore${sim_ac_qt_suffix}${sim_ac_qt_major_version} -lQt3Support${sim_ac_qt_suffix}${sim_ac_qt_major_version}" \
             "-lQtGui -lQt3Support" \
             "-lqt-gl" \
             "-lqt-mt" \
@@ -4366,6 +4438,7 @@ recommend you to upgrade.])
             "-lqt${sim_ac_qt_version}${sim_ac_qt_suffix} -lqtmain -lgdi32" \
             "-lqt -luser32 -lole32 -limm32 -lcomdlg32 -lgdi32" \
             "-lqt-mt-eval" \
+            "-lqt-mteval${sim_ac_qt_version}" \
             "-lqt-mtnc${sim_ac_qt_version}"
         do
           if test "x$sim_ac_qt_libs" = "xUNRESOLVED"; then
@@ -4385,12 +4458,14 @@ recommend you to upgrade.])
         done
       done
 
-      AC_MSG_RESULT($sim_ac_qt_cppflags $sim_ac_qt_libs)
+      AC_MSG_RESULT($sim_ac_qt_cppflags $sim_ac_qt_ldflags $sim_ac_qt_libs)
     fi
 
   else # sim_ac_qglobal = false
     AC_MSG_WARN([header file qglobal.h not found, can not compile Qt code])
   fi
+
+  fi # sim_ac_have_qt_framework
 
   # We should only *test* availability, not mutate the LIBS/CPPFLAGS
   # variables ourselves inside this macro. 20041021 larsa
@@ -4475,7 +4550,7 @@ if $sim_ac_with_qt; then
     AC_MSG_CHECKING([for the QGL extension library])
 
     sim_ac_qgl_libs=UNRESOLVED
-    for sim_ac_qgl_libcheck in "-lQtOpenGL" "-lqgl" "-lqgl -luser32"; do
+    for sim_ac_qgl_libcheck in "-lQtOpenGL4" "-lQtOpenGL" "-lqgl" "-lqgl -luser32"; do
       if test "x$sim_ac_qgl_libs" = "xUNRESOLVED"; then
         LIBS="$sim_ac_qgl_libcheck $sim_ac_save_LIBS"
         AC_TRY_LINK([#include <qgl.h>],
@@ -4670,7 +4745,7 @@ AC_CACHE_CHECK(
   [whether QWidget::setWindowState() exists],
   sim_cv_exists_qwidget_setwindowstate,
 
-  [AC_TRY_LINK([#include <qapplication.h>],
+  [AC_TRY_LINK([#include <qwidget.h>],
                [QWidget * w = NULL; w->setWindowState(0);],
                [sim_cv_exists_qwidget_setwindowstate=true],
                [sim_cv_exists_qwidget_setwindowstate=false])])
@@ -4702,6 +4777,51 @@ if $sim_cv_exists_qlineedit_setinputmask; then
             [Define this if QLineEdit::setInputMask() is available])
 fi
 ]) # SIM_AC_QLINEEDIT_HASSETINPUTMASK
+
+
+
+# SIM_AC_HAVE_QT_FRAMEWORK
+# ----------------------
+#
+# Determine whether Qt is installed as a Mac OS X framework.  
+#
+# Uses the variable $sim_ac_qt_framework_dir which should either 
+# point to /Library/Frameworks or $QTDIR/lib. 
+#
+# Sets sim_ac_have_qt_framework to true if Qt is installed as 
+# a framework, and to false otherwise. 
+#
+# Author: Karin Kosina, <kyrah@sim.no>.
+
+AC_DEFUN([SIM_AC_HAVE_QT_FRAMEWORK], [
+case $host_os in
+  darwin*)
+    # First check if framework exists in the specified location, then
+    # try to actually link against the framework. This precaution is
+    # needed to catch the case where Qt-4 is installed in the default
+    # location /Library/Frameworks, but the user wants to override it
+    # by setting QTDIR to point to a non-framework install.
+    if test -d $sim_ac_qt_framework_dir/QtCore.framework; then
+      sim_ac_save_ldflags_fw=$LDFLAGS 
+      LDFLAGS="$LDFLAGS -F$sim_ac_qt_framework_dir -framework QtCore"
+      AC_CACHE_CHECK(
+        [whether Qt is installed as a framework],
+        sim_ac_have_qt_framework,
+        [AC_TRY_LINK([#include <QtCore/qglobal.h>],
+                 [],
+                 [sim_ac_have_qt_framework=true],
+                 [sim_ac_have_qt_framework=false])
+        ])
+        LDFLAGS=$sim_ac_save_ldflags_fw
+    else 
+      sim_ac_have_qt_framework=false
+    fi 
+    ;;
+  *)
+    sim_ac_have_qt_framework=false
+    ;;
+esac
+])
 
 
 # Usage:

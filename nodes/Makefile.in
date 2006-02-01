@@ -121,6 +121,8 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 UIC = @UIC@
+USING_QT_4_FALSE = @USING_QT_4_FALSE@
+USING_QT_4_TRUE = @USING_QT_4_TRUE@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
 X_CFLAGS = @X_CFLAGS@
@@ -219,7 +221,8 @@ BUILT_SOURCES = \
 	bigimage.cpp \
 	textureunit.cpp \
 	bumpmap.cpp \
-	scenetexture.cpp
+	scenetexture.cpp \
+	nurbssurface.cpp 
 
 
 noinst_PROGRAMS = \
@@ -230,7 +233,7 @@ noinst_PROGRAMS = \
         camera blinker texture texture3 environment atmospheric shuttle \
         complexity text2 text3 clipplane levelofdetail extselection \
         pointset markerset image bigimage textureunit bumpmap \
-	scenetexture
+	scenetexture nurbssurface
 
 
 drawstyle_SOURCES = drawstyle.cpp
@@ -272,6 +275,7 @@ bigimage_SOURCES = bigimage.cpp
 textureunit_SOURCES = textureunit.cpp
 bumpmap_SOURCES = bumpmap.cpp
 scenetexture_SOURCES = scenetexture.cpp
+nurbssurface_SOURCES = nurbssurface.cpp
 subdir = nodes
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
@@ -285,7 +289,7 @@ CONFIG_CLEAN_FILES = drawstyle.cpp material.cpp selection.cpp \
 	atmospheric.cpp shuttle.cpp complexity.cpp text2.cpp text3.cpp \
 	clipplane.cpp levelofdetail.cpp extselection.cpp pointset.cpp \
 	markerset.cpp image.cpp bigimage.cpp textureunit.cpp \
-	bumpmap.cpp scenetexture.cpp
+	bumpmap.cpp scenetexture.cpp nurbssurface.cpp
 noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	selection$(EXEEXT) slideshow$(EXEEXT) sphere$(EXEEXT) \
 	spherecolor$(EXEEXT) rotation$(EXEEXT) scale$(EXEEXT) \
@@ -299,7 +303,8 @@ noinst_PROGRAMS = drawstyle$(EXEEXT) material$(EXEEXT) \
 	text2$(EXEEXT) text3$(EXEEXT) clipplane$(EXEEXT) \
 	levelofdetail$(EXEEXT) extselection$(EXEEXT) pointset$(EXEEXT) \
 	markerset$(EXEEXT) image$(EXEEXT) bigimage$(EXEEXT) \
-	textureunit$(EXEEXT) bumpmap$(EXEEXT) scenetexture$(EXEEXT)
+	textureunit$(EXEEXT) bumpmap$(EXEEXT) scenetexture$(EXEEXT) \
+	nurbssurface$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_atmospheric_OBJECTS = atmospheric.$(OBJEXT)
@@ -392,6 +397,11 @@ material_OBJECTS = $(am_material_OBJECTS)
 material_LDADD = $(LDADD)
 material_DEPENDENCIES =
 material_LDFLAGS =
+am_nurbssurface_OBJECTS = nurbssurface.$(OBJEXT)
+nurbssurface_OBJECTS = $(am_nurbssurface_OBJECTS)
+nurbssurface_LDADD = $(LDADD)
+nurbssurface_DEPENDENCIES =
+nurbssurface_LDFLAGS =
 am_pointlight_OBJECTS = pointlight.$(OBJEXT)
 pointlight_OBJECTS = $(am_pointlight_OBJECTS)
 pointlight_LDADD = $(LDADD)
@@ -511,6 +521,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/facesetindexed.Po ./$(DEPDIR)/image.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/levelofdetail.Po ./$(DEPDIR)/lights.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/markerset.Po ./$(DEPDIR)/material.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/nurbssurface.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/pointlight.Po ./$(DEPDIR)/pointset.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/quadmesh.Po ./$(DEPDIR)/rotation.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/rotor.Po ./$(DEPDIR)/scale.Po \
@@ -535,28 +546,29 @@ DIST_SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) \
 	$(environment_SOURCES) $(extselection_SOURCES) \
 	$(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) \
 	$(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) \
-	$(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) \
-	$(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) \
-	$(scale_SOURCES) $(scenetexture_SOURCES) $(selection_SOURCES) \
-	$(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) \
-	$(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) \
-	$(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) \
-	$(textureunit_SOURCES) $(transform_SOURCES) \
-	$(translation_SOURCES) $(trianglestripset_SOURCES)
+	$(material_SOURCES) $(nurbssurface_SOURCES) \
+	$(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) \
+	$(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) \
+	$(scenetexture_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) \
+	$(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) \
+	$(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) \
+	$(texture_SOURCES) $(texture3_SOURCES) $(textureunit_SOURCES) \
+	$(transform_SOURCES) $(translation_SOURCES) \
+	$(trianglestripset_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in atmospheric.cpp.in \
 	bigimage.cpp.in blinker.cpp.in bumpmap.cpp.in camera.cpp.in \
 	clipplane.cpp.in complexity.cpp.in directionallight.cpp.in \
 	drawstyle.cpp.in environment.cpp.in extselection.cpp.in \
 	faceset.cpp.in facesetindexed.cpp.in image.cpp.in \
 	levelofdetail.cpp.in lights.cpp.in markerset.cpp.in \
-	material.cpp.in pointlight.cpp.in pointset.cpp.in \
-	quadmesh.cpp.in rotation.cpp.in rotor.cpp.in scale.cpp.in \
-	scenetexture.cpp.in selection.cpp.in shuttle.cpp.in \
-	slideshow.cpp.in sphere.cpp.in spherecolor.cpp.in \
-	spotlight.cpp.in text2.cpp.in text3.cpp.in texture.cpp.in \
-	texture3.cpp.in textureunit.cpp.in transform.cpp.in \
-	translation.cpp.in trianglestripset.cpp.in
-SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) $(blinker_SOURCES) $(bumpmap_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(scenetexture_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(textureunit_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
+	material.cpp.in nurbssurface.cpp.in pointlight.cpp.in \
+	pointset.cpp.in quadmesh.cpp.in rotation.cpp.in rotor.cpp.in \
+	scale.cpp.in scenetexture.cpp.in selection.cpp.in \
+	shuttle.cpp.in slideshow.cpp.in sphere.cpp.in \
+	spherecolor.cpp.in spotlight.cpp.in text2.cpp.in text3.cpp.in \
+	texture.cpp.in texture3.cpp.in textureunit.cpp.in \
+	transform.cpp.in translation.cpp.in trianglestripset.cpp.in
+SOURCES = $(atmospheric_SOURCES) $(bigimage_SOURCES) $(blinker_SOURCES) $(bumpmap_SOURCES) $(camera_SOURCES) $(clipplane_SOURCES) $(complexity_SOURCES) $(directionallight_SOURCES) $(drawstyle_SOURCES) $(environment_SOURCES) $(extselection_SOURCES) $(faceset_SOURCES) $(facesetindexed_SOURCES) $(image_SOURCES) $(levelofdetail_SOURCES) $(lights_SOURCES) $(markerset_SOURCES) $(material_SOURCES) $(nurbssurface_SOURCES) $(pointlight_SOURCES) $(pointset_SOURCES) $(quadmesh_SOURCES) $(rotation_SOURCES) $(rotor_SOURCES) $(scale_SOURCES) $(scenetexture_SOURCES) $(selection_SOURCES) $(shuttle_SOURCES) $(slideshow_SOURCES) $(sphere_SOURCES) $(spherecolor_SOURCES) $(spotlight_SOURCES) $(text2_SOURCES) $(text3_SOURCES) $(texture_SOURCES) $(texture3_SOURCES) $(textureunit_SOURCES) $(transform_SOURCES) $(translation_SOURCES) $(trianglestripset_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -646,6 +658,8 @@ bumpmap.cpp: $(top_builddir)/config.status bumpmap.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 scenetexture.cpp: $(top_builddir)/config.status scenetexture.cpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+nurbssurface.cpp: $(top_builddir)/config.status nurbssurface.cpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
@@ -703,6 +717,9 @@ markerset$(EXEEXT): $(markerset_OBJECTS) $(markerset_DEPENDENCIES)
 material$(EXEEXT): $(material_OBJECTS) $(material_DEPENDENCIES) 
 	@rm -f material$(EXEEXT)
 	$(CXXLINK) $(material_LDFLAGS) $(material_OBJECTS) $(material_LDADD) $(LIBS)
+nurbssurface$(EXEEXT): $(nurbssurface_OBJECTS) $(nurbssurface_DEPENDENCIES) 
+	@rm -f nurbssurface$(EXEEXT)
+	$(CXXLINK) $(nurbssurface_LDFLAGS) $(nurbssurface_OBJECTS) $(nurbssurface_LDADD) $(LIBS)
 pointlight$(EXEEXT): $(pointlight_OBJECTS) $(pointlight_DEPENDENCIES) 
 	@rm -f pointlight$(EXEEXT)
 	$(CXXLINK) $(pointlight_LDFLAGS) $(pointlight_OBJECTS) $(pointlight_LDADD) $(LIBS)
@@ -791,6 +808,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lights.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/markerset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/material.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nurbssurface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pointlight.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pointset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quadmesh.Po@am__quote@
