@@ -28,8 +28,9 @@ wavekitdemo_SOURCES = wavekitdemo.cpp WaveSurfaceKit.cpp WaveSurfaceKit.h
 
 
 # Create Mac OS X application bundles.
-install-exec-local:
+app-bundles: all-am
 	@case $(target_os) in darwin* ) \
+	  echo "Making Mac OS X application bundles in nodekits."; \
 	  for i in $(noinst_PROGRAMS); do \
 	    if test -f $$i; then $(soguiconfig) --build-app $$i; fi \
 	  done;; \

@@ -13,7 +13,7 @@ endif
 # **************************************************************************
 
 SUBDIRS = \
-  . components eyecandy coin-competitions annex \
+  components eyecandy coin-competitions annex \
   actions draggers engines manipulators nodes sensors nodekits sound \
   $(VOLUMERENDERINGDIR)
 
@@ -38,7 +38,10 @@ windows-packages: windows-files
 # **************************************************************************
 
 # Create Mac OS X application bundles.
-install-exec-local:
+app-bundles:
 	@case $(target_os) in darwin* ) \
-	  echo "Making Mac OS application bundles." ;; \
+	  echo "Making Mac OS application bundles."; \
+          for dir in $(SUBDIRS); do \ 
+            (cd $$dir; $(MAKE) app-bundles;) \
+          done ;; \
 	esac

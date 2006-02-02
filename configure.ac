@@ -826,12 +826,11 @@ SIM_AC_CONFIGURATION_SUMMARY
 
 echo ""
 echo "Now run 'make' to build the examples."
-echo ""
-
 case $target_os in
   darwin* ) 
-    echo "Run 'make install' to create app bundles for the executables." ;; 
+    echo "Run 'make app-bundles' to create Mac OS X application bundles." ;; 
 esac
+echo ""
 
 echo "(Note that they are not installed, so after building you should"
 echo "execute them straight from this directory's subdirectories.)"

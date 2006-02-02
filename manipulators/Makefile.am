@@ -6,8 +6,9 @@ pointlightmanip_SOURCES = pointlightmanip.cpp
 tabboxmanip_SOURCES = tabboxmanip.cpp
 
 # Create Mac OS X application bundles.
-install-exec-local:
+app-bundles: all-am
 	@case $(target_os) in darwin* ) \
+	  echo "Making Mac OS X application bundles in manipulators."; \
 	  for i in $(noinst_PROGRAMS); do \
 	    if test -f $$i; then $(soguiconfig) --build-app $$i; fi \
 	  done;; \
