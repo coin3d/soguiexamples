@@ -121,6 +121,8 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 UIC = @UIC@
+USING_QT_4_FALSE = @USING_QT_4_FALSE@
+USING_QT_4_TRUE = @USING_QT_4_TRUE@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
 X_CFLAGS = @X_CFLAGS@
@@ -466,6 +468,14 @@ uninstall-info: uninstall-info-recursive
 	ps-recursive tags tags-recursive uninstall uninstall-am \
 	uninstall-info-am uninstall-info-recursive uninstall-recursive
 
+
+app-bundles:
+	@case $(target_os) in darwin* ) \
+	  echo "Making Mac OS X application bundles in coin-competitions"; \
+	  for dir in $(SUBDIRS); do \
+	    (cd $$dir; $(MAKE) app-bundles;) \
+	  done ;; \
+	esac
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

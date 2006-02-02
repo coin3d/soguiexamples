@@ -125,6 +125,8 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 UIC = @UIC@
+USING_QT_4_FALSE = @USING_QT_4_FALSE@
+USING_QT_4_TRUE = @USING_QT_4_TRUE@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
 X_CFLAGS = @X_CFLAGS@
@@ -193,7 +195,7 @@ target_vendor = @target_vendor@
 
 # **************************************************************************
 SUBDIRS = \
-  . components eyecandy coin-competitions annex \
+  components eyecandy coin-competitions annex \
   actions draggers engines manipulators nodes sensors nodekits sound \
   $(VOLUMERENDERINGDIR)
 
@@ -213,7 +215,7 @@ DIST_COMMON = README AUTHORS COPYING ChangeLog INSTALL Makefile.am \
 	Makefile.in NEWS TODO aclocal.m4 cfg/config.guess \
 	cfg/config.sub cfg/depcomp cfg/install-sh cfg/missing \
 	cfg/mkinstalldirs config.h.in configure configure.ac
-DIST_SUBDIRS = . components eyecandy coin-competitions annex actions \
+DIST_SUBDIRS = components eyecandy coin-competitions annex actions \
 	draggers engines manipulators nodes sensors nodekits sound \
 	volumerendering
 all: config.h
@@ -552,7 +554,7 @@ info-am:
 
 install-data-am:
 
-install-exec-am: install-exec-local
+install-exec-am:
 
 install-info: install-info-recursive
 
@@ -588,8 +590,8 @@ uninstall-info: uninstall-info-recursive
 	distdir distuninstallcheck dvi dvi-am dvi-recursive info \
 	info-am info-recursive install install-am install-data \
 	install-data-am install-data-recursive install-exec \
-	install-exec-am install-exec-local install-exec-recursive \
-	install-info install-info-am install-info-recursive install-man \
+	install-exec-am install-exec-recursive install-info \
+	install-info-am install-info-recursive install-man \
 	install-recursive install-strip installcheck installcheck-am \
 	installdirs installdirs-am installdirs-recursive \
 	maintainer-clean maintainer-clean-generic \
@@ -620,9 +622,12 @@ windows-packages: windows-files
 # **************************************************************************
 
 # Create Mac OS X application bundles.
-install-exec-local:
+app-bundles:
 	@case $(target_os) in darwin* ) \
-	  echo "Making Mac OS application bundles." ;; \
+	  echo "Making Mac OS application bundles."; \
+          for dir in $(SUBDIRS); do \
+            (cd $$dir; $(MAKE) app-bundles;) \
+          done ;; \
 	esac
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -124,6 +124,8 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 UIC = @UIC@
+USING_QT_4_FALSE = @USING_QT_4_FALSE@
+USING_QT_4_TRUE = @USING_QT_4_TRUE@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
 X_CFLAGS = @X_CFLAGS@
@@ -440,7 +442,7 @@ info-am:
 
 install-data-am:
 
-install-exec-am: install-exec-local
+install-exec-am:
 
 install-info: install-info-am
 
@@ -470,9 +472,9 @@ uninstall-am: uninstall-info-am
 	clean-noinstPROGRAMS ctags distclean distclean-compile \
 	distclean-depend distclean-generic distclean-tags distdir dvi \
 	dvi-am info info-am install install-am install-data \
-	install-data-am install-exec install-exec-am install-exec-local \
-	install-info install-info-am install-man install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
+	install-data-am install-exec install-exec-am install-info \
+	install-info-am install-man install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
@@ -481,8 +483,9 @@ uninstall-am: uninstall-info-am
 ############################################################################
 
 # Create Mac OS X application bundles.
-install-exec-local:
+app-bundles: all-am
 	@case $(target_os) in darwin* ) \
+	  echo "Making Mac OS X application bundles in nodekits."; \
 	  for i in $(noinst_PROGRAMS); do \
 	    if test -f $$i; then $(soguiconfig) --build-app $$i; fi \
 	  done;; \

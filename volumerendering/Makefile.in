@@ -121,6 +121,8 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 UIC = @UIC@
+USING_QT_4_FALSE = @USING_QT_4_FALSE@
+USING_QT_4_TRUE = @USING_QT_4_TRUE@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
 X_CFLAGS = @X_CFLAGS@
@@ -761,7 +763,7 @@ info-am:
 
 install-data-am:
 
-install-exec-am: install-exec-local
+install-exec-am:
 
 install-info: install-info-recursive
 
@@ -795,15 +797,15 @@ uninstall-info: uninstall-info-recursive
 	distclean-generic distclean-recursive distclean-tags distdir \
 	dvi dvi-am dvi-recursive info info-am info-recursive install \
 	install-am install-data install-data-am install-data-recursive \
-	install-exec install-exec-am install-exec-local \
-	install-exec-recursive install-info install-info-am \
-	install-info-recursive install-man install-recursive \
-	install-strip installcheck installcheck-am installdirs \
-	installdirs-am installdirs-recursive maintainer-clean \
-	maintainer-clean-generic maintainer-clean-recursive mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-recursive \
-	pdf pdf-am pdf-recursive ps ps-am ps-recursive tags \
-	tags-recursive uninstall uninstall-am uninstall-info-am \
+	install-exec install-exec-am install-exec-recursive \
+	install-info install-info-am install-info-recursive install-man \
+	install-recursive install-strip installcheck installcheck-am \
+	installdirs installdirs-am installdirs-recursive \
+	maintainer-clean maintainer-clean-generic \
+	maintainer-clean-recursive mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-recursive pdf pdf-am \
+	pdf-recursive ps ps-am ps-recursive tags tags-recursive \
+	uninstall uninstall-am uninstall-info-am \
 	uninstall-info-recursive uninstall-recursive
 
 
@@ -852,8 +854,9 @@ moc_OrthoSliceHandler.cpp: $(srcdir)/OrthoSliceHandler.h
 ############################################################################
 
 # Create Mac OS X application bundles.
-install-exec-local:
+app-bundles: all-am
 	@case $(target_os) in darwin* ) \
+	  echo "Making Mac OS X application bundles in volumerendering."; \
 	  for i in $(noinst_PROGRAMS); do \
 	    if test -f $$i; then $(soguiconfig) --build-app $$i; fi \
 	  done;; \
