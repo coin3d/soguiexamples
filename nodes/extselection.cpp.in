@@ -77,6 +77,7 @@ main(int argc, char ** argv)
 #include <Inventor/nodes/SoExtSelection.h>
 #include <Inventor/nodes/SoCamera.h>
 #include <Inventor/nodes/SoIndexedLineSet.h>
+#include <Inventor/nodes/SoPointSet.h>
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoLightModel.h>
 #include <Inventor/nodes/SoBaseColor.h>
@@ -111,9 +112,12 @@ main(int argc, char ** argv)
 
 SbBSPTree mybsptree;
 SbList <int32_t> myidxlist;
+SbBSPTree mypointbsptree;
 
 SoCoordinate3 * mycoords = NULL;
 SoIndexedLineSet * mylineset = NULL;
+SoCoordinate3 * mypointcoords = NULL;
+SoPointSet * mypointset = NULL;
 
 int trianglecounter;
 int linecounter;
@@ -129,6 +133,7 @@ start_callback(void * userdata, SoSelection * sel)
   if (sel->policy.getValue() == SoSelection::SINGLE ||
       (sel->policy.getValue() == SoSelection::SHIFT && !((SoExtSelection*)sel)->wasShiftDown())) {
     mybsptree.clear();
+    mypointbsptree.clear();
     myidxlist.truncate(0);
 
     // This line is very important or the 'selection-lines' will be selected during the next selection as
@@ -149,6 +154,11 @@ finish_callback(void * userdata, SoSelection * sel)
   mylineset->coordIndex.setNum(n);
   memcpy(mylineset->coordIndex.startEditing(), myidxlist.getArrayPtr(), n*sizeof(int32_t));
   mylineset->coordIndex.finishEditing();
+
+  n = mypointbsptree.numPoints();
+  mypointcoords->point.setNum(n);
+  memcpy(mypointcoords->point.startEditing(), mypointbsptree.getPointsArrayPtr(), n*sizeof(SbVec3f));
+  mypointcoords->point.finishEditing();
 }
 
 static SbBool 
@@ -186,20 +196,10 @@ pointCB(void * userdata,
   ++pointcounter;
 
   SbVec3f vec1 = v1->getPoint();
-  SbVec3f vec2 = v1->getPoint();
 
   mm.multVecMatrix(v1->getPoint(),vec1);
-  mm.multVecMatrix(v1->getPoint(),vec2);
 
-  vec2[0] += .1;
-  vec2[1] += .1;
-  vec2[2] += .1;
-
-  myidxlist.append(mybsptree.addPoint(vec1)); // Ugly hack. A 'point' must have 3 points...
-  myidxlist.append(mybsptree.addPoint(vec2));
-  myidxlist.append(mybsptree.addPoint(vec1));
- 
-  myidxlist.append(-1);
+  mypointbsptree.addPoint(vec1);
 
   return FALSE;
 }
@@ -256,12 +256,22 @@ make_line_sg(void)
   sep->addChild(col);
   SoDrawStyle * ds = new SoDrawStyle;
   ds->lineWidth = 2;
+  ds->pointSize = 4;
   sep->addChild(ds);
 
+  SoSeparator *linesep = new SoSeparator;
+  sep->addChild(linesep);
   mycoords = new SoCoordinate3;
   mylineset = new SoIndexedLineSet;
-  sep->addChild(mycoords);
-  sep->addChild(mylineset);
+  linesep->addChild(mycoords);
+  linesep->addChild(mylineset);
+  SoSeparator *pointsep = new SoSeparator;
+  sep->addChild(pointsep);
+  mypointcoords = new SoCoordinate3;
+  mypointcoords->point.setNum(0);
+  mypointset = new SoPointSet;
+  pointsep->addChild(mypointcoords);
+  pointsep->addChild(mypointset);
   return sep;
 }
 
