@@ -615,11 +615,11 @@ fi
 # Remove redundant options from certain option lists, to clean up the
 # compiler and linker invocations.
 
-SIM_AC_UNIQIFY_LIST(CPPFLAGS, $CPPFLAGS)
-SIM_AC_UNIQIFY_LIST(CXXFLAGS, $CXXFLAGS)
-SIM_AC_UNIQIFY_LIST(CFLAGS, $CFLAGS)
-SIM_AC_UNIQIFY_LIST(LDFLAGS, $LDFLAGS)
-SIM_AC_UNIQIFY_LIST(LIBS, $LIBS)
+SIM_AC_UNIQIFY_OPTION_LIST(CPPFLAGS, $CPPFLAGS)
+SIM_AC_UNIQIFY_OPTION_LIST(CXXFLAGS, $CXXFLAGS)
+SIM_AC_UNIQIFY_OPTION_LIST(CFLAGS, $CFLAGS)
+SIM_AC_UNIQIFY_OPTION_LIST(LDFLAGS, $LDFLAGS)
+SIM_AC_UNIQIFY_OPTION_LIST(LIBS, $LIBS)
 
 # **************************************************************************
 # Support for generating VisualStudio project files
