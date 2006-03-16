@@ -1973,7 +1973,7 @@ if test x"$with_opengl" != x"no"; then
   case $host_os in
   darwin*)
     AC_REQUIRE([SIM_AC_CHECK_X11])
-    if test x$sim_ac_enable_darwin_x11 = xtrue; then
+    if $sim_ac_enable_darwin_x11; then
       sim_ac_gl_darwin_x11=/usr/X11R6
       if test -d $sim_ac_gl_darwin_x11; then
         sim_ac_gl_cppflags=-I$sim_ac_gl_darwin_x11/include
@@ -1985,17 +1985,21 @@ if test x"$with_opengl" != x"no"; then
   CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
 
   # Mac OS X framework (no X11, -framework OpenGL) 
-  if test x$sim_ac_enable_darwin_x11 = xtrue; then
-    SIM_AC_CHECK_HEADER_SILENT([GL/gl.h], [
-      sim_ac_gl_header_avail=true
-      sim_ac_gl_header=GL/gl.h
-      AC_DEFINE([HAVE_GL_GL_H], 1, [define if the GL header should be included as GL/gl.h])
-    ])
+  if $sim_ac_enable_darwin_x11; then :
   else
     SIM_AC_CHECK_HEADER_SILENT([OpenGL/gl.h], [
       sim_ac_gl_header_avail=true
       sim_ac_gl_header=OpenGL/gl.h
       AC_DEFINE([HAVE_OPENGL_GL_H], 1, [define if the GL header should be included as OpenGL/gl.h])
+    ])
+  fi
+
+  if $sim_ac_gl_header_avail; then :
+  else
+    SIM_AC_CHECK_HEADER_SILENT([GL/gl.h], [
+      sim_ac_gl_header_avail=true
+      sim_ac_gl_header=GL/gl.h
+      AC_DEFINE([HAVE_GL_GL_H], 1, [define if the GL header should be included as GL/gl.h])
     ])
   fi
 
@@ -2046,7 +2050,7 @@ if test x"$with_opengl" != x"no"; then
   case $host_os in
   darwin*)
     AC_REQUIRE([SIM_AC_CHECK_X11])
-    if test x$sim_ac_enable_darwin_x11 = xtrue; then
+    if $sim_ac_enable_darwin_x11; then
       sim_ac_gl_darwin_x11=/usr/X11R6
       if test -d $sim_ac_gl_darwin_x11; then
         sim_ac_gl_cppflags=-I$sim_ac_gl_darwin_x11/include
@@ -2058,17 +2062,21 @@ if test x"$with_opengl" != x"no"; then
   CPPFLAGS="$CPPFLAGS $sim_ac_glu_cppflags"
 
   # Mac OS X framework (no X11, -framework OpenGL) 
-  if test x$sim_ac_enable_darwin_x11 = xtrue; then
-    SIM_AC_CHECK_HEADER_SILENT([GL/glu.h], [
-      sim_ac_glu_header_avail=true
-      sim_ac_glu_header=GL/glu.h
-      AC_DEFINE([HAVE_GL_GLU_H], 1, [define if the GLU header should be included as GL/glu.h])
-    ])
+  if $sim_ac_enable_darwin_x11; then :
   else
     SIM_AC_CHECK_HEADER_SILENT([OpenGL/glu.h], [
       sim_ac_glu_header_avail=true
       sim_ac_glu_header=OpenGL/glu.h
       AC_DEFINE([HAVE_OPENGL_GLU_H], 1, [define if the GLU header should be included as OpenGL/glu.h])
+    ])
+  fi
+
+  if $sim_ac_glu_header_avail; then :
+  else
+    SIM_AC_CHECK_HEADER_SILENT([GL/glu.h], [
+      sim_ac_glu_header_avail=true
+      sim_ac_glu_header=GL/glu.h
+      AC_DEFINE([HAVE_GL_GLU_H], 1, [define if the GLU header should be included as GL/glu.h])
     ])
   fi
  
@@ -2119,7 +2127,7 @@ if test x"$with_opengl" != x"no"; then
   case $host_os in
   darwin*)
     AC_REQUIRE([SIM_AC_CHECK_X11])
-    if test x$sim_ac_enable_darwin_x11 = xtrue; then
+    if $sim_ac_enable_darwin_x11; then
       sim_ac_gl_darwin_x11=/usr/X11R6
       if test -d $sim_ac_gl_darwin_x11; then
         sim_ac_gl_cppflags=-I$sim_ac_gl_darwin_x11/include
@@ -2131,17 +2139,21 @@ if test x"$with_opengl" != x"no"; then
   CPPFLAGS="$CPPFLAGS $sim_ac_glext_cppflags"
 
   # Mac OS X framework (no X11, -framework OpenGL) 
-  if test x$sim_ac_enable_darwin_x11 = xtrue; then
-    SIM_AC_CHECK_HEADER_SILENT([GL/glext.h], [
-      sim_ac_glext_header_avail=true
-      sim_ac_glext_header=GL/glext.h
-      AC_DEFINE([HAVE_GL_GLEXT_H], 1, [define if the GLEXT header should be included as GL/glext.h])
-    ])
+  if $sim_ac_enable_darwin_x11; then :
   else
     SIM_AC_CHECK_HEADER_SILENT([OpenGL/glext.h], [
       sim_ac_glext_header_avail=true
       sim_ac_glext_header=OpenGL/glext.h
       AC_DEFINE([HAVE_OPENGL_GLEXT_H], 1, [define if the GLEXT header should be included as OpenGL/glext.h])
+    ])
+  fi
+
+  if $sim_ac_glext_header_avail; then :
+  else
+    SIM_AC_CHECK_HEADER_SILENT([GL/glext.h], [
+      sim_ac_glext_header_avail=true
+      sim_ac_glext_header=GL/glext.h
+      AC_DEFINE([HAVE_GL_GLEXT_H], 1, [define if the GLEXT header should be included as GL/glext.h])
     ])
   fi
 
@@ -2233,7 +2245,7 @@ if test x"$with_opengl" != xno; then
   case $host_os in
   darwin*)
     AC_REQUIRE([SIM_AC_CHECK_X11])
-    if test x"$GCC" = x"yes" -a x$sim_ac_enable_darwin_x11 = xtrue; then
+    if test x"$GCC" = x"yes" -a $sim_ac_enable_darwin_x11; then
       # On Mac OS X, OpenGL is installed as part of the optional X11 SDK.
       sim_ac_gl_darwin_x11=/usr/X11R6
       if test -d $sim_ac_gl_darwin_x11; then
@@ -2292,14 +2304,15 @@ if test x"$with_opengl" != xno; then
           AC_TRY_LINK(
             [#ifdef HAVE_WINDOWS_H
              #include <windows.h>
-             #endif
+             #endif /* HAVE_WINDOWS_H */
              #ifdef HAVE_GL_GL_H
              #include <GL/gl.h>
-             #endif
+             #else /* ! HAVE_GL_GL_H */
              #ifdef HAVE_OPENGL_GL_H
              /* Mac OS X */
              #include <OpenGL/gl.h>
-             #endif
+             #endif /* HAVE_OPENGL_GL_H */
+             #endif /* ! HAVE_GL_GL_H */
             ],
             [glPointSize(1.0f);],
             [
@@ -2756,7 +2769,7 @@ AC_DEFUN([SIM_AC_HAVE_AGL_PBUFFER], [
 AC_DEFUN([SIM_AC_CHECK_X11], [
 AC_REQUIRE([AC_PATH_XTRA])
 
-sim_ac_enable_darwin_x11=true
+sim_ac_enable_darwin_x11=false
 
 case $host_os in
   darwin* ) 
@@ -2774,7 +2787,7 @@ esac
 
 sim_ac_x11_avail=no
 
-if test x"$no_x" != xyes -a x"$sim_ac_enable_darwin_x11" = xtrue; then
+if test x"$no_x" != xyes -o $sim_ac_enable_darwin_x11 ; then
   #  *** DEBUG ***
   #  Keep this around, as it can be handy when testing on new systems.
   # echo "X_CFLAGS: $X_CFLAGS"
@@ -4147,7 +4160,7 @@ EOF
 # The " *"-parts of the last sed-expression on the next line are necessary
 # because at least the Solaris/CC preprocessor adds extra spaces before and
 # after the trailing semicolon.
-sim_ac_qt_version=`$CXXCPP $CPPFLAGS conftest.c 2>/dev/null | grep '^int VerQt' | sed 's%^int VerQt = %%' | sed 's% *; *$%%'`
+sim_ac_qt_version=`$CXXCPP $CPPFLAGS conftest.c 2>/dev/null | grep '^int VerQt' | sed 's%^int VerQt = %%' | sed 's% *;.*$%%'`
 
 case $sim_ac_qt_version in
 0x* )
@@ -4291,20 +4304,20 @@ known to contain some serious bugs on MacOS X. We strongly recommend you to
 upgrade. (See $srcdir/README.MAC for details.)])
       fi
 
-      if test x$sim_ac_enable_darwin_x11 = xfalse; then
-      # Using Qt/X11 but option --enable-darwin-x11 not given
-      AC_TRY_COMPILE([#include <qapplication.h>],
-                  [#if defined(__APPLE__) && defined(Q_WS_X11)
-                   #error blah!
-                   #endif],[],
-                  [SIM_AC_ERROR([x11-qt-but-no-x11-requested])])
-      else 
+      if $sim_ac_enable_darwin_x11; then
       # --enable-darwin-x11 specified but attempting Qt/Mac linkage
       AC_TRY_COMPILE([#include <qapplication.h>],
                   [#if defined(__APPLE__) && defined(Q_WS_MAC)
                    #error blah!
                    #endif],[],
                   [SIM_AC_ERROR([mac-qt-but-x11-requested])])
+      else 
+      # Using Qt/X11 but option --enable-darwin-x11 not given
+      AC_TRY_COMPILE([#include <qapplication.h>],
+                  [#if defined(__APPLE__) && defined(Q_WS_X11)
+                   #error blah!
+                   #endif],[],
+                  [SIM_AC_ERROR([x11-qt-but-no-x11-requested])])
       fi
       ;;
     esac
@@ -5705,26 +5718,30 @@ fi
 # EOF **********************************************************************
 
 # **************************************************************************
-# SIM_AC_UNIQIFY_LIST( VARIABLE, LIST )
+# SIM_AC_UNIQIFY_OPTION_LIST( VARIABLE, LIST )
 #
-# This macro filters out redundant items from a list.  This macro was made
-# to avoid having multiple equivalent -I and -L options for the compiler on
-# the command-line, which made compilation quite messy to watch.
-#
-# BUGS:
-#   Items with spaces are probably not supported.
+# This macro filters out redundant commandline options. It is heavily based
+# on the SIM_AC_UNIQIFY_LIST macro, but has been extended to support
+# spaces (i.e. for instance "-framework OpenGL" as needed on Mac OS X).
 #
 # Authors:
 #   Lars J. Aas <larsa@sim.no>
-#
+#   Karin Kosina <kyrah@sim.no>
+#   Tamer Fahmy <tamer@tammura.at>
 
-AC_DEFUN([SIM_AC_UNIQIFY_LIST], [
+AC_DEFUN([SIM_AC_UNIQIFY_OPTION_LIST], [
 sim_ac_save_prefix=$prefix
 sim_ac_save_exec_prefix=$exec_prefix
 test x"$prefix" = xNONE && prefix=/usr/local
 test x"$exec_prefix" = xNONE && exec_prefix='${prefix}'
 sim_ac_uniqued_list=
-for sim_ac_item in $2; do
+eval paramlist='"$2"'
+sim_ac_sed_expr="[s,\(-[_a-zA-Z0-9][%_a-zA-Z0-9]*\) [ ]*\([_a-zA-Z0-9][_a-zA-Z0-9]*\),\1%%%%%\2,g]"
+paramlist="`echo $paramlist | sed \"$sim_ac_sed_expr\"`"
+while test x"$paramlist" != x"`echo $paramlist | sed \"$sim_ac_sed_expr\"`"; do
+  paramlist="`echo $paramlist | sed \"$sim_ac_sed_expr\"`"
+done
+for sim_ac_item in $paramlist; do
   eval sim_ac_eval_item="$sim_ac_item"
   eval sim_ac_eval_item="$sim_ac_eval_item"
   if test x"$sim_ac_uniqued_list" = x; then
@@ -5739,13 +5756,13 @@ for sim_ac_item in $2; do
     $sim_ac_unique && sim_ac_uniqued_list="$sim_ac_uniqued_list $sim_ac_item"
   fi
 done
-$1=$sim_ac_uniqued_list
+$1=`echo $sim_ac_uniqued_list | sed 's/%%%%%/ /g'`
 prefix=$sim_ac_save_prefix
 exec_prefix=$sim_ac_save_exec_prefix
 # unset sim_ac_save_prefix
 # unset sim_ac_save_exec_prefix
 # unset sim_ac_eval_item
 # unset sim_ac_eval_uniq
-]) # SIM_AC_UNIQIFY_LIST
+]) # SIM_AC_UNIQIFY_OPTION_LIST
 
 
