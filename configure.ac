@@ -46,6 +46,12 @@ AC_LANG(C++)
 # Miscellaneous options and initializations.
 
 AC_CANONICAL_SYSTEM
+
+# **************************************************************************
+# Universal Binary support (Mac OS X)
+
+SIM_AC_UNIVERSAL_BINARIES
+
 AM_INIT_AUTOMAKE(examples, 1.0.0)
 
 # File to cram results from the configure tests into.
