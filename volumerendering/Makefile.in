@@ -207,7 +207,7 @@ noinst_PROGRAMS = \
 ############################################################################
 # Executables using the Qt extensions in the "Cute/" subdir.
 @BUILD_WITH_MSVC_TRUE@CUTEARCHIVE = Cute/Cute.lst
-@BUILD_WITH_MSVC_FALSE@CUTEARCHIVE = Cute/Cute.a
+@BUILD_WITH_MSVC_FALSE@CUTEARCHIVE = Cute/libCute.a
 
 # FIXME: only these three examples actually have dependencies on Qt / SoQt,
 # and we should fix so the other examples can be built even when not using
@@ -360,7 +360,7 @@ am_orthoslicer_OBJECTS = orthoslicer.$(OBJEXT) utility.$(OBJEXT) \
 	$(am__objects_1) $(am__objects_2)
 orthoslicer_OBJECTS = $(am_orthoslicer_OBJECTS)
 @BUILD_WITH_MSVC_TRUE@orthoslicer_DEPENDENCIES = Cute/Cute.lst
-@BUILD_WITH_MSVC_FALSE@orthoslicer_DEPENDENCIES = Cute/Cute.a
+@BUILD_WITH_MSVC_FALSE@orthoslicer_DEPENDENCIES = Cute/libCute.a
 orthoslicer_LDFLAGS =
 am_raypick_OBJECTS = raypick.$(OBJEXT) utility.$(OBJEXT)
 raypick_OBJECTS = $(am_raypick_OBJECTS)
@@ -373,7 +373,7 @@ am__objects_3 = SoVolumeRender_ctrl.$(OBJEXT) \
 am_readvol_OBJECTS = readvol.$(OBJEXT) $(am__objects_1) $(am__objects_3)
 readvol_OBJECTS = $(am_readvol_OBJECTS)
 @BUILD_WITH_MSVC_TRUE@readvol_DEPENDENCIES = Cute/Cute.lst
-@BUILD_WITH_MSVC_FALSE@readvol_DEPENDENCIES = Cute/Cute.a
+@BUILD_WITH_MSVC_FALSE@readvol_DEPENDENCIES = Cute/libCute.a
 readvol_LDFLAGS =
 am_simple8bit_OBJECTS = simple8bit.$(OBJEXT) utility.$(OBJEXT)
 simple8bit_OBJECTS = $(am_simple8bit_OBJECTS)
@@ -383,7 +383,7 @@ simple8bit_LDFLAGS =
 am_voleonexplore_OBJECTS = voleonexplore.$(OBJEXT)
 voleonexplore_OBJECTS = $(am_voleonexplore_OBJECTS)
 @BUILD_WITH_MSVC_TRUE@voleonexplore_DEPENDENCIES = Cute/Cute.lst
-@BUILD_WITH_MSVC_FALSE@voleonexplore_DEPENDENCIES = Cute/Cute.a
+@BUILD_WITH_MSVC_FALSE@voleonexplore_DEPENDENCIES = Cute/libCute.a
 voleonexplore_LDFLAGS =
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)

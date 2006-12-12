@@ -30,7 +30,7 @@ noinst_PROGRAMS = \
 if BUILD_WITH_MSVC
 CUTEARCHIVE = Cute/Cute.lst
 else
-CUTEARCHIVE = Cute/Cute.a
+CUTEARCHIVE = Cute/libCute.a
 endif
 
 # FIXME: only these three examples actually have dependencies on Qt / SoQt,
