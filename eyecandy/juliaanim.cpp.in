@@ -42,7 +42,7 @@
 // *************************************************************************
 
 // big is better ;)
-#define SMALL 1
+#define SMALL 0
 
 #if SMALL
 #include "stone42a.h"
