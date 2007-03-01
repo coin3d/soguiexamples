@@ -41,7 +41,7 @@ windows-packages: windows-files
 app-bundles:
 	@case $(target_os) in darwin* ) \
 	  echo "Making Mac OS application bundles."; \
-          for dir in $(SUBDIRS); do \ 
+          for dir in $(SUBDIRS); do \
             (cd $$dir; $(MAKE) app-bundles;) \
           done ;; \
 	esac
