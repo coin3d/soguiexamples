@@ -177,8 +177,8 @@ OrthoSliceHandler::alphaUseUpdate(int idx)
 void
 OrthoSliceHandler::clippingCheckBoxUpdate(int idx)
 {
-  if (idx == QButton::NoChange) return;
-  this->node->clipping = (idx == QButton::On) ? TRUE : FALSE;
+  if (idx == QCheckBox::NoChange) return;
+  this->node->clipping = (idx == QCheckBox::On) ? TRUE : FALSE;
 }
 
 void

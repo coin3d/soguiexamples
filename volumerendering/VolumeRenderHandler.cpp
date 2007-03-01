@@ -171,6 +171,6 @@ VolumeRenderHandler::compositionUpdate(int idx)
 void
 VolumeRenderHandler::viewAlignedSlicesCheckBoxUpdate(int idx)
 {
-  if (idx == QButton::NoChange) return;
-  this->node->viewAlignedSlices = (idx == QButton::On) ? TRUE : FALSE;
+  if (idx == QCheckBox::NoChange) return;
+  this->node->viewAlignedSlices = (idx == QCheckBox::On) ? TRUE : FALSE;
 }
