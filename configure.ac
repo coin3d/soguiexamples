@@ -474,13 +474,19 @@ if $sim_ac_using_qt; then
     SIM_AC_ERROR([no-moc])
   fi
 
-  SIM_AC_QT_PROG(UIC, uic)
-  if test x"$UIC" = x"false"; then
-    SIM_AC_ERROR([no-uic])
-  fi
-
   SIM_AC_QT_VERSION
-  if test "$sim_ac_qt_major_version" = "4"; then sim_ac_using_qt_4=true; fi
+  if test "$sim_ac_qt_major_version" = "4"; then
+    SIM_AC_QT_PROG(UIC, uic3)
+    if test x"$UIC" = x"false"; then
+      SIM_AC_ERROR([no-uic3])
+    fi
+    sim_ac_using_qt_4=true
+  else
+    SIM_AC_QT_PROG(UIC, uic)
+    if test x"$UIC" = x"false"; then
+      SIM_AC_ERROR([no-uic])
+    fi
+  fi
 fi
 
 AM_CONDITIONAL(USING_QT_4, $sim_ac_using_qt_4)

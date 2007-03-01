@@ -33,6 +33,10 @@ else
 CUTEARCHIVE = Cute/libCute.a
 endif
 
+if USING_QT_4
+AM_CPPFLAGS = -DQT3_SUPPORT
+endif
+
 # FIXME: only these three examples actually have dependencies on Qt / SoQt,
 # and we should fix so the other examples can be built even when not using
 # SoQt. 20041021 mortene.
