@@ -4,7 +4,7 @@ SUBDIRS = SIM-20020503 SIM-20020118 \
 app-bundles:
 	@case $(target_os) in darwin* ) \
 	  echo "Making Mac OS X application bundles in coin-competitions"; \
-	  for dir in $(SUBDIRS); do \ 
+	  for dir in $(SUBDIRS); do \
 	    (cd $$dir; $(MAKE) app-bundles;) \
 	  done ;; \
 	esac
