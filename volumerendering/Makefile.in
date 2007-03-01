@@ -209,6 +209,8 @@ noinst_PROGRAMS = \
 @BUILD_WITH_MSVC_TRUE@CUTEARCHIVE = Cute/Cute.lst
 @BUILD_WITH_MSVC_FALSE@CUTEARCHIVE = Cute/libCute.a
 
+@USING_QT_4_TRUE@AM_CPPFLAGS = -DQT3_SUPPORT
+
 # FIXME: only these three examples actually have dependencies on Qt / SoQt,
 # and we should fix so the other examples can be built even when not using
 # SoQt. 20041021 mortene.
