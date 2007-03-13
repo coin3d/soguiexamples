@@ -431,9 +431,10 @@ float
 InvSqrt(
   const float number )
 {
-  int i;
-  i = 0x5f3759df - ((*((int *)&number))>>1);
-  return *(float *)&i;
+  union f32 { float f32; int u32; } val;
+  val.f32 = number;
+  val.u32 = 0x5f3759df - (val.u32 >> 1);
+  return val.f32;
 }
 
 static void
