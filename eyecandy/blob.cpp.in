@@ -431,7 +431,7 @@ float
 InvSqrt(
   const float number )
 {
-  union f32 { float f32; int32_t u32; } val;
+  union { float f32; int32_t u32; } val;
   val.f32 = number;
   val.u32 = 0x5f3759df - (val.u32 >> 1);
   return val.f32;
