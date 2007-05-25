@@ -42,7 +42,7 @@ public:
   void back( void );                  // remove previous char
   void * pixels( void );              // get pixelbuffer
   void render( void );                // render charbuffer to pixelbuffer
-  void render( char c,                // render character to pixelbuffer
+  void render( unsigned int c,        // render character to pixelbuffer
     unsigned int line,
     unsigned int column );
   void cursor( );                     // update cursor

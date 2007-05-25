@@ -133,7 +133,7 @@ void MooOut::render( void )
 
 }
 
-void MooOut::render( char c, unsigned int line, unsigned int column )
+void MooOut::render( unsigned int c, unsigned int line, unsigned int column )
 {
   static unsigned int bit_pos_x;
   static unsigned int bit_pos_y;
