@@ -497,7 +497,6 @@ AM_CONDITIONAL(USING_QT_4, $sim_ac_using_qt_4)
 # volumerendering/ directory.
 
 if test x"$sim_ac_gui_toolkit" = x"soqt"; then
-
   # Default to not look for SIM Voleon, as we'll get lots of warnings
   # from configure in the common case that it is _not_ available.
   sim_ac_simvoleon_desired=false
@@ -517,6 +516,30 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
       :
     else
       AC_MSG_ERROR([Detected old CVS checkout of SoGuiExamples, exiting. To fix, 'cd' to the SoGuiExamples/volumerendering/ directory, do a 'cvs co Cute' and re-run configure.])
+    fi
+
+    # Check if Qt4 has been compiled with Qt3Support
+    if $sim_ac_using_qt_4; then
+      sim_ac_save_libs=$LIBS
+      LIBS="-lQt3Support $LIBS"
+      AC_MSG_CHECKING(if Qt4 has Qt3Support enabled)
+      AC_LANG_PUSH(C++)
+      AC_TRY_LINK(
+        [#include <Qt3Support/q3valuelist.h>],
+        [Q3ValueList<float> params;],
+        [sim_ac_qt3support_avail=true],
+        [sim_ac_qt3support_avail=false])
+      AC_LANG_POP
+      AC_MSG_RESULT($sim_ac_qt3support_avail)
+    
+      if $sim_ac_qt3support_avail; then
+        SIM_AC_CONFIGURATION_SETTING([Qt3Support], [found enabled in Qt4 and is being used])
+        AC_DEFINE(HAVE_QT3SUPPORT_LIBRARY, 1, [Define to enable use of Qt3Support library])
+      else
+        SIM_AC_CONFIGURATION_SETTING([Qt3Support], [is not being enabled in Qt4 used -- SIM Voleon examples not built])
+        LIBS=$sim_ac_save_libs
+        AC_MSG_ERROR([Detected Qt4 usage but Qt3Support couldn't be found. This is currently required to run the SIMVoleon examples. To fix, you will need to enable Qt3Support in Qt4.])
+      fi    
     fi
   ], [
     if $sim_ac_simvoleon_desired; then
