@@ -178,8 +178,6 @@ int coincounter=0;
 int coincounter2=0;
 float g_z[COINS];
 
-const int MAXZ=2.0;
-
 bool flagg=true;
 float f=0, f2=0;
 float r[COINS];
