@@ -1,0 +1,115 @@
+2006-12-12 13:42:10  Rev 634    frodo
+
+	* volumerendering/Makefile.am, volumerendering/Makefile.in:
+
+	build fix for the volumerendering examples
+
+2006-11-24 18:10:52  Rev 633    tamer
+
+	* volumerendering:
+
+	sources in Cute repository have been moved to Cute/trunk/src.
+
+2006-11-24 15:35:49  Rev 632    tamer
+
+	* volumerendering:
+
+	sources in Cute repository have been moved to Cute/trunk/lib.
+
+2006-10-02 01:00:30  Rev 630    autosvn
+
+	* .cvsignore:
+
+	remove now obsolete .cvsignore files.
+
+2006-03-30 15:13:06  Rev 628    kyrah
+
+	* configure.ac:
+
+	Universal Binary support.
+
+2006-03-17 13:28:32  Rev 627    kyrah
+
+	* aclocal.m4, configure:
+
+	Bootstrap.
+
+2006-03-16 13:48:15  Rev 626    mortene
+
+	* aclocal.m4, configure, cfg/wrapmsvc.exe:
+
+	bootstrap
+
+2006-02-22 16:44:16  Rev 625    kyrah
+
+	* configure.ac:
+
+	Use SIM_AC_UNIQIFY_OPTION_LIST macro instead of the obsolete
+	SIM_AC_UNIQIFY_LIST. The newer macro supports spaces in the option
+	list, and thus avoids "-arch ppc -arch i386" to be changed into
+	the bogus "-arch ppc i386".
+
+2006-02-03 13:55:06  Rev 624    kintel
+
+	* nodes/extselection.cpp.in:
+
+	Fixed Coin bug #159
+
+2006-02-02 23:38:23  Rev 623    kyrah
+
+	* manipulators/Makefile.in, nodekits/Makefile.in, coin-
+	competitions/SIM-20011005/Makefile.in, coin-
+	competitions/SIM-20011116/Makefile.in, coin-
+	competitions/SIM-20020503/Makefile.in, components/Makefile.in, coin-
+	competitions/SIM-20010803/Makefile.in, coin-
+	competitions/SIM-20020118/Makefile.in, sound/Makefile.in,
+	engines/Makefile.in, coin-competitions/SIM-20010824/Makefile.in,
+	coin-competitions/SIM-20010914/Makefile.in, aclocal.m4,
+	sensors/Makefile.in, draggers/Makefile.in, configure,
+	actions/Makefile.in, Makefile.in, eyecandy/Makefile.in, coin-
+	competitions/Makefile.in, volumerendering/Makefile.in,
+	nodes/Makefile.in, annex/Makefile.in:
+
+	Bootstrap.
+
+2006-02-02 23:34:08  Rev 622    kyrah
+
+	* coin-competitions/SIM-20020503/Makefile.am, coin-
+	competitions/SIM-20011116/Makefile.am, components/Makefile.am, coin-
+	competitions/SIM-20020118/Makefile.am, coin-
+	competitions/SIM-20010803/Makefile.am, engines/Makefile.am,
+	sound/Makefile.am, coin-competitions/SIM-20010824/Makefile.am, coin-
+	competitions/SIM-20010914/Makefile.am, configure.ac,
+	sensors/Makefile.am, draggers/Makefile.am, Makefile.am,
+	actions/Makefile.am, eyecandy/Makefile.am, coin-
+	competitions/Makefile.am, volumerendering/Makefile.am,
+	nodes/Makefile.am, annex/Makefile.am, manipulators/Makefile.am,
+	nodekits/Makefile.am, coin-competitions/SIM-20011005/Makefile.am:
+
+	Changed target for building Mac OS X applications bundles from
+	"install" to the more appropriate "app-bundles".
+
+2006-02-01 11:56:46  Rev 621    mortene
+
+	* cfg/gendsp.sh.in, aclocal.m4, configure, cfg/config.guess,
+	cfg/errors.txt, nodes/Makefile.in, cfg/config.sub:
+
+	bootstrap
+
+2006-02-01 11:51:03  Rev 620    mortene
+
+	* configure.ac:
+
+	Fixes for correct Qt detection, even with Inventor.
+
+2006-01-31 21:23:22  Rev 619    kyrah
+
+	* nodes/Makefile.am, configure.ac:
+
+	Added nurbssurface example.
+
+2006-01-31 21:22:57  Rev 618    kyrah
+
+	* nodes/nurbssurface.cpp.in:
+
+	Basic usage example for the SoNurbsSurface and SoNurbsProfile nodes.

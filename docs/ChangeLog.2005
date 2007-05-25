@@ -1,0 +1,198 @@
+2005-11-30 15:54:03  Rev 617    mortene
+
+	* nodes/pointset.cpp.in:
+
+	Mention interaction possibility.
+
+2005-10-25 09:43:26  Rev 616    kyrah
+
+	* draggers/jackdragger.cpp.in, actions/intersection.cpp.in:
+
+	Call So@Gui@::show(w) after viewer->show(). (At least with Qt-4/Mac,
+	the size of the window is wrong otherwise.)
+
+2005-10-18 16:15:34  Rev 615    kyrah
+
+	* components/snapshotviewer.cpp.in:
+
+	Call So@Gui@::show(w) after viewer->show(). (At least with Qt-4/Mac,
+	the size of the window is wrong otherwise.)
+
+2005-07-14 10:03:13  Rev 614    mortene
+
+	* configure:
+
+	bootstrap
+
+2005-07-14 10:03:02  Rev 613    mortene
+
+	* configure.ac:
+
+	Bugfix: don't link with simage if not using Coin -- leads to early segfault
+	with SGI Inventor, at least.
+
+2005-07-14 09:29:44  Rev 612    mortene
+
+	* aclocal.m4, configure, configure.ac:
+
+	Bugfix: configuring for SGI Inventor / InventorXt was out of sync.
+
+2005-07-14 09:12:00  Rev 611    mortene
+
+	* aclocal.m4, cfg/gendsp.sh.in, configure, Makefile.in,
+	components/Makefile.in:
+
+	bootstrap
+
+2005-07-14 09:11:37  Rev 610    mortene
+
+	* components/simplerenderarea.cpp.in, components/Makefile.am,
+	configure.ac:
+
+	New example, simplest possible So*RenderArea usage. Useful for generating
+	small test examples for reproducing bugs.
+
+2005-07-14 09:07:34  Rev 609    mortene
+
+	* components/examinerviewer.cpp.in, Makefile.am:
+
+	FIXME note.
+
+2005-06-30 12:36:33  Rev 608    mortene
+
+	* components/simpleexviewer.cpp.in:
+
+	Tiny clean-up: remove unnecessary #include.
+
+2005-06-28 08:09:07  Rev 607    mortene
+
+	* sound/audiocallback.cpp.in:
+
+	Compile fixes: improve typing, get rid of g++ warning.
+
+2005-06-09 09:44:31  Rev 606    mortene
+
+	* aclocal.m4, configure:
+
+	bootstrap
+
+2005-06-09 09:42:34  Rev 605    mortene
+
+	* components/computils.cpp.in:
+
+	Allow TGS MeshViz instead of SIM Aruba.
+
+2005-06-09 09:42:19  Rev 604    mortene
+
+	* configure.ac:
+
+	Bugfix: Qt-check macros has changed, sync.
+
+2005-06-09 09:14:31  Rev 603    mortene
+
+	* manipulators/Makefile.in, config.h.in, nodekits/Makefile.in, coin-
+	competitions/SIM-20011005/Makefile.in, coin-
+	competitions/SIM-20011116/Makefile.in, coin-
+	competitions/SIM-20020503/Makefile.in, components/Makefile.in, coin-
+	competitions/SIM-20010803/Makefile.in, coin-
+	competitions/SIM-20020118/Makefile.in, sound/Makefile.in,
+	engines/Makefile.in, coin-competitions/SIM-20010824/Makefile.in,
+	coin-competitions/SIM-20010914/Makefile.in, sensors/Makefile.in,
+	draggers/Makefile.in, configure, actions/Makefile.in, Makefile.in,
+	eyecandy/Makefile.in, coin-competitions/Makefile.in,
+	volumerendering/Makefile.in, nodes/Makefile.in, annex/Makefile.in:
+
+	bootstrap
+
+2005-06-09 09:13:49  Rev 602    mortene
+
+	* configure.ac:
+
+	Added feature: attempt to detect and use TGS MeshViz, if found.
+
+2005-06-07 12:55:57  Rev 601    mortene
+
+	* manipulators/Makefile.in, config.h.in, nodekits/Makefile.in, coin-
+	competitions/SIM-20011005/Makefile.in, coin-
+	competitions/SIM-20011116/Makefile.in, coin-
+	competitions/SIM-20020503/Makefile.in, components/Makefile.in, coin-
+	competitions/SIM-20010803/Makefile.in, coin-
+	competitions/SIM-20020118/Makefile.in, sound/Makefile.in,
+	engines/Makefile.in, coin-competitions/SIM-20010824/Makefile.in,
+	coin-competitions/SIM-20010914/Makefile.in, aclocal.m4,
+	sensors/Makefile.in, draggers/Makefile.in, configure,
+	actions/Makefile.in, Makefile.in, eyecandy/Makefile.in, coin-
+	competitions/Makefile.in, volumerendering/Makefile.in,
+	cfg/errors.txt, nodes/Makefile.in, annex/Makefile.in:
+
+	bootstrap
+
+2005-06-07 12:50:35  Rev 600    mortene
+
+	* eyecandy/toonshader.cpp.in:
+
+	FIXMEs about robustness.
+
+2005-06-07 12:48:46  Rev 599    mortene
+
+	* configure.ac, components/computils.cpp.in:
+
+	Added feature; pick up on and init SIM Aruba.
+
+2005-06-01 08:53:17  Rev 598    thammer
+
+	* sound/manysources.cpp.in:
+
+	Make sure sound is heard at a distance
+
+2005-05-24 21:00:01  Rev 597    thammer
+
+	* sound/interactive.cpp.in:
+
+	Trigger sounds by the keyboard
+
+2005-04-28 12:47:21  Rev 596    mortene
+
+	* cfg/gendsp.sh.in, configure, cfg/wrapmsvc.exe, components/Makefile.in,
+	volumerendering/Makefile.in:
+
+	Bootstrap.
+
+2005-04-28 12:47:01  Rev 595    mortene
+
+	* components/Makefile.am, configure.ac, components/simpleexviewer.cpp.in:
+
+	Build the dead simple examinerviewer example. Nice to have around for quick
+	tests.
+
+2005-04-27 11:17:50  Rev 594    handegar
+
+	* aclocal.m4, config.h.in, configure, configure.ac,
+	eyecandy/Makefile.in, eyecandy/Makefile.am:
+
+	Bootstrap
+
+2005-04-27 11:15:49  Rev 593    handegar
+
+	* eyecandy/toonshader.cpp.in:
+
+	New SoShaderProgram example.
+
+2005-04-18 09:41:29  Rev 592    thammer
+
+	* sound/distance_attenuation.iv:
+
+	Demonstrates distance attenuation and spatialization with draggers to
+	change the most important parameters.
+
+2005-01-10 10:41:15  Rev 591    mortene
+
+	* nodes/selection.cpp.in:
+
+	Plug memleak.
+
+2005-01-04 13:13:01  Rev 590    mortene
+
+	* actions/tesselate.cpp:
+
+	Clean-up on exit.

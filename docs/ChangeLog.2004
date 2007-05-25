@@ -1,0 +1,509 @@
+2004-12-07 10:47:03  Rev 589    mortene
+
+	* volumerendering/Makefile.am:
+
+	FIXME note.
+
+2004-12-06 13:08:22  Rev 588    mortene
+
+	* actions/raypick.cpp.in:
+
+	Make it possible to read model from file.
+
+2004-10-28 11:58:58  Rev 587    mortene
+
+	* nodes/extselection.cpp.in:
+
+	Group options, identify defaults.
+
+2004-10-26 08:43:01  Rev 586    mortene
+
+	* volumerendering/voleonexplore.cpp:
+
+	Make alpha channel values go from 0 to 1, which is more often what we want.
+
+2004-10-26 08:42:02  Rev 585    mortene
+
+	* volumerendering/orthoslicer.cpp.in:
+
+	Minor fix, remove sphere.
+
+2004-10-21 09:52:22  Rev 584    handegar
+
+	* volumerendering/fencediagram.cpp:
+
+	Minor cleanup.
+
+2004-10-21 09:41:27  Rev 583    handegar
+
+	* volumerendering/Makefile.am, volumerendering/Makefile.in,
+	volumerendering/fencediagram.cpp:
+
+	Changed filename: 'volumefencediagram' => 'fencediagram'.
+	Bootstrap.
+
+2004-10-21 09:15:32  Rev 582    handegar
+
+	* volumerendering/volumefencediagram.cpp:
+
+	Changed input-keys.
+
+2004-10-21 08:59:23  Rev 581    handegar
+
+	* volumerendering/Makefile.am, volumerendering/volumefencediagram.cpp,
+	volumerendering/Makefile.in:
+
+	Added an SoObliqueSlice example (fence diagram).
+	Bootstrap.
+
+2004-10-11 08:45:46  Rev 580    mortene
+
+	* configure, volumerendering/Makefile.in:
+
+	bootstrap
+
+2004-10-11 08:44:07  Rev 579    mortene
+
+	* configure.ac:
+
+	Work around ugly SGI/TGS headers.
+
+2004-10-11 08:13:01  Rev 578    mortene
+
+	* volumerendering/Makefile.am, volumerendering/changingdataset.cpp.in,
+	volumerendering/VolumeRenderHandler.h,
+	volumerendering/readvol.cpp.in, volumerendering/voleonexplore.cpp,
+	volumerendering/VolumeRenderHandler.cpp:
+
+	Fixes vs API changes for SIM Voleon 2.0.
+
+2004-10-11 08:12:38  Rev 577    mortene
+
+	* volumerendering/OpaqueChair.cpp, volumerendering/OpaqueChair.h:
+
+	Many code clean-ups.
+
+2004-10-11 08:10:25  Rev 576    mortene
+
+	* BUGS.txt:
+
+	New item.
+
+2004-10-08 15:09:52  Rev 575    mortene
+
+	* volumerendering/TransferFunctionHandler.cpp,
+	volumerendering/utility.h, volumerendering/OrthoSliceHandler.cpp,
+	volumerendering/OrthoSliceHandler.h, volumerendering/readvol.cpp.in,
+	volumerendering/orthoslicer.cpp.in:
+
+	Compatibility fixes.
+
+2004-10-08 14:25:53  Rev 574    mortene
+
+	* manipulators/Makefile.in, config.h.in, nodekits/Makefile.in, coin-
+	competitions/SIM-20011005/Makefile.in, coin-
+	competitions/SIM-20011116/Makefile.in, coin-
+	competitions/SIM-20020503/Makefile.in, components/Makefile.in, coin-
+	competitions/SIM-20010803/Makefile.in, coin-
+	competitions/SIM-20020118/Makefile.in, sound/Makefile.in,
+	engines/Makefile.in, coin-competitions/SIM-20010824/Makefile.in,
+	coin-competitions/SIM-20010914/Makefile.in, sensors/Makefile.in,
+	draggers/Makefile.in, configure, actions/Makefile.in, Makefile.in,
+	eyecandy/Makefile.in, coin-competitions/Makefile.in,
+	volumerendering/Makefile.in, nodes/Makefile.in, annex/Makefile.in:
+
+	Bootstrap.
+
+2004-10-08 14:25:08  Rev 573    mortene
+
+	* configure.ac, components/computils.cpp.in:
+
+	Pick VolumeViz.
+
+2004-10-08 13:53:25  Rev 572    mortene
+
+	* aclocal.m4, configure, Makefile.in:
+
+	Bootstrap.
+
+2004-10-08 13:51:21  Rev 571    mortene
+
+	* configure.ac:
+
+	Detect requests for InventorQt instead of InventorXt, and pick up the correct
+	libraries.
+
+2004-10-06 17:07:52  Rev 570    kyrah
+
+	* aclocal.m4, configure, Makefile.in, cfg/errors.txt:
+
+	Bootstrap.
+
+2004-09-21 15:26:57  Rev 569    pederb
+
+	* nodes/bigimage.cpp.in:
+
+	Slightly improved.
+
+2004-09-21 09:17:06  Rev 568    mortene
+
+	* volumerendering/raypick.cpp.in:
+
+	Minor debug fix: render volume picks in a different color.
+
+2004-09-20 09:31:45  Rev 567    mortene
+
+	* volumerendering/raypick.cpp.in:
+
+	Fix reported incompatibility with TGS VolumeViz interface.
+
+2004-09-19 13:28:23  Rev 566    mortene
+
+	* BUGS.txt:
+
+	New item.
+
+2004-09-17 09:53:56  Rev 565    mortene
+
+	* manipulators/Makefile.in, config.h.in, nodekits/Makefile.in, coin-
+	competitions/SIM-20011005/Makefile.in, coin-
+	competitions/SIM-20011116/Makefile.in, coin-
+	competitions/SIM-20020503/Makefile.in, components/Makefile.in, coin-
+	competitions/SIM-20010803/Makefile.in, coin-
+	competitions/SIM-20020118/Makefile.in, sound/Makefile.in,
+	engines/Makefile.in, coin-competitions/SIM-20010824/Makefile.in,
+	coin-competitions/SIM-20010914/Makefile.in, aclocal.m4,
+	sensors/Makefile.in, draggers/Makefile.in, configure,
+	actions/Makefile.in, Makefile.in, eyecandy/Makefile.in, coin-
+	competitions/Makefile.in, volumerendering/Makefile.in,
+	nodes/Makefile.in, annex/Makefile.in:
+
+	Bootstrap.
+
+2004-09-17 09:53:02  Rev 564    mortene
+
+	* configure.ac, components/computils.cpp.in:
+
+	Pick up support for the Coin SIM Scenery interface, if available.
+
+2004-09-16 11:26:13  Rev 563    larsa
+
+	* aclocal.m4, configure:
+
+	bootstrap
+
+2004-09-15 13:58:00  Rev 562    handegar
+
+	* volumerendering/voleonexplore.cpp:
+
+	Minor instruction-text fix.
+
+2004-09-15 13:44:48  Rev 561    handegar
+
+	* volumerendering/Makefile.am, volumerendering/Makefile.in,
+	volumerendering/voleonexplore.cpp:
+
+	Added a new SIMVoleon example; 'VoleonExplore'.
+	Bootstrap.
+
+2004-09-14 14:11:46  Rev 560    mortene
+
+	* volumerendering/readvol.cpp.in:
+
+	Offer bbox control.
+
+2004-09-13 07:50:38  Rev 559    mortene
+
+	* volumerendering/TransferFunctionHandler.cpp:
+
+	Build fixes.
+
+2004-09-10 14:38:04  Rev 558    mortene
+
+	* manipulators/Makefile.in, nodekits/Makefile.in, coin-
+	competitions/SIM-20011005/Makefile.in, coin-
+	competitions/SIM-20011116/Makefile.in, coin-
+	competitions/SIM-20020503/Makefile.in, components/Makefile.in, coin-
+	competitions/SIM-20010803/Makefile.in, coin-
+	competitions/SIM-20020118/Makefile.in, sound/Makefile.in,
+	engines/Makefile.in, coin-competitions/SIM-20010824/Makefile.in,
+	coin-competitions/SIM-20010914/Makefile.in, aclocal.m4,
+	sensors/Makefile.in, draggers/Makefile.in, configure, Makefile.in,
+	actions/Makefile.in, eyecandy/Makefile.in, coin-
+	competitions/Makefile.in, volumerendering/Makefile.in,
+	nodes/Makefile.in, annex/Makefile.in:
+
+	Bootstrap.
+
+2004-09-10 14:37:47  Rev 557    mortene
+
+	* volumerendering/Makefile.am, configure.ac, Makefile.am:
+
+	Use widgets from our set of Qt extensions.
+
+2004-09-09 14:47:07  Rev 556    handegar
+
+	* draggers/Makefile.in, configure.ac, draggers/Makefile.am,
+	draggers/jackdragger.cpp.in:
+
+	Added a SoJackDragger example illustrating the SbPlane::intersect(SbPlane)
+	feature in Coin.
+	Bootstrap.
+
+2004-09-06 13:59:21  Rev 555    mortene
+
+	* volumerendering/utility.cpp:
+
+	Compile fix: Inventor compatibility mod.
+
+2004-09-06 10:13:02  Rev 554    handegar
+
+	* volumerendering/raypick.cpp.in:
+
+	Added some coloring to the picked points making them easier to spot.
+
+2004-09-03 08:12:45  Rev 553    mortene
+
+	* aclocal.m4, configure, Makefile.in, cfg/config.guess, cfg/errors.txt,
+	cfg/config.sub:
+
+	Bootstrap.
+
+2004-09-03 08:09:37  Rev 552    mortene
+
+	* Makefile.am:
+
+	Tmp disable building the volumerendering examples.
+
+2004-09-02 13:15:43  Rev 551    mortene
+
+	* components/examinerviewer.cpp.in:
+
+	Clean up static data.
+
+2004-08-29 18:03:11  Rev 550    mortene
+
+	* nodes/scenetexture.cpp.in:
+
+	Very minor code comment fixes.
+
+2004-07-23 11:31:04  Rev 549    kyrah
+
+	* nodekits/wavekitdemo.cpp.in:
+
+	Bugfix: Don't apply stone texture to help text. :)
+
+2004-07-19 15:50:53  Rev 548    pederb
+
+	* nodes/bumpmap.cpp.in:
+
+	compile fix
+
+2004-07-19 15:49:40  Rev 547    pederb
+
+	* nodes/bumpmap.cpp.in:
+
+	Turn specular shading on/off.
+
+2004-07-14 11:41:29  Rev 546    mortene
+
+	* nodes/bumpmap.cpp.in:
+
+	Minor fix, typo.
+
+2004-07-06 10:55:54  Rev 545    mortene
+
+	* BUGS.txt:
+
+	Additional info on last item.
+
+2004-07-06 10:55:39  Rev 544    mortene
+
+	* nodes/quadmesh.cpp.in:
+
+	Bugfix: was reading off array bounds for SoCoordinate3 nodes. Also simplified
+	code a bit.
+
+2004-06-24 15:03:23  Rev 543    kintel
+
+	* BUGS.txt:
+
+	New item
+
+2004-06-24 08:51:46  Rev 542    mortene
+
+	* BUGS.txt:
+
+	New items; problems found by new summer interns while testing.
+
+2004-06-24 08:22:53  Rev 541    mortene
+
+	* actions/intersection.cpp.in:
+
+	Turn off epsilon distance by default.
+
+2004-05-05 13:37:59  Rev 540    mortene
+
+	* volumerendering/raypick.cpp.in, volumerendering/Makefile.am,
+	volumerendering/utility.h, volumerendering/examine.cpp.in,
+	volumerendering/Makefile.in, volumerendering/orthoslicer.cpp.in,
+	volumerendering/utility.cpp:
+
+	32-bit voxel values no longer supported, change example programs accordingly.
+
+2004-05-05 13:36:53  Rev 539    mortene
+
+	* annex/rawhardcopy.cpp:
+
+	Doc tidbit.
+
+2004-05-05 13:17:43  Rev 538    mortene
+
+	* volumerendering/readvol.cpp.in:
+
+	Default to show all slices of a volume.
+
+2004-03-25 15:08:46  Rev 537    larsa
+
+	* manipulators/Makefile.in, nodekits/Makefile.in, coin-
+	competitions/SIM-20011005/Makefile.in, coin-
+	competitions/SIM-20011116/Makefile.in, coin-
+	competitions/SIM-20020503/Makefile.in, components/Makefile.in, coin-
+	competitions/SIM-20010803/Makefile.in, coin-
+	competitions/SIM-20020118/Makefile.in, sound/Makefile.in,
+	engines/Makefile.in, coin-competitions/SIM-20010824/Makefile.in,
+	coin-competitions/SIM-20010914/Makefile.in, aclocal.m4,
+	sensors/Makefile.in, draggers/Makefile.in, configure, Makefile.in,
+	actions/Makefile.in, eyecandy/Makefile.in, coin-
+	competitions/Makefile.in, volumerendering/Makefile.in,
+	nodes/Makefile.in, annex/Makefile.in:
+
+	bootstrap
+
+2004-03-25 15:05:54  Rev 536    larsa
+
+	* configure.ac:
+
+	another MKS fix
+
+2004-03-25 15:03:43  Rev 535    larsa
+
+	* configure.ac:
+
+	couple of MKS fixes
+
+2004-03-24 22:40:23  Rev 534    kyrah
+
+	* configure:
+
+	Bootstrap.
+
+2004-03-24 22:35:51  Rev 533    kyrah
+
+	* configure.ac:
+
+	Don't require SmallChange by default.
+
+2004-03-24 15:23:12  Rev 532    pederb
+
+	* components/multifileviewer.cpp.in:
+
+	Test-application for thread safe loading.
+
+2004-03-24 12:15:10  Rev 531    pederb
+
+	* aclocal.m4, components/Makefile.am, configure, configure.ac,
+	components/Makefile.in, components/multifileviewer.cpp.in:
+
+	New viewer for testing thread safe loading of files.
+
+2004-02-27 21:53:43  Rev 530    kyrah
+
+	* manipulators/Makefile.in, nodekits/Makefile.in, coin-
+	competitions/SIM-20011005/Makefile.in, coin-
+	competitions/SIM-20011116/Makefile.in, coin-
+	competitions/SIM-20020503/Makefile.in, components/Makefile.in, coin-
+	competitions/SIM-20010803/Makefile.in, coin-
+	competitions/SIM-20020118/Makefile.in, sound/Makefile.in,
+	engines/Makefile.in, coin-competitions/SIM-20010824/Makefile.in,
+	coin-competitions/SIM-20010914/Makefile.in, aclocal.m4,
+	sensors/Makefile.in, draggers/Makefile.in, configure,
+	actions/Makefile.in, Makefile.in, eyecandy/Makefile.in,
+	volumerendering/Makefile.in, cfg/errors.txt, nodes/Makefile.in,
+	annex/Makefile.in:
+
+	Bootstrap.
+
+2004-02-27 21:41:26  Rev 529    kyrah
+
+	* coin-competitions/SIM-20011116/Makefile.am, coin-
+	competitions/SIM-20020503/Makefile.am, components/Makefile.am, coin-
+	competitions/SIM-20010803/Makefile.am, coin-
+	competitions/SIM-20020118/Makefile.am, sound/Makefile.am,
+	engines/Makefile.am, coin-competitions/SIM-20010824/Makefile.am,
+	coin-competitions/SIM-20010914/Makefile.am, configure.ac,
+	sensors/Makefile.am, draggers/Makefile.am, actions/Makefile.am,
+	Makefile.am, eyecandy/Makefile.am, volumerendering/Makefile.am,
+	components/materialeditor.cpp.in, nodes/Makefile.am,
+	annex/Makefile.am, manipulators/Makefile.am, nodekits/Makefile.am,
+	coin-competitions/SIM-20011005/Makefile.am:
+
+	Create Mac OS X application bundles on "make install".
+
+2004-02-19 12:10:58  Rev 528    mortene
+
+	* volumerendering/Makefile.am, volumerendering/opaquechairexaminer.cpp,
+	volumerendering/Makefile.in, volumerendering/OpaqueChair.cpp,
+	volumerendering/OpaqueChair-iv.h, volumerendering/chair.cpp:
+
+	Add chair visualization example to build. Example written by handegar.
+
+2004-02-19 12:05:58  Rev 527    mortene
+
+	* volumerendering/TransferFunctionHandler.cpp:
+
+	Build fix; remove null statement.
+
+2004-02-04 14:11:40  Rev 526    mortene
+
+	* aclocal.m4, configure, annex/Makefile.in:
+
+	Bootstrap.
+
+2004-02-04 14:11:30  Rev 525    mortene
+
+	* annex/rawhardcopy.cpp:
+
+	Remove build hack.
+
+2004-02-04 14:03:09  Rev 524    mortene
+
+	* annex/rawhardcopy.cpp, annex/Makefile.am:
+
+	Bare-bones vector output example.
+
+2004-01-19 13:35:30  Rev 523    pederb
+
+	* nodes/bumpmap.cpp.in:
+
+	Bump map example.
+
+2004-01-19 13:12:35  Rev 522    pederb
+
+	* aclocal.m4, config.h.in, configure, configure.ac:
+
+	Added test for SoBumpMapTransform node. Bootstrap.
+
+2004-01-09 11:28:34  Rev 521    handegar
+
+	* volumerendering/opaquechairexaminer.cpp,
+	volumerendering/OpaqueChair.iv, volumerendering/OpaqueChair.cpp,
+	volumerendering/OpaqueChair.h:
+
+	Added an example for 'opaque chair'-examining of volume data.
+
+2003-12-18 16:07:05  Rev 520    pederb
+
+	* sound/audiocallback.cpp.in:
+
+	Compile fix. Reported by Giampiero Gabbiani.
