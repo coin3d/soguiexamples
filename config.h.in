@@ -39,6 +39,9 @@
 /* define if pthread's struct timespec uses nsecs and not usecs */
 #undef HAVE_PTHREAD_TIMESPEC_NSEC
 
+/* Define to enable use of Qt3Support library */
+#undef HAVE_QT3SUPPORT_LIBRARY
+
 /* Define to enable explicit use of simage library */
 #undef HAVE_SIMAGE_LIBRARY
 
