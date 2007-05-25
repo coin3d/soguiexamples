@@ -46,7 +46,7 @@ class TextureWriter
   unsigned int line;
 
   // render character to pixelbuffer
-  void render(char c, unsigned int line, unsigned int column);
+  void render(int c, unsigned int line, unsigned int column);
 public:
 
   TextureWriter(unsigned int cols, unsigned int lines);

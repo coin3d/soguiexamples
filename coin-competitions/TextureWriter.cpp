@@ -147,7 +147,7 @@ void TextureWriter::render( void )
   }
 }
 
-void TextureWriter::render( char c, unsigned int line, unsigned int column )
+void TextureWriter::render( int i, unsigned int line, unsigned int column )
 {
   static unsigned int bit_pos_x;
   static unsigned int bit_pos_y;
@@ -158,7 +158,7 @@ void TextureWriter::render( char c, unsigned int line, unsigned int column )
 
   char_pos_y = line * this->fontYSize;
   char_pos_x = column * this->fontXSize;
-  bitmap = SOGUIEXAMPLES_FONT[c];
+  bitmap = SOGUIEXAMPLES_FONT[i];
 
   // FIXME: rendering is sloooow!
   for (bit_pos_y=0;bit_pos_y<this->fontYSize;bit_pos_y++) {
