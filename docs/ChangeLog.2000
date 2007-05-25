@@ -1,0 +1,2706 @@
+ChangeLog
+=========
+
+This is the ChangeLog file for the ChangeLog.sh module.  This file is
+automatically generated every night.  Entries are in reversed chronological
+order.
+
+See http://www.red-bean.com/~kfogel/cvs2cl.shtml for information about the
+cvs2cl script used to generate this file.
+
+============================================================================
+
+2001-07-17 14:12  larsa
+
+	* cfg/m4/general.m4:
+	
+	Make macros compatible with both Autoconf 2.50 and CVS Autoconf.
+
+2001-07-12 15:56  mortene
+
+	* nodes/text3.cpp.in:
+	
+	Less offensive scroller text..
+
+2001-07-12 15:55  mortene
+
+	* eyecandy/simbuoy.cpp.in:
+	
+	Calm down the weather a little bit.
+
+2001-07-12 10:43  larsa
+
+	* cfg/m4/general.m4:
+	
+	Remove many redundant and annoying -I compiler options.
+
+2001-07-11 19:45  larsa
+
+	* cfg/m4/general.m4:
+	
+	Prefer <inttypes.h> before <stdint.h> when looking for
+	size-specific int types.
+
+2001-07-11 14:50  mortene
+
+	* cfg/m4/general.m4:
+	
+	Include <stdint.h> when searching for fixed-size bitwidth integer
+	types. Problem detected and solution suggested by Ralf Corsepius.
+
+2001-07-11 14:43  larsa
+
+	* cfg/m4/: check_jpeglib.m4, check_pnglib.m4, check_tifflib.m4,
+	check_ungif.m4, check_zlib.m4:
+	
+	Disable automatically checking for libraries in $prefix.
+
+2001-07-11 08:35  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	New macro for detection of presence of WGL binding (extracted from
+	Coin configure.in).
+
+2001-07-10 23:02  mortene
+
+	* cfg/m4/wrapmsvc.cpp:
+	
+	A few bugfixes.
+
+2001-07-10 19:54  larsa
+
+	* cfg/m4/check_qt.m4:
+	
+	Support building with MS Windows Qt-2.3.0 Non-Commercial Edition.
+
+2001-07-10 17:53  mortene
+
+	* cfg/m4/wrapmsvc.cpp:
+	
+	Started writing support for GCC3-style dependency tracking.
+
+2001-07-10 16:20  larsa
+
+	* cfg/m4/msvccc:
+	
+	Reset temporary variable in loop.
+
+2001-07-10 15:26  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Workarounds for bug in HP-UX aCC compiler.
+
+2001-07-10 14:56  larsa
+
+	* cfg/m4/msvccc:
+	
+	Add support for .lst files.
+
+2001-07-10 14:39  larsa
+
+	* cfg/m4/msvccc:
+	
+	Add fake /LST: link option.
+
+2001-07-10 13:48  mortene
+
+	* cfg/m4/check_dl.m4:
+	
+	A bit more extensive (and secure) testing for the dynamic link
+	library.
+
+2001-07-09 23:38  mortene
+
+	* cfg/m4/wrapmsvc.cpp:
+	
+	Misc fixes to pass the libCoin configure process.
+
+2001-07-09 22:21  mortene
+
+	* cfg/m4/wrapmsvc.cpp:
+	
+	Reorganized.
+	
+	Can now completely build simage library again, at least.
+
+2001-07-04 11:31  larsa
+
+	* TODO, configure.in, components/Makefile.am,
+	components/overlay.cpp.in:
+	
+	Reduced the number of Automake conditionals.
+
+2001-06-29 09:54  pederb
+
+	* Makefile.am, bootstrap, components/Makefile.am,
+	nodes/Makefile.am, nodes/extselection.cpp.in:
+	
+	Added SoExtSelection example program.
+
+2001-06-27 19:01  mortene
+
+	* cfg/m4/wrapmsvc.cpp:
+	
+	Starts rewrite to parse all options before constructing the
+	MSVC-native argument list.
+
+2001-06-27 18:08  mortene
+
+	* cfg/m4/wrapmsvc.cpp:
+	
+	Remove some old cruft.
+
+2001-06-27 18:07  mortene
+
+	* cfg/m4/wrapmsvc.cpp:
+	
+	Start factoring.
+
+2001-06-27 17:55  mortene
+
+	* cfg/m4/wrapmsvc.cpp:
+	
+	Parse (and ignore for now) GCC3-style dependency tracking arguments
+	to the preprocessor.
+
+2001-06-27 17:01  mortene
+
+	* cfg/m4/wrapmsvc.cpp:
+	
+	Adds header.
+
+2001-06-27 16:19  mortene
+
+	* cfg/m4/: msvccc.cpp, wrapmsvc.cpp:
+	
+	Renamed msvccc.cpp -> wrapmsvc.cpp (to avoid name crash between
+	``msvccc'' shell script and ``msvccc.exe'' executable on
+	DOS-filesystem).
+
+2001-06-27 16:05  mortene
+
+	* cfg/m4/msvccc.cpp:
+	
+	Convert from POSIX-style paths to MSWin / DOS paths without forking
+	an external process.
+	
+	Misc fixes to compile with the Cygwin-port of GCC.
+
+2001-06-26 16:59  mortene
+
+	* cfg/m4/check_dl.m4:
+	
+	Test and detect availability of Win32 function LoadLibrary().
+	
+	Misc cleanups.
+
+2001-06-22 16:13  mortene
+
+	* cfg/m4/msvccc.cpp:
+	
+	Make linking work.
+
+2001-06-22 07:58  mortene
+
+	* cfg/m4/msvccc.cpp:
+	
+	Some restructuring.
+
+2001-06-14 18:06  mortene
+
+	* cfg/m4/msvccc.cpp:
+	
+	Compilation working.
+
+2001-06-14 13:35  larsa
+
+	* cfg/m4/check_qt.m4:
+	
+	also check for libqt-mt.so
+
+2001-06-13 18:35  pederb
+
+	* cfg/m4/check_tifflib.m4:
+	
+	Detect libtiff properly under Win32. Thanks to larsa for holding my
+	hand while I fixed the m4-macro :)
+
+2001-06-13 16:41  mortene
+
+	* cfg/m4/msvccc.cpp:
+	
+	Grok src files.
+
+2001-06-13 15:47  mortene
+
+	* cfg/m4/msvccc.cpp:
+	
+	Parsecode for all option arguments.
+
+2001-06-13 12:10  mortene
+
+	* cfg/m4/msvccc.cpp:
+	
+	Start of optimized MSVC++ wrapper.
+
+2001-06-08 22:05  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Typo.
+
+2001-06-08 22:04  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	New macro SIM_AC_QWIDGET_SHOWFULLSCREEN to detect existence of
+	QWidget::showFullScreen().
+
+2001-06-07 15:41  mariusbu
+
+	* cfg/m4/: ChangeLog.sh, check_be.m4, check_linkstyle.m4,
+	check_nprintf.m4, check_pthread.m4, check_x11.m4, cl-opts.txt,
+	compile_exceptions.m4, compile_functionname.m4,
+	compile_profiling.m4, compile_rtti.m4, compile_symbols.m4,
+	compile_warnings.m4, configuration_summary.m4, dime.m4,
+	doxygen_detection.m4, expand_dir_vars.m4, guile.m4, iso8601.m4,
+	macro_quoting.m4, modifierlist.m4, network.m4, path_conversion.m4,
+	sogtk.m4, sogui.m4, soqt.m4, soxt.m4, uniqify.m4:
+	
+	Fixing ^M blooper + adding SbBool
+	SoWinComponent::isFulScreen(void).
+
+2001-06-06 20:31  mariusbu
+
+	* cfg/m4/: ChangeLog.sh, check_be.m4, check_linkstyle.m4,
+	check_nprintf.m4, check_pthread.m4, check_x11.m4, cl-opts.txt,
+	compile_exceptions.m4, compile_functionname.m4,
+	compile_profiling.m4, compile_rtti.m4, compile_symbols.m4,
+	compile_warnings.m4, configuration_summary.m4, dime.m4,
+	doxygen_detection.m4, expand_dir_vars.m4, guile.m4, iso8601.m4,
+	macro_quoting.m4, modifierlist.m4, network.m4, path_conversion.m4,
+	sogtk.m4, sogui.m4, soqt.m4, soxt.m4, uniqify.m4:
+	
+	Added SoWinComponent::goFullScreen(SbBool) + misc code cleanup.
+
+2001-05-31 15:05  mariusbu
+
+	* cfg/m4/cl-opts.txt:
+	
+	Bugfix: doIdleTasks is only called when idleSensorActive=TRUE
+
+2001-05-29 14:30  larsa
+
+	* cfg/m4/compile_warnings.m4:
+	
+	irix/CC test fix
+
+2001-05-27 18:33  larsa
+
+	* cfg/m4/check_ungif.m4:
+	
+	Fix for bug in the previous bugfix.  New bugs follow...
+
+2001-05-27 18:28  larsa
+
+	* cfg/m4/check_ungif.m4:
+	
+	Fix for bug adding empty -I to CPPFLAGS.
+
+2001-05-04 18:58  larsa
+
+	* cfg/m4/compile_warnings.m4:
+	
+	General configure/build update.  - CVS Autoconf, CVS Automake,
+	libtool 1.4 - Modifications for "make dist" to work.
+
+2001-04-26 11:27  pederb
+
+	* cfg/m4/check_qt.m4:
+	
+	user32.lib is needed when linking against static Qt.
+
+2001-04-03 17:43  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Make sure the Qt check fails if the `moc' utility can not be found.
+
+2001-03-30 13:58  mortene
+
+	* cfg/m4/compile_functionname.m4:
+	
+	Corrects documentation.
+
+2001-03-28 14:13  mortene
+
+	* bootstrap:
+	
+	Accept newer CVS versions of autoconf and automake.
+
+2001-03-26 18:39  mortene
+
+	* cfg/m4/general.m4:
+	
+	Use sensible comment on the HAVE_INT*_T and COIN_INT*_T defines.
+
+2001-03-26 16:10  mortene
+
+	* cfg/m4/general.m4:
+	
+	Adds 64-bit types known to the Microsoft VisualC++ v6 compiler
+	(__int64 and unsigned __int64) to the SIM_AC_DEFINE_BYTESIZE_TYPES
+	macro.
+
+2001-03-26 11:28  pederb
+
+	* cfg/m4/check_qt.m4:
+	
+	Fix for Qt::Keypad configure test. qkeycode.h should be included,
+	not qkeyevent.h
+
+2001-03-26 09:55  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Adds macro SIM_AC_QT_KEYPAD_DEFINE to check for existence of the
+	Qt::Keypad define.
+
+2001-03-25 21:31  mortene
+
+	* cfg/m4/compile_warnings.m4:
+	
+	Kill a harmless warning which triggers with the SGI/TGS SbTime.h
+	header file (avoid clutter on stderr during compilation of SoQt,
+	SoGtk and SoXt on IRIX with SGI MIPSPro CC).
+
+2001-03-25 12:59  mortene
+
+	* cfg/m4/general.m4:
+	
+	A few minor improvements.
+
+2001-03-25 00:16  mortene
+
+	* cfg/m4/general.m4:
+	
+	Adds new macros with the purpose of finding which "native" types
+	corresponds to these typedefs with known bitwidths:
+	
+		int8_t
+		uint8_t
+		int16_t
+		uint16_t
+		int32_t
+		uint32_t
+		int64_t
+		uint64_t
+
+2001-03-23 13:02  mortene
+
+	* cfg/m4/compiler_capabilities.m4:
+	
+	Adds a test macro for smoking out this buggy compiler version on
+	the Sun platform:
+	
+	  `CC: Sun WorkShop 6 update 1 C++ 5.2 Patch 109508-01 2001/01/31''
+	
+	Problem reported by Stefan Meinlschmidt.
+
+2001-03-21 20:12  larsa
+
+	* cfg/m4/check_nprintf.m4:
+	
+	Remove the need to add the AC_DEFINEs to acconfig.h.
+
+2001-02-20 23:37  larsa
+
+	* cfg/m4/coin.m4:
+	
+	Use --alternate option if supported.
+
+2001-02-09 23:08  larsa
+
+	* cfg/m4/msvccc:
+	
+	Optimize harder when asked for.
+
+2001-02-07 21:46  larsa
+
+	* cfg/m4/uniqify.m4:
+	
+	Do evaluation of items to eliminate items that are indirectly the
+	same.
+
+2001-02-07 18:56  larsa
+
+	* cfg/m4/msvccc:
+	
+	/LIB option for linking static LIB instead of DLL.
+
+2001-02-06 09:00  larsa
+
+	* cfg/m4/simage.m4:
+	
+	Test whether simage-config supports the same alternate
+	configuration.
+
+2001-02-01 18:12  larsa
+
+	* cfg/m4/: coin.m4, simage.m4:
+	
+	Install coin-*.cfg during install-data instead of install-exec. 
+	Automake update.
+
+2001-02-01 17:07  larsa
+
+	* cfg/m4/simage.m4:
+	
+	Disable using the obsolete --debug option.
+
+2001-01-30 17:35  larsa
+
+	* cfg/m4/: check_inventor.m4, check_jpeglib.m4, check_pnglib.m4,
+	check_qt.m4, check_tifflib.m4, check_ungif.m4, check_zlib.m4,
+	coin.m4, msvccc, simage.m4:
+	
+	Changed use of egrep to plain grep.
+
+2001-01-30 17:09  larsa
+
+	* cfg/m4/coin.m4:
+	
+	Add option --debug to coin-config, and use it if appropriate in the
+	installed coin.m4 aclocal macro.  Create coin.cfg, and install it
+	in $prefix/share/Coin/conf/.  Build libCoin_g (or coin0d.dll) when
+	building debug library.
+
+2001-01-30 13:57  larsa
+
+	* cfg/m4/simage.m4:
+	
+	Split simage-config into a generic script and a set of config files
+	in $prefix/share/Coin/conf/ to enable having installed debug and
+	release versions at the same time, with support from the
+	simage-config script.  simage-config now handles new argument
+	"--debug".
+
+2001-01-30 13:42  larsa
+
+	* cfg/m4/check_zlib.m4:
+	
+	Bugfix for restoring saved variables.
+
+2001-01-29 22:14  larsa
+
+	* cfg/m4/msvccc:
+	
+	Set CYGWIN environment variable to empty string on each cygpath
+	invokation.
+
+2001-01-29 21:36  larsa
+
+	* cfg/m4/: check_jpeglib.m4, check_pnglib.m4, check_tifflib.m4,
+	check_ungif.m4, check_zlib.m4:
+	
+	Complete macro rewrites to work with Windows libraries with version
+	numbers in library names.
+
+2001-01-29 20:25  larsa
+
+	* cfg/m4/msvccc.m4:
+	
+	New macro SIM_AC_SETUP_MSVC_IFELSE to replace the old
+	SIM_AC_MSVC_SUPPORT.
+
+2001-01-19 13:36  larsa
+
+	* cfg/m4/check_dl.m4:
+	
+	Change from SIM_AC_CHECK_HEADERS to AC_CHECK_HEADERS.  The former
+	macro hasn't survived the latest changes in Autoconf, and I have no
+	idea why the AC_* macro wasn't used from the beginning.
+
+2001-01-16 17:40  larsa
+
+	* configure.in, components/computils.cpp.in:
+	
+	Add configure test for the viewer->set*Stereo*() function calls.
+
+2001-01-16 17:18  larsa
+
+	* cfg/m4/general.m4:
+	
+	Don't use AS_IF, since "AutoShell" is not a fixed API yet.
+
+2001-01-15 17:53  larsa
+
+	* cfg/m4/check_dl.m4:
+	
+	Improved quoting.
+
+2001-01-15 17:51  larsa
+
+	* cfg/m4/general.m4:
+	
+	Changed AS_IFELSE to AS_IF to keep in sync with the latest CVS
+	Autoconf.  Better indentation.
+
+2001-01-15 16:22  larsa
+
+	* cfg/m4/compile_debug.m4:
+	
+	Added AC_SUBST $DSUFFIX which is "d" when debug-compiling and ""
+	when not.
+
+2001-01-12 22:00  larsa
+
+	* cfg/m4/msvccc.m4:
+	
+	Protect against multiple invokations - which isn't supported.
+
+2001-01-11 21:25  larsa
+
+	* bootstrap, configure.in:
+	
+	Accept relative path in configure invokation.  Regeneration of
+	build files.
+
+2001-01-10 15:19  larsa
+
+	* cfg/m4/: cl-opts.txt, msvccc:
+	
+	Translate more compiler options to corresponding cl.exe options.
+
+2001-01-03 17:00  larsa
+
+	* cfg/m4/reconfigure.m4:
+	
+	Quote $0 and $@ now that the text is inside an m4 macro definition.
+
+2001-01-03 16:52  larsa
+
+	* cfg/m4/reconfigure.m4:
+	
+	Macro for creating the reconfigure script.
+
+2001-01-02 14:59  larsa
+
+	* cfg/m4/configuration_summary.m4:
+	
+	A couple of utility macros for making it easy to have a short
+	summary of the important configuration settings and a list of
+	warnings printed at the end of the configure run.
+
+2001-01-02 14:58  larsa
+
+	* cfg/m4/TODO:
+	
+	Removed old item.
+
+2000-12-22 23:16  larsa
+
+	* components/: computils.cpp.in, computils.h.in,
+	examinerviewer.cpp.in:
+	
+	Added additional options to control the viewer components, by
+	Peder.
+
+2000-12-18 15:01  larsa
+
+	* cfg/m4/check_inventor.m4:
+	
+	Removed obsolete SIM_AC_HAVE_SOMOUSEBUTTONEVENT_BUTTONS.
+
+2000-12-18 12:49  mortene
+
+	* cfg/m4/msvccc:
+	
+	Sync with latest msvccc wrapper script from HEAD branch of
+	conf-macros/.
+
+2000-12-14 20:03  larsa
+
+	* cfg/m4/: gettext.m4, lcmessage.m4, progtest.m4:
+	
+	Added warning that these files may differ from the originals, so
+	people should go to the source instead of picking them up from
+	here.
+
+2000-12-14 16:03  larsa
+
+	* cfg/m4/gettext.m4:
+	
+	Removed incorrect mkinstalldirs detection, by Ralf Corsepius.
+
+2000-12-13 15:43  larsa
+
+	* cfg/m4/: gettext.m4, lcmessage.m4, progtest.m4:
+	
+	Macro files for i18n support, by Ulrich Drepper
+	<drepper@cygnus.com>.
+
+2000-12-08 16:58  larsa
+
+	* Makefile.am, bootstrap, components/Makefile.am,
+	components/overlay.cpp.in:
+	
+	New experimental example program: components/overlay.  General
+	Autoconf update.
+
+2000-12-08 14:17  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Test presence of operator==(QGLFormat&,QGLFormat&). Problem
+	reported by Eivind Rovik and Christof Rezk-Salama.
+
+2000-12-08 13:09  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Do not use qGLVersion() for testing availability of the QGLWidget
+	implementation, as qGLVersion() is supposed to be obsoleted by
+	Troll Tech as QGL is moved into Qt proper.
+	
+	Reported by Eivind Rovik and Christof Rezk-Salama, solution
+	suggested by Eivind Rovik.
+
+2000-11-24 12:58  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Adds a set of libraries to link with which should cover static
+	linking with Qt on Win32.
+
+2000-11-24 11:10  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Only set sim_ac_inventor_path if OIVHOME has been set.
+
+2000-11-23 16:16  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Correct direction of slashes in $OIVHOME if they are backslashes.
+
+2000-11-23 15:32  mortene
+
+	* cfg/m4/sowin.m4:
+	
+	Adds macro SIM_AC_HAVE_SOWIN_IFELSE for detecting and setting up
+	the SoWin library for inclusion in other projects.
+
+2000-11-23 15:06  larsa
+
+	* cfg/m4/check_opengl.m4:
+	
+	More m4 quotes.
+
+2000-11-23 14:49  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Bugfix: remember to include the -limage library if it was found.
+
+2000-11-23 14:40  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Improve the SIM_AC_CHECK_QGL macro to work better on MSWindows
+	systems.
+
+2000-11-23 14:39  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Remove obsoleted macro SIM_CHECK_INVENTOR.
+
+2000-11-23 14:25  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Restore CPPFLAGS, LDFLAGS and LIBS after trying to link against
+	Inventor library.
+
+2000-11-23 14:22  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Fix SIM_AC_HAVE_INVENTOR_IFELSE to be able to detect TGS Inventor
+	on MSWindows systems.
+
+2000-11-23 12:18  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Adds macro SIM_AC_HAVE_INVENTOR_FEATURE for generic testing of
+	availability of various features in the Inventor implementation.
+
+2000-11-23 11:25  mortene
+
+	* components/computils.cpp.in:
+	
+	Extra case to the switch on random values.
+
+2000-11-22 23:08  mortene
+
+	* cfg/m4/bccc:
+	
+	Minor fixes by larsa.
+
+2000-11-22 20:24  mortene
+
+	* cfg/m4/check_x11.m4:
+	
+	Misc minor fixes.
+
+2000-11-21 15:30  mortene
+
+	* cfg/m4/bccc:
+	
+	Wrapper script for Borland C++.
+
+2000-11-21 15:30  mortene
+
+	* cfg/m4/bccc:
+	
+	file bccc was initially added on branch simage-1-0.
+
+2000-11-17 17:17  mortene
+
+	* configure.in:
+	
+	Add support for compiling directly against libInventorXt +
+	libInventor.
+
+2000-11-17 17:08  mortene
+
+	* components/renderarea.cpp.in:
+	
+	There was no SoSeparator over the SoDirectionalLight, which means
+	the OpenGL lightsource was never "popped off the stack", which
+	again made the scene brighter and brighter for each redraw as more
+	and more lightsources were added.
+	
+	Fixes Bugzilla #12.
+
+2000-11-16 11:46  larsa
+
+	* cfg/m4/msvccc.m4:
+	
+	New macro SIM_AC_MSVC_SUPPORT for setting up Visual C++ support on
+	the Cygwin platform.
+
+2000-11-15 23:06  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Fix for resulting CPPFLAGS.
+
+2000-11-15 15:15  mortene
+
+	* eyecandy/simbuoy.cpp.in:
+	
+	Remove unused variables.
+
+2000-11-15 13:15  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Latest changes had made the check defunct under MSWin. Fixed.
+
+2000-11-15 13:15  mortene
+
+	* cfg/m4/msvccc:
+	
+	Let all "native" options (i.e. those which starts with a "/") pass
+	through.
+
+2000-11-14 20:34  larsa
+
+	* cfg/m4/general.m4:
+	
+	Changed AC_SHELL_IFELSE to AS_IFELSE to conform to recent CVS
+	Autoconf changes, by Ralf Corsepius.  Various cosmetic changes.
+
+2000-11-12 21:17  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Don't implicitly push and pop to C when testing for the Inventor
+	image library -- it fucks up the carefully crafted tests for the
+	other dependencies already done.
+
+2000-11-12 17:13  mortene
+
+	* configure.in:
+	
+	Set up CPPFLAGS, LDFLAGS and LIBS _after_ testing compiler
+	features, to avoid getting the C++ libraries on the link line for
+	the C compiler.
+
+2000-11-11 20:50  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Only set up the QT_DLL define when testing the typical Win32
+	linking settings, as it caused problems with libqt v2.0.0 on Linux.
+
+2000-11-03 13:36  larsa
+
+	* cfg/m4/ChangeLog.sh:
+	
+	Use sed instead of bash magic.
+
+2000-11-02 21:18  larsa
+
+	* cfg/m4/check_opengl.m4:
+	
+	New (unused) macro: SIM_AC_HAVE_GLX_IFELSE().
+
+2000-11-02 13:05  mortene
+
+	* Makefile.am, configure.in:
+	
+	Remove the unfinished SoCalculator engine example, as it is just
+	confusing the way it is now.
+
+2000-11-02 12:40  mortene
+
+	* eyecandy/moirepatterns.cpp.in:
+	
+	Typo fix.
+
+2000-11-02 12:39  mortene
+
+	* eyecandy/simbuoy.cpp.in:
+	
+	Plug 2 memory leaks, and avoid reading and writing outside the
+	array bounds of the normals array.
+
+2000-11-01 13:58  mortene
+
+	* cfg/m4/msvccc:
+	
+	Document code better.
+
+2000-11-01 13:17  mortene
+
+	* eyecandy/juliaanim.cpp.in:
+	
+	Default to less polygons, to make the example usable on computers
+	with less horsepower.
+
+2000-11-01 13:16  mortene
+
+	* eyecandy/simbuoy.cpp.in:
+	
+	Use a scale value for the water mesh.
+
+2000-11-01 12:50  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Use $CPPFLAGS when extracting the Qt version number.
+
+2000-11-01 12:45  mortene
+
+	* eyecandy/moirepatterns.cpp.in:
+	
+	Some extra info on stdout on how to interact with example app.
+
+2000-11-01 12:44  mortene
+
+	* eyecandy/Makefile.am:
+	
+	Add simbuoy example to build.
+
+2000-11-01 12:41  mortene
+
+	* eyecandy/simbuoy.cpp.in:
+	
+	Rearrange code to avoid having to use forward declarations.
+
+2000-11-01 12:18  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Fix for a stupid bug in the Qt detection macro which always set the
+	Qt libraries to the last in the test.
+
+2000-10-31 21:40  mortene
+
+	* bootstrap:
+	
+	Add options "--clean" and "--add", remove unused patching
+	mechanism.
+
+2000-10-31 21:39  mortene
+
+	* cfg/depcomp:
+	
+	Updated to include tools from our latest installed Autoconf and
+	Automake.
+
+2000-10-31 21:31  mortene
+
+	* bootstrap, configure.in:
+	
+	We don't need Libtool to build the examples, so get rid of it for
+	this module.
+
+2000-10-31 21:21  mortene
+
+	* configure.in:
+	
+	Automatically detect and use the MSVC++ compiler wrapper script.
+
+2000-10-31 20:57  mortene
+
+	* autogen.sh, bootstrap:
+	
+	Rename from autogen.sh to bootstrap.
+
+2000-10-31 20:48  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Set the sim_ac_qt_libs upon success.
+
+2000-10-31 20:42  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	To find all symbols in the qt*.dll at linktime, we need to compile
+	sourcecode using Qt with the QT_DLL define.
+
+2000-10-31 19:22  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Do not use the result from the "MSWindows linking style" any more,
+	as it has been obsoleted by the msvccc wrapper script for MSVC++
+	cl.exe.
+
+2000-10-31 15:59  mortene
+
+	* cfg/m4/msvccc:
+	
+	Need to exit with a failure code on unknown options to let
+	configure work correctly.
+
+2000-10-31 15:47  mortene
+
+	* cfg/m4/msvccc:
+	
+	Let unknown option just pass through to the compiler.
+
+2000-10-30 16:05  larsa
+
+	* cfg/m4/coin.m4:
+	
+	Ensure that the Coin link test is done in C++ mode.
+
+2000-10-27 14:04  mortene
+
+	* configure.in:
+	
+	Update due to a change of name for the SIM_COMPILE_DEBUG macro.
+
+2000-10-27 14:02  mortene
+
+	* cfg/m4/compile_debug.m4:
+	
+	Cleaned up and renamed SIM_COMPILE_DEBUG to SIM_AC_COMPILE_DEBUG.
+
+2000-10-26 11:49  mortene
+
+	* cfg/m4/msvccc:
+	
+	Handle Libtool's .la files by extracting all the object-files. This
+	is a rather quick hack and probably needs to be cleaned up before
+	eventual inclusion into Autoconf or Automake distribution.
+
+2000-10-25 14:26  mortene
+
+	* cfg/m4/cvschanges.m4:
+	
+	Merged SIM_AC_CVS_CHANGE(S) macros from HEAD.
+
+2000-10-25 14:00  mortene
+
+	* cfg/m4/network.m4:
+	
+	netinet/in.h depends on sys/types.h on some platforms, according to
+	Ralf Corsepius.
+
+2000-10-25 11:48  mortene
+
+	* cfg/m4/network.m4:
+	
+	Include <sys/param.h> so the test is successful on FreeBSD systems.
+
+2000-10-24 15:28  mortene
+
+	* cfg/m4/network.m4:
+	
+	Collection of network programming related macros.
+
+2000-10-24 14:09  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Cleaned up the OpenGL and GLU detection macros after change from
+	depending on linkstyle test to using a wrapper script around the
+	MSVC++ compiler and linkers.
+
+2000-10-24 12:39  larsa
+
+	* cfg/m4/cvschanges.m4:
+	
+	New macros for ensuring that build systems are in sync with changes
+	in the CVS repository structure.
+
+2000-10-23 19:44  mortene
+
+	* cfg/m4/: check_jpeglib.m4, check_jpeglib.m4:
+	
+	Improve libjpeg test to also work with C++ compilers.
+
+2000-10-23 13:40  larsa
+
+	* cfg/m4/ChangeLog.sh:
+	
+	Set module name explicitly.
+
+2000-10-21 19:42  mortene
+
+	* cfg/m4/ChangeLog.sh:
+	
+	Corrected path to cvs2cl.pl script.
+
+2000-10-20 16:31  mortene
+
+	* cfg/m4/msvccc:
+	
+	Exit with error if cl.exe can not be found.
+
+2000-10-19 20:42  larsa
+
+	* cfg/m4/changesonly.m4:
+	
+	New SIM_AM_CHANGES_ONLY macro for configuring an Automake template
+	that can install headers as usual or only install changed headers.
+
+2000-10-19 17:57  larsa
+
+	* cfg/m4/check_inventor.m4:
+	
+	Reworked the SIM_AC_HAVE_INVENTOR_IFELSE macro.
+
+2000-10-19 17:53  larsa
+
+	* cfg/m4/coin.m4:
+	
+	Folded multiple AC_ARG_WITH invocations to just one invocation.
+
+2000-10-19 16:30  mortene
+
+	* cfg/m4/msvccc:
+	
+	Wrapper script for Microsoft Visual C++ command line tools.
+
+2000-10-16 14:13  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Let the new define-names match the old ones used for the
+	SoPolygonOffset and SoExtSelection tests.
+
+2000-10-16 11:15  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Abstracted SIM_AC_HAVE_SOPOLYGONOFFSET and
+	SIM_AC_HAVE_SOEXTSELECTION into a general
+	SIM_AC_HAVE_INVENTOR_NODE.
+	
+	By larsa.
+
+2000-10-12 19:31  larsa
+
+	* cfg/m4/check_inventor.m4:
+	
+	Changed from SoGtkTypedObject to SoGtkObject.
+
+2000-10-10 18:00  larsa
+
+	* configure.in, oivxt-config, actions/search.cpp.in,
+	components/computils.cpp.in, eyecandy/blob.cpp.in,
+	nodes/selection.cpp.in:
+	
+	Portability fixes for SGI Inventor, mostly by Ralf Corsepius.
+
+2000-10-10 14:02  mortene
+
+	* cfg/m4/: check_jpeglib.m4, check_pnglib.m4, check_tifflib.m4,
+	check_ungif.m4:
+	
+	Quoting fixes.
+
+2000-10-09 21:12  mortene
+
+	* cfg/m4/: check_jpeglib.m4, check_pnglib.m4, check_tifflib.m4,
+	check_ungif.m4, check_zlib.m4:
+	
+	Separate checking for MS linkstyle no longer needed.
+
+2000-10-09 17:25  larsa
+
+	* Makefile.am, configure.in, actions/search.cpp.in,
+	components/Makefile.am, components/customviewer.cpp.in,
+	components/directionallighteditor.cpp.in,
+	components/examinerviewer.cpp.in, components/flyviewer.cpp.in,
+	components/grapheditor.cpp.in, components/lightsliderset.cpp.in,
+	components/materialeditor.cpp.in, components/materiallist.cpp.in,
+	components/materiallist2.cpp.in,
+	components/materialsliderset.cpp.in,
+	components/materialsliderset2.cpp.in,
+	components/planeviewer.cpp.in, components/printdialog.cpp.in,
+	components/renderarea.cpp.in, components/roster.cpp.in,
+	components/transformsliderset.cpp.in, components/walkviewer.cpp.in,
+	draggers/dragpoint.cpp.in, draggers/translate1.cpp.in,
+	draggers/translate2.cpp.in, eyecandy/blob.cpp.in,
+	eyecandy/mandelzoom.cpp.in, eyecandy/moirepatterns.cpp.in,
+	eyecandy/simbuoy.cpp.in, manipulators/pointlightmanip.cpp.in,
+	nodes/selection.cpp.in, nodes/slideshow.cpp.in:
+	
+	Removed the WINWIDGET substkeyword that is not in use, and added a
+	few example programs for in-development toolkit components.
+
+2000-10-09 15:06  larsa
+
+	* cfg/m4/check_inventor.m4:
+	
+	SIM_AC_HAVE_INVENTOR_IMAGE_IFELSE: Be verbose.
+
+2000-10-09 14:58  larsa
+
+	* cfg/m4/check_inventor.m4:
+	
+	SIM_AC_HAVE_INVENTOR_IMAGE_IFELSE: New macro to detect if -limage
+	can be used.  SIM_CHECK_INVENTOR: reomved -limage from link line.
+
+2000-10-02 15:33  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Added macro SIM_AC_HAVE_SOEXTSELECTION to test for presence of the
+	SoExtSelection node.
+
+2000-10-02 10:45  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	New macro SIM_AC_GLU_READY_IFELSE for testing if GLU functions are
+	available with the current CPPFLAGS, LDFLAGS and LIBS settings.
+
+2000-09-29 19:08  mortene
+
+	* cfg/m4/check_mathlib.m4:
+	
+	A new macro SIM_AC_MATHLIB_READY_IFELSE for testing whether or not
+	we can already link against the mathlib functions with the current
+	LIBS setting.
+
+2000-09-28 16:30  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Split OpenGL-detection into two macros; one for the main OpenGL
+	library and one for detecting/adding GLU.
+	
+	Done in preparation for runtime loading and linking of GLU in Coin.
+
+2000-09-28 14:52  mortene
+
+	* cfg/m4/: check_dl.m4, check_opengl.m4, compile_debug.m4,
+	compile_exceptions.m4, compile_profiling.m4, compile_rtti.m4,
+	compile_symbols.m4, compile_warnings.m4:
+	
+	Corrected quoting.
+
+2000-09-27 17:51  mortene
+
+	* cfg/m4/check_dl.m4:
+	
+	Improved checking for -ldl (the dynamic loader library).
+
+2000-09-27 17:50  mortene
+
+	* cfg/m4/simage.m4:
+	
+	Fixed a nasty bug which made --without-simage have no effect.
+
+2000-09-27 16:57  mortene
+
+	* cfg/m4/general.m4:
+	
+	Wrote macros SIM_AC_CHECK_HEADER and SIM_AC_CHECK_HEADERS.
+
+2000-09-25 20:16  larsa
+
+	* README, autogen.sh, configure.in, depcomp, cfg/depcomp:
+	
+	Moved auxiliary scripts into cfg/.  Added test for old CVS
+	repository structure.
+
+2000-09-25 19:57  larsa
+
+	* autogen.sh, components/Makefile.am, components/Makefile.in.diff:
+	
+	Fixed the LINK<->CXXLINK problem.  General Automake/Autoconf
+	upgrade.
+
+2000-09-22 10:08  mortene
+
+	* cfg/m4/compile_symbols.m4:
+	
+	Let SIM_AC_DEBUGSYMBOLS strip off the "-g" option for other
+	compilers than GCC.
+
+2000-09-18 14:14  larsa
+
+	* cfg/m4/guile.m4:
+	
+	New macro for detecting Guile (in a better way than the provided
+	GUILE_FLAGS macro does).
+
+2000-09-18 09:02  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Let QGL detection macro first check if the QGL widget is integrated
+	in the Qt library (which seems to be the case from v2.2.0).
+
+2000-09-17 15:44  mortene
+
+	* configure.in:
+	
+	Updated to match new name of SIM_AC_DEBUGSYMBOLS macro.
+
+2000-09-17 15:36  mortene
+
+	* cfg/m4/compile_symbols.m4:
+	
+	Changed name of macro, and fixed a bug (CPPFLAGS not being
+	processed).
+
+2000-09-15 12:54  larsa
+
+	* cfg/m4/: sogtk.m4, soqt.m4, soxt.m4:
+	
+	Wrapped AC_LANG_PUSH(C++) + AC_LANG_POP around compile/link tests.
+
+2000-09-13 13:49  larsa
+
+	* cfg/m4/sogtk.m4:
+	
+	Correction typo fixes.
+
+2000-09-12 14:10  mortene
+
+	* cfg/m4/sockets.m4:
+	
+	New macro SIM_AC_HAVE_SOCKLEN_T for testing whether or not the
+	socklen_t type is defined on the build system.
+
+2000-09-11 18:25  larsa
+
+	* cfg/m4/check_inventor.m4:
+	
+	Added description of HAVE_SOPOLYGONOFFSET for config.h.in.
+
+2000-09-01 14:04  larsa
+
+	* cfg/m4/sogtk.m4:
+	
+	New SIM_AC_HAVE_SOGTK_IFELSE macro.
+
+2000-09-01 00:18  larsa
+
+	* cfg/m4/check_ungif.m4:
+	
+	Fixed problem with variable name sharing, causing libX11 to tag
+	along even though libungif wasn't found.  Problem reported by
+	Daedalus.
+
+2000-08-30 17:30  larsa
+
+	* cfg/m4/check_ungif.m4:
+	
+	Search in path specified for --with-ungif.
+
+2000-08-30 16:45  larsa
+
+	* cfg/m4/check_x11.m4:
+	
+	Fixed minor bug with empty -I flag in SIM_AC_HAVE_LIBX11_IFELSE.
+
+2000-08-30 16:26  larsa
+
+	* cfg/m4/check_ungif.m4:
+	
+	New macro SIM_AC_HAVE_LIBUNGIF_IFELSE.
+
+2000-08-30 16:25  larsa
+
+	* cfg/m4/check_x11.m4:
+	
+	New macro SIM_AC_HAVE_LIBX11_IFELSE.
+
+2000-08-29 12:34  larsa
+
+	* cfg/m4/dime.m4:
+	
+	New macro SIM_AC_HAVE_DIME_IFELSE for checking for libdime.
+
+2000-08-29 12:33  larsa
+
+	* cfg/m4/profit.m4:
+	
+	Typo fix.
+
+2000-08-29 12:14  larsa
+
+	* cfg/m4/profit.m4:
+	
+	New macro SIM_AC_HAVE_PROFIT_IFELSE for checking for libprofit.
+
+2000-08-29 11:24  larsa
+
+	* cfg/m4/check_inventor.m4:
+	
+	Typo fix.
+
+2000-08-14 14:02  mortene
+
+	* cfg/m4/compile_functionname.m4:
+	
+	Added check for __func__, as specified by C99.
+
+2000-08-14 13:52  mortene
+
+	* cfg/m4/compile_functionname.m4:
+	
+	Fixed a bug which prevented the SIM_AC_CHECK_VAR_FUNCTIONNAME macro
+	to detect compilers using the __FUNCTION__ keyword for the current
+	function.
+
+2000-08-09 19:26  larsa
+
+	* Makefile.am, eyecandy/Makefile.am, eyecandy/blob.cpp.in:
+	
+	A "pulsating" blob, by Tor-Helge Skei <skei@sim.no>.  (code still
+	needs a lot of cleaning up)
+
+2000-08-09 17:58  pederb
+
+	* eyecandy/juliaanim.cpp.in:
+	
+	Added initial rotation.
+
+2000-08-09 17:57  pederb
+
+	* eyecandy/mandelzoom.cpp.in:
+	
+	Added initial rotation and centerpoint.
+
+2000-08-09 17:48  larsa
+
+	* eyecandy/juliaanim.cpp.in:
+	
+	#include <assert.h>
+
+2000-08-09 17:28  pederb
+
+	* actions/search.cpp.in:
+	
+	Enabled backface culling for shapes
+
+2000-08-09 17:20  larsa
+
+	* eyecandy/README:
+	
+	Some brief text about the eye candy examples.
+
+2000-08-09 16:59  larsa
+
+	* Makefile.am, eyecandy/Makefile.am, eyecandy/mandelzoom.cpp.in:
+	
+	Extended viewer example for zooming into a Mandelbrot landscape. 
+	Thumbwheels are redefined for moving the fractal instead of the
+	model.	Written, copyparty-style, by the Coin team on a hotel room
+	in New Orleans.
+
+2000-08-09 16:10  mortene
+
+	* eyecandy/juliaanim.cpp.in:
+	
+	Fixed typo.
+
+2000-08-09 16:05  larsa
+
+	* Makefile.am, eyecandy/Makefile.am:
+	
+	Added build of eyecandy/juliaanim example.
+
+2000-08-09 16:04  larsa
+
+	* eyecandy/: juliaanim.cpp.in, sky10a.h, sky10b.h, stone42a.h,
+	stone42b.h:
+	
+	Example of an animated julia fractal landscape.  By Marius B.
+	Monsen <mariusbu@sim.no> and Tor Gunnar Berland <torgunna@sim.no>.
+
+2000-08-09 14:36  larsa
+
+	* Makefile.am, configure.in:
+	
+	New setup, also building examples in the eyecandy directory.
+
+2000-08-09 14:33  larsa
+
+	* eyecandy/Makefile.am:
+	
+	Makefile setup for building the eyecandy examples.
+
+2000-08-09 14:31  larsa
+
+	* eyecandy/moirepatterns.cpp.in:
+	
+	A small demo for visualizing moiré patterns by using a pointset
+	node.  By Tor-Helge Skei <skei@sim.no>.
+
+2000-08-09 12:41  mortene
+
+	* cfg/m4/: soqt.m4, soxt.m4:
+	
+	Added missing quoting.
+
+2000-08-09 12:00  mortene
+
+	* cfg/m4/coin.m4:
+	
+	Minor bugfix (was missing parenthesis around potentially empty
+	variable in test case).
+
+2000-08-08 14:44  mortene
+
+	* cfg/m4/check_mathlib.m4:
+	
+	Updated Autoconf mathlib check which should work despite any
+	compilers attempt to "collapse" math expressions where the math
+	functions use constant arguments.
+
+2000-08-08 13:05  mortene
+
+	* components/computils.cpp.in:
+	
+	Moved srand() to correct place in the code, to avoid always getting
+	the same color when using the --cube, --cone etc arguments.
+
+2000-08-08 11:01  mortene
+
+	* TODO, actions/Makefile.am, components/Makefile.am,
+	draggers/Makefile.am, manipulators/Makefile.am, nodes/Makefile.am,
+	sensors/Makefile.am:
+	
+	Simplified (and corrected) Makefile.am files by removing bogus
+	INCLUDES settings.
+
+2000-08-07 15:42  larsa
+
+	* cfg/m4/soxt.m4:
+	
+	Fixed typos, reported by Rupert Kittinger.
+
+2000-07-18 17:05  larsa
+
+	* cfg/m4/soqt.m4:
+	
+	Fixed some critical typos.
+
+2000-07-17 10:29  larsa
+
+	* cfg/m4/check_inventor.m4:
+	
+	Added check for SoMouseButtonEvent::BUTTON5 availability.
+
+2000-07-17 10:25  larsa
+
+	* ChangeLog.1:
+	
+	Added the ChangeLog from before the module reorganization.
+
+2000-07-13 13:53  larsa
+
+	* cfg/m4/uniqify.m4:
+	
+	New macro SIM_AC_UNIQIFY_LIST for removing redundant options from
+	option lists.
+
+2000-07-13 13:49  larsa
+
+	* cfg/m4/check_inventor.m4:
+	
+	TGS Inventor for Windows check fix.
+
+2000-07-12 18:06  larsa
+
+	* configure.in:
+	
+	Support --prefix for path-specification of non-standard
+	installations of SoQt/SoXt...
+
+2000-07-12 17:55  larsa
+
+	* cfg/m4/: coin.m4, simage.m4, soqt.m4, soxt.m4:
+	
+	Did a s/exec_prefix/prefix/g
+
+2000-07-11 20:06  larsa
+
+	* cfg/m4/: check_inventor.m4, coin.m4, compile_debug.m4,
+	compile_exceptions.m4, compile_profiling.m4, compile_rtti.m4,
+	compile_symbols.m4, compile_warnings.m4, simage.m4, sobe.m4,
+	soqt.m4, soxt.m4:
+	
+	coin.m4, simage.m4 sobe.m4, soqt.m4 soxt.m4: Changed macro name to
+	the SIM_AC_HAVE_<module>_IFELSE() pattern.  General CVS Autoconf
+	upgrade.
+
+2000-07-11 19:05  larsa
+
+	* configure.in:
+	
+	Fix for the configure script.
+
+2000-07-11 17:36  larsa
+
+	* ChangeLog.sh:
+	
+	Misc small fixes...
+
+2000-07-11 17:22  larsa
+
+	* depcomp, components/depcomp, components/diff-header:
+	
+	Fixed initial setup errors.
+
+2000-07-11 17:17  larsa
+
+	* ChangeLog.0, ChangeLog.sh, Makefile.am, TODO, autogen.sh,
+	configure.in, AUTHORS, COPYING, INSTALL, NEWS, README,
+	actions/Makefile.am, actions/search.cpp.in, components/Makefile.am,
+	components/Makefile.in.diff, components/README,
+	components/computils.cpp.in, components/computils.h.in,
+	components/depcomp, components/diff-header,
+	components/directionallighteditor.cpp.in,
+	components/examinerviewer.cpp.in, components/flyviewer.cpp.in,
+	components/lightsliderset.cpp.in, components/materialeditor.cpp.in,
+	components/materiallist.cpp.in, components/materiallist2.cpp.in,
+	components/materialsliderset.cpp.in,
+	components/materialsliderset2.cpp.in,
+	components/planeviewer.cpp.in, components/printdialog.cpp.in,
+	components/renderarea.cpp.in, components/transformsliderset.cpp.in,
+	components/walkviewer.cpp.in, draggers/Makefile.am,
+	draggers/dragpoint.cpp.in, draggers/translate1.cpp.in,
+	draggers/translate2.cpp.in, manipulators/Makefile.am,
+	manipulators/pointlightmanip.cpp.in, nodes/Makefile.am,
+	nodes/atmospheric.cpp.in, nodes/blinker.cpp.in,
+	nodes/camera.cpp.in, nodes/clipplane.cpp.in,
+	nodes/complexity.cpp.in, nodes/directionallight.cpp.in,
+	nodes/drawstyle.cpp.in, nodes/environment.cpp.in,
+	nodes/faceset.cpp.in, nodes/facesetindexed.cpp.in,
+	nodes/levelofdetail.cpp.in, nodes/lights.cpp.in,
+	nodes/material.cpp.in, nodes/pointlight.cpp.in,
+	nodes/quadmesh.cpp.in, nodes/rotation.cpp.in, nodes/rotor.cpp.in,
+	nodes/scale.cpp.in, nodes/selection.cpp.in, nodes/shuttle.cpp.in,
+	nodes/slideshow.cpp.in, nodes/sphere.cpp.in,
+	nodes/spherecolor.cpp.in, nodes/spotlight.cpp.in,
+	nodes/text2.cpp.in, nodes/text3.cpp.in, nodes/texture.cpp.in,
+	nodes/transform.cpp.in, nodes/translation.cpp.in,
+	nodes/trianglestripset.cpp.in, sensors/Makefile.am,
+	sensors/timersensor.cpp.in:
+	
+	Initial revision
+
+2000-07-11 17:17  larsa
+
+	* ChangeLog.0, ChangeLog.sh, Makefile.am, TODO, autogen.sh,
+	configure.in, AUTHORS, COPYING, INSTALL, NEWS, README,
+	actions/Makefile.am, actions/search.cpp.in, components/Makefile.am,
+	components/Makefile.in.diff, components/README,
+	components/computils.cpp.in, components/computils.h.in,
+	components/depcomp, components/diff-header,
+	components/directionallighteditor.cpp.in,
+	components/examinerviewer.cpp.in, components/flyviewer.cpp.in,
+	components/lightsliderset.cpp.in, components/materialeditor.cpp.in,
+	components/materiallist.cpp.in, components/materiallist2.cpp.in,
+	components/materialsliderset.cpp.in,
+	components/materialsliderset2.cpp.in,
+	components/planeviewer.cpp.in, components/printdialog.cpp.in,
+	components/renderarea.cpp.in, components/transformsliderset.cpp.in,
+	components/walkviewer.cpp.in, draggers/Makefile.am,
+	draggers/dragpoint.cpp.in, draggers/translate1.cpp.in,
+	draggers/translate2.cpp.in, manipulators/Makefile.am,
+	manipulators/pointlightmanip.cpp.in, nodes/Makefile.am,
+	nodes/atmospheric.cpp.in, nodes/blinker.cpp.in,
+	nodes/camera.cpp.in, nodes/clipplane.cpp.in,
+	nodes/complexity.cpp.in, nodes/directionallight.cpp.in,
+	nodes/drawstyle.cpp.in, nodes/environment.cpp.in,
+	nodes/faceset.cpp.in, nodes/facesetindexed.cpp.in,
+	nodes/levelofdetail.cpp.in, nodes/lights.cpp.in,
+	nodes/material.cpp.in, nodes/pointlight.cpp.in,
+	nodes/quadmesh.cpp.in, nodes/rotation.cpp.in, nodes/rotor.cpp.in,
+	nodes/scale.cpp.in, nodes/selection.cpp.in, nodes/shuttle.cpp.in,
+	nodes/slideshow.cpp.in, nodes/sphere.cpp.in,
+	nodes/spherecolor.cpp.in, nodes/spotlight.cpp.in,
+	nodes/text2.cpp.in, nodes/text3.cpp.in, nodes/texture.cpp.in,
+	nodes/transform.cpp.in, nodes/translation.cpp.in,
+	nodes/trianglestripset.cpp.in, sensors/Makefile.am,
+	sensors/timersensor.cpp.in:
+	
+	Independent module for SoXt/SoQt/SoGtk... examples.
+
+2000-07-11 14:55  larsa
+
+	* cfg/m4/check_inventor.m4:
+	
+	Typo fix (misplaced $).
+
+2000-07-06 15:42  mortene
+
+	* cfg/m4/compile_warnings.m4:
+	
+	Don't inhibit "Meaningless type qualifier on return type" warnings
+	for the SGI MIPSpro CC compiler, they seem to be useful after all.
+
+2000-07-04 16:39  mortene
+
+	* cfg/m4/iso8601.m4:
+	
+	New macro SIM_AC_ISO8601_DATE to extract the configure date.
+
+2000-07-04 16:38  mortene
+
+	* cfg/m4/expand_dir_vars.m4:
+	
+	Expand _all_ install-directory variables configure can use.
+
+2000-07-03 14:28  mortene
+
+	* cfg/m4/expand_dir_vars.m4:
+	
+	Expand $datadir and $mandir aswell, as they are needed by the
+	automatic documentation generation.
+
+2000-07-03 12:15  mortene
+
+	* cfg/m4/doxygen_detection.m4:
+	
+	New macro SIM_AC_DOXYGEN_TOOL for detecting the presence and
+	version number of a doxygen executable.
+
+2000-07-03 12:13  mortene
+
+	* cfg/m4/: soqt.m4, soxt.m4:
+	
+	Bugfixes: don't try to set environment variables for CPPFLAGS,
+	LDFLAGS and LIBS if the so[qt|xt]-config could not be found.
+
+2000-07-01 15:48  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Made macro SIM_AC_GLU_NURBSOBJECT for testing what the name of the
+	GLU NURBS interface structure is.
+
+2000-06-30 19:34  larsa
+
+	* cfg/m4/coin.m4:
+	
+	Removed coin_version variable (got sim_ac_coin_version anyway).
+
+2000-06-30 19:21  larsa
+
+	* cfg/m4/check_qt.m4:
+	
+	Removed AC_SUBST - moved to configure.in.
+
+2000-06-30 19:01  larsa
+
+	* cfg/m4/check_qt.m4:
+	
+	Add AC_SUBST on @qt_version@
+
+2000-06-30 19:00  larsa
+
+	* cfg/m4/coin.m4:
+	
+	Supply new $sim_ac_coin_version (coin-config --version) and
+	$coin_version (--version without the dots) variables.
+
+2000-06-30 09:30  mortene
+
+	* cfg/m4/check_mathlib.m4:
+	
+	Fixed ugly bug in the SIM_AC_CHECK_MATHLIB macro which basically
+	prevented it from adding the mathlib to the LIBS variable.
+
+2000-06-29 18:24  mortene
+
+	* cfg/m4/check_nprintf.m4:
+	
+	Corrected the way we call _vsnprintf() (was using 3 arguments,
+	should try with 4).
+
+2000-06-29 14:00  larsa
+
+	* cfg/m4/check_inventor.m4:
+	
+	Support Windows libraries in Inventor check.
+
+2000-06-29 12:05  mortene
+
+	* cfg/m4/soxt.m4:
+	
+	The SoXt detection macro was pretty dysfunctional; CPPFLAGS,
+	LDFLAGS and LIBS variables were just "duplicated" if SoXt was
+	found.
+
+2000-06-28 15:43  larsa
+
+	* cfg/m4/check_qt.m4:
+	
+	Check is Qt is linked as .lib or .dll on Windows.  By mariusbu.
+
+2000-06-28 15:30  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Temporary bug fix in OpenGL detection on MS Windows, by mariusbu.
+
+2000-06-26 19:01  mortene
+
+	* cfg/m4/path_conversion.m4:
+	
+	New macro SIM_AC_DODOUBLEBACKSLASH, written by mariusbu.
+
+2000-06-26 13:50  larsa
+
+	* cfg/m4/linux_api.m4:
+	
+	Added --with-linux-joystick-device=/dev/foobar in case /dev/js0
+	isn't the joystick device on the system.
+
+2000-06-26 13:17  mortene
+
+	* cfg/m4/expand_dir_vars.m4:
+	
+	Expand $datadir variable too.
+
+2000-06-22 14:27  larsa
+
+	* cfg/m4/linux_api.m4:
+	
+	New file for checking for Linux-specific APIs (or APIs originating
+	from Linux).
+
+2000-06-19 15:20  larsa
+
+	* cfg/m4/sogui.m4:
+	
+	Bugfix.
+
+2000-06-19 14:40  larsa
+
+	* cfg/m4/sogui.m4:
+	
+	new file with common macros for GUI toolkit libraries
+
+2000-06-16 12:54  mortene
+
+	* cfg/m4/: check_pnglib.m4, check_zlib.m4:
+	
+	Added macros SIM_AC_CHECK_ZLIB_READY and SIM_AC_CHECK_PNG_READY to
+	test if explicit linking with zlib and libpng is necessary.
+
+2000-06-09 20:50  mortene
+
+	* cfg/m4/misc_compiler.m4:
+	
+	Fixed typo.
+
+2000-06-09 20:48  mortene
+
+	* cfg/m4/misc_compiler.m4:
+	
+	Fixed a particularly nasty bug in the compiler-option checking.
+
+2000-06-09 20:47  mortene
+
+	* cfg/m4/compile_warnings.m4:
+	
+	Killed unnecessary quoting.
+
+2000-06-09 19:37  mortene
+
+	* cfg/m4/compile_warnings.m4:
+	
+	Use a single check for the -woff syntax with SGI MIPSpro CC
+	compilers.
+
+2000-06-09 18:47  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Added more libraries necessary for linking with Qt on MSWin.
+
+2000-06-09 17:26  mortene
+
+	* cfg/m4/check_mathlib.m4:
+	
+	Bugfix.
+
+2000-06-09 17:15  mortene
+
+	* cfg/m4/check_mathlib.m4:
+	
+	Fix to work on systems where linking against the mathlib is
+	implicit.
+
+2000-06-09 16:28  mortene
+
+	* cfg/m4/check_mathlib.m4:
+	
+	Vastly improved the math library checking, so we can use it instead
+	of AC_CHECK_LIBM from libtool (which fails miserably with SGI
+	MIPSpro CC v7.30, at least).
+
+2000-06-08 21:05  mortene
+
+	* cfg/m4/compile_warnings.m4:
+	
+	Added TODO item (fix -woff checking for SGI MIPSpro to be done only
+	once).
+
+2000-06-07 17:26  mortene
+
+	* cfg/m4/path_conversion.m4:
+	
+	New macro for converting to and from MSDOS-style directory paths.
+
+2000-06-06 18:04  mortene
+
+	* cfg/m4/: compile_exceptions.m4, compile_warnings.m4,
+	misc_compiler.m4:
+	
+	Fixes to the macro which checks the validity of command line
+	options.
+	
+	Patch also contains a minor fix to the check for "-fno-multichar",
+	as Akos Balazs reports that older versions of gcc can't grok it and
+	c++ _can_ grok it on the same platform (Debian 2.1).
+
+2000-06-06 14:51  mortene
+
+	* cfg/m4/check_zlib.m4:
+	
+	Use a more common name for zlib on Win32. Patch from mariusbu.
+
+2000-06-05 14:27  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Get rid of a few bugs introduced with the last patch, plus remove
+	the ^M characters at end-of-line.
+
+2000-06-05 13:48  larsa
+
+	* cfg/m4/check_qt.m4:
+	
+	Adaptations for using the MSVC compiler/linker on CygWin.  By
+	Marius Bugge Monsen.
+
+2000-06-02 19:12  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Fix to work better with Microsoft Visual C++.
+
+2000-06-02 18:47  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Added detection of OpenGL libraries under MSWindows.
+
+2000-06-02 17:54  mortene
+
+	* cfg/m4/: check_jpeglib.m4, check_pnglib.m4, check_tifflib.m4,
+	check_ungif.m4, check_zlib.m4:
+	
+	Made library detection macros compatible with Microsoft Visual C++.
+
+2000-06-02 17:53  mortene
+
+	* cfg/m4/check_linkstyle.m4:
+	
+	Added a macro to detect if we should use "MSWin-style" linking
+	(i.e. "libname.lib" instead of the usual UNIX "-llibname").
+
+2000-06-02 12:30  mortene
+
+	* cfg/m4/check_x11.m4:
+	
+	Upgrade to latest Automake from CVS and latest Libtool release
+	(version 1.3.5). The Autoconf and Automake versions we are using
+	also includes a number of bugfixes.
+	
+	The upgrade of Automake and Libtool fixes a number of bugs, among
+	them the need to have GNU Make on IRIX and sourcecode dependency
+	tracking for the SGI MipsPro compilers.
+
+2000-06-02 10:44  mortene
+
+	* cfg/m4/macro_quoting.m4:
+	
+	Bugfix.
+
+2000-05-30 14:53  larsa
+
+	* cfg/m4/compile_warnings.m4:
+	
+	Added a warning to the list of warnings to silence for the SGI CC
+	compiler.
+
+2000-05-30 14:52  larsa
+
+	* cfg/m4/check_x11.m4:
+	
+	Added check for Athena widget set library.
+
+2000-05-29 16:08  mortene
+
+	* cfg/m4/compile_warnings.m4:
+	
+	Extend the macro which sets up compiler options for giving us the
+	maximum warning level to kill a bunch of bogus warnings from SGI
+	Mipspro v7.30.
+
+2000-05-24 19:21  mortene
+
+	* cfg/m4/macro_quoting.m4:
+	
+	Cleaned up the SIM_AC_CHECK_MACRO_QUOTE Autoconf macro, which
+	removes a warning from Coin autogen.sh invocations.
+
+2000-05-22 10:58  larsa
+
+	* cfg/m4/check_mathlib.m4:
+	
+	Removed an "unset".  Various cosmetic changes.
+
+2000-05-20 10:45  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Added detection of the QGLFormat::setOverlay() method, which is not
+	available on older versions of the QGL library.
+
+2000-05-19 13:48  mortene
+
+	* cfg/m4/check_ungif.m4:
+	
+	Added macro for detection of the ungif library (and development
+	system).
+
+2000-05-18 13:37  larsa
+
+	* cfg/m4/check_x11.m4:
+	
+	New macro: SIM_AC_CHECK_X11_READY( [ACTION-IF-TRUE],
+	[ACTION-IF-FALSE] )
+
+2000-05-18 11:57  mortene
+
+	* cfg/m4/check_x11.m4:
+	
+	Added macro to detect and include the X11 printing library (-lXp).
+
+2000-05-11 21:56  larsa
+
+	* cfg/m4/check_motif.m4:
+	
+	Silenced a warning in the Xt/Motif GL widget check macro.
+
+2000-05-11 16:28  mortene
+
+	* cfg/m4/compile_rtti.m4:
+	
+	Switch default setting to be the same as g++ (i.e. users must now
+	explicitly disable RTTI).
+
+2000-05-09 12:46  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Added possibility to avoid defaulting to linking with Mesa if both
+	MesaGL and GL libraries are found on the system. Feature requested
+	by Per Hvidsten.
+
+2000-05-09 12:45  mortene
+
+	* cfg/m4/: compile_exceptions.m4, compile_profiling.m4,
+	compile_rtti.m4:
+	
+	Typo fixes.
+
+2000-05-05 14:53  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Killed a bug which would affect detection of OpenGL/Mesa
+	implementations which need the pthread library. Thanks to Jacob
+	Støren for the bugreport.
+
+2000-04-28 15:42  mortene
+
+	* cfg/m4/check_pthread.m4:
+	
+	Bugfix.
+
+2000-04-28 15:30  mortene
+
+	* cfg/m4/simage.m4:
+	
+	Minor improvements (lessen probability of namespace clashes, don't
+	be strict with Autoconf requirements, use the correct macro naming
+	convention).
+
+2000-04-28 15:28  mortene
+
+	* cfg/m4/: check_opengl.m4, check_pthread.m4:
+	
+	Try to handle OpenGL / Mesa installations which uses symbols from
+	the pthread library.
+
+2000-04-27 08:42  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Corrected macro which checks for QGLWidget::setAutoBufferSwap().
+
+2000-04-24 17:36  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Added a macro for checking availability of
+	QGLWidget::setAutoBufferSwap().
+
+2000-04-17 16:02  mortene
+
+	* cfg/m4/check_qt.m4:
+	
+	Let the Qt detection fail if we can't find moc.
+
+2000-04-13 14:00  larsa
+
+	* cfg/m4/: compile_debug.m4, compile_exceptions.m4,
+	compile_functionname.m4, compile_profiling.m4, compile_rtti.m4,
+	compile_symbols.m4, compile_warnings.m4, compiler_capabilities.m4,
+	expand_dir_vars.m4, macro_quoting.m4, misc_compiler.m4:
+	
+	General cleanup. Use # comments instead of m4 dnls.  More (and more
+	consistent) quoting of m4 macro arguments.
+
+2000-04-12 19:03  larsa
+
+	* cfg/m4/: check_be.m4, check_dl.m4, check_inventor.m4,
+	check_jpeglib.m4, check_mathlib.m4, check_motif.m4,
+	check_nprintf.m4, check_opengl.m4, check_pnglib.m4, check_qt.m4,
+	check_tifflib.m4, check_x11.m4, check_zlib.m4:
+	
+	General cleanup:   - use # comments instead of m4 dnls	 - more
+	(and more consistent) quoting of m4 macro arguments
+
+2000-04-11 20:00  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Remove test which checks to see if the OpenGL library we found is
+	Mesa. The Autoconf philosophy is to check for features, so it was
+	bad design, and it didn't serve much purpose anyway.
+
+2000-04-10 13:13  larsa
+
+	* cfg/m4/compile_functionname.m4:
+	
+	New macro to check for the __PRETTY_FUNCTION__ / __FUNCTION__
+	variables.
+
+2000-04-10 12:20  larsa
+
+	* cfg/m4/soqt.m4:
+	
+	Removed some garbage characters.
+
+2000-04-05 14:22  larsa
+
+	* cfg/m4/check_x11.m4:
+	
+	Bugfix in SIM_CHECK_LIBXPM.  By Morten.
+
+2000-04-05 11:19  larsa
+
+	* cfg/m4/: coin.m4, simage.m4, soqt.m4, soxt.m4:
+	
+	Changed the ugly (and unnecessary) dnl macros for # comments,
+	removed some of the unnecessary ifelse macros, and quoted the
+	necessary ones properly.
+
+2000-04-05 10:04  larsa
+
+	* cfg/m4/check_x11.m4:
+	
+	Added SIM_CHECK_LIBXPM macro for checking if the Xpm library is
+	available.
+
+2000-04-04 15:12  larsa
+
+	* cfg/m4/ChangeLog.sh:
+	
+	Autodetection of module location.
+
+2000-03-19 16:35  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Added macro to check for presence of the SoPolygonOffset node in
+	the Inventor implementation.
+
+2000-03-13 10:49  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Various fixes, as suggested by Autoconf maintainer Akim Demaille.
+
+2000-03-02 20:34  larsa
+
+	* cfg/m4/modifierlist.m4:
+	
+	Minor changes.
+
+2000-03-01 19:50  mortene
+
+	* cfg/m4/compile_warnings.m4:
+	
+	Killed an SGI MIPSPro warning.
+
+2000-03-01 13:49  larsa
+
+	* cfg/m4/modifierlist.m4:
+	
+	Improved readability somewhat by defining TAB and LF instead of
+	using them verbatim.  Fixed a quoting bug.
+
+2000-02-28 21:55  larsa
+
+	* cfg/m4/modifierlist.m4:
+	
+	Namespace change, style change, better error reporting, and a few
+	corrections pointed out by Akim Demaille of autoconf fame.
+
+2000-02-23 13:42  larsa
+
+	* cfg/m4/: simage.m4, sobe.m4, soqt.m4, soxt.m4:
+	
+	Updated the macros to use SOM_PARSE_MODIFIER_LIST().
+
+2000-02-23 13:34  larsa
+
+	* cfg/m4/modifierlist.m4:
+	
+	Added warning if you set up a modifier to change an unconfigured
+	variable.   Reworked some quoting problems.  Added some
+	commented-out debug messages.
+
+2000-02-22 20:30  larsa
+
+	* cfg/m4/modifierlist.m4:
+	
+	Cosmetic debug-message changes.
+
+2000-02-22 20:22  larsa
+
+	* cfg/m4/coin.m4:
+	
+	Removed all of yesterday's m4 code and replaced it with a more
+	intuitive SIM_PARSE_MODIFIER_LIST() invocation.
+
+2000-02-22 20:21  larsa
+
+	* cfg/m4/modifierlist.m4:
+	
+	Created autoconf/m4-macro SIM_PARSE_MODIFIER_LIST() that can be
+	used to make autoconf macros more configurable.
+
+2000-02-21 19:09  larsa
+
+	* cfg/m4/sobe.m4:
+	
+	Cloned soqt.m4, with search/replace on qt/be.
+
+2000-02-21 19:09  larsa
+
+	* cfg/m4/: coin.m4, simage.m4, soqt.m4, soxt.m4:
+	
+	Added a third argument (ATTRIBUTE-LIST) to the SIM_CHECK_* macros,
+	with some m4-level autoconf argument checking.
+
+2000-02-21 13:29  larsa
+
+	* cfg/m4/: README, TODO:
+	
+	Added TODO items.  Some cosmetics (reformatting).
+
+2000-02-21 13:28  larsa
+
+	* cfg/m4/compile_debug.m4:
+	
+	Extended macro with added ACTION-IF / ACTION-IF-NOT arguments so
+	you can avoid testing $enable_debug below the SIM_COMPILE_DEBUG
+	macro call.  The old approach of testing $enable_debug still works,
+	of course.
+
+2000-02-15 17:00  mortene
+
+	* cfg/m4/check_x11.m4:
+	
+	Implemented a macro which checks for the X11 Intrinsic library
+	(-lXt).
+
+2000-02-15 15:00  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Improve the OpenGL check by testing whether or not we should link
+	against a separate GLU library (e.g. BeOS keeps all the GL code
+	within -lGL, and doesn't even have a -lGLU).
+
+2000-02-15 14:42  larsa
+
+	* cfg/m4/check_be.m4:
+	
+	Macro for checking if we are building for a BeOS system.
+
+2000-02-14 14:33  larsa
+
+	* cfg/m4/check_motif.m4:
+	
+	Comment update.
+
+2000-02-13 23:05  mortene
+
+	* cfg/m4/check_motif.m4:
+	
+	Replaces code in AC_TRY_LINK with something which will actually
+	fail if the particular GL widget is not available. Fixes a bug with
+	the HAVE_*_GLW[M]?DRAWA_H definitions. Puts the library containing
+	the GL widget at the front of LIBS (as it depends on other
+	libraries already in the LIBS list).
+
+2000-02-13 13:09  larsa
+
+	* cfg/m4/check_motif.m4:
+	
+	Improved (hopefully) Xt/Motif GL widget check.
+
+2000-02-11 16:39  larsa
+
+	* cfg/m4/check_motif.m4:
+	
+	Corrected AC_DEFINE to AC_DEFINE_UNQUOTED.
+
+2000-02-11 16:35  larsa
+
+	* cfg/m4/check_motif.m4:
+	
+	Added fallback from glwMDrawingAreaWidgetClass to
+	glwDrawingAreaWidgetClass and additional check for the MesaGLw
+	library.
+
+2000-02-11 14:36  larsa
+
+	* cfg/m4/soxt.m4:
+	
+	Cloned soqt.m4
+
+2000-02-11 12:23  larsa
+
+	* cfg/m4/check_motif.m4:
+	
+	Removed infinite recursion problem...
+
+2000-02-11 11:32  larsa
+
+	* cfg/m4/: check_motif.m4, check_x11.m4:
+	
+	Separated Motif-macros into separate file.  Added macros for
+	detecting which Xt/Motif glwMDrawingAreaWidgetClass development
+	environment that must be used.	Based on code by Loring Holden
+	<lsh@cs.brown.edu>.
+
+2000-02-11 11:30  larsa
+
+	* cfg/m4/coin.m4:
+	
+	Added search in $exec_prefix/bin for coin-config, and a warning
+	message for cases where coin-config isn't found.  Submitted by
+	Loring Holden <lsh@cs.brown.edu>.
+
+2000-02-09 18:56  mortene
+
+	* cfg/m4/compiler_capabilities.m4:
+	
+	Added a file with macros for checking compiler capabilities.  First
+	macro is made to smoke out the useless "CC" C++ compiler for HPUX.
+
+2000-02-07 19:59  mortene
+
+	* cfg/m4/macro_quoting.m4:
+	
+	Implemented autoconf macro which checks if the compiler allows
+	string quoting within #define macros.
+
+2000-02-07 18:09  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Implicitly default location of OpenGL libraries under HPUX to
+	/opt/graphics/OpenGL/.
+
+2000-02-06 16:33  mortene
+
+	* cfg/m4/check_nprintf.m4:
+	
+	Macro for checking availability of snprintf(), vsnprintf(),
+	_snprintf() and _vsnprintf().
+
+2000-01-31 14:36  mortene
+
+	* cfg/m4/expand_dir_vars.m4:
+	
+	Added macro SIM_EXPAND_DIR_VARS for expanding the configure
+	directory setting variables.
+
+2000-01-30 14:32  mortene
+
+	* cfg/m4/TODO:
+	
+	Killed entries for solved issues.
+
+2000-01-27 22:35  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Add macro for finding and checking the InventorXt GUI "glue"
+	library.
+
+2000-01-27 22:34  mortene
+
+	* cfg/m4/check_x11.m4:
+	
+	Add macros for checking availability of the X11 input device
+	extension library, the Motif library and the XmeDrawShadows()
+	function in the Motif library.
+
+2000-01-26 17:14  larsa
+
+	* cfg/m4/includelib_inventor.m4:
+	
+	Various changes to reflect the added examples/components module.
+
+2000-01-25 23:44  mortene
+
+	* cfg/m4/soqt.m4:
+	
+	Fixed ambiguity in library call within AC_TRY_LINK to avoid
+	failures during detection.
+
+2000-01-25 15:28  mortene
+
+	* cfg/m4/compile_warnings.m4:
+	
+	"Tune" warning flags for SGI MIPS CC.
+
+2000-01-24 17:02  larsa
+
+	* cfg/m4/includelib_gtk.m4:
+	
+	Not in use anymore.
+
+2000-01-24 10:36  mortene
+
+	* cfg/m4/check_x11.m4:
+	
+	Made -lXmu check more robust.
+
+2000-01-24 10:19  mortene
+
+	* cfg/m4/: check_dl.m4, check_inventor.m4, check_jpeglib.m4,
+	check_opengl.m4, check_pnglib.m4, check_qt.m4, check_tifflib.m4,
+	check_zlib.m4, coin.m4, simage.m4, soqt.m4:
+	
+	Changed all "if ! val0 = val1" constructs into "if val0 != val1",
+	as they seem to be more portable (bash v1.14.5 can't grok the "if
+	!" format, at least).
+
+2000-01-23 22:13  mortene
+
+	* cfg/m4/soqt.m4:
+	
+	Macro for convenient checking for the SoQt library.
+
+2000-01-23 22:13  mortene
+
+	* cfg/m4/check_dl.m4:
+	
+	Add macro to check for the dynamic link loader library.
+
+2000-01-23 22:12  mortene
+
+	* cfg/m4/includelib_inventor.m4:
+	
+	Old Open Inventor detection macro has been obsoleted.
+
+2000-01-23 22:12  mortene
+
+	* cfg/m4/: check_qt.m4, includelib_qt.m4:
+	
+	Improved Qt detection macros.
+
+2000-01-23 22:11  mortene
+
+	* cfg/m4/check_inventor.m4:
+	
+	Namespace fix for consistency.
+
+2000-01-23 22:10  mortene
+
+	* cfg/m4/check_x11.m4:
+	
+	Added macro to check for the X11 "miscellaneous utilities" library
+	(-lXmu).
+
+2000-01-23 20:14  mortene
+
+	* cfg/m4/includelib_inventor.m4:
+	
+	Marked macros for obsoletion.
+
+2000-01-23 20:12  mortene
+
+	* cfg/m4/: check_inventor.m4, coin.m4:
+	
+	Improved Open Inventor and Coin detection macros.
+
+2000-01-23 20:12  mortene
+
+	* cfg/m4/check_x11.m4:
+	
+	Separated X11 detection from Coin's configure.in into its own
+	autoconf macro.
+
+2000-01-23 20:11  mortene
+
+	* cfg/m4/simage.m4:
+	
+	Macro for simage detection improved.
+
+2000-01-23 14:30  mortene
+
+	* cfg/m4/check_opengl.m4:
+	
+	Made a separate macro for detection of OpenGL (or Mesa)
+	installation.
+
+2000-01-23 14:30  mortene
+
+	* cfg/m4/simage.m4:
+	
+	Improvements and bugfixes for the simage detection macro.
+
+2000-01-23 13:10  mortene
+
+	* cfg/m4/: check_jpeglib.m4, check_pnglib.m4, check_tifflib.m4,
+	check_zlib.m4:
+	
+	Miscellaneous bugfixes.
+
+2000-01-22 18:35  mortene
+
+	* cfg/m4/simage.m4:
+	
+	Commited macro for simage library detection.
+
+2000-01-22 18:35  mortene
+
+	* cfg/m4/: check_jpeglib.m4, check_pnglib.m4, check_tifflib.m4,
+	check_zlib.m4:
+	
+	Use CPPFLAGS instead of CFLAGS in macros to work better with C++.
+
+2000-01-22 14:28  mortene
+
+	* cfg/m4/check_mathlib.m4:
+	
+	Removed TODO item which has been completed.
+
+2000-01-22 14:28  mortene
+
+	* cfg/m4/: check_jpeglib.m4, check_pnglib.m4, check_tifflib.m4,
+	check_zlib.m4:
+	
+	Added macros for testing libjpeg, libtiff, libpng and zlib
+	installations.
+
+2000-01-21 18:18  larsa
+
+	* cfg/m4/ChangeLog.sh:
+	
+	Small change in the script for generating the ChangeLog file.
+
+2000-01-18 16:35  mortene
+
+	* cfg/m4/includelib_qt.m4:
+	
+	Improvements to detection macros for Qt and QGL libraries.
+
+2000-01-18 16:35  mortene
+
+	* cfg/m4/includelib_inventor.m4:
+	
+	Improvements to detection code for Open Inventor and Coin developer
+	kits.
+
+2000-01-12 10:57  mortene
+
+	* cfg/m4/check_mathlib.m4:
+	
+	Added a note about libtool's AC_CHECK_LIBM.
+
+2000-01-07 10:23  mortene
+
+	* cfg/m4/check_mathlib.m4:
+	
+	Cache checking on whether or not we need to explicitly specify to
+	link with the math library. By larsa.
+
+1999-12-19 18:34  mortene
+
+	* cfg/m4/misc_compiler.m4:
+	
+	Added TODO item.
+
+1999-12-17 19:03  mortene
+
+	* cfg/m4/compile_exceptions.m4:
+	
+	Fixes a terrible typo.
+
+1999-12-16 18:10  mortene
+
+	* cfg/m4/compile_exceptions.m4:
+	
+	Check if compiler options are available before they are used.  Also
+	added option for avoiding exception handling with GCC older than
+	version 2.8.
+
+1999-12-05 20:01  mortene
+
+	* cfg/m4/TODO:
+	
+	Minor change.
+
+1999-11-28 15:57  mortene
+
+	* cfg/m4/: TODO, compile_warnings.m4:
+	
+	Minor doc fixes.
+
+1999-11-25 22:23  mortene
+
+	* cfg/m4/compile_warnings.m4:
+	
+	"-Wno-multichar" option doesn't work with all variations of g++.
+
+1999-11-25 22:22  mortene
+
+	* cfg/m4/misc_compiler.m4:
+	
+	Added macro for checking whether or not the compiler accepts
+	certain command-line options.
+
+1999-11-16 12:46  mortene
+
+	* cfg/m4/TODO:
+	
+	Minor addition.
+
+1999-11-15 08:18  mortene
+
+	* cfg/m4/compile_warnings.m4:
+	
+	Fixed bug.
+
+1999-11-15 07:05  mortene
+
+	* cfg/m4/TODO:
+	
+	Added some items.
+
+1999-11-14 22:26  mortene
+
+	* cfg/m4/: README, TODO:
+	
+	Documentation fixes.
+
+1999-11-14 22:26  mortene
+
+	* cfg/m4/: includelib_inventor.m4, includelib_qt.m4:
+	
+	Made macros of the generic stuff in SoQt configure.in.
+
+1999-11-14 20:22  mortene
+
+	* cfg/m4/: compile_debug.m4, compile_exceptions.m4,
+	compile_profiling.m4, compile_rtti.m4, compile_symbols.m4,
+	compile_warnings.m4:
+	
+	Added a bunch of macros extracted from the Coin configure.in
+	script. All of these are related to which options to pass to the
+	compiler.
+
+1999-11-14 17:32  mortene
+
+	* cfg/m4/: README, check_mathlib.m4:
+	
+	First macro (larsa's "explicitly link with -lm" check) moved into
+	collection.
+
