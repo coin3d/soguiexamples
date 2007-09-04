@@ -40,6 +40,10 @@ AC_PROG_CPP
 ## Locate C++ compiler and set C++ as the default compiler to run
 ## in tests.
 AC_PROG_CXX
+AC_PROG_CXXCPP
+
+SIM_AC_STRIP_EXIT_DECLARATION
+
 AC_LANG(C++)
 
 # **************************************************************************
