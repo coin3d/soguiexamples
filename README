@@ -2,7 +2,9 @@ README
 ======
 
 This module consists of generic example code on how you can use Coin and
-the miscellaneous accompanying GUI toolkits.  
+the miscellaneous accompanying GUI toolkits.  The example programs are not
+installed on the system since they are mostly useless, so you will need to
+look for them in the build directories.
 
 All sourcecode is licensed under the GNU GPL, with the exception that
 Coin Professional Edition License licensees are allowed to use any and
