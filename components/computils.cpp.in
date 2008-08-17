@@ -165,34 +165,39 @@ get_scene_graph(
   srand( (unsigned int) time(NULL) );
 
   if ( argc > 1 ) {
+    for (int c = 1; c < argc; ++c) {
+      if (argv[c][0] == '-') {
+        if ( ! strcmp( argv[c], "--cube" ) ) {
+          return shape_to_scene_graph( new SoCube );
+        } else if ( ! strcmp( argv[c], "--sphere" ) ) {
+          return shape_to_scene_graph( new SoSphere );
+        } else if ( ! strcmp( argv[c], "--cone" ) ) {
+          return shape_to_scene_graph( new SoCone );
+        } else if ( ! strcmp( argv[c], "--cylinder" ) ) {
+          return shape_to_scene_graph( new SoCylinder );
+        } else if ( ! strcmp( argv[c], "--text3" ) ) {
+          SoText3 * textnode = new SoText3;
+          const char * s[] = { "www", "Coin3D", "org" };
+          textnode->string.setValues( 0, 3, s );
+          textnode->parts.setValue( SoText3::ALL );
+          textnode->justification = SoText3::CENTER;
+          return shape_to_scene_graph( textnode );
+        }
+      } else {
 #if HAVE_DIME2SO
 #endif
 #if HAVE_PROFIT2SO
-    if ( prf_openflight_check_file( argv[1] ) )
-      return prf_openinventor_import( argv[1] );
+        if ( prf_openflight_check_file( argv[c] ) )
+          return prf_openinventor_import( argv[c] );
 #endif
-    SoInput in;
-    if ( ! strcmp( argv[1], "--cube" ) ) {
-      return shape_to_scene_graph( new SoCube );
-    } else if ( ! strcmp( argv[1], "--sphere" ) ) {
-      return shape_to_scene_graph( new SoSphere );
-    } else if ( ! strcmp( argv[1], "--cone" ) ) {
-      return shape_to_scene_graph( new SoCone );
-    } else if ( ! strcmp( argv[1], "--cylinder" ) ) {
-      return shape_to_scene_graph( new SoCylinder );
-    } else if ( ! strcmp( argv[1], "--text3" ) ) {
-      SoText3 * textnode = new SoText3;
-      const char * s[] = { "www", "Coin3D", "org" };
-      textnode->string.setValues( 0, 3, s );
-      textnode->parts.setValue( SoText3::ALL );
-      textnode->justification = SoText3::CENTER;
-      return shape_to_scene_graph( textnode );
-    } else if ( ! in.openFile( argv[1] ) ) {
-      return NULL;
+        SoInput in;
+        if ( ! in.openFile( argv[c] ) ) {
+          return NULL;
+        }
+        return SoDB::readAll( &in );
+      }
     }
-    return SoDB::readAll( &in );
   }
-
   int randval = rand() % 5;
   switch ( randval ) {
   case 0:  return shape_to_scene_graph( new SoCone );
@@ -240,7 +245,11 @@ config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
 
   int i = 1;
   while (i < argc) {
-    if (!strcmp(argv[i], "--stereo")) {
+    if (!strncmp(argv[i], "-psn_", 5)) {
+      // ignore this bogus arg (OS X bundle launch argument)
+      i++;
+    }
+    else if (!strcmp(argv[i], "--stereo")) {
       setQuadBufferStereo(viewer, TRUE);
       setStereoViewing(viewer, TRUE);
       i++;
