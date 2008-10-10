@@ -165,38 +165,58 @@ get_scene_graph(
   srand( (unsigned int) time(NULL) );
 
   if ( argc > 1 ) {
+    SoSeparator * root = new SoSeparator;
+    root->ref();
+
     for (int c = 1; c < argc; ++c) {
       if (argv[c][0] == '-') {
         if ( ! strcmp( argv[c], "--cube" ) ) {
-          return shape_to_scene_graph( new SoCube );
+          root->addChild(shape_to_scene_graph( new SoCube ));
         } else if ( ! strcmp( argv[c], "--sphere" ) ) {
-          return shape_to_scene_graph( new SoSphere );
+          root->addChild(shape_to_scene_graph( new SoSphere ));
         } else if ( ! strcmp( argv[c], "--cone" ) ) {
-          return shape_to_scene_graph( new SoCone );
+          root->addChild(shape_to_scene_graph( new SoCone ));
         } else if ( ! strcmp( argv[c], "--cylinder" ) ) {
-          return shape_to_scene_graph( new SoCylinder );
+          root->addChild( shape_to_scene_graph( new SoCylinder ));
         } else if ( ! strcmp( argv[c], "--text3" ) ) {
           SoText3 * textnode = new SoText3;
           const char * s[] = { "www", "Coin3D", "org" };
           textnode->string.setValues( 0, 3, s );
           textnode->parts.setValue( SoText3::ALL );
           textnode->justification = SoText3::CENTER;
-          return shape_to_scene_graph( textnode );
+          root->addChild(shape_to_scene_graph( textnode ));
         }
       } else {
 #if HAVE_DIME2SO
 #endif
 #if HAVE_PROFIT2SO
-        if ( prf_openflight_check_file( argv[c] ) )
-          return prf_openinventor_import( argv[c] );
+        if ( prf_openflight_check_file( argv[c] ) ) {
+          root->addChild(prf_openinventor_import( argv[c] ));
+        }
 #endif
         SoInput in;
-        if ( ! in.openFile( argv[c] ) ) {
-          return NULL;
+        if (in.openFile( argv[c] ) ) {
+          root->addChild(SoDB::readAll( &in ));
         }
-        return SoDB::readAll( &in );
       }
     }
+
+    SoNode * n;
+    switch (root->getNumChildren()) {
+    case 0:
+      root->unref();
+      return NULL;
+    case 1:
+      n = root->getChild(0);
+      n->ref();
+      root->unref();
+      n->unrefNoDelete();
+      return n;
+    default:
+      root->unrefNoDelete();
+      return root;
+    }
+
   }
   int randval = rand() % 5;
   switch ( randval ) {
