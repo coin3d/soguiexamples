@@ -118,12 +118,12 @@ normalized_rand(void)
 // *************************************************************************
 
 template <class Type>
-inline Type cu_max( const Type A, const Type B ) {
+inline Type cu_max(const Type A, const Type B) {
   return (A < B) ? B : A;
 }
 
 template <class Type>
-inline Type cu_min( const Type A, const Type B ) {
+inline Type cu_min(const Type A, const Type B) {
   return (A < B) ? A : B;
 }
 
@@ -131,27 +131,27 @@ inline Type cu_min( const Type A, const Type B ) {
 
 static SoNode *
 shape_to_scene_graph(
-  SoShape * shape )
+  SoShape * shape)
 {
   SoSeparator * root = new SoSeparator;
   SoShapeHints * hints = new SoShapeHints;
   hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   hints->shapeType = SoShapeHints::SOLID;
   hints->creaseAngle = 0.91f;
-  root->addChild( hints );
+  root->addChild(hints);
   SoBaseColor * basecol = new SoBaseColor;
-  basecol->rgb.setValue( cu_min(1.0f, 0.3f + normalized_rand()),
+  basecol->rgb.setValue(cu_min(1.0f, 0.3f + normalized_rand()),
                          cu_min(1.0f, 0.3f + normalized_rand()),
-                         cu_min(1.0f, 0.3f + normalized_rand()) );
-  root->addChild( basecol );
+                         cu_min(1.0f, 0.3f + normalized_rand()));
+  root->addChild(basecol);
 
   SoScale * nonuniformscale = new SoScale;
-  nonuniformscale->scaleFactor.setValue( normalized_rand() * 5.0f + 1.0f,
+  nonuniformscale->scaleFactor.setValue(normalized_rand() * 5.0f + 1.0f,
                                          normalized_rand() * 5.0f + 1.0f,
-                                         normalized_rand() * 5.0f + 1.0f );
-  root->addChild( nonuniformscale );
+                                         normalized_rand() * 5.0f + 1.0f);
+  root->addChild(nonuniformscale);
 
-  root->addChild( shape );
+  root->addChild(shape);
   return (SoNode *) root;
 } // shape_to_scene_graph()
 
@@ -160,43 +160,43 @@ shape_to_scene_graph(
 SoNode *
 get_scene_graph(
   int argc,
-  char ** argv )
+  char ** argv)
 {
-  srand( (unsigned int) time(NULL) );
+  srand((unsigned int) time(NULL));
 
-  if ( argc > 1 ) {
+  if (argc > 1) {
     SoSeparator * root = new SoSeparator;
     root->ref();
 
     for (int c = 1; c < argc; ++c) {
       if (argv[c][0] == '-') {
-        if ( ! strcmp( argv[c], "--cube" ) ) {
-          root->addChild(shape_to_scene_graph( new SoCube ));
-        } else if ( ! strcmp( argv[c], "--sphere" ) ) {
-          root->addChild(shape_to_scene_graph( new SoSphere ));
-        } else if ( ! strcmp( argv[c], "--cone" ) ) {
-          root->addChild(shape_to_scene_graph( new SoCone ));
-        } else if ( ! strcmp( argv[c], "--cylinder" ) ) {
-          root->addChild( shape_to_scene_graph( new SoCylinder ));
-        } else if ( ! strcmp( argv[c], "--text3" ) ) {
+        if (! strcmp(argv[c], "--cube")) {
+          root->addChild(shape_to_scene_graph(new SoCube));
+        } else if (! strcmp(argv[c], "--sphere")) {
+          root->addChild(shape_to_scene_graph(new SoSphere));
+        } else if (! strcmp(argv[c], "--cone")) {
+          root->addChild(shape_to_scene_graph(new SoCone));
+        } else if (! strcmp(argv[c], "--cylinder")) {
+          root->addChild(shape_to_scene_graph(new SoCylinder));
+        } else if (! strcmp(argv[c], "--text3")) {
           SoText3 * textnode = new SoText3;
           const char * s[] = { "www", "Coin3D", "org" };
-          textnode->string.setValues( 0, 3, s );
-          textnode->parts.setValue( SoText3::ALL );
+          textnode->string.setValues(0, 3, s);
+          textnode->parts.setValue(SoText3::ALL);
           textnode->justification = SoText3::CENTER;
-          root->addChild(shape_to_scene_graph( textnode ));
+          root->addChild(shape_to_scene_graph(textnode));
         }
       } else {
 #if HAVE_DIME2SO
 #endif
 #if HAVE_PROFIT2SO
-        if ( prf_openflight_check_file( argv[c] ) ) {
-          root->addChild(prf_openinventor_import( argv[c] ));
+        if (prf_openflight_check_file(argv[c])) {
+          root->addChild(prf_openinventor_import(argv[c]));
         }
 #endif
         SoInput in;
-        if (in.openFile( argv[c] ) ) {
-          root->addChild(SoDB::readAll( &in ));
+        if (in.openFile(argv[c])) {
+          root->addChild(SoDB::readAll(&in));
         }
       }
     }
@@ -219,18 +219,18 @@ get_scene_graph(
 
   }
   int randval = rand() % 5;
-  switch ( randval ) {
-  case 0:  return shape_to_scene_graph( new SoCone );
-  case 1:  return shape_to_scene_graph( new SoCube );
-  case 2:  return shape_to_scene_graph( new SoCylinder );
-  case 3:  return shape_to_scene_graph( new SoSphere );
+  switch (randval) {
+  case 0:  return shape_to_scene_graph(new SoCone);
+  case 1:  return shape_to_scene_graph(new SoCube);
+  case 2:  return shape_to_scene_graph(new SoCylinder);
+  case 3:  return shape_to_scene_graph(new SoSphere);
   default:
     SoText3 * textnode = new SoText3;
     const char * s[] = { "www", "Coin3D", "org" };
-    textnode->string.setValues( 0, 3, s );
-    textnode->parts.setValue( SoText3::ALL );
+    textnode->string.setValues(0, 3, s);
+    textnode->parts.setValue(SoText3::ALL);
     textnode->justification = SoText3::CENTER;
-    return shape_to_scene_graph( textnode );
+    return shape_to_scene_graph(textnode);
   }
 } // get_scene_graph()
 
@@ -285,7 +285,7 @@ config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
     }
     else
 
-    if (!strcmp(argv[i], "--title" ) && (i < argc - 1)) {
+    if (!strcmp(argv[i], "--title") && (i < argc - 1)) {
       viewer->setTitle(argv[i+1]);
       i += 2;
     }
