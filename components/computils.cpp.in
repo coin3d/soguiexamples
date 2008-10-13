@@ -191,12 +191,14 @@ get_scene_graph(
 #endif
 #if HAVE_PROFIT2SO
         if (prf_openflight_check_file(argv[c])) {
-          root->addChild(prf_openinventor_import(argv[c]));
+          SoNode * r = prf_openinventor_import(argv[c]);
+          if (r) { root->addChild(r); }
         }
 #endif
         SoInput in;
         if (in.openFile(argv[c])) {
-          root->addChild(SoDB::readAll(&in));
+          SoNode * r = SoDB::readAll(&in);
+          if (r) { root->addChild(r); }
         }
       }
     }
