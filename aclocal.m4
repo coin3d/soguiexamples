@@ -184,7 +184,7 @@ while test $sim_ac_num_settings -ge 0; do
   sim_ac_description=`echo "$sim_ac_setting" | cut -d: -f1`
   sim_ac_status=`echo "$sim_ac_setting" | cut -d: -f2-`
   # hopefully not too many terminals are too dumb for this
-  echo -e "$sim_ac_padding $sim_ac_status\r  $sim_ac_description:"
+  printf "$sim_ac_padding $sim_ac_status\r  $sim_ac_description:\n"
   sim_ac_configuration_settings=`echo $sim_ac_configuration_settings | cut -d"|" -f2-`
   sim_ac_num_settings=`expr $sim_ac_num_settings - 1`
 done
@@ -1798,8 +1798,9 @@ fi
 #
 # Description:
 #   Let the user decide if C++ exception handling should be compiled
-#   in. The compiled libraries/executables will use a lot less space
-#   if they have exception handling support.
+#   in. With older compilers the libraries/executables will use a lot
+#   less space if they have exception handling support disabled, on
+#   modern compilers the difference is negligible.
 #
 #   Note: this macro must be placed after AC_PROG_CXX in the
 #   configure.in script.
@@ -1815,13 +1816,13 @@ AC_PREREQ([2.13])
 AC_ARG_ENABLE(
   [exceptions],
   AC_HELP_STRING([--enable-exceptions],
-                 [(g++ only) compile with exceptions [[default=no]]]),
+                 [(g++ only) compile with exceptions [[default=yes]]]),
   [case "${enableval}" in
     yes) enable_exceptions=yes ;;
     no)  enable_exceptions=no ;;
     *) AC_MSG_ERROR(bad value "${enableval}" for --enable-exceptions) ;;
   esac],
-  [enable_exceptions=no])
+  [enable_exceptions=yes])
 
 if test x"$enable_exceptions" = x"no"; then
   if test "x$GXX" = "xyes"; then
@@ -4288,9 +4289,15 @@ AC_ARG_WITH(
   [sim_ac_with_qt=true])
 
 if $sim_ac_with_qt; then
-  if test -z "$sim_ac_qtdir"; then
-    # The Cygwin environment needs to invoke moc with a POSIX-style path.
-    AC_PATH_PROG(sim_ac_qt_cygpath, cygpath, false)
+  # The Cygwin environment needs to invoke moc with a POSIX-style path.
+  AC_PATH_PROG(sim_ac_qt_cygpath, cygpath, false)
+
+  if test -n "$sim_ac_qtdir"; then
+    if test $sim_ac_qt_cygpath != "false"; then
+      # Quote $sim_ac_qtdir in case it contains whitespace characters.
+      sim_ac_qtdir=`$sim_ac_qt_cygpath -u "$sim_ac_qtdir"`
+    fi
+  else
     if test $sim_ac_qt_cygpath = "false"; then
       sim_ac_qtdir=$QTDIR
     else
