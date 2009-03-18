@@ -1,0 +1,11 @@
+=====================================================================
+
+000 Dependent on SoQt.
+
+    There are dependencies on stuff from SoQt in these source code
+    files, but the idea is that this lib should be a place to collect
+    a set of "pure" Qt-extensions widgets.
+
+    20040910 mortene.
+
+=====================================================================
