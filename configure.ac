@@ -710,7 +710,6 @@ AC_CONFIG_FILES(
         components/simpleexviewer.cpp
         components/roster.cpp
         components/snapshotviewer.cpp
-        components/spaceballdemo.cpp 
         components/transformsliderset.cpp
 
         actions/Makefile

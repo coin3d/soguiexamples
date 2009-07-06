@@ -53,8 +53,6 @@ snapshotviewer_SOURCES = \
 
 backgroundimg_SOURCES = backgroundimg.cpp
 
-spaceballdemo_SOURCES = spaceballdemo.cpp
-
 multifileviewer_SOURCES = multifileviewer.cpp
 
 ## So@Gui@LightSliderSet component
@@ -136,15 +134,14 @@ BUILT_SOURCES = \
 	snapshotviewer.cpp \
 	SoGuiSnapshotViewer.h \
 	SoGuiSnapshotViewer.cpp \
-	multifileviewer.cpp \
-	spaceballdemo.cpp 
+	multifileviewer.cpp
 # 	cutterviewer.cpp \
 # 	SoGuiCutterViewer.h \
 # 	SoGuiCutterViewer.cpp
 
 noinst_PROGRAMS = renderarea simplerenderarea \
 	simpleexviewer backgroundimg examinerviewer \
-	overlay planeviewer flyviewer snapshotviewer spaceballdemo \
+	overlay planeviewer flyviewer snapshotviewer \
 	multifileviewer \
 	$(SLIDERSETS) $(DIRECTIONALLIGHTEDITOR) $(MATERIALEDITOR) \
 	$(MATERIALLIST) $(PRINTDIALOG)
