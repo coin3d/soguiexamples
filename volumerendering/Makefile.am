@@ -1,4 +1,6 @@
+if HAVE_QT3SUPPORT
 SUBDIRS = Cute .
+endif
 
 ############################################################################
 # Conditional build.
@@ -9,8 +11,21 @@ else
 SIMAGE_DEPENDENTS = 
 endif
 
+HAVE_QT3SUPPORT = false
+
+if HAVE_QT3SUPPORT
+QT3SUPPORT_DEPENDENTS = readvol orthoslicer
+endif
+
 if HAVE_SMALLCHANGE
-SMALLCHANGE_DEPENDENTS = opaquechair voleonexplore
+if HAVE_QT3SUPPORT
+SMALLQT3_DEPENDENTS = voleonexplore
+endif
+endif
+
+
+if HAVE_SMALLCHANGE
+SMALLCHANGE_DEPENDENTS = opaquechair 
 else
 SMALLCHANGE_DEPENDENTS = 
 endif
@@ -19,10 +34,10 @@ endif
 # Executables.
 
 noinst_PROGRAMS = \
-	readvol changingdataset examine orthoslicer \
+	changingdataset examine  \
 	raypick simple8bit $(SIMAGE_DEPENDENTS) \
 	fencediagram \
-	$(SMALLCHANGE_DEPENDENTS)
+	$(SMALLCHANGE_DEPENDENTS) ${QT3SUPPORT_DEPENDENTS} ${SMALLQT3_DEPENDENTS}
 
 ############################################################################
 # Executables using the Qt extensions in the "Cute/" subdir.

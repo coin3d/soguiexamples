@@ -394,6 +394,12 @@ SIM_AC_HAVE_INVENTOR_FEATURE(
    const char * v = SoHardCopy::getVersion();],
   [HAVE_HARDCOPY])
 
+
+# **************************************************************************
+# Don't use QT3SUPPORT for now
+AM_CONDITIONAL(HAVE_QT3SUPPORT, false)
+
+
 # **************************************************************************
 # Use SmallChange if available.
 
