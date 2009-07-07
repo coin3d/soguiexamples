@@ -396,11 +396,6 @@ SIM_AC_HAVE_INVENTOR_FEATURE(
 
 
 # **************************************************************************
-# Don't use QT3SUPPORT for now
-AM_CONDITIONAL(HAVE_QT3SUPPORT, false)
-
-
-# **************************************************************************
 # Use SmallChange if available.
 
 sim_ac_smallchange_desired=false
@@ -506,10 +501,11 @@ AM_CONDITIONAL(USING_QT_4, $sim_ac_using_qt_4)
 # Those are the two dependencies of the examples under the
 # volumerendering/ directory.
 
+sim_ac_simvoleon_avail=false
 if test x"$sim_ac_gui_toolkit" = x"soqt"; then
-  # Default to not look for SIM Voleon, as we'll get lots of warnings
-  # from configure in the common case that it is _not_ available.
-  sim_ac_simvoleon_desired=false
+# Default to not look for SIM Voleon, as we'll get lots of warnings
+# from configure in the common case that it is _not_ available.
+sim_ac_simvoleon_desired=false
 
   SIM_AC_HAVE_SIMVOLEON_IFELSE([
     CPPFLAGS="$sim_ac_simvoleon_cppflags $CPPFLAGS"
@@ -545,10 +541,11 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
       if $sim_ac_qt3support_avail; then
         SIM_AC_CONFIGURATION_SETTING([Qt3Support], [found enabled in Qt4 and is being used])
         AC_DEFINE(HAVE_QT3SUPPORT_LIBRARY, 1, [Define to enable use of Qt3Support library])
+        # **************************************************************************
       else
         SIM_AC_CONFIGURATION_SETTING([Qt3Support], [is not being enabled in Qt4 used -- SIM Voleon examples not built])
         LIBS=$sim_ac_save_libs
-        AC_MSG_ERROR([Detected Qt4 usage but Qt3Support couldn't be found. This is currently required to run the SIMVoleon examples. To fix, you will need to enable Qt3Support in Qt4.])
+        AC_DEFINE(HAVE_QT3SUPPORT_LIBRARY, 0, [Define to enable use of Qt3Support library])
       fi    
     fi
   ], [
@@ -559,7 +556,6 @@ if test x"$sim_ac_gui_toolkit" = x"soqt"; then
     fi
   ])
 else
-  sim_ac_simvoleon_avail=false
   if $sim_ac_want_inventor; then
     :  # don't warn if we're using SGI or TGS Inventor, as SIM Voleon is an obvious no-go then
   else
@@ -567,7 +563,14 @@ else
   fi
 fi
 
+if test x"$sim_ac_gui_toolkit" = x"soqt"; then
+  sim_ac_use_soqt=true
+else
+  sim_ac_use_soqt=false
+fi  
 AM_CONDITIONAL(HAVE_SIMVOLEON, $sim_ac_simvoleon_avail)
+AM_CONDITIONAL(HAVE_QT3SUPPORT_LIBRARY, $sim_ac_qt3support_avail)
+AM_CONDITIONAL(USE_SOQT, $sim_ac_use_soqt && $sim_ac_qt3support_avail)
 
 # **************************************************************************
 # If we're using Inventor and InventorQt, check to see if VolumeViz is

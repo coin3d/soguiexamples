@@ -1,4 +1,4 @@
-if HAVE_QT3SUPPORT
+if USE_SOQT
 SUBDIRS = Cute .
 endif
 
@@ -11,14 +11,12 @@ else
 SIMAGE_DEPENDENTS = 
 endif
 
-HAVE_QT3SUPPORT = false
-
-if HAVE_QT3SUPPORT
+if HAVE_QT3SUPPORT_LIBRARY
 QT3SUPPORT_DEPENDENTS = readvol orthoslicer
 endif
 
 if HAVE_SMALLCHANGE
-if HAVE_QT3SUPPORT
+if USE_SOQT
 SMALLQT3_DEPENDENTS = voleonexplore
 endif
 endif
@@ -107,6 +105,7 @@ voleonexplore_SOURCES = voleonexplore.cpp
 
 fencediagram_SOURCES = fencediagram.cpp
 
+if USE_SOQT
 ############################################################################
 
 SoTransferFunction_ctrl.h: $(srcdir)/SoTransferFunction_ctrl.ui
@@ -151,12 +150,9 @@ moc_OrthoSliceHandler.cpp: $(srcdir)/OrthoSliceHandler.h
 
 ############################################################################
 
-BUILT_SOURCES = \
+SOQT_ONLY_SOURCES = \
 	voleonexplore.cpp \
-	readvol.cpp \
-	changingdataset.cpp \
-	fencediagram.cpp \
-	\
+	readvol.cpp		\
 	SoTransferFunction_ctrl.cpp SoTransferFunction_ctrl.h moc_SoTransferFunction_ctrl.cpp \
 	moc_TransferFunctionHandler.cpp \
 	\
@@ -165,6 +161,13 @@ BUILT_SOURCES = \
 	\
 	SoOrthoSlice_ctrl.cpp SoOrthoSlice_ctrl.h moc_SoOrthoSlice_ctrl.cpp \
 	moc_OrthoSliceHandler.cpp
+
+endif
+
+BUILT_SOURCES = \
+    $(SOQT_ONLY_SOURCES) \
+	changingdataset.cpp \
+	fencediagram.cpp
 
 ############################################################################
 

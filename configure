@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS sim_ac_mks_make BUILD_WITH_MSVC BUILD_WITH_MSVC_TRUE BUILD_WITH_MSVC_FALSE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX CXXCPP build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT RANLIB ac_ct_RANLIB DSUFFIX EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS sim_ac_qt_cygpath HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER HAVE_QT3SUPPORT_TRUE HAVE_QT3SUPPORT_FALSE sim_ac_smallchange_configcmd HAVE_SMALLCHANGE_TRUE HAVE_SMALLCHANGE_FALSE sim_ac_simaruba_configcmd HAVE_SIMARUBA_TRUE HAVE_SIMARUBA_FALSE sim_ac_coinscenery_configcmd HAVE_COINSCENERY_TRUE HAVE_COINSCENERY_FALSE MOC UIC USING_QT_4_TRUE USING_QT_4_FALSE sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE HAVE_VOLUMEVIZ_TRUE HAVE_VOLUMEVIZ_FALSE HAVE_MESHVIZ_TRUE HAVE_MESHVIZ_FALSE HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE sim_ac_simage_configcmd soguiexamples_src_dir soguiexamples_build_dir LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS sim_ac_mks_make BUILD_WITH_MSVC BUILD_WITH_MSVC_TRUE BUILD_WITH_MSVC_FALSE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX CXXCPP build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE am__leading_dot DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT RANLIB ac_ct_RANLIB DSUFFIX EGREP X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS sim_ac_qt_cygpath HAVE_SLIDERSETS_TRUE HAVE_SLIDERSETS_FALSE HAVE_MATERIALEDITOR_TRUE HAVE_MATERIALEDITOR_FALSE HAVE_DIRECTIONALLIGHTEDITOR_TRUE HAVE_DIRECTIONALLIGHTEDITOR_FALSE HAVE_MATERIALLIST_TRUE HAVE_MATERIALLIST_FALSE HAVE_PRINTDIALOG_TRUE HAVE_PRINTDIALOG_FALSE soguiconfig GUI Gui gui EVENT WIDGET COMPONENTHEADER sim_ac_smallchange_configcmd HAVE_SMALLCHANGE_TRUE HAVE_SMALLCHANGE_FALSE sim_ac_simaruba_configcmd HAVE_SIMARUBA_TRUE HAVE_SIMARUBA_FALSE sim_ac_coinscenery_configcmd HAVE_COINSCENERY_TRUE HAVE_COINSCENERY_FALSE MOC UIC USING_QT_4_TRUE USING_QT_4_FALSE sim_ac_simvoleon_configcmd HAVE_SIMVOLEON_TRUE HAVE_SIMVOLEON_FALSE HAVE_QT3SUPPORT_LIBRARY_TRUE HAVE_QT3SUPPORT_LIBRARY_FALSE USE_SOQT_TRUE USE_SOQT_FALSE HAVE_VOLUMEVIZ_TRUE HAVE_VOLUMEVIZ_FALSE HAVE_MESHVIZ_TRUE HAVE_MESHVIZ_FALSE HAVE_SIMAGE_TRUE HAVE_SIMAGE_FALSE sim_ac_simage_configcmd soguiexamples_src_dir soguiexamples_build_dir LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -13672,20 +13672,6 @@ fi
 
 
 # **************************************************************************
-# Don't use QT3SUPPORT for now
-
-
-if false; then
-  HAVE_QT3SUPPORT_TRUE=
-  HAVE_QT3SUPPORT_FALSE='#'
-else
-  HAVE_QT3SUPPORT_TRUE='#'
-  HAVE_QT3SUPPORT_FALSE=
-fi
-
-
-
-# **************************************************************************
 # Use SmallChange if available.
 
 sim_ac_smallchange_desired=false
@@ -14829,10 +14815,11 @@ fi
 # Those are the two dependencies of the examples under the
 # volumerendering/ directory.
 
+sim_ac_simvoleon_avail=false
 if test x"$sim_ac_gui_toolkit" = x"soqt"; then
-  # Default to not look for SIM Voleon, as we'll get lots of warnings
-  # from configure in the common case that it is _not_ available.
-  sim_ac_simvoleon_desired=false
+# Default to not look for SIM Voleon, as we'll get lots of warnings
+# from configure in the common case that it is _not_ available.
+sim_ac_simvoleon_desired=false
 
 
 
@@ -15163,6 +15150,7 @@ cat >>confdefs.h <<\_ACEOF
 #define HAVE_QT3SUPPORT_LIBRARY 1
 _ACEOF
 
+        # **************************************************************************
       else
 
 if test x"${sim_ac_configuration_settings+set}" = x"set"; then
@@ -15172,9 +15160,11 @@ else
 fi
 
         LIBS=$sim_ac_save_libs
-        { { echo "$as_me:$LINENO: error: Detected Qt4 usage but Qt3Support couldn't be found. This is currently required to run the SIMVoleon examples. To fix, you will need to enable Qt3Support in Qt4." >&5
-echo "$as_me: error: Detected Qt4 usage but Qt3Support couldn't be found. This is currently required to run the SIMVoleon examples. To fix, you will need to enable Qt3Support in Qt4." >&2;}
-   { (exit 1); exit 1; }; }
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_QT3SUPPORT_LIBRARY 0
+_ACEOF
+
       fi
     fi
 
@@ -15221,7 +15211,6 @@ fi
 fi
 
 else
-  sim_ac_simvoleon_avail=false
   if $sim_ac_want_inventor; then
     :  # don't warn if we're using SGI or TGS Inventor, as SIM Voleon is an obvious no-go then
   else
@@ -15235,6 +15224,11 @@ fi
   fi
 fi
 
+if test x"$sim_ac_gui_toolkit" = x"soqt"; then
+  sim_ac_use_soqt=true
+else
+  sim_ac_use_soqt=false
+fi
 
 
 if $sim_ac_simvoleon_avail; then
@@ -15243,6 +15237,26 @@ if $sim_ac_simvoleon_avail; then
 else
   HAVE_SIMVOLEON_TRUE='#'
   HAVE_SIMVOLEON_FALSE=
+fi
+
+
+
+if $sim_ac_qt3support_avail; then
+  HAVE_QT3SUPPORT_LIBRARY_TRUE=
+  HAVE_QT3SUPPORT_LIBRARY_FALSE='#'
+else
+  HAVE_QT3SUPPORT_LIBRARY_TRUE='#'
+  HAVE_QT3SUPPORT_LIBRARY_FALSE=
+fi
+
+
+
+if $sim_ac_use_soqt && $sim_ac_qt3support_avail; then
+  USE_SOQT_TRUE=
+  USE_SOQT_FALSE='#'
+else
+  USE_SOQT_TRUE='#'
+  USE_SOQT_FALSE=
 fi
 
 
@@ -16146,13 +16160,6 @@ echo "$as_me: error: conditional \"HAVE_PRINTDIALOG\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
-if test -z "${HAVE_QT3SUPPORT_TRUE}" && test -z "${HAVE_QT3SUPPORT_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"HAVE_QT3SUPPORT\" was never defined.
-Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"HAVE_QT3SUPPORT\" was never defined.
-Usually this means the macro was only invoked conditionally." >&2;}
-   { (exit 1); exit 1; }; }
-fi
 if test -z "${HAVE_SMALLCHANGE_TRUE}" && test -z "${HAVE_SMALLCHANGE_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"HAVE_SMALLCHANGE\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -16185,6 +16192,20 @@ if test -z "${HAVE_SIMVOLEON_TRUE}" && test -z "${HAVE_SIMVOLEON_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"HAVE_SIMVOLEON\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"HAVE_SIMVOLEON\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${HAVE_QT3SUPPORT_LIBRARY_TRUE}" && test -z "${HAVE_QT3SUPPORT_LIBRARY_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"HAVE_QT3SUPPORT_LIBRARY\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"HAVE_QT3SUPPORT_LIBRARY\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_SOQT_TRUE}" && test -z "${USE_SOQT_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_SOQT\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_SOQT\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -16971,8 +16992,6 @@ s,@gui@,$gui,;t t
 s,@EVENT@,$EVENT,;t t
 s,@WIDGET@,$WIDGET,;t t
 s,@COMPONENTHEADER@,$COMPONENTHEADER,;t t
-s,@HAVE_QT3SUPPORT_TRUE@,$HAVE_QT3SUPPORT_TRUE,;t t
-s,@HAVE_QT3SUPPORT_FALSE@,$HAVE_QT3SUPPORT_FALSE,;t t
 s,@sim_ac_smallchange_configcmd@,$sim_ac_smallchange_configcmd,;t t
 s,@HAVE_SMALLCHANGE_TRUE@,$HAVE_SMALLCHANGE_TRUE,;t t
 s,@HAVE_SMALLCHANGE_FALSE@,$HAVE_SMALLCHANGE_FALSE,;t t
@@ -16989,6 +17008,10 @@ s,@USING_QT_4_FALSE@,$USING_QT_4_FALSE,;t t
 s,@sim_ac_simvoleon_configcmd@,$sim_ac_simvoleon_configcmd,;t t
 s,@HAVE_SIMVOLEON_TRUE@,$HAVE_SIMVOLEON_TRUE,;t t
 s,@HAVE_SIMVOLEON_FALSE@,$HAVE_SIMVOLEON_FALSE,;t t
+s,@HAVE_QT3SUPPORT_LIBRARY_TRUE@,$HAVE_QT3SUPPORT_LIBRARY_TRUE,;t t
+s,@HAVE_QT3SUPPORT_LIBRARY_FALSE@,$HAVE_QT3SUPPORT_LIBRARY_FALSE,;t t
+s,@USE_SOQT_TRUE@,$USE_SOQT_TRUE,;t t
+s,@USE_SOQT_FALSE@,$USE_SOQT_FALSE,;t t
 s,@HAVE_VOLUMEVIZ_TRUE@,$HAVE_VOLUMEVIZ_TRUE,;t t
 s,@HAVE_VOLUMEVIZ_FALSE@,$HAVE_VOLUMEVIZ_FALSE,;t t
 s,@HAVE_MESHVIZ_TRUE@,$HAVE_MESHVIZ_TRUE,;t t
