@@ -44,7 +44,7 @@
 // *************************************************************************
 
 static
-char * REPLACEMENTPARTS = "#Inventor V2.1 ascii\n\n"
+const char * REPLACEMENTPARTS = "#Inventor V2.1 ascii\n\n"
 ""
 "Separator {"
 "   DEF AXISTRANSLATOR Separator {"

@@ -191,7 +191,7 @@ template<class generic> bool MooList<generic>::search( find * function, void * d
 template<class generic> void MooList<generic>::empty( void )
 {
   this->end( );
-  while ( this->remove( ) );
+  while ( this->remove( ) ) {}
 }
 
 template<class generic> inline unsigned int MooList<generic>::length( void )
@@ -209,11 +209,11 @@ template<class generic> generic MooList<generic>::get( unsigned int index )
 
   if ( this->currentIndex > index ) {
 
-    while( ( this->currentIndex > index ) && this->prev( ) );
+    while( ( this->currentIndex > index ) && this->prev( ) ) {}
 
   } else if ( this->currentIndex < index ) {
 
-    while( ( this->currentIndex < index ) && this->next( ) );
+    while( ( this->currentIndex < index ) && this->next( ) ) {}
 
   }
 

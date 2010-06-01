@@ -43,7 +43,7 @@
 // Return:
 //  SoSeparator *
 SoSeparator *
-text(char * txtstring, SbVec2f pos1, SbVec2f pos2, float speed, SbVec3f col)
+text(const char * txtstring, SbVec2f pos1, SbVec2f pos2, float speed, SbVec3f col)
 {
   SoSeparator * sep = new SoSeparator;
   SoShuttle * shuttle = new SoShuttle;

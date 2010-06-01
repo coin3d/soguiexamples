@@ -1432,27 +1432,27 @@ event_cb(void *userdata, SoEventCallback *node)
   }
   //yaw forward
   else if (SO_KEY_PRESS_EVENT(event, W)) {
-    if(!rotate_piece(0));
+    rotate_piece(0);
   }
   //yaw backward
   else if (SO_KEY_PRESS_EVENT(event, S)) {
-    if(!rotate_piece(1));
+    rotate_piece(1);
   }
   //rotate left
   else if (SO_KEY_PRESS_EVENT(event, A)) {
-    if(!rotate_piece(2));
+    rotate_piece(2);
   }
   //rotate right
   else if (SO_KEY_PRESS_EVENT(event, D)) {
-    if(!rotate_piece(3));
+    rotate_piece(3);
   }
   //roll left
   else if (SO_KEY_PRESS_EVENT(event, Q)) {
-    if(!rotate_piece(4));
+    rotate_piece(4);
   }
   //roll right
   else if (SO_KEY_PRESS_EVENT(event, E)) {
-    if(!rotate_piece(5));
+    rotate_piece(5);
   }
   else if (SO_KEY_PRESS_EVENT(event, X)) {
     exit(1);

@@ -474,7 +474,7 @@ addText(
   float radius,
   float height,
   float radians,
-  char * text )
+  const char * text )
 {
   SoSeparator * group = new SoSeparator;
 
@@ -578,7 +578,7 @@ makeBuoy(
   sep4->addChild( filetrans );
 
   SoInput logobuf;
-  logobuf.setBuffer( (void *) sim_logo, strlen(sim_logo) );
+  logobuf.setBuffer( static_cast<const void*>(sim_logo), strlen(sim_logo) );
   SoNode * logo = NULL;
   SoDB::read( &logobuf, logo );
   sep4->addChild( logo );

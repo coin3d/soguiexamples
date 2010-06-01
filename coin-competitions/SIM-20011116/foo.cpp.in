@@ -107,7 +107,7 @@
 
 
 // global data
-char* strings [] = {"h a l l o  w e l t !", 
+const char* strings [] = {"h a l l o  w e l t !", 
                       "c i a o  i l  m o n d o !", 
                       "h e l l o  w o r l d !", 
                       "h o l a  m u n d o !", 

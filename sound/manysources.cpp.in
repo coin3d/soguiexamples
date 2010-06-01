@@ -107,7 +107,7 @@ main(int argc, char *argv[])
 {
   @WIDGET@ win = So@Gui@::init(argc, argv, argv[0]);
 
-  char *filename = "clips/synthloop_a.ogg";
+  const char *filename = "clips/synthloop_a.ogg";
   SbBool random = FALSE;
   num_sources = 5;
   printf("\nUsage: manysources [ <clip_filename> [ <num_sources> [random]]]\n");
