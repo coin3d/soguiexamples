@@ -24,15 +24,15 @@
  *
 \**************************************************************************/
 
-#include <qcanvas.h>
+#include <q3canvas.h>
 #include <qimage.h>
 
 class QPainter;
 
-class ImageItem: public QCanvasRectangle
+class ImageItem: public Q3CanvasRectangle
 {
 public:
-  ImageItem(QCanvas *canvas);
+  ImageItem(Q3Canvas *canvas);
   void setImage(QImage img);
 
 

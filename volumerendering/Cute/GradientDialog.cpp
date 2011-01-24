@@ -25,20 +25,21 @@
 
 #include <qlayout.h>
 #include <qimage.h>
-#include <qcanvas.h>
+#include <q3canvas.h>
 #include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
-#include <qvaluelist.h>
-#include <qfiledialog.h>
+#include <q3valuelist.h>
+#include <q3filedialog.h>
 #include <qpushbutton.h>
 #include <qsizepolicy.h>
+#include <qboxlayout.h>
 
 #include "gradientp/GradientView.h"
 #include "gradientp/SoQtGradientDialogP.h"
 #include "SoQtGradientDialog.h"
 
-#include "moc_SoQtGradientDialogP.icc"
+#include "moc_SoQtGradientDialogP.cxx"
 
 QString * SoQtGradientDialogP::defaultdir = NULL;
 
@@ -103,7 +104,7 @@ SoQtGradientDialogP::resetGradient()
 void 
 SoQtGradientDialogP::loadGradient()
 {
-  this->filedialog->setMode(QFileDialog::ExistingFile);
+  this->filedialog->setMode(Q3FileDialog::ExistingFile);
 
   if (this->filedialog->exec()) {
     QString filename = this->filedialog->selectedFile();
@@ -125,7 +126,7 @@ SoQtGradientDialogP::loadGradient()
 void 
 SoQtGradientDialogP::saveGradient()
 {
-  this->filedialog->setMode(QFileDialog::AnyFile);
+  this->filedialog->setMode(Q3FileDialog::AnyFile);
 
   if (this->filedialog->exec()) {
     QString filename = this->filedialog->selectedFile();
@@ -138,7 +139,7 @@ SoQtGradientDialogP::saveGradient()
     
       QString dir = this->filedialog->dirPath();
       QString description = filename.remove(0, dir.length() + 1);
-      this->gradientlist->changeItem(grad.getImage(60, 16, 32), description, this->old_index);
+      this->gradientlist->changeItem((QPixmap &)grad.getImage(60, 16, 32), description, this->old_index);
 
       if (SoQtGradientDialogP::defaultdir == NULL) { // set the static defaultdir to the first dir chosen
         SoQtGradientDialogP::defaultdir = new QString(dir);
@@ -161,7 +162,7 @@ void SoQtGradientDialogP::saveCurrent()
 {
   const Gradient & grad = this->gradview->getGradient();
   QString description = this->gradientlist->text(this->old_index);
-  this->gradientlist->changeItem(grad.getImage(60, 16, 32), description, this->old_index);
+  this->gradientlist->changeItem((QPixmap &)grad.getImage(60, 16, 32), description, this->old_index);
   this->gradients[old_index] = grad;
 }
 
@@ -180,12 +181,12 @@ SoQtGradientDialog::SoQtGradientDialog(const Gradient & grad,
   this->setSizePolicy(sizepolicy);
 
   PRIVATE(this)->filetype = ".grad";
-  PRIVATE(this)->filedialog = new QFileDialog(this);
+  PRIVATE(this)->filedialog = new Q3FileDialog(this);
   if (SoQtGradientDialogP::defaultdir) {
     PRIVATE(this)->filedialog->setDir(*SoQtGradientDialogP::defaultdir);
   }
   
-  PRIVATE(this)->gradview = new GradientView(new QCanvas(), grad, this, "GradientView");
+  PRIVATE(this)->gradview = new GradientView(new Q3Canvas(), grad, this, "GradientView");
   PRIVATE(this)->gradview->setFrameStyle(QFrame::Sunken);
 
   PRIVATE(this)->gradientlist = new QComboBox(this, "gradientlist");
@@ -201,7 +202,7 @@ SoQtGradientDialog::SoQtGradientDialog(const Gradient & grad,
   QHBoxLayout * buttonlayout = new QHBoxLayout();
   toplayout->addLayout(buttonlayout, 2, 0);
 
-  QVBoxLayout * loadsaveLayout = new QVBoxLayout();
+  QBoxLayout * loadsaveLayout = new QBoxLayout(QBoxLayout::LeftToRight);
   buttonlayout->addLayout(loadsaveLayout);
 
   QHBoxLayout * contupdatelayout = new QHBoxLayout();
@@ -213,15 +214,15 @@ SoQtGradientDialog::SoQtGradientDialog(const Gradient & grad,
   toplayout->addLayout(applyresetLayout, 2, 2);
 
   loadsaveLayout->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
-  loadsaveLayout->addWidget(PRIVATE(this)->gradientlist, 0, 1);
+  loadsaveLayout->addWidget(PRIVATE(this)->gradientlist, 0, (Qt::Alignment)1);
 
   QPushButton * loadbutton = new QPushButton(this, "loadbutton");
   loadbutton->setText("Load");
-  loadsaveLayout->addWidget(loadbutton, 0, 1);
+  loadsaveLayout->addWidget(loadbutton, 0, (Qt::Alignment)1);
 
   QPushButton * savebutton = new QPushButton(this, "savebutton");
   savebutton->setText("Save");
-  loadsaveLayout->addWidget(savebutton, 0, 1);
+  loadsaveLayout->addWidget(savebutton, 0, (Qt::Alignment)1);
 
   PRIVATE(this)->contupdate = new QCheckBox(this);
   PRIVATE(this)->contupdate->setText("Continuous update ");
@@ -266,7 +267,7 @@ void SoQtGradientDialog::addGradient(const Gradient & grad, QString description)
   }
 
   PRIVATE(this)->gradients.append(PRIVATE(this)->gradientcopy);
-  PRIVATE(this)->gradientlist->insertItem(PRIVATE(this)->gradientcopy.getImage(60, 16, 32), description);
+  PRIVATE(this)->gradientlist->insertItem((QPixmap &)PRIVATE(this)->gradientcopy.getImage(60, 16, 32), description);
   PRIVATE(this)->old_index = PRIVATE(this)->gradientlist->count() - 1;
   
   PRIVATE(this)->gradientlist->setCurrentItem(PRIVATE(this)->old_index);

@@ -24,9 +24,26 @@
 \**************************************************************************/
 
 #include <qwidget.h>
+#include <QDialog>
+
+namespace Ui {
+    class SoTransferFunction_ctrl;
+}
+
+class SoTransferFunction_ctrl : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit SoTransferFunction_ctrl(QWidget *parent = 0);
+    ~SoTransferFunction_ctrl();
+
+//private:
+    Ui::SoTransferFunction_ctrl *ui;
+};
 
 class SoTransferFunction;
-class SoTransferFunction_ctrl;
+//class SoTransferFunction_ctrl;
 class Gradient;
 
 

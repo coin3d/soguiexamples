@@ -24,32 +24,34 @@
  *
 \**************************************************************************/
 
-#include <qcanvas.h>
+#include <q3canvas.h>
 #include <qimage.h>
 #include <Inventor/SbBasic.h>
 #include <Inventor/lists/SbList.h>
+#include <QtCore/qnamespace.h>
+#include <QResizeEvent>
+#include <QMouseEvent>
 
 // FIXME: remove these dependencies. 20031020 mortene.
 #include "SoQtColorTableEditor.h"
 #include "ColorCurve.h"
 
-class QCanvasItemList;
+class Q3CanvasItemList;
 class QMouseEvent;
-class QCanvasItem;
+class Q3CanvasItem;
 
 // *************************************************************************
-
-class CurveView : public QCanvasView 
+class CurveView : public Q3CanvasView 
 {
   Q_OBJECT
 
 public:
   CurveView(int numcolors,
             SoQtColorTableEditor::Mode mode, 
-            QCanvas * canvas, 
+            Q3Canvas * canvas, 
             QWidget * parent = 0, 
             const char * name = 0, 
-            WFlags flags = 0);
+            Qt::WFlags flags = 0);
   
   ~CurveView();
 
@@ -86,15 +88,15 @@ private:
   void initGrid(void);
   
   QPixmap makePixmap(int w, int h, const uint8_t * r, const uint8_t * g, const uint8_t * b) const;
-  QCanvasRectangle * newControlPoint(int x, int y);
-  QCanvasItemList newCanvasCtrlPtList(void);
-  QCanvasItem * smallestItem(QCanvasItemList * list);
+  Q3CanvasRectangle * newControlPoint(int x, int y);
+  Q3CanvasItemList newCanvasCtrlPtList(void);
+  Q3CanvasItem * smallestItem(Q3CanvasItemList * list);
 
   SbBool mousepressed;
   QPoint movingstart;
   QPoint lastpos;
-  QCanvas * canvas;
-  QCanvasItem * movingitem;
+  Q3Canvas * canvas;
+  Q3CanvasItem * movingitem;
 
   CurveType curvemode;
   SoQtColorTableEditor::Mode colormode;
@@ -103,13 +105,12 @@ private:
   int size;
   int maxval;
   
-  SbList<QCanvasItemList> canvasctrlpts;
+  SbList<Q3CanvasItemList> canvasctrlpts;
   SbList<ColorCurve*> colorcurves;
     
-  QCanvasItemList curvesegments;
-  QCanvasItemList grid;
+  Q3CanvasItemList curvesegments;
+  Q3CanvasItemList grid;
 };
 
 // *************************************************************************
-
 #endif // CURVEVIEW_H

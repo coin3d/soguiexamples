@@ -24,13 +24,13 @@
  *
 \**************************************************************************/
 
-#include <qcanvas.h>
+#include <q3canvas.h>
 #include <Inventor/SbBasic.h>
 
-class TickMark : public QCanvasPolygon
+class TickMark : public Q3CanvasPolygon
 {
 public:
-  TickMark(QCanvas * canvas);
+  TickMark(Q3Canvas * canvas);
   ~TickMark();
 
   float getPos(void) const;

@@ -1,200 +1,190 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
-<class>SoTransferFunction_ctrl</class>
-<widget class="QDialog">
-    <property name="name">
-        <cstring>SoTransferFunction_ctrl</cstring>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SoTransferFunction_ctrl</class>
+ <widget class="QDialog" name="SoTransferFunction_ctrl">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>560</width>
+    <height>223</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SoTransferFunction control</string>
+  </property>
+  <widget class="QWidget" name="Layout8">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>30</y>
+     <width>420</width>
+     <height>163</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout">
+    <property name="margin">
+     <number>0</number>
     </property>
-    <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>560</width>
-            <height>223</height>
-        </rect>
+    <property name="spacing">
+     <number>6</number>
     </property>
-    <property name="caption">
-        <string>SoTransferFunction control</string>
-    </property>
-    <widget class="QLayoutWidget">
-        <property name="name">
-            <cstring>Layout8</cstring>
+    <item row="0" column="0">
+     <widget class="QLabel" name="TextLabel2">
+      <property name="text">
+       <string>reMap</string>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="TextLabel4">
+      <property name="text">
+       <string>offset</string>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <layout class="QHBoxLayout">
+      <property name="spacing">
+       <number>6</number>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLineEdit" name="lowEdit">
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
         </property>
-        <property name="geometry">
-            <rect>
-                <x>70</x>
-                <y>30</y>
-                <width>420</width>
-                <height>163</height>
-            </rect>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="highEdit">
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
         </property>
-        <grid>
-            <property name="name">
-                <cstring>unnamed</cstring>
-            </property>
-            <property name="margin">
-                <number>0</number>
-            </property>
-            <property name="spacing">
-                <number>6</number>
-            </property>
-            <widget class="QLabel" row="0" column="0">
-                <property name="name">
-                    <cstring>TextLabel2</cstring>
-                </property>
-                <property name="text">
-                    <string>reMap</string>
-                </property>
-            </widget>
-            <widget class="QLabel" row="2" column="0">
-                <property name="name">
-                    <cstring>TextLabel4</cstring>
-                </property>
-                <property name="text">
-                    <string>offset</string>
-                </property>
-            </widget>
-            <widget class="QLayoutWidget" row="0" column="1">
-                <property name="name">
-                    <cstring>Layout4</cstring>
-                </property>
-                <hbox>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <property name="margin">
-                        <number>0</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <widget class="QLineEdit">
-                        <property name="name">
-                            <cstring>lowEdit</cstring>
-                        </property>
-                        <property name="alignment">
-                            <set>AlignRight</set>
-                        </property>
-                    </widget>
-                    <widget class="QLineEdit">
-                        <property name="name">
-                            <cstring>highEdit</cstring>
-                        </property>
-                        <property name="alignment">
-                            <set>AlignRight</set>
-                        </property>
-                    </widget>
-                </hbox>
-            </widget>
-            <widget class="QLabel" row="3" column="0">
-                <property name="name">
-                    <cstring>TextLabel5</cstring>
-                </property>
-                <property name="text">
-                    <string>predefColorMap</string>
-                </property>
-            </widget>
-            <widget class="QComboBox" row="3" column="1">
-                <item>
-                    <property name="text">
-                        <string>NONE</string>
-                    </property>
-                </item>
-                <item>
-                    <property name="text">
-                        <string>GREY</string>
-                    </property>
-                </item>
-                <item>
-                    <property name="text">
-                        <string>TEMPERATURE</string>
-                    </property>
-                </item>
-                <item>
-                    <property name="text">
-                        <string>PHYSICS</string>
-                    </property>
-                </item>
-                <item>
-                    <property name="text">
-                        <string>STANDARD</string>
-                    </property>
-                </item>
-                <item>
-                    <property name="text">
-                        <string>GLOW</string>
-                    </property>
-                </item>
-                <item>
-                    <property name="text">
-                        <string>BLUE_RED</string>
-                    </property>
-                </item>
-                <item>
-                    <property name="text">
-                        <string>SEISMIC</string>
-                    </property>
-                </item>
-                <property name="name">
-                    <cstring>predefCombo</cstring>
-                </property>
-            </widget>
-            <widget class="QComboBox" row="4" column="1">
-                <item>
-                    <property name="text">
-                        <string>ALPHA</string>
-                    </property>
-                </item>
-                <item>
-                    <property name="text">
-                        <string>LUM_ALPHA</string>
-                    </property>
-                </item>
-                <item>
-                    <property name="text">
-                        <string>RGBA</string>
-                    </property>
-                </item>
-                <property name="name">
-                    <cstring>colormapCombo</cstring>
-                </property>
-            </widget>
-            <widget class="QLabel" row="4" column="0">
-                <property name="name">
-                    <cstring>TextLabel6</cstring>
-                </property>
-                <property name="text">
-                    <string>colorMapType</string>
-                </property>
-            </widget>
-            <widget class="QLabel" row="1" column="0">
-                <property name="name">
-                    <cstring>TextLabel3</cstring>
-                </property>
-                <property name="text">
-                    <string>shift</string>
-                </property>
-            </widget>
-            <widget class="QLineEdit" row="1" column="1">
-                <property name="name">
-                    <cstring>shiftEdit</cstring>
-                </property>
-            </widget>
-            <widget class="QLineEdit" row="2" column="1">
-                <property name="name">
-                    <cstring>offsetEdit</cstring>
-                </property>
-            </widget>
-        </grid>
-    </widget>
-</widget>
-<tabstops>
-    <tabstop>lowEdit</tabstop>
-    <tabstop>highEdit</tabstop>
-    <tabstop>shiftEdit</tabstop>
-    <tabstop>offsetEdit</tabstop>
-    <tabstop>predefCombo</tabstop>
-    <tabstop>colormapCombo</tabstop>
-</tabstops>
-<pixmapinproject/>
-<layoutdefaults spacing="6" margin="11"/>
-</UI>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="TextLabel5">
+      <property name="text">
+       <string>predefColorMap</string>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QComboBox" name="predefCombo">
+      <item>
+       <property name="text">
+        <string>NONE</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>GREY</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>TEMPERATURE</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>PHYSICS</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>STANDARD</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>GLOW</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>BLUE_RED</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SEISMIC</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QComboBox" name="colormapCombo">
+      <item>
+       <property name="text">
+        <string>ALPHA</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>LUM_ALPHA</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>RGBA</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="TextLabel6">
+      <property name="text">
+       <string>colorMapType</string>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="TextLabel3">
+      <property name="text">
+       <string>shift</string>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="shiftEdit"/>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="offsetEdit"/>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <tabstops>
+  <tabstop>lowEdit</tabstop>
+  <tabstop>highEdit</tabstop>
+  <tabstop>shiftEdit</tabstop>
+  <tabstop>offsetEdit</tabstop>
+  <tabstop>predefCombo</tabstop>
+  <tabstop>colormapCombo</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

@@ -21,7 +21,7 @@
 \**************************************************************************/
 
 #include "VolumeRenderHandler.h"
-#include "SoVolumeRender_ctrl.h"
+#include "ui_SoVolumeRender_ctrl.h"
 
 #include <assert.h>
 
@@ -38,6 +38,18 @@
 #include "utility.h"
 
 // *************************************************************************
+SoVolumeRender_ctrl::SoVolumeRender_ctrl(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::SoVolumeRender_ctrl)
+{
+    ui->setupUi(this);
+}
+
+
+SoVolumeRender_ctrl::~SoVolumeRender_ctrl()
+{
+    delete ui;
+}
 
 VolumeRenderHandler::VolumeRenderHandler(SoVolumeRender * rendernode,
                                          SoVolumeData * volumedatanode,
@@ -73,57 +85,57 @@ VolumeRenderHandler::initGUI(void)
 
   // "numSlices" slider & edit
 
-  this->ctrl->numSlicesSlider->setMinValue(0);
+  this->ctrl->ui->numSlicesSlider->setMinValue(0);
   const unsigned short maxdim = SbGuiExMax(dimension[0], SbGuiExMax(dimension[1], dimension[2]));
-  this->ctrl->numSlicesSlider->setMaxValue(maxdim);
-  this->ctrl->numSlicesSlider->setValue(this->node->numSlices.getValue());
+  this->ctrl->ui->numSlicesSlider->setMaxValue(maxdim);
+  this->ctrl->ui->numSlicesSlider->setValue(this->node->numSlices.getValue());
 
-  QObject::connect(this->ctrl->numSlicesSlider, SIGNAL(valueChanged(int)),
+  QObject::connect(this->ctrl->ui->numSlicesSlider, SIGNAL(valueChanged(int)),
                    this, SLOT(numSlicesSliderUpdate(int)));
 
 
   QString s;
   s.sprintf("%d", this->node->numSlices.getValue());
-  this->ctrl->numSlicesEdit->setText(s);
+  this->ctrl->ui->numSlicesEdit->setText(s);
 
-  QObject::connect(this->ctrl->numSlicesEdit, SIGNAL(returnPressed()),
+  QObject::connect(this->ctrl->ui->numSlicesEdit, SIGNAL(returnPressed()),
                    this, SLOT(numSlicesEditUpdate()));
 
   // numSlicesControl combobox
 
-  this->ctrl->numSlicesControlCombo->setCurrentItem(this->node->numSlicesControl.getValue());
+  this->ctrl->ui->numSlicesControlCombo->setCurrentItem(this->node->numSlicesControl.getValue());
 
-  QObject::connect(this->ctrl->numSlicesControlCombo, SIGNAL(activated(int)),
+  QObject::connect(this->ctrl->ui->numSlicesControlCombo, SIGNAL(activated(int)),
                    this, SLOT(numSlicesControlUpdate(int)));
 
   if (this->node->numSlicesControl.getValue() == SoVolumeRender::ALL) {
-    this->ctrl->numSlicesEdit->setEnabled(FALSE);
-    this->ctrl->numSlicesSlider->setEnabled(FALSE);
+    this->ctrl->ui->numSlicesEdit->setEnabled(FALSE);
+    this->ctrl->ui->numSlicesSlider->setEnabled(FALSE);
   }
 
   // interpolation combobox
 
-  this->ctrl->interpolationCombo->setCurrentItem(this->node->interpolation.getValue());
+  this->ctrl->ui->interpolationCombo->setCurrentItem(this->node->interpolation.getValue());
 
-  QObject::connect(this->ctrl->interpolationCombo, SIGNAL(activated(int)),
+  QObject::connect(this->ctrl->ui->interpolationCombo, SIGNAL(activated(int)),
                    this, SLOT(interpolationUpdate(int)));
 
   // composition combobox
 
-  this->ctrl->compositionCombo->setCurrentItem(this->node->composition.getValue());
+  this->ctrl->ui->compositionCombo->setCurrentItem(this->node->composition.getValue());
 
-  QObject::connect(this->ctrl->compositionCombo, SIGNAL(activated(int)),
+  QObject::connect(this->ctrl->ui->compositionCombo, SIGNAL(activated(int)),
                    this, SLOT(compositionUpdate(int)));
 
   // viewAlignedSlices checkbox
 
-  this->ctrl->viewAlignedSlicesCheckBox->setChecked(this->node->viewAlignedSlices.getValue());
+  this->ctrl->ui->viewAlignedSlicesCheckBox->setChecked(this->node->viewAlignedSlices.getValue());
 
-  QObject::connect(this->ctrl->viewAlignedSlicesCheckBox, SIGNAL(stateChanged(int)),
+  QObject::connect(this->ctrl->ui->viewAlignedSlicesCheckBox, SIGNAL(stateChanged(int)),
                    this, SLOT(viewAlignedSlicesCheckBoxUpdate(int)));
 
   // Not in use yet -- 3D textures are not supported.
-  this->ctrl->viewAlignedSlicesCheckBox->setEnabled(FALSE);
+  this->ctrl->ui->viewAlignedSlicesCheckBox->setEnabled(FALSE);
 }
 
 
@@ -134,15 +146,15 @@ VolumeRenderHandler::numSlicesSliderUpdate(int val)
 
   QString s;
   s.sprintf("%d", val);
-  this->ctrl->numSlicesEdit->setText(s);
+  this->ctrl->ui->numSlicesEdit->setText(s);
 }
 
 void
 VolumeRenderHandler::numSlicesEditUpdate(void)
 {
-  this->node->numSlices = this->ctrl->numSlicesEdit->text().toInt();
+  this->node->numSlices = this->ctrl->ui->numSlicesEdit->text().toInt();
 
-  this->ctrl->numSlicesSlider->setValue(this->node->numSlices.getValue());
+  this->ctrl->ui->numSlicesSlider->setValue(this->node->numSlices.getValue());
 }
 
 void
@@ -151,9 +163,9 @@ VolumeRenderHandler::numSlicesControlUpdate(int idx)
   this->node->numSlicesControl = idx;
 
   const SbBool is_all = this->node->numSlicesControl.getValue() == SoVolumeRender::ALL;
-  this->ctrl->numSlicesEdit->setEnabled(!is_all);
-  this->ctrl->numSlicesSlider->setEnabled(!is_all);
-  this->ctrl->numSlicesLabel->setEnabled(!is_all);
+  this->ctrl->ui->numSlicesEdit->setEnabled(!is_all);
+  this->ctrl->ui->numSlicesSlider->setEnabled(!is_all);
+  this->ctrl->ui->numSlicesLabel->setEnabled(!is_all);
 }
 
 void

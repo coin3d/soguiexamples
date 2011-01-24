@@ -24,10 +24,27 @@
 \**************************************************************************/
 
 #include <qwidget.h>
+#include <QDialog>
+
+namespace Ui {
+    class SoVolumeRender_ctrl;
+}
+
+class SoVolumeRender_ctrl : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit SoVolumeRender_ctrl(QWidget *parent = 0);
+    ~SoVolumeRender_ctrl();
+
+//private:
+    Ui::SoVolumeRender_ctrl *ui;
+};
 
 class SoVolumeRender;
 class SoVolumeData;
-class SoVolumeRender_ctrl;
+//class SoVolumeRender_ctrl;
 
 
 class VolumeRenderHandler : QObject

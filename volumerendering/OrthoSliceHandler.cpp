@@ -21,7 +21,8 @@
 \**************************************************************************/
 
 #include "OrthoSliceHandler.h"
-#include <SoOrthoSlice_ctrl.h>
+#include "ui_SoOrthoSlice_ctrl.h"
+
 #include "utility.h"
 
 #include <assert.h>
@@ -36,6 +37,18 @@
 #include <VolumeViz/nodes/SoVolumeData.h>
 
 // *************************************************************************
+SoOrthoSlice_ctrl::SoOrthoSlice_ctrl(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::SoOrthoSlice_ctrl)
+{
+    ui->setupUi(this);
+}
+
+
+SoOrthoSlice_ctrl::~SoOrthoSlice_ctrl()
+{
+    delete ui;
+}
 
 OrthoSliceHandler::OrthoSliceHandler(SoOrthoSlice * orthonode,
                                      SoVolumeData * volumedatanode,
@@ -71,55 +84,55 @@ OrthoSliceHandler::initGUI(void)
 
   // "sliceNumber" slider & edit
 
-  this->ctrl->sliceNumberSlider->setMinValue(0);
+  this->ctrl->ui->sliceNumberSlider->setMinValue(0);
   const int maxsliceidx = dimension[this->node->axis.getValue()] - 1;
-  this->ctrl->sliceNumberSlider->setMaxValue(maxsliceidx);
-  this->ctrl->sliceNumberSlider->setValue(this->node->sliceNumber.getValue());
+  this->ctrl->ui->sliceNumberSlider->setMaxValue(maxsliceidx);
+  this->ctrl->ui->sliceNumberSlider->setValue(this->node->sliceNumber.getValue());
 
-  QObject::connect(this->ctrl->sliceNumberSlider, SIGNAL(valueChanged(int)),
+  QObject::connect(this->ctrl->ui->sliceNumberSlider, SIGNAL(valueChanged(int)),
                    this, SLOT(sliceNumberSliderUpdate(int)));
 
 
   QString s;
   s.sprintf("%d", this->node->sliceNumber.getValue());
-  this->ctrl->sliceNumberEdit->setText(s);
+  this->ctrl->ui->sliceNumberEdit->setText(s);
 
-  QObject::connect(this->ctrl->sliceNumberEdit, SIGNAL(returnPressed()),
+  QObject::connect(this->ctrl->ui->sliceNumberEdit, SIGNAL(returnPressed()),
                    this, SLOT(sliceNumberEditUpdate()));
 
   // axis combobox
 
-  this->ctrl->axisCombo->setCurrentItem(this->node->axis.getValue());
+  this->ctrl->ui->axisCombo->setCurrentItem(this->node->axis.getValue());
 
-  QObject::connect(this->ctrl->axisCombo, SIGNAL(activated(int)),
+  QObject::connect(this->ctrl->ui->axisCombo, SIGNAL(activated(int)),
                    this, SLOT(axisUpdate(int)));
 
   // interpolation combobox
 
-  this->ctrl->interpolationCombo->setCurrentItem(this->node->interpolation.getValue());
+  this->ctrl->ui->interpolationCombo->setCurrentItem(this->node->interpolation.getValue());
 
-  QObject::connect(this->ctrl->interpolationCombo, SIGNAL(activated(int)),
+  QObject::connect(this->ctrl->ui->interpolationCombo, SIGNAL(activated(int)),
                    this, SLOT(interpolationUpdate(int)));
 
   // alphaUse combobox
 
-  this->ctrl->alphaUseCombo->setCurrentItem(this->node->alphaUse.getValue());
+  this->ctrl->ui->alphaUseCombo->setCurrentItem(this->node->alphaUse.getValue());
 
-  QObject::connect(this->ctrl->alphaUseCombo, SIGNAL(activated(int)),
+  QObject::connect(this->ctrl->ui->alphaUseCombo, SIGNAL(activated(int)),
                    this, SLOT(alphaUseUpdate(int)));
 
   // clipping checkbox
 
-  this->ctrl->clippingCheckBox->setChecked(this->node->clipping.getValue());
+  this->ctrl->ui->clippingCheckBox->setChecked(this->node->clipping.getValue());
 
-  QObject::connect(this->ctrl->clippingCheckBox, SIGNAL(stateChanged(int)),
+  QObject::connect(this->ctrl->ui->clippingCheckBox, SIGNAL(stateChanged(int)),
                    this, SLOT(clippingCheckBoxUpdate(int)));
 
   // clippingSide combobox
 
-  this->ctrl->clippingSideCombo->setCurrentItem(this->node->clippingSide.getValue());
+  this->ctrl->ui->clippingSideCombo->setCurrentItem(this->node->clippingSide.getValue());
 
-  QObject::connect(this->ctrl->clippingSideCombo, SIGNAL(activated(int)),
+  QObject::connect(this->ctrl->ui->clippingSideCombo, SIGNAL(activated(int)),
                    this, SLOT(clippingSideUpdate(int)));
 }
 
@@ -131,15 +144,15 @@ OrthoSliceHandler::sliceNumberSliderUpdate(int val)
 
   QString s;
   s.sprintf("%d", val);
-  this->ctrl->sliceNumberEdit->setText(s);
+  this->ctrl->ui->sliceNumberEdit->setText(s);
 }
 
 void
 OrthoSliceHandler::sliceNumberEditUpdate(void)
 {
-  this->node->sliceNumber = this->ctrl->sliceNumberEdit->text().toInt();
+  this->node->sliceNumber = this->ctrl->ui->sliceNumberEdit->text().toInt();
 
-  this->ctrl->sliceNumberSlider->setValue(this->node->sliceNumber.getValue());
+  this->ctrl->ui->sliceNumberSlider->setValue(this->node->sliceNumber.getValue());
 }
 
 void
@@ -158,8 +171,8 @@ OrthoSliceHandler::axisUpdate(int idx)
   this->node->sliceNumber =
     SbGuiExMin(this->node->sliceNumber.getValue(), maxsliceidx);
 
-  this->ctrl->sliceNumberSlider->setMaxValue(maxsliceidx);
-  this->ctrl->sliceNumberSlider->setValue(this->node->sliceNumber.getValue());
+  this->ctrl->ui->sliceNumberSlider->setMaxValue(maxsliceidx);
+  this->ctrl->ui->sliceNumberSlider->setValue(this->node->sliceNumber.getValue());
 }
 
 void

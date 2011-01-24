@@ -26,25 +26,26 @@
 #include <qpainter.h>
 #include <qcursor.h>
 #include <Inventor/SbLinear.h>
+#include <qnamespace.h>
 #include "ColorCurve.h"
 #include "CurveView.h"
-#include "moc_CurveView.icc"
+#include "moc_CurveView.cxx"
 
 CurveView::CurveView(int numcolors,
                      SoQtColorTableEditor::Mode mode,
-                     QCanvas * canvas,
+                     Q3Canvas * canvas,
                      QWidget * parent,
                      const char * name,
-                     WFlags flags)
+					 Qt::WFlags flags)
                      
- : QCanvasView(canvas, parent, name, flags), ptsize(3)
+ : Q3CanvasView(canvas, parent, name, flags), ptsize(3)
 {
   this->colormode = mode;
   this->canvas = canvas;
   this->canvas->resize(numcolors, numcolors);
   this->setFixedSize(numcolors+2, numcolors+2);
-  this->setVScrollBarMode(QScrollView::AlwaysOff);
-  this->setHScrollBarMode(QScrollView::AlwaysOff);
+  this->setVScrollBarMode(Q3ScrollView::AlwaysOff);
+  this->setHScrollBarMode(Q3ScrollView::AlwaysOff);
 
   this->curvemode = CurveView::SMOOTH;
   this->mousepressed = FALSE;
@@ -88,7 +89,7 @@ CurveView::initCanvasCurve()
 {
   const uint8_t * curvepts = this->colorcurves[this->colorindex]->getColorMap();
   for (int i = 2; i < this->colorcurves[this->colorindex]->getNumColors(); i+=2) {
-    QCanvasLine * line = new QCanvasLine(this->canvas);
+    Q3CanvasLine * line = new Q3CanvasLine(this->canvas);
     line->setPoints(i-2, int(this->size - 1) - curvepts[i-2], i, int(this->size - 1) - curvepts[i]);
     line->setZ(1); // to make the curve be drawn on top of the grid
     line->show();
@@ -102,7 +103,7 @@ void CurveView::initGrid()
   QPen pen(Qt::gray);
 
   for (int i = step; i < this->size; i+=step) {
-    QCanvasLine * line = new QCanvasLine(this->canvas);
+    Q3CanvasLine * line = new Q3CanvasLine(this->canvas);
     line->setPoints(i, 0, i, (this->size - 1));
     line->setPen(pen);
     line->show();
@@ -110,7 +111,7 @@ void CurveView::initGrid()
   }
 
   for (int j = step; j < this->size; j+=step) {
-    QCanvasLine * line = new QCanvasLine(this->canvas);
+    Q3CanvasLine * line = new Q3CanvasLine(this->canvas);
     line->setPoints(0, j, this->size, j);
     line->setPen(pen);
     line->show();
@@ -126,13 +127,13 @@ void CurveView::contentsMousePressEvent(QMouseEvent* e)
   QPoint p = inverseWorldMatrix().map(e->pos());
   this->movingstart = p;
   this->lastpos = p;
-  QCanvasItemList list = this->canvas->collisions(p);
+  Q3CanvasItemList list = this->canvas->collisions(p);
 
   if (this->curvemode == CurveView::SMOOTH) {
 
-    QCanvasItemList::Iterator it = list.begin();
+    Q3CanvasItemList::Iterator it = list.begin();
 
-    if ((it != list.end()) && ((*it)->rtti() == QCanvasRectangle::RTTI)) {
+    if ((it != list.end()) && ((*it)->rtti() == Q3CanvasRectangle::RTTI)) {
       if (e->button() == Qt::LeftButton) {
         this->movingitem = (*it);
       } else {
@@ -143,7 +144,7 @@ void CurveView::contentsMousePressEvent(QMouseEvent* e)
       }
     } else {
       if (e->button() == Qt::LeftButton) {
-        QCanvasRectangle * ctrlpt = this->newControlPoint(p.x(), p.y());
+        Q3CanvasRectangle * ctrlpt = this->newControlPoint(p.x(), p.y());
         this->movingitem = ctrlpt;
         this->canvasctrlpts[this->colorindex].append(ctrlpt);
       }
@@ -168,13 +169,13 @@ CurveView::contentsMouseMoveEvent(QMouseEvent* e)
 
   if (this->curvemode == CurveView::SMOOTH) {
     // change the cursor if it is over a control point
-    QCanvasItemList list = this->canvas->collisions(p);
-    QCanvasItemList::Iterator it = list.begin();
+    Q3CanvasItemList list = this->canvas->collisions(p);
+    Q3CanvasItemList::Iterator it = list.begin();
 
-    if ((it != list.end()) && ((*it)->rtti() == QCanvasRectangle::RTTI)) {
-      this->setCursor(QCursor::SizeAllCursor);
+    if ((it != list.end()) && ((*it)->rtti() == Q3CanvasRectangle::RTTI)) {
+      this->setCursor(Qt::SizeAllCursor);
     } else {
-      this->setCursor(QCursor::ArrowCursor);
+      this->setCursor(Qt::ArrowCursor);
     }
   
     if (this->movingitem && this->mousepressed) { // move the control point
@@ -238,7 +239,7 @@ CurveView::drawContents(QPainter * p)
 void 
 CurveView::drawContents(QPainter * p, int cx, int cy, int cw, int ch)
 {
-  QCanvasItemList::Iterator it;
+  Q3CanvasItemList::Iterator it;
   
     // draw the grid in the background
   it = this->grid.begin();
@@ -262,7 +263,7 @@ CurveView::drawContents(QPainter * p, int cx, int cy, int cw, int ch)
 void 
 CurveView::hideUnselected()
 {
-  QCanvasItemList::Iterator it;
+  Q3CanvasItemList::Iterator it;
 
   for (int i = 0; i < this->colormode; i++) {
     it = this->canvasctrlpts[i].begin();
@@ -280,9 +281,9 @@ void
 CurveView::resetActive() 
 {
   this->colorcurves[this->colorindex]->resetCtrlPoints();
-  // QCanvasItemList::clear() only removes the items from the list, 
+  // Q3CanvasItemList::clear() only removes the items from the list, 
   // but they need to be deleted also.
-  QCanvasItemList::Iterator it = this->canvasctrlpts[this->colorindex].begin();
+  Q3CanvasItemList::Iterator it = this->canvasctrlpts[this->colorindex].begin();
   for (; it != this->canvasctrlpts[this->colorindex].end(); it++) {
     delete (*it);
   }
@@ -293,10 +294,10 @@ CurveView::resetActive()
   this->canvas->update();
 }
 
-QCanvasItemList
+Q3CanvasItemList
 CurveView::newCanvasCtrlPtList()
 {
-  QCanvasItemList list;
+  Q3CanvasItemList list;
   int numpts = this->colorcurves[this->colorindex]->getNumCtrlPoints();
   const SbList<SbVec3f> ctrlpts = this->colorcurves[this->colorindex]->getCtrlPoints();
 
@@ -306,11 +307,11 @@ CurveView::newCanvasCtrlPtList()
   return list;
 }
 
-QCanvasRectangle *
+Q3CanvasRectangle *
 CurveView::newControlPoint(int x, int y)
 {
-  QCanvasRectangle * rect
-    = new QCanvasRectangle(x-this->ptsize, y-this->ptsize,
+  Q3CanvasRectangle * rect
+    = new Q3CanvasRectangle(x-this->ptsize, y-this->ptsize,
                            this->ptsize*2, this->ptsize*2,
                            this->canvas);
   rect->setZ(2); // the control points will be drawn on top of the curve
@@ -321,16 +322,16 @@ CurveView::newControlPoint(int x, int y)
 void 
 CurveView::updateCurve()
 {
-  QCanvasItemList::iterator it;
+  Q3CanvasItemList::iterator it;
 
   int i = 0;
   if (this->curvemode == CurveView::SMOOTH) { 
-    QCanvasItemList list = this->canvasctrlpts[this->colorindex];
-    QCanvasItemList sortedlist;
+    Q3CanvasItemList list = this->canvasctrlpts[this->colorindex];
+    Q3CanvasItemList sortedlist;
     
     // Sort the list of control points
     while ((it = list.begin()) != list.end()) {
-      QCanvasRectangle * smallest = (QCanvasRectangle *) this->smallestItem(&list);
+      Q3CanvasRectangle * smallest = (Q3CanvasRectangle *) this->smallestItem(&list);
       smallest->setBrush(Qt::black);
       sortedlist.append(smallest);
       list.remove(smallest);
@@ -348,18 +349,18 @@ CurveView::updateCurve()
   it = this->curvesegments.begin();
   const uint8_t * curvepts = this->colorcurves[this->colorindex]->getColorMap();
   for (; it != this->curvesegments.end(); it++) {
-    QCanvasLine* line = (QCanvasLine*)(*it);
+    Q3CanvasLine* line = (Q3CanvasLine*)(*it);
     line->setPoints(i-2, int(this->size - 1)-curvepts[i-2], i, int(this->size - 1)-curvepts[i]);
     i+=2;
   }    
   emit this->curveChanged();
 }
 
-QCanvasItem * 
-CurveView::smallestItem(QCanvasItemList * list)
+Q3CanvasItem * 
+CurveView::smallestItem(Q3CanvasItemList * list)
 {
-  QCanvasItemList::Iterator it = list->begin();
-  QCanvasItem * smallest = (*it);
+  Q3CanvasItemList::Iterator it = list->begin();
+  Q3CanvasItem * smallest = (*it);
 
   it++;
   for (; it != list->end(); ++it) {
@@ -375,7 +376,7 @@ CurveView::setMode(SoQtColorTableEditor::Mode mode)
 {
   for (int i = 0; i < this->colormode; i++) {
     delete this->colorcurves[i];
-    QCanvasItemList::Iterator it = this->canvasctrlpts[i].begin();
+    Q3CanvasItemList::Iterator it = this->canvasctrlpts[i].begin();
     for (; it != this->canvasctrlpts[i].end(); it++) {
       delete *it;
     }
@@ -420,7 +421,7 @@ CurveView::interpolateFromColors()
     this->colorcurves[i]->interpolateColorMapping();
     SbList<SbVec3f> ctrlpts = this->colorcurves[i]->getCtrlPoints();
 
-    QCanvasItemList::Iterator it = this->canvasctrlpts[i].begin();
+    Q3CanvasItemList::Iterator it = this->canvasctrlpts[i].begin();
     for (; it != this->canvasctrlpts[i].end(); it++) {
       delete (*it);
     }

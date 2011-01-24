@@ -1,0 +1,10 @@
+#include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+int
+main ()
+{
+
+   So@Gui@ExaminerViewer * viewer = (So@Gui@ExaminerViewer *) 0;
+   viewer->setStereoViewing(FALSE);
+  ;
+  return 0;
+}

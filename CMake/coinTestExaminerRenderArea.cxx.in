@@ -1,0 +1,10 @@
+#include <Inventor/@Gui@/So@Gui@RenderArea.h>
+int
+main ()
+{
+
+   So@Gui@RenderArea * viewer = (So@Gui@RenderArea *) 0;
+   viewer->setAccumulationBuffer(FALSE);
+  ;
+  return 0;
+}

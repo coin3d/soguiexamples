@@ -21,13 +21,13 @@
  *
 \**************************************************************************/
 
-#include "qpointarray.h"
+#include <q3pointarray.h>
 #include "TickMark.h"
 
-TickMark::TickMark(QCanvas * canvas)
-: QCanvasPolygon(canvas)
+TickMark::TickMark(Q3Canvas * canvas)
+: Q3CanvasPolygon(canvas)
 {
-  QPointArray pa(3);
+  Q3PointArray pa(3);
   pa[0] = QPoint(-6,15);
   pa[1] = QPoint(6,15);
   pa[2] = QPoint(0,0);
