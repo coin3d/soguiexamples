@@ -119,7 +119,7 @@ ENDIF(HAVE_DIRECTIONALLIGHTEDITOR)
 #backgroundimg example
 SET(backgroundimg_SOURCE ${CONF_FILE_DIR}/backgroundimg.cpp)
 ADD_EXECUTABLE(backgroundimg ${backgroundimg_SOURCE})
-TARGET_LINK_LIBRARIES(backgroundimg ${LINK_LIBRARY})
+TARGET_LINK_LIBRARIES(backgroundimg ${LINK_LIBRARY} ${OPENGL_LIBRARIES})
 
 #examinerviewer example
 SET(examinerviewer_SOURCE ${CONF_FILE_DIR}/examinerviewer.cpp ${COMPUTILS_SOURCE})

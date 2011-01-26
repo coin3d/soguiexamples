@@ -578,7 +578,7 @@ makeBuoy(
   sep4->addChild( filetrans );
 
   SoInput logobuf;
-  logobuf.setBuffer( static_cast<const void*>(sim_logo), strlen(sim_logo) );
+  logobuf.setBuffer( (void *)(sim_logo), strlen(sim_logo) );
   SoNode * logo = NULL;
   SoDB::read( &logobuf, logo );
   sep4->addChild( logo );
@@ -975,3 +975,4 @@ main(
 } // main()
 
 // *************************************************************************
+

@@ -16,8 +16,8 @@ IF(USE_SIM_FIND)
   # FIXME: Experimental find mechanism. Should be tested on several platforms with several
   # configurations and someone extended before becomming the one and only thing. 20081105 larsm
   INCLUDE(SimFind)
-  SIM_FIND(SoQt RELEASELIBNAMES soqt1
-                  DEBUGLIBNAMES soqt1d
+  SIM_FIND(SoQt RELEASELIBNAMES SoQt soqt1
+                  DEBUGLIBNAMES SoQtd soqt1d
                   INCLUDEFILE Inventor/Qt/SoQt.h)
 ELSE(USE_SIM_FIND)
   IF(NOT COINDIR)
@@ -27,8 +27,8 @@ ELSE(USE_SIM_FIND)
     ENDIF(COINDIR)
   ENDIF(NOT COINDIR)
   
-  SET(SOQT_NAMES soqt1)
-  SET(SOQT_NAMES_DEBUG soqt1d)
+  SET(SOQT_NAMES SoQt soqt1)
+  SET(SOQT_NAMES_DEBUG SoQtd soqt1d)
 
   IF(COINDIR)
     # Look for Coin in environment variable COINDIR
@@ -140,3 +140,4 @@ ELSE(USE_SIM_FIND)
   ENDIF()
 
 ENDIF(USE_SIM_FIND)
+

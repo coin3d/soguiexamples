@@ -16,8 +16,8 @@ IF(USE_SIM_FIND)
   # FIXME: Experimental find mechanism. Should be tested on several platforms with several
   # configurations and someone extended before becomming the one and only thing. 20081105 larsm
   INCLUDE(SimFind)
-  SIM_FIND(SIMVoleon RELEASELIBNAMES simvoleon2
-                  DEBUGLIBNAMES simvoleon2d
+  SIM_FIND(SIMVoleon RELEASELIBNAMES simvoleon simvoleon2
+                  DEBUGLIBNAMES simvoleond simvoleon2d
                   INCLUDEFILE VolumeViz/details/SoVolumeDetail.h)
 ELSE(USE_SIM_FIND)
   IF(NOT COINDIR)
@@ -27,8 +27,8 @@ ELSE(USE_SIM_FIND)
     ENDIF(COINDIR)
   ENDIF(NOT COINDIR)
   
-  SET(SIMVOLEON_NAMES simvoleon2)
-  SET(SIMVOLEON_NAMES_DEBUG simvoleon2d)
+  SET(SIMVOLEON_NAMES simvoleon simvoleon2)
+  SET(SIMVOLEON_NAMES_DEBUG simvoleond simvoleon2d)
 
   IF(COINDIR)
     # Look for Coin in environment variable COINDIR
@@ -73,7 +73,7 @@ ELSE(USE_SIM_FIND)
       MESSAGE(STATUS "Found SIMVoleon" "${SIMVoleon_LIBRARY}")
     ELSE (SIMVoleon_FOUND)
       IF (SIMVoleon_FIND_REQUIRED)
-        MESSAGE(FATAL_ERROR "Could not find SIMVoleon in ${COINDIR} - try changing the COINDIR environment variable.")
+        MESSAGE(STATUS "Could not find SIMVoleon in ${COINDIR} - try changing the COINDIR environment variable.")
       ENDIF (SIMVoleon_FIND_REQUIRED)
     ENDIF (SIMVoleon_FOUND)
 
@@ -111,7 +111,7 @@ ELSE(USE_SIM_FIND)
       MESSAGE(STATUS "Found SIMVoleon" "${SIMVoleon_LIBRARY}")
     ELSE (SIMVoleon_FOUND)
       IF (SIMVoleon_FIND_REQUIRED)
-        MESSAGE(FATAL_ERROR "Could not find SIMVoleon. Try setting the COINDIR environment variable to the root of the Coin 3 installation directory.")
+        MESSAGE(STATUS "Could not find SIMVoleon. Try setting the COINDIR environment variable to the root of the Coin 3 installation directory.")
       ENDIF (SIMVoleon_FIND_REQUIRED)
     ENDIF (SIMVoleon_FOUND)
   ENDIF(COINDIR)
@@ -140,3 +140,4 @@ ELSE(USE_SIM_FIND)
   ENDIF()
 
 ENDIF(USE_SIM_FIND)
+

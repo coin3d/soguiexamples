@@ -1,5 +1,5 @@
 # FIXME: Caching of the result seems to be broken, causing cmake to re-search 
-# for SmallChange every time it runs. Otto 20101229.
+# for SmallChange every time it runs. kintel 20090114.
 
 # FIXME: Rewrite this to be more standards compliant
 # See http://www.cmake.org/cgi-bin/viewcvs.cgi/Modules/readme.txt?root=CMake&view=markup
@@ -16,9 +16,9 @@ IF(USE_SIM_FIND)
   # FIXME: Experimental find mechanism. Should be tested on several platforms with several
   # configurations and someone extended before becomming the one and only thing. 20081105 larsm
   INCLUDE(SimFind)
-  SIM_FIND(SmallChange RELEASELIBNAMES SmallChange1
-                  DEBUGLIBNAMES SmallChange1d
-           )
+  SIM_FIND(SmallChange RELEASELIBNAMES SmallChange SmallChange1
+                  DEBUGLIBNAMES SmallChanged SmallChange1d
+                  INCLUDEFILE SmallChange/SmallChange.h)
 ELSE(USE_SIM_FIND)
   IF(NOT COINDIR)
     SET(COINDIR $ENV{COINDIR})
@@ -27,8 +27,8 @@ ELSE(USE_SIM_FIND)
     ENDIF(COINDIR)
   ENDIF(NOT COINDIR)
   
-  SET(SMALLCHANGE_NAMES SmallChange1)
-  SET(SMALLCHANGE_NAMES_DEBUG SmallChange1d)
+  SET(SMALLCHANGE_NAMES SmallChange SmallChange1)
+  SET(SMALLCHANGE_NAMES_DEBUG SmallChanged SmallChange1d)
 
   IF(COINDIR)
     # Look for SmallChange in environment variable COINDIR
@@ -63,8 +63,9 @@ ELSE(USE_SIM_FIND)
     SET(SmallChange_LIBRARY ${SmallChange_LIBRARY} CACHE FILEPATH "The SmallChange library")
     MARK_AS_ADVANCED(SmallChange_LIBRARY_RELEASE SmallChange_LIBRARY_DEBUG)
 
+    FIND_PATH(SmallChange_INCLUDE_DIR SmallChange/SmallChange.h PATHS ${COINDIR} PATH_SUFFIXES include . NO_DEFAULT_PATH)
 
-    IF (SmallChange_LIBRARY)
+    IF (SmallChange_INCLUDE_DIR AND SmallChange_LIBRARY)
       SET(SmallChange_FOUND TRUE)
     ENDIF ()
 
@@ -72,7 +73,7 @@ ELSE(USE_SIM_FIND)
       MESSAGE(STATUS "Found SmallChange" "${SmallChange_LIBRARY}")
     ELSE (SmallChange_FOUND)
       IF (SmallChange_FIND_REQUIRED)
-        MESSAGE(FATAL_ERROR "Could not find SmallChange in ${COINDIR} - try changing the COINDIR environment variable.")
+        MESSAGE(STATUS "Could not find SmallChange in ${COINDIR} - try changing the COINDIR environment variable.")
       ENDIF (SmallChange_FIND_REQUIRED)
     ENDIF (SmallChange_FOUND)
 
@@ -88,15 +89,24 @@ ELSE(USE_SIM_FIND)
       pkg_search_module(SmallChange SmallChange)
       IF(SmallChange_FOUND)
 	SET(SmallChange_LIBRARY ${SmallChange_LIBRARIES} ${SmallChange_LDFLAGS})
+	SET(SmallChange_INCLUDE_DIR ${SmallChange_INCLUDE_DIRS})
+        MESSAGE(STATUS "Found SmallChange" "${SmallChange_LIBRARY}")
       ENDIF(SmallChange_FOUND)
     ENDIF(PKG_CONFIG_FOUND)
 
     # Automatic find, if pkg-config fails
     IF(NOT SmallChange_FOUND)
+      FIND_PATH(SmallChange_INCLUDE_DIR SmallChange/SmallChange.h)
+
       FIND_LIBRARY(SmallChange_LIBRARY NAMES ${SMALLCHANGE_NAMES})
-      IF (SmallChange_LIBRARY)
+
+      IF (APPLE)
+	FIND_LIBRARY(Ogl_LIBRARY OpenGL)
+	SET(SmallChange_LIBRARY ${SmallChange_LIBRARY} ${Ogl_LIBRARY})
+      ENDIF(APPLE)
+      IF (SmallChange_INCLUDE_DIR AND SmallChange_LIBRARY)
 	SET(SmallChange_FOUND TRUE)
-      ENDIF (SmallChange_LIBRARY)
+      ENDIF (SmallChange_INCLUDE_DIR AND SmallChange_LIBRARY)
     ENDIF(NOT SmallChange_FOUND)
 
 
@@ -105,14 +115,14 @@ ELSE(USE_SIM_FIND)
       MESSAGE(STATUS "Found SmallChange" "${SmallChange_LIBRARY}")
     ELSE (SmallChange_FOUND)
       IF (SmallChange_FIND_REQUIRED)
-        MESSAGE(FATAL_ERROR "Could not find SmallChange. Try setting the COINDIR environment variable to the root of the SmallChange 3 installation directory.")
+        MESSAGE(STATUS "Could not find SmallChange. Try setting the COINDIR environment variable to the root of the SmallChange 3 installation directory.")
       ENDIF (SmallChange_FIND_REQUIRED)
     ENDIF (SmallChange_FOUND)
   ENDIF(COINDIR)
 
   # SmallChange_DEFINES - only on WIN32
   IF (SmallChange_FOUND AND WIN32)
-    FIND_FILE(SmallChange_pc NAMES SmallChange.pc PATHS ${COINDIR}/ PATH_SUFFIXES . lib/pkgconfig/ NO_DEFAULT_PATH)
+    FIND_FILE(SmallChange_pc NAMES SmallChange.pc PATHS ${SmallChange_INCLUDE_DIR}/../ PATH_SUFFIXES . lib/pkgconfig/ NO_DEFAULT_PATH)
     MARK_AS_ADVANCED(SmallChange_pc)
     IF(EXISTS ${SmallChange_pc})
       FILE(READ ${SmallChange_pc} SmallChangePC)
@@ -134,3 +144,4 @@ ELSE(USE_SIM_FIND)
   ENDIF()
 
 ENDIF(USE_SIM_FIND)
+
