@@ -24,27 +24,10 @@
 \**************************************************************************/
 
 #include <qwidget.h>
-#include <QDialog>
-
-namespace Ui {
-    class SoOrthoSlice_ctrl;
-}
-
-class SoOrthoSlice_ctrl : public QDialog
-{
-    Q_OBJECT
-
-public:
-    explicit SoOrthoSlice_ctrl(QWidget *parent = 0);
-    ~SoOrthoSlice_ctrl();
-
-//private:
-    Ui::SoOrthoSlice_ctrl *ui;
-};
 
 class SoOrthoSlice;
 class SoVolumeData;
-//class SoOrthoSlice_ctrl;
+class SoOrthoSlice_ctrl;
 
 
 class OrthoSliceHandler : QObject

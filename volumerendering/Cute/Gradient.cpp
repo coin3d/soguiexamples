@@ -33,8 +33,8 @@ public:
   GradientP(Gradient * publ);
   unsigned int getColorIndex(unsigned int i, Gradient::TickSide s) const;
   Gradient * pub;
-  Q3ValueList<float> parameters;
-  Q3ValueList<QRgb> colors;
+  QValueList<float> parameters;
+  QValueList<QRgb> colors;
   Gradient::ChangeCB * callBack;
   void * callBackData;
   void copy(const GradientP * p);
@@ -175,8 +175,8 @@ Gradient::insertTick(float t)
 {
   // find position to insert before
   int i = 0;
-  Q3ValueList<float>::Iterator it = PRIVATE(this)->parameters.begin();
-  Q3ValueList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
+  QValueList<float>::Iterator it = PRIVATE(this)->parameters.begin();
+  QValueList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
   // it2 = it * 2 - 1, (+= operator wasnt available until Qt 3.1.0)
   while ((*it) < t) { i++; it++; it2++; it2++; }
   it2--;
@@ -193,8 +193,8 @@ Gradient::insertTick(float t)
 void
 Gradient::removeTick(unsigned int i)
 {
-  Q3ValueList<float>::Iterator it = PRIVATE(this)->parameters.begin();
-  Q3ValueList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
+  QValueList<float>::Iterator it = PRIVATE(this)->parameters.begin();
+  QValueList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
   // the += operator wasn't available until Qt 3.1.0. Just iterate
   // and use ++. pederb, 2003-09-22
   for (unsigned int j = 0; j < i; j++) { it++; it2++; it2++; }
@@ -294,7 +294,7 @@ Gradient::save(const QString & filename) const
 
     stream << PRIVATE(this)->parameters.size() << " ";
 
-    Q3ValueList<float>::Iterator it = PRIVATE(this)->parameters.begin();
+    QValueList<float>::Iterator it = PRIVATE(this)->parameters.begin();
     for (; it != PRIVATE(this)->parameters.end(); it++) {
       stream << (*it) << " ";
 
@@ -305,7 +305,7 @@ Gradient::save(const QString & filename) const
 
     stream << PRIVATE(this)->colors.size() << " ";
 
-    Q3ValueList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
+    QValueList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
     for (; it2 != PRIVATE(this)->colors.end(); it2++) {
       stream << (*it2) << " ";
 

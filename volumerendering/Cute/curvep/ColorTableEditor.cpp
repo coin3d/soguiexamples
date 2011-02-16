@@ -25,7 +25,7 @@
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qcombobox.h>
-#include <q3groupbox.h>
+#include <qgroupbox.h>
 #include <qcheckbox.h>
 #include <qpainter.h>
 #include <qpushbutton.h>
@@ -35,7 +35,7 @@
 #include "CurveView.h"
 #include "SoQtColorTableEditor.h"
 #include "SoQtColorTableEditorP.h"
-#include "moc_SoQtColorTableEditorP.cxx"
+#include "moc_SoQtColorTableEditorP.icc"
 
 // *************************************************************************
 
@@ -147,7 +147,7 @@ SoQtColorTableEditor::SoQtColorTableEditor(int numcolors, QWidget * parent, cons
   toplayout->setMargin(10);
   QVBoxLayout * buttonlayout = new QVBoxLayout();
 
-  Q3GroupBox * controlgroup = new Q3GroupBox(3, Qt::Horizontal, this);
+  QGroupBox * controlgroup = new QGroupBox(3, Qt::Horizontal, this);
 
   PRIVATE(this)->modetext = new QLabel(controlgroup);
   PRIVATE(this)->modetext->setText("Modify channel: ");
@@ -193,7 +193,7 @@ SoQtColorTableEditor::SoQtColorTableEditor(int numcolors, QWidget * parent, cons
   curvelayout->addWidget(PRIVATE(this)->horgrad, 1, 1);
 
   PRIVATE(this)->curveview = 
-    new CurveView(numcolors, PRIVATE(this)->mode, new Q3Canvas, curvewidget);
+    new CurveView(numcolors, PRIVATE(this)->mode, new QCanvas, curvewidget);
   PRIVATE(this)->curveview->show();
 
   curvelayout->addWidget(PRIVATE(this)->curveview, 0, 1);

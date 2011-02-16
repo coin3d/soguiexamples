@@ -130,7 +130,7 @@ main(int argc, char ** argv )
   @WIDGET@ window = So@Gui@::init(argv[0]);
 
   SoInput in;
-  in.setBuffer((void *)REPLACEMENTPARTS, strlen(REPLACEMENTPARTS));
+  in.setBuffer(REPLACEMENTPARTS, strlen(REPLACEMENTPARTS));
 //    SbBool r = in.openFile("dpd.iv");
 //    assert(r && "missing iv-file");
   SoNode * ivroot;
@@ -267,4 +267,3 @@ main(int argc, char ** argv )
 } // main()
 
 // *************************************************************************
-

@@ -24,7 +24,7 @@
  *
 \**************************************************************************/
 
-#include <q3canvas.h>
+#include <qcanvas.h>
 #include "Gradient.h"
 
 class TickMark;
@@ -32,21 +32,21 @@ class QPainter;
 class QMouseEvent;
 class QResizeEvent;
 class ImageItem;
-class Q3PopupMenu;
+class QPopupMenu;
 class QStatusBar;
 
 // *************************************************************************
 
-class GradientView : public Q3CanvasView
+class GradientView : public QCanvasView
 {
   Q_OBJECT
 
 public:
-  GradientView(Q3Canvas * c = 0,
+  GradientView(QCanvas * c = 0,
                const Gradient & g = Gradient(), 
                QWidget * parent = 0, 
                const char * name = 0, 
-               Qt::WFlags f = 0);
+               WFlags f = 0);
   
   ~GradientView();
 
@@ -94,12 +94,12 @@ private:
 
 
   TickMark * newTick(int x);
-  Q3Canvas * canvas;
+  QCanvas * canvas;
   Gradient grad;
   ImageItem * graditem;
   ImageItem * selectionmarker;
-  Q3PopupMenu * menu;
-  Q3ValueList<TickMark*> tickmarks;
+  QPopupMenu * menu;
+  QValueList<TickMark*> tickmarks;
   QStatusBar * statusbar;
 
   int currenttick;

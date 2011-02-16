@@ -24,8 +24,8 @@
 #include <qpainter.h>
 #include "ImageItem.h"
 
-ImageItem::ImageItem(Q3Canvas *canvas)
-: Q3CanvasRectangle(canvas)
+ImageItem::ImageItem(QCanvas *canvas)
+: QCanvasRectangle(canvas)
 {
   this->setSize(canvas->width(), canvas->height());
 }

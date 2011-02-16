@@ -25,15 +25,8 @@
 \**************************************************************************/
 
 #include <qcolor.h>
-#include <q3valuelist.h>
+#include <qvaluelist.h>
 #include <Inventor/SbBasic.h>
-#include <qlocale.h>
-#include <qimage.h>
-#include <qtextstream.h>
-#include <qrgb.h>
-#include <qwidget.h>
-#include <QResizeEvent>
-#include <QMouseEvent>
 
 // *************************************************************************
 

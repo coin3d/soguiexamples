@@ -21,7 +21,7 @@
 \**************************************************************************/
 
 #include "TransferFunctionHandler.h"
-#include "ui_SoTransferFunction_ctrl.h"
+#include <SoTransferFunction_ctrl.h>
 
 #include <assert.h>
 
@@ -33,20 +33,7 @@
 
 #include "Cute/SoQtGradientDialog.h"
 
-
 // *************************************************************************
-SoTransferFunction_ctrl::SoTransferFunction_ctrl(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::SoTransferFunction_ctrl)
-{
-    ui->setupUi(this);
-}
-
-
-SoTransferFunction_ctrl::~SoTransferFunction_ctrl()
-{
-    delete ui;
-}
 
 TransferFunctionHandler::TransferFunctionHandler(SoTransferFunction * node,
                                                  int remaplow, int remaphigh,
@@ -82,27 +69,27 @@ TransferFunctionHandler::initGUI(void)
 
   QIntValidator * v = new QIntValidator(0, 255, new QObject);
 
-  this->ctrl->ui->lowEdit->setValidator(v);
-  this->ctrl->ui->highEdit->setValidator(v);
+  this->ctrl->lowEdit->setValidator(v);
+  this->ctrl->highEdit->setValidator(v);
 
   QString s;
   s.sprintf("%d", this->remap[0]);
-  this->ctrl->ui->lowEdit->setText(s);
+  this->ctrl->lowEdit->setText(s);
   s.sprintf("%d", this->remap[1]);
-  this->ctrl->ui->highEdit->setText(s);
+  this->ctrl->highEdit->setText(s);
 
-  QObject::connect(this->ctrl->ui->lowEdit, SIGNAL(returnPressed()),
+  QObject::connect(this->ctrl->lowEdit, SIGNAL(returnPressed()),
                    this, SLOT(lowEditUpdate()));
 
-  QObject::connect(this->ctrl->ui->highEdit, SIGNAL(returnPressed()),
+  QObject::connect(this->ctrl->highEdit, SIGNAL(returnPressed()),
                    this, SLOT(highEditUpdate()));
 
 
   // predefColorMap combobox
 
-  this->ctrl->ui->predefCombo->setCurrentItem(this->node->predefColorMap.getValue());
+  this->ctrl->predefCombo->setCurrentItem(this->node->predefColorMap.getValue());
 
-  QObject::connect(this->ctrl->ui->predefCombo, SIGNAL(activated(int)),
+  QObject::connect(this->ctrl->predefCombo, SIGNAL(activated(int)),
                    this, SLOT(predefColorMapUpdate(int)));
 
 
@@ -110,18 +97,18 @@ TransferFunctionHandler::initGUI(void)
 
   v = new QIntValidator(-32767, 32767, new QObject);
 
-  this->ctrl->ui->shiftEdit->setValidator(v);
-  this->ctrl->ui->offsetEdit->setValidator(v);
+  this->ctrl->shiftEdit->setValidator(v);
+  this->ctrl->offsetEdit->setValidator(v);
 
   s.sprintf("%d", this->node->shift.getValue());
-  this->ctrl->ui->shiftEdit->setText(s);
+  this->ctrl->shiftEdit->setText(s);
   s.sprintf("%d", this->node->offset.getValue());
-  this->ctrl->ui->offsetEdit->setText(s);
+  this->ctrl->offsetEdit->setText(s);
 
-  QObject::connect(this->ctrl->ui->shiftEdit, SIGNAL(returnPressed()),
+  QObject::connect(this->ctrl->shiftEdit, SIGNAL(returnPressed()),
                    this, SLOT(shiftEditUpdate()));
 
-  QObject::connect(this->ctrl->ui->offsetEdit, SIGNAL(returnPressed()),
+  QObject::connect(this->ctrl->offsetEdit, SIGNAL(returnPressed()),
                    this, SLOT(offsetEditUpdate()));
 
 }
@@ -129,7 +116,7 @@ TransferFunctionHandler::initGUI(void)
 void
 TransferFunctionHandler::lowEditUpdate(void)
 {
-  this->remap[0] = this->ctrl->ui->lowEdit->text().toInt();
+  this->remap[0] = this->ctrl->lowEdit->text().toInt();
   assert(this->remap[0] <= this->remap[1] && "must be <= the high value");
 
   this->node->reMap(this->remap[0], this->remap[1]);
@@ -138,7 +125,7 @@ TransferFunctionHandler::lowEditUpdate(void)
 void
 TransferFunctionHandler::highEditUpdate(void)
 {
-  this->remap[1] = this->ctrl->ui->highEdit->text().toInt();
+  this->remap[1] = this->ctrl->highEdit->text().toInt();
   assert(this->remap[1] >= this->remap[0] && "must be >= the low value");
 
   this->node->reMap(this->remap[0], this->remap[1]);
@@ -181,24 +168,24 @@ TransferFunctionHandler::predefColorMapUpdate(int idx)
   if (idx == SoTransferFunction::NONE) {
     if (this->gradientdialog == NULL) {
       this->gradientdialog = new SoQtGradientDialog();
-      //this->gradientdialog->setChangeCallback(TransferFunctionHandler::gradientCallbackP, this);
+      this->gradientdialog->setChangeCallback(TransferFunctionHandler::gradientCallbackP, this);
     }
-    //this->gradientdialog->show();
-   // this->gradientCallback(this->gradientdialog->getGradient());
+    this->gradientdialog->show();
+    this->gradientCallback(this->gradientdialog->getGradient());
   }
   else {
-    //if (this->gradientdialog) { this->gradientdialog->hide(); }
+    if (this->gradientdialog) { this->gradientdialog->hide(); }
   }
 }
 
 void
 TransferFunctionHandler::shiftEditUpdate(void)
 {
-  this->node->shift = this->ctrl->ui->shiftEdit->text().toInt();
+  this->node->shift = this->ctrl->shiftEdit->text().toInt();
 }
 
 void
 TransferFunctionHandler::offsetEditUpdate(void)
 {
-  this->node->offset = this->ctrl->ui->offsetEdit->text().toInt();
+  this->node->offset = this->ctrl->offsetEdit->text().toInt();
 }

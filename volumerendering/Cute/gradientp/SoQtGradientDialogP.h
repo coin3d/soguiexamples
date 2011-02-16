@@ -24,7 +24,7 @@
  *
 \**************************************************************************/
 
-#include <q3valuelist.h>
+#include <qvaluelist.h>
 #include <qobject.h>
 #include "../Gradient.h"
 
@@ -34,7 +34,7 @@ class QComboBox;
 class QCheckBox;
 class QLabel;
 class QPushButton;
-class Q3FileDialog;
+class QFileDialog;
 
 class SoQtGradientDialogP : public QObject {
 
@@ -48,9 +48,9 @@ public:
   void saveCurrent();
 
 
-  Q3FileDialog * filedialog;
+  QFileDialog * filedialog;
   GradientView * gradview;
-  Q3ValueList<Gradient> gradients;
+  QValueList<Gradient> gradients;
   QComboBox * gradientlist;
   QCheckBox * contupdate;
   Gradient gradientcopy;

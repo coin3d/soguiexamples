@@ -43,29 +43,28 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qpainter.h>
-#include <q3valuelist.h>
-#include <q3popupmenu.h>
+#include <qvaluelist.h>
+#include <qpopupmenu.h>
 #include <qcolordialog.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qstatusbar.h>
-#include <qnamespace.h>
 
 #include "Gradient.h"
 #include "GradientView.h"
 #include "TickMark.h"
 #include "ImageItem.h"
-#include "moc_GradientView.cxx"
+#include "moc_GradientView.icc"
 
 // *************************************************************************
 
-GradientView::GradientView(Q3Canvas * c,
+GradientView::GradientView(QCanvas * c,
                            const Gradient & g,
                            QWidget * parent,
                            const char * name,
-                           Qt::WFlags f)
+                           WFlags f)
                            
-  : Q3CanvasView(c, parent, name, f)
+  : QCanvasView(c, parent, name, f)
 {
   this->canvas = c;
   this->canvas->resize(this->sizeHint().width(),
@@ -114,7 +113,6 @@ GradientView::sizeHint() const
 {
   return QSize(450, 75);
 }
-
 
 void
 GradientView::viewportResizeEvent(QResizeEvent * e)
@@ -266,7 +264,7 @@ GradientView::contentsMouseMoveEvent(QMouseEvent * e)
 void
 GradientView::unselectAll(void)
 {
-  Q3ValueList<TickMark*>::Iterator it = this->tickmarks.begin();
+  QValueList<TickMark*>::Iterator it = this->tickmarks.begin();
   for (; it != tickmarks.end(); ++it) {
     (*it)->setBrush(Qt::black);
   }
@@ -337,7 +335,7 @@ GradientView::insertTick(void)
   const float t = x / (float)this->canvas->width();
   const int i = this->grad.insertTick(t);
 
-  Q3ValueList<TickMark*>::Iterator it = this->tickmarks.begin();
+  QValueList<TickMark*>::Iterator it = this->tickmarks.begin();
   // the += operator wasn't available until Qt 3.1.0. Just iterate
   // and use ++. pederb, 2003-09-22
   for (int j = 0; j < i; j++) { it++; }
@@ -361,7 +359,7 @@ GradientView::insertTick(void)
 void
 GradientView::updateTicks(void)
 {
-  Q3ValueList<TickMark*>::Iterator it = this->tickmarks.begin();
+  QValueList<TickMark*>::Iterator it = this->tickmarks.begin();
   for (; it != tickmarks.end(); ++it) { delete (*it); }
 
   this->tickmarks.clear();
@@ -477,9 +475,9 @@ void
 GradientView::buildMenu(void)
 {
   // FIXME: instead of building the menu each time, simply use
-  // Q3PopupMenu::changeItem to change the color pixmaps. 20030925 frodo.
+  // QPopupMenu::changeItem to change the color pixmaps. 20030925 frodo.
   assert(!this->menu);
-  this->menu = new Q3PopupMenu(this);
+  this->menu = new QPopupMenu(this);
 
   int id;
 
