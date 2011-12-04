@@ -6,9 +6,4 @@ the miscellaneous accompanying GUI toolkits.  The example programs are not
 installed on the system since they are mostly useless, so you will need to
 look for them in the build directories.
 
-All sourcecode is licensed under the GNU GPL, with the exception that
-Coin Professional Edition License licensees are allowed to use any and
-all code for any purpose.
-
-See <URL:http://www.coin3d.org> on how to obtain a Coin Professional
-Edition License.
+All sourcecode is licensed under the 3-clause BSD license.
