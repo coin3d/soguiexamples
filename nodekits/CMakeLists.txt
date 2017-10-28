@@ -3,10 +3,12 @@ SET(CONF_FILE_DIR ${PROJECT_BINARY_DIR}/nodekits)
 INCLUDE_DIRECTORIES(${CONF_FILE_DIR})
 
 #scalemarker example
-CONFIGURE_FILE(scalemarker.cpp.in ${CONF_FILE_DIR}/scalemarker.cpp)
-SET(scalemarker_SOURCE ${CONF_FILE_DIR}/scalemarker.cpp)
-ADD_EXECUTABLE(scalemarker ${scalemarker_SOURCE})
-TARGET_LINK_LIBRARIES(scalemarker ${LINK_LIBRARY})
+if (SIMVoleon_FOUND)
+  CONFIGURE_FILE(scalemarker.cpp.in ${CONF_FILE_DIR}/scalemarker.cpp)
+  SET(scalemarker_SOURCE ${CONF_FILE_DIR}/scalemarker.cpp)
+  ADD_EXECUTABLE(scalemarker ${scalemarker_SOURCE})
+  TARGET_LINK_LIBRARIES(scalemarker ${LINK_LIBRARY})
+endif()
 
 #wavekitdemo example
 CONFIGURE_FILE(wavekitdemo.cpp.in ${CONF_FILE_DIR}/wavekitdemo.cpp)
@@ -27,9 +29,9 @@ CONFIGURE_FILE(textures/wood2.jpg ${CONF_FILE_DIR}/textures/wood2.jpg COPYONLY)
 #Generate the tree structure in the VS Projects.
 SIM_VS_GENERATE_BASIC_TREE()
 
-INSTALL(TARGETS scalemarker
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodekits
-)
+if (SIMVoleon_FOUND)
+  INSTALL(TARGETS scalemarker RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodekits)
+endif()
 
 INSTALL(TARGETS wavekitdemo
   RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodekits

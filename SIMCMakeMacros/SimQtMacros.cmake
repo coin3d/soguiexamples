@@ -1,4 +1,3 @@
-INCLUDE(${QT_USE_FILE})
 INCLUDE(SimMSVC)
 
 # SIM_QT4_WRAP_CPP(outfiles infiles ... )
