@@ -1,0 +1,4 @@
+coinTestExaminerRenderArea.cxx
+coinTestExaminerViewer_setfullscreen.cxx
+coinTestExaminerViewer_viewer_quadbuffer_stereo.cxx
+coinTestExaminerViewer_viewer_stereo_viewing.cxx
