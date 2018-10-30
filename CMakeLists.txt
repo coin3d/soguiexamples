@@ -1,25 +1,46 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6) # Or does this work on 2.4? 2008-05-15, oyshole
-SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true) # Avoid unneccesary code
+cmake_minimum_required(VERSION 3.0)
 
-PROJECT(SoGuiExamples)
-SET(CURRENT_BUILD_DIR SoGuiExamples)
-SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/SIMCMakeMacros/")
+set(Gui Qt)
+set(GUI QT)
+set(WIDGET QWidget*)
 
-option(HAVE_DEBUG "Add debugging information during the configure process")
+project(So${Gui}Examples VERSION 1.0.0)
+string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+
+# ############################################################################
+# these will be removed after upgrading CMake minimum version to 3.9.6
+set(PROJECT_DESCRIPTION   "Examples for Coin and its GUI toolkits.")
+# ############################################################################
+ 
+string(TIMESTAMP SO${GUI}EXAMPLES_BUILD_YEAR "%Y")
+
+if(POLICY CMP0072)
+  # get rid of OpenGL GLVND warning from CMake 3.11
+  cmake_policy(SET CMP0072 NEW)
+endif()
+
+if(POLICY CMP0075)
+  # get rid of CMAKE_REQUIRED_LIBRARIES warning from CMake 3.12
+  cmake_policy(SET CMP0075 NEW)
+endif()
+
+# ############################################################################
+# Macros
+# ############################################################################
 
 # This is a convenience macro for generating better tree structures in VS solutions.
 # Running this in any directory will affect all libraries/executables at that location.
-MACRO(SIM_VS_GENERATE_BASIC_TREE)
-  SOURCE_GROUP("Source" REGULAR_EXPRESSION \\.cpp)
-  SOURCE_GROUP("Headers" REGULAR_EXPRESSION \\.h)
+macro(SIM_VS_GENERATE_BASIC_TREE)
+  source_group("Source" REGULAR_EXPRESSION \\.cpp)
+  source_group("Headers" REGULAR_EXPRESSION \\.h)
 
-  SOURCE_GROUP("Source\\Generated Moc files" REGULAR_EXPRESSION moc_*)
-  SOURCE_GROUP("Source\\Generated Qrc files" REGULAR_EXPRESSION [^\\.]qrc_*)
-  SOURCE_GROUP("Resources" REGULAR_EXPRESSION .*\\.qrc)
+  source_group("Source\\Generated Moc files" REGULAR_EXPRESSION moc_*)
+  source_group("Source\\Generated Qrc files" REGULAR_EXPRESSION [^\\.]qrc_*)
+  source_group("Resources" REGULAR_EXPRESSION .*\\.qrc)
 
-  SOURCE_GROUP("Build" REGULAR_EXPRESSION \\.txt)
-  SOURCE_GROUP("Build\\Rules" REGULAR_EXPRESSION \\.rule)
-ENDMACRO()
+  source_group("Build" REGULAR_EXPRESSION \\.txt)
+  source_group("Build\\Rules" REGULAR_EXPRESSION \\.rule)
+endmacro()
 
 function(dump_variable)
   if (HAVE_DEBUG)
@@ -29,83 +50,96 @@ function(dump_variable)
   endif(HAVE_DEBUG)
 endfunction(dump_variable)
 
-#Add libs
-FIND_PACKAGE(OpenGL REQUIRED)
-FIND_PACKAGE(Coin REQUIRED CONFIG) # FIXME: The results of this macro is not cached.
-find_package(SoQt REQUIRED CONFIG)
-SET(QT_USE_QTDESIGNER true)
-SET(QT_USE_QTTEST true)
-SET(QT_USE_QTOPENGL true)
-SET(QT_USE_QTUITOOLS true)
-FIND_PACKAGE(Qt5 REQUIRED Core Widgets)
-dump_variable(
-Coin_DIR
-Coin_DEFINES
-SoQt_DIR
-SoQt_DEFINES
-)
-FIND_PACKAGE(SmallChange)
-if (SmallChange_FOUND)
-  ADD_DEFINITIONS(${SmallChange_DEFINES})
-  set(LINK_LIBRARY ${LINK_LIBRARY} ${SmallChange_LIBRARY})
-endif(SmallChange_FOUND)
-FIND_PACKAGE(SIMVoleon)
-IF (SIMVoleon_FOUND)
-  ADD_DEFINITIONS(${SIMVoleon_DEFINES})
-  set(LINK_LIBRARY ${LINK_LIBRARY} ${SIMVoleon_LIBRARY})
-ENDIF (SIMVoleon_FOUND)
+# ############################################################################
+# Provide options to customise the build
+# ############################################################################
 
-LINK_DIRECTORIES(Qt5::Core ${Coin_LIB_DIR} ${OPENGL_gl_DIRECTORY})
-add_definitions("-DQT_NO_VERSION_TAGGING")
+option(HAVE_DEBUG "Add debugging information during the configure process")
+
+set(CURRENT_BUILD_DIR SoGuiExamples)
+
+# ############################################################################
+# Find all necessary and optional SoQt dependencies
+# ############################################################################
+
+find_package(OpenGL REQUIRED)
+find_package(Coin REQUIRED)
+find_package(SoQt REQUIRED)
+find_package(Qt5 COMPONENTS UiTools REQUIRED)
+set(LINK_LIBRARY ${LINK_LIBRARY} ${SoQt_LIBRARY} Qt5::UiTools)
+
+find_package(SmallChange)
+if (SmallChange_FOUND)
+  add_definitions(${SmallChange_DEFINES})
+  set(LINK_LIBRARY ${LINK_LIBRARY} ${SmallChange_LIBRARIES})
+endif()
+
+find_package(SIMVoleon QUIET)
+IF (SIMVoleon_FOUND)
+  add_definitions(${SIMVoleon_DEFINES})
+  set(LINK_LIBRARY ${LINK_LIBRARY} ${SIMVoleon_LIBRARY})
+endif()
+
+dump_variable(
+  Coin_DIR
+  Coin_DEFINES
+  Coin_LIBRARY
+  Coin_INCLUDE_DIR
+  QT_INCLUDE_DIR
+  SoQt_DIR
+  SoQt_DEFINES
+  SoQt_LIBRARY
+  SmallChange_LIBRARIES
+  SIMVoleon_LIBRARY
+  LINK_LIBRARY
+)
+
+# ##########################################################################
+# Setup build environment
+# ##########################################################################
+
+link_directories(Qt5::Core ${Coin_LIB_DIR} ${OPENGL_gl_DIRECTORY})
+# add_definitions("-DQT_NO_VERSION_TAGGING")
 
 #Add header directories
 include_directories(BEFORE
-${SoQt_INCLUDE_DIRS}
-${Qt5Core_INCLUDE_DIRS}
-${Coin_INCLUDE_DIR}
-${OPENGL_INCLUDE_DIR}
+  ${SoQt_INCLUDE_DIRS}
+  ${Coin_INCLUDE_DIR}
+  ${Qt5Core_INCLUDE_DIRS}
+  ${OPENGL_INCLUDE_DIR}
 )
 
-#Add definitions really need?
-ADD_DEFINITIONS(${Coin_DEFINES})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
-ADD_DEFINITIONS(${SoQt_DEFINES})
+if(MSVC)
+  message(STATUS "MSVC Version: " ${MSVC_VERSION})
+  add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+endif()
 
-IF(MSVC)
-  MESSAGE(STATUS "MSVC Version: " ${MSVC_VERSION})
-  ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE)
-ENDIF()
+# INCLUDE(SimQtMacros)
 
-INCLUDE(SimQtMacros)
+# set(LINK_LIBRARY ${LINK_LIBRARY} SoQt)
 
-SET(LINK_LIBRARY ${LINK_LIBRARY} Coin::Coin SoQt)
+# ############################################################################
+# Tests for Coin
+# ############################################################################
 
-#To configure files
-SET(Gui "Qt")
-SET(GUI "QT")
-SET(WIDGET "QWidget* ")
+set(COIN_CMAKE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
+set(COIN_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+include(${COIN_CMAKE_DIR}/Confugure.cmake)
 
-# Tests for coin
-SET(COIN_CMAKE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
-SET(COIN_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}")
-INCLUDE(${COIN_CMAKE_DIR}/Confugure.cmake)
-dump_variable(COIN_CMAKE_DIR)
+# ############################################################################
+# Setup targets in subdirectories
+# ############################################################################
 
-# Executables fail to build with Qt 5 in the default configuration^M
-# without -fPIE. We add that here.^M
-set(CMAKE_CXX_FLAGS "-fPIC")
-
-# What to build
-ADD_SUBDIRECTORY(actions)
-ADD_SUBDIRECTORY(annex)
-ADD_SUBDIRECTORY(coin-competitions)
-ADD_SUBDIRECTORY(components)
-ADD_SUBDIRECTORY(draggers)
-ADD_SUBDIRECTORY(engines)
-ADD_SUBDIRECTORY(eyecandy)
-ADD_SUBDIRECTORY(manipulators)
-ADD_SUBDIRECTORY(nodekits)
-ADD_SUBDIRECTORY(nodes)
-ADD_SUBDIRECTORY(sensors)
-ADD_SUBDIRECTORY(sound)
-ADD_SUBDIRECTORY(volumerendering)
+add_subdirectory(actions)
+add_subdirectory(annex)
+add_subdirectory(coin-competitions)
+add_subdirectory(components)
+add_subdirectory(draggers)
+add_subdirectory(engines)
+add_subdirectory(eyecandy)
+add_subdirectory(manipulators)
+add_subdirectory(nodekits)
+add_subdirectory(nodes)
+add_subdirectory(sensors)
+add_subdirectory(sound)
+add_subdirectory(volumerendering)
