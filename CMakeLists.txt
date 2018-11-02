@@ -1,8 +1,25 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(Gui Qt)
-set(GUI QT)
-set(WIDGET QWidget*)
+set(Gui "Qt" CACHE STRING "Target GUI for the examples")
+set(GuiValues "Qt;Xt;Win" CACHE INTERNAL "List of possible values for the GUI cache variable")
+set_property(CACHE Gui PROPERTY STRINGS ${GuiValues})
+ 
+message(STATUS "Gui='${Gui}'")
+
+# ############################################################################
+
+if (Gui STREQUAL "Qt")
+  set(GUI QT)
+  set(WIDGET QWidget*)
+elseif(Gui STREQUAL "Xt")
+  set(GUI XT)
+  set(WIDGET Widget)
+elseif(Gui STREQUAL "Win")
+  set(GUI WIN)
+  set(WIDGET HWND)
+else()
+  message(FATAL_ERROR "Only Qt,Win and Xt supported: please set Gui at one of these values")
+endif()
 
 project(So${Gui}Examples VERSION 1.0.0)
 string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
@@ -64,9 +81,12 @@ set(CURRENT_BUILD_DIR SoGuiExamples)
 
 find_package(OpenGL REQUIRED)
 find_package(Coin REQUIRED)
-find_package(SoQt REQUIRED)
-find_package(Qt5 COMPONENTS UiTools REQUIRED)
-set(LINK_LIBRARY ${LINK_LIBRARY} ${SoQt_LIBRARY} Qt5::UiTools)
+find_package(So${Gui} REQUIRED)
+set(LINK_LIBRARY ${LINK_LIBRARY} ${So${Gui}_LIBRARY})
+if (${Gui} STREQUAL "Qt")
+  find_package(Qt5 COMPONENTS UiTools REQUIRED)
+  set(LINK_LIBRARY ${LINK_LIBRARY} Qt5::UiTools)
+endif()
 
 find_package(SmallChange)
 if (SmallChange_FOUND)

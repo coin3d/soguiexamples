@@ -15,7 +15,9 @@ CONFIGURE_FILE(wavekitdemo.cpp.in ${CONF_FILE_DIR}/wavekitdemo.cpp)
 SET(wavekitdemo_SOURCE ${CONF_FILE_DIR}/wavekitdemo.cpp WaveSurfaceKit.cpp WaveSurfaceKit.h)
 ADD_EXECUTABLE(wavekitdemo ${wavekitdemo_SOURCE})
 TARGET_LINK_LIBRARIES(wavekitdemo ${LINK_LIBRARY})
-
+dump_variable(
+LINK_LIBRARY
+)
 # copy over the textures pic
 CONFIGURE_FILE(textures/envmap.jpg ${CONF_FILE_DIR}/textures/envmap.jpg COPYONLY)
 
