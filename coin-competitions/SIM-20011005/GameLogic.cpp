@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -32,8 +32,8 @@
 
 #include "GameLogic.h"
 #include "Minimax.h"
-#include <stdio.h>
-#include <assert.h>
+#include <cstdio>
+#include <cassert>
 
 GameLogic::GameLogic()
 {
@@ -88,7 +88,7 @@ GameLogic::add()
   return add(x,y);
 }
 
-bool 
+bool
 GameLogic::isComputersTurn()
 {
   return (onePlayer() && getWhoseTurn()==this->computerColor);
@@ -108,7 +108,7 @@ GameLogic::getSolution(int& i0,int& i1,int& i2,int& i3)
   this->board.getSolution(this->solution,i0,i1,i2,i3);
 }
 
-void 
+void
 GameLogic::getCurrPos(int &x, int &y)
 {
   x = this->tokenXpos;
@@ -118,7 +118,7 @@ GameLogic::getCurrPos(int &x, int &y)
 //
 // Gets last position and color (RED || BLUE)
 //
-bool 
+bool
 GameLogic::getLastPos(int &x, int &y, int &z, Token &color)
 {
   x = this->lastpos[0];
@@ -126,7 +126,7 @@ GameLogic::getLastPos(int &x, int &y, int &z, Token &color)
   y = this->lastpos[1];
   z = this->lastpos[2];
   color = (Token)(this->board.getToken(x,y,z)&(RED|BLUE));
-  
+
   return true;
 }
 
@@ -201,8 +201,8 @@ GameLogic::getSuggestedMove(int& x, int& y)
 // Private methods
 //
 
-void 
-GameLogic::nextTurn() 
+void
+GameLogic::nextTurn()
 {
   if (this->whoseTurn==RED) this->whoseTurn=BLUE;
   else this->whoseTurn=RED;
@@ -212,7 +212,7 @@ bool
 GameLogic::add(int x, int y)
 {
   int z=this->board.checkPosition(x,y);
-  
+
   if (z!=-1) {
     this->board.setToken(x,y,z,this->whoseTurn | this->counter++);
     this->lastpos[0]=x;
@@ -230,7 +230,7 @@ GameLogic::doValidate()
   int x,y,z;
   Token col;
   int solution;
-  
+
   if (this->getLastPos(x,y,z,col)) {
     bool ok = this->board.validate(x,y,z,col,solution);
     if (ok) this->solution=solution;

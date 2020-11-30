@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SbBasic.h>
@@ -43,10 +43,10 @@
 #include <Inventor/nodes/SoShapeHints.h>
 
 // lightsource
-const float light_x = 5.0;
-const float light_y = 15.0;
-const float light_z = 10.0;
-const float light_color[] = {1.0, 1.0, 0.5};
+const float light_x = 5.0f;
+const float light_y = 15.0f;
+const float light_z = 10.0f;
+const float light_color[] = {1.0f, 1.0f, 0.5f};
 
 // Recursive function that generates a scene graph with spheres
 // Parameters:
@@ -65,7 +65,7 @@ scene(float xt, float yt, float zt, int n)
 
   if (n>0) {
     transf->translation.setValue(xt, yt, zt);
-    transf->rotation.setValue(SbVec3f(0, 0, 1), M_PI/(float)(n+1));
+    transf->rotation.setValue(SbVec3f(0, 0, 1), float(M_PI)/(float)(n+1));
     sep->addChild(transf);
     sep->addChild(new SoSphere);
     sep->addChild(scene(xt, yt, zt, n-1));
@@ -97,11 +97,11 @@ main(int, char ** argv) {
 
   // Setting up the point light
   light->color.setValue(light_color[0], light_color[1], light_color[2]);
-  light->intensity.setValue(0.95);
+  light->intensity.setValue(0.95f);
   light->location.setValue(light_x, light_y, light_z);
   
   root->addChild(light);
-  root->addChild(scene(3.0, 1.0, 2.0, 20));
+  root->addChild(scene(3.0f, 1.0f, 2.0f, 20));
 
   // Set up an object that represent the lightsource
   SoLightModel * lmod = new SoLightModel;

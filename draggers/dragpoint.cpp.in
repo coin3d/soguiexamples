@@ -68,7 +68,7 @@ make_transparent_sphere(SbColor color, SoSFVec3f * draggerfield)
 
   SoMaterial * mat = new SoMaterial;
   sub->addChild(mat);
-  mat->transparency = 0.1;
+  mat->transparency = 0.1f;
   mat->diffuseColor.setValue(color);
   mat->emissiveColor.setValue(color / 2);
 
@@ -82,7 +82,7 @@ make_transparent_sphere(SbColor color, SoSFVec3f * draggerfield)
 
   SoTranslation * offset = new SoTranslation;
   sub->addChild(offset);
-  offset->translation.setValue(0, -3.5, 0);
+  offset->translation.setValue(0, -3.5f, 0);
 
   SoSphere * sphere = new SoSphere;
   sub->addChild(sphere);

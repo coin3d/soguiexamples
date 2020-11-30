@@ -30,10 +30,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <assert.h>
-#include <float.h>
-#include <stdlib.h> // exit()
-#include <string.h> // memset()
+#include <cassert>
+#include <cfloat>
+#include <cstdlib> // exit()
+#include <cstring> // memset()
 
 #include <Inventor/SbBasic.h>
 #include <Inventor/actions/SoGLRenderAction.h>
@@ -246,7 +246,7 @@ Landscape::smooth(void) {
                           heightbuffer[i-width+1] +
                           heightbuffer[i+width-1] + 
                           heightbuffer[i+width] +
-                          heightbuffer[i+width+1])/10.0;
+                          heightbuffer[i+width+1])/10.0f;
       if (smoothbuffer[i] > maxheight)
         maxheight = smoothbuffer[i];
     }
@@ -268,13 +268,13 @@ Landscape::createCoords(void) {
       i = y * width + x; 
       lx = x * landscapexstep; 
       ly = y * landscapeystep;
-      ptr[i].setValue(lx,
+      ptr[i].setValue(float(lx),
                       smoothbuffer[i] * 2,
-                      ly);
+                      float(ly));
       ptr[i+1].setValue(
-                        lx + landscapexstep,
+                        float(lx + landscapexstep),
                         smoothbuffer[i+1] * 2,
-                        ly);
+                        float(ly));
     } 
   }
   coords->point.finishEditing();
@@ -284,7 +284,7 @@ void
 Landscape::createTexture(void)
 {
   float elevation;
-  float elevation_limit_hi = 0.75 * maxheight;
+  float elevation_limit_hi = 0.75f * maxheight;
   int byte_width = width * 4;
   int byte_height = height * 4;
   int x,y,i,j;
@@ -324,9 +324,9 @@ Landscape::updateCoords(void) {
   assert( mesh != NULL );
 
 #if SMALL
-  float add = 0.0001;
+  float add = 0.0001f;
 #else
-  float add = 0.0005;
+  float add = 0.0005f;
 #endif
 
   SbVec3f * coordinates = coords->point.startEditing();

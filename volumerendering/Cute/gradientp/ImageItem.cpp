@@ -31,19 +31,19 @@
 \**************************************************************************/
 
 #include <qpainter.h>
+#include <QGraphicsScene>
 #include "ImageItem.h"
 
-ImageItem::ImageItem(QCanvas *canvas)
-: QCanvasRectangle(canvas)
+ImageItem::ImageItem(QGraphicsScene* canvas)
 {
-  this->setSize(canvas->width(), canvas->height());
+  canvas->addItem(this);
 }
 
 void 
-ImageItem::setImage(QImage image)
+ImageItem::setImage(const QImage& image)
 {
   if (!image.isNull()) {
-    this->setSize(image.width(), image.height());
+    this->setRect(0, 0, image.width(), image.height());
     this->pixmap.convertFromImage(image, Qt::OrderedAlphaDither);
   }
 }

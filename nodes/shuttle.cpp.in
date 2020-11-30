@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -51,20 +51,20 @@ scene()
   SoSeparator * conesep = new SoSeparator;
   
   SoShuttle * cubeshuttle = new SoShuttle;
-  cubeshuttle->translation0.setValue(-2.0, 2.0, -4.0);
-  cubeshuttle->translation1.setValue(2.0, -2.0, 5.0);
-  cubeshuttle->speed = 0.1;
+  cubeshuttle->translation0.setValue(-2.0f, 2.0f, -4.0f);
+  cubeshuttle->translation1.setValue(2.0f, -2.0f, 5.0f);
+  cubeshuttle->speed = 0.1f;
   
   SoMaterial * cubematerial = new SoMaterial;
-  cubematerial->diffuseColor.setValue(1.0, 0.0, 0.0);
+  cubematerial->diffuseColor.setValue(1.0f, 0.0f, 0.0f);
 
   SoShuttle * coneshuttle = new SoShuttle;
-  coneshuttle->translation0.setValue(2.0, -2.0, 3.0);
-  coneshuttle->translation1.setValue(-2.0, 2.0, -3.0);
-  coneshuttle->speed = 0.1;
+  coneshuttle->translation0.setValue(2.0f, -2.0f, 3.0f);
+  coneshuttle->translation1.setValue(-2.0f, 2.0f, -3.0f);
+  coneshuttle->speed = 0.1f;
 
   SoMaterial * conematerial = new SoMaterial;
-  conematerial->diffuseColor.setValue(0.0, 0.0, 1.0);
+  conematerial->diffuseColor.setValue(0.0f, 0.0f, 1.0f);
 
   cubesep->addChild(cubeshuttle);
   cubesep->addChild(cubematerial);

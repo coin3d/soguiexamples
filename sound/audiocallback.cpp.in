@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
@@ -9,9 +9,9 @@
 #include <Inventor/VRMLnodes/SoVRMLAudioClip.h>
 #include <Inventor/VRMLnodes/SoVRMLSound.h>
 
-static size_t 
-read_callback(void *datasource, void *buffer, 
-              int numframes, int &channels, 
+static size_t
+read_callback(void *datasource, void *buffer,
+              int numframes, int &channels,
               SoVRMLAudioClip *clip,
               void * userdataptr)
 {
@@ -28,8 +28,8 @@ read_callback(void *datasource, void *buffer,
   return numframes;
 }
 
-int 
-main(int argc, char *argv[]) 
+int
+main(int argc, char *argv[])
 {
   @WIDGET@ win = So@Gui@::init(argc, argv, argv[0]);
 
@@ -54,7 +54,7 @@ main(int argc, char *argv[])
   So@Gui@ExaminerViewer *viewer = new So@Gui@ExaminerViewer(win);
   viewer->setSceneGraph(root);
   viewer->show();
-  
+
   So@Gui@::show(win);
   So@Gui@::mainLoop();
 

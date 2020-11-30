@@ -76,7 +76,6 @@ unsigned char * generateTexture(SbVec3s & dim)
 {
   int val;
   float x,y,z;
-  unsigned char pixval;
   unsigned char * bitmap = new unsigned char[dim[0] * dim[1] * dim[2]];
 
   (void)fprintf(stdout, "Generating [%dx%dx%d] ", dim[0], dim[1], dim[2]);
@@ -287,7 +286,7 @@ int main(int argc, char * argv[])
   // Setup renderarea
   SoQtExaminerViewer * renderarea = new SoQtExaminerViewer(window);
   renderarea->setSceneGraph(root);
-  renderarea->setBackgroundColor(SbColor(0.176, 0.234, 0.477));
+  renderarea->setBackgroundColor(SbColor(0.176f, 0.234f, 0.477f));
   renderarea->setTitle(argv[0]);
   renderarea->setIconTitle(argv[0]);
   renderarea->viewAll();

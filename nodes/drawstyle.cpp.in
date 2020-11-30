@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -48,11 +48,11 @@
 // Return:
 //  SoSeparator *
 SoSeparator *
-scene(float t, int n, short flag) 
+scene(float t, int n, short flag)
 {
   SoSeparator * sep = new SoSeparator;
   sep->ref();
-  
+
   if (n>0) {
     SoTranslation * transl = new SoTranslation;
     SoDrawStyle * style = new SoDrawStyle;
@@ -64,7 +64,7 @@ scene(float t, int n, short flag)
     sep->addChild(material);
     sep->addChild(new SoCube);
 
-    // Switch between drawing filled and lines 
+    // Switch between drawing filled and lines
     if ((n%2)==0) {
       style->style.setValue(SoDrawStyle::LINES);
       lightm->model = SoLightModel::BASE_COLOR; // disable light on line-cubes
@@ -101,7 +101,7 @@ main (int, char ** argv)
 
   // Initialize Coin, and return a main window to use
   // If unsuccessful, exit
-  @WIDGET@ window = So@Gui@::init(argv[0]); 
+  @WIDGET@ window = So@Gui@::init(argv[0]);
   if (window==NULL) exit(1);
 
   // Create a scene graph with 3 spheres (solid, lines and points)

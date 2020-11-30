@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -34,9 +34,9 @@
  * Written by Tor-Helge Skei.
  */
 
-#include <assert.h>
-#include <string.h>
-#include <stdlib.h> // rand(), exit()
+#include <cassert>
+#include <cstring>
+#include <cstdlib> // rand(), exit()
 
 #include <Inventor/SoDB.h>
 #include <Inventor/nodes/SoComplexity.h>
@@ -558,7 +558,7 @@ makeBuoy(
   sh->creaseAngle = 0.8f;
   sh->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   sh->shapeType = SoShapeHints::SOLID;
-        
+
   result->addChild( sh );
   result->addChild( plcube );
   result->addChild( sep4 );
@@ -661,7 +661,7 @@ makeGridObject(
   // --- face-indexes ---
   //   a       b
   //  1__2       1
-  //  | /       /|  
+  //  | /       /|
   // 3|/      3/_|2
 
   for ( x = 0; x < MESHSIZE; x++ ) {
@@ -677,14 +677,14 @@ makeGridObject(
       indexes[((y*MESHSIZE+x)*8)+7] = SO_END_FACE_INDEX;
     }
   }
-	
+
 	/* _______	_____________
-	   |\ |\ |	|\ | /|\ | /| 
+	   |\ |\ |	|\ | /|\ | /|
 	   |_\|_\|	|_\|/_|_\|/_|
-	   |\ |\ |	| /|\ | /|\ | 
+	   |\ |\ |	| /|\ | /|\ |
 	   |_\|_\|	|/_|_\|/_|_\|
 	*/
-	
+
   SoSeparator *result = new SoSeparator;
   // --- material ---
   SoMaterial *mat = new SoMaterial;
@@ -784,8 +784,8 @@ void updateWave(float *dst, float *src, float damp)
     int frompos = (GRID-2)*GRID+x;
     pos = (GRID-1)*GRID+x;
     dst[pos] = dst[frompos];
-  } 
-  
+  }
+
   // --- some random drops ---
   if (watercount >= WATERINTERVAL) {
     //for (x=0;x<10;x++)	// if more than one drop per frame.
@@ -816,11 +816,11 @@ void updateSinus(void)
     v2 += sinaddyinner2;
   }
 }
-	
+
 // ----------------------------------------------------------------------------------------------------
-	
+
 void updateMesh(void)
-{		
+{
   int   x,y,pos;
 
   // --- water+sinusmap -> coords
@@ -845,7 +845,7 @@ void updateMesh(void)
       }
     }
   }
-  
+
 
   // quick hack for edge normals
   for (x = 0; x < GRID; x++) {
@@ -853,23 +853,23 @@ void updateMesh(void)
     pos = GRID * (GRID - 1) + x;
     int frompos = pos - GRID;
     normals[pos] = normals[frompos];
-    
+
     // bottom
     pos = x;
     frompos = pos + GRID;
     normals[pos] = normals[frompos];
-    
+
     // right
     pos = GRID + GRID * x - 1;
     frompos = pos - 1;
     normals[pos] = normals[frompos];
-    
+
     // left
     pos = GRID * x;
     frompos = pos + 1;
     normals[pos] = normals[frompos];
   }
-  
+
   gridCoords->point.finishEditing();
   gridNormals->vector.finishEditing();
 }
@@ -919,7 +919,7 @@ timerSensorCallback(
   cuberoty->rotation.setValue(vec,(temp1+temp2)*0.5f);
   // --- z-height ---
   cubetrans->translation.setValue( 0, 0, sinusmap[(GRID/2)*GRID + (GRID/2)] );
-  
+
   static int ptlgtcnt = 0;
   ptlgtcnt++;
   if ( ptlgtcnt == PTLGTON ) {

@@ -30,17 +30,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include "qpointarray.h"
+#include <QGraphicsScene>
+#include <QPolygon>
 #include "TickMark.h"
 
-TickMark::TickMark(QCanvas * canvas)
-: QCanvasPolygon(canvas)
+TickMark::TickMark(QGraphicsScene* canvas)
 {
-  QPointArray pa(3);
+  QPolygon pa(3);
   pa[0] = QPoint(-6,15);
   pa[1] = QPoint(6,15);
   pa[2] = QPoint(0,0);
-  this->setPoints(pa);
+  this->setPolygon(pa);
+  canvas->addItem(this);
 }
 
 TickMark::~TickMark()
@@ -49,7 +50,7 @@ TickMark::~TickMark()
 
 bool TickMark::hit(QPoint p) const
 {
-  if (this->visible()) {
+  if (this->isVisible()) {
     if (this->boundingRect().contains(p)) {
       return TRUE;
     }
@@ -59,5 +60,5 @@ bool TickMark::hit(QPoint p) const
 
 float TickMark::getPos() const
 {
-  return float(this->x()) / ((float)canvas()->width() + 0.5f);
+  return float(this->x()) / ((float)scene()->width() + 0.5f);
 }

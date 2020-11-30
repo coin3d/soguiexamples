@@ -17,7 +17,7 @@
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
  * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * PIMPL SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
@@ -27,13 +27,13 @@
  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * OF PIMPL SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
 
 #include <Inventor/SoOffscreenRenderer.h>
 #include <Inventor/errors/SoDebugError.h>
@@ -100,14 +100,14 @@ SoGuiSnapshotViewerP::SoGuiSnapshotViewerP(So@Gui@SnapshotViewer * viewer)
   this->infotext = new SoText2;
   this->infotext->string.set1Value(0, "");
   SoOrthographicCamera * cam = new SoOrthographicCamera;
-  cam->height.setValue(1.0);
-  cam->nearDistance.setValue(0.0);
-  cam->farDistance.setValue(1.0);
+  cam->height.setValue(1.0f);
+  cam->nearDistance.setValue(0.0f);
+  cam->farDistance.setValue(1.0f);
 
   this->infotrans = new SoTranslation;
-  this->infotrans->translation.setValue(SbVec3f(0,0,-0.1));
+  this->infotrans->translation.setValue(SbVec3f(0,0,-0.1f));
   SoBaseColor * color = new SoBaseColor;
-  color->rgb.setValue(SbColor(1.0, 0.0, 0.0));
+  color->rgb.setValue(SbColor(1.0f, 0.0f, 0.0f));
 
   this->inforoot = new SoSwitch;
   this->inforoot->whichChild.setValue(SO_SWITCH_ALL);
@@ -152,7 +152,7 @@ SoGuiSnapshotViewerP::hideCB(void * userdata, SoSensor * sensor)
 
 // *************************************************************************
 
-#define THIS (this->pimpl)
+#define PIMPL (this->pimpl)
 
 SO@GUI@_OBJECT_SOURCE(So@Gui@SnapshotViewer);
 
@@ -161,78 +161,78 @@ So@Gui@SnapshotViewer::So@Gui@SnapshotViewer(@WIDGET@ parent,
                                              SbBool embed)
   : So@Gui@ExaminerViewer(parent, name, embed)
 {
-  THIS = new SoGuiSnapshotViewerP(this);
+  PIMPL = new SoGuiSnapshotViewerP(this);
 }
 
 So@Gui@SnapshotViewer::~So@Gui@SnapshotViewer(void)
 {
-  delete THIS;
+  delete PIMPL;
 }
 
 void
 So@Gui@SnapshotViewer::setAntialiasingEnabled(SbBool enable)
 {
-  THIS->antialiasing = enable;
+  PIMPL->antialiasing = enable;
 }
 
 SbBool
 So@Gui@SnapshotViewer::isAntialiasingEnabled(void) const
 {
-  return THIS->antialiasing;
+  return PIMPL->antialiasing;
 }
 
 void
 So@Gui@SnapshotViewer::setTransparencyEnabled(SbBool enable)
 {
-  THIS->transparency = enable;
+  PIMPL->transparency = enable;
 }
 
 SbBool
 So@Gui@SnapshotViewer::isTransparencyEnabled(void) const
 {
-  return THIS->transparency;
+  return PIMPL->transparency;
 }
 
 void
 So@Gui@SnapshotViewer::setAutoCroppingEnabled(SbBool enable)
 {
-  THIS->autocropping = enable;
+  PIMPL->autocropping = enable;
 }
 
 SbBool
 So@Gui@SnapshotViewer::isAutoCroppingEnabled(void) const
 {
-  return THIS->autocropping;
+  return PIMPL->autocropping;
 }
 
 void
 So@Gui@SnapshotViewer::setCropBorderSize(int size)
 {
   if ( size < 0 ) size = 0;
-  THIS->cropborder = size;
+  PIMPL->cropborder = size;
 }
 
 int
 So@Gui@SnapshotViewer::getCropBorderSize(void) const
 {
-  return THIS->cropborder;
+  return PIMPL->cropborder;
 }
 
 void
 So@Gui@SnapshotViewer::setDefaultSnapshotFilename(const char * filename)
 {
-  if ( THIS->defaultfilename ) {
-    free((void *)THIS->defaultfilename);
-    THIS->defaultfilename = NULL;
+  if ( PIMPL->defaultfilename ) {
+    free((void *)PIMPL->defaultfilename);
+    PIMPL->defaultfilename = NULL;
   }
   if ( filename )
-    THIS->defaultfilename = strdup(filename);
+    PIMPL->defaultfilename = strdup(filename);
 }
 
 const char *
 So@Gui@SnapshotViewer::getDefaultSnapshotFilename(void) const
 {
-  return THIS->defaultfilename;
+  return PIMPL->defaultfilename;
 }
 
 void
@@ -240,35 +240,35 @@ So@Gui@SnapshotViewer::showInfo(float seconds)
 {
   SbString string;
   string.sprintf("[i] - display info, [s] - save snapshot");
-  THIS->infotext->string.set1Value(1, string);
+  PIMPL->infotext->string.set1Value(1, string);
   string.sprintf("[a]ntialiasing    : %s", this->isAntialiasingEnabled() ? "on" : "off");
-  THIS->infotext->string.set1Value(2, string);
+  PIMPL->infotext->string.set1Value(2, string);
   string.sprintf("[t]ransparency    : %s", this->isTransparencyEnabled() ? "on" : "off");
-  THIS->infotext->string.set1Value(3, string);
+  PIMPL->infotext->string.set1Value(3, string);
   string.sprintf("auto[c]ropping    : %s", this->isAutoCroppingEnabled() ? "on" : "off");
-  THIS->infotext->string.set1Value(4, string);
+  PIMPL->infotext->string.set1Value(4, string);
   string.sprintf("crop border [b/B] : %d pixels", this->getCropBorderSize());
-  THIS->infotext->string.set1Value(5, string);
-  string.sprintf("viewport size     : %dx%d", THIS->viewport[0], THIS->viewport[1]);
-  THIS->infotext->string.set1Value(6, string);
+  PIMPL->infotext->string.set1Value(5, string);
+  string.sprintf("viewport size     : %dx%d", PIMPL->viewport[0], PIMPL->viewport[1]);
+  PIMPL->infotext->string.set1Value(6, string);
   string.sprintf("snapshot filename : %s", this->getDefaultSnapshotFilename());
-  THIS->infotext->string.set1Value(7, string);
+  PIMPL->infotext->string.set1Value(7, string);
   
-  if ( THIS->alarm->isScheduled() ) THIS->alarm->unschedule();
-  THIS->alarm->setTime(SbTime::getTimeOfDay() + seconds);
-  THIS->alarm->schedule();
+  if ( PIMPL->alarm->isScheduled() ) PIMPL->alarm->unschedule();
+  PIMPL->alarm->setTime(SbTime::getTimeOfDay() + seconds);
+  PIMPL->alarm->schedule();
 
-  THIS->inforoot->whichChild.setValue(SO_SWITCH_ALL);
+  PIMPL->inforoot->whichChild.setValue(SO_SWITCH_ALL);
   this->scheduleRedraw();
 }
 
 void
 So@Gui@SnapshotViewer::hideInfo(void)
 {
-  THIS->inforoot->whichChild.setValue(SO_SWITCH_NONE);
-  THIS->infotext->string.set1Value(STATUS_LINE, "");
+  PIMPL->inforoot->whichChild.setValue(SO_SWITCH_NONE);
+  PIMPL->infotext->string.set1Value(STATUS_LINE, "");
   this->scheduleRedraw();
-  if ( THIS->alarm->isScheduled() ) THIS->alarm->unschedule();
+  if ( PIMPL->alarm->isScheduled() ) PIMPL->alarm->unschedule();
 }
 
 void
@@ -276,7 +276,7 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
 {
   SoOffscreenRenderer * renderer = new SoOffscreenRenderer(this->getGLSize());
 
-  if ( THIS->transparency ) {
+  if ( PIMPL->transparency ) {
     // FIXME: why does transparency work at home, and not at work?
     renderer->setComponents(SoOffscreenRenderer::RGB_TRANSPARENCY);
     // FIXME: when using transparency - maybe set white background?  this is
@@ -288,55 +288,55 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
     renderer->setBackgroundColor(this->getSceneManager()->getBackgroundColor());
   }
 
-  if ( THIS->antialiasing ) {
+  if ( PIMPL->antialiasing ) {
     renderer->getGLRenderAction()->setNumPasses(9);
   }
 
-  renderer->render(THIS->realroot);
+  renderer->render(PIMPL->realroot);
 
   int left = 0;
-  int right = THIS->viewport[0] - 1;
+  int right = PIMPL->viewport[0] - 1;
   int top = 0;
-  int bottom = THIS->viewport[1] - 1;
-  if ( THIS->autocropping ) {
+  int bottom = PIMPL->viewport[1] - 1;
+  if ( PIMPL->autocropping ) {
     const int components = renderer->getComponents();
     unsigned char * buffer = renderer->getBuffer();
     SbColor background = renderer->getBackgroundColor();
     SbVec4f bg = SbVec4f(background[0], background[1], background[2], 255);
-    if ( THIS->transparency ) bg[3] = 0;
+    if ( PIMPL->transparency ) bg[3] = 0;
     SbBool loop = TRUE;
     // note that the border indices come out off-by-one when breaking the loop
-    for ( ; loop && (left < THIS->viewport[0]); left++ )
-      for ( int i = 0; loop && (i < THIS->viewport[1]); i++ )
-	for ( int c = 0; loop && (c < components); c++ )
-	  if ( buffer[(i*components*THIS->viewport[0])+(left*components)+c] != bg[c] )
-	    loop = FALSE;
+    for ( ; loop && (left < PIMPL->viewport[0]); left++ )
+      for ( int i = 0; loop && (i < PIMPL->viewport[1]); i++ )
+        for ( int c = 0; loop && (c < components); c++ )
+          if ( buffer[(i*components*PIMPL->viewport[0])+(left*components)+c] != bg[c] )
+            loop = FALSE;
     loop = TRUE;
     for ( ; loop && (right >= left); right-- )
-      for ( int i = 0; loop && (i < THIS->viewport[1]); i++ )
-	for ( int c = 0; loop && (c < components); c++ )
-	  if ( buffer[(i*components*THIS->viewport[0])+(right*components)+c] != bg[c] )
-	    loop = FALSE;
+      for ( int i = 0; loop && (i < PIMPL->viewport[1]); i++ )
+        for ( int c = 0; loop && (c < components); c++ )
+          if ( buffer[(i*components*PIMPL->viewport[0])+(right*components)+c] != bg[c] )
+            loop = FALSE;
     loop = TRUE;
-    for ( ; loop && (top < THIS->viewport[1]); top++ )
-      for ( int i = 0; loop && (i < THIS->viewport[0]); i++ )
-	for ( int c = 0; loop && (c < components); c++ )
-	  if ( buffer[(top*components*THIS->viewport[0])+(i*components)+c] != bg[c] )
-	    loop = FALSE;
+    for ( ; loop && (top < PIMPL->viewport[1]); top++ )
+      for ( int i = 0; loop && (i < PIMPL->viewport[0]); i++ )
+        for ( int c = 0; loop && (c < components); c++ )
+          if ( buffer[(top*components*PIMPL->viewport[0])+(i*components)+c] != bg[c] )
+            loop = FALSE;
     loop = TRUE;
     for ( ; loop && (bottom >= top); bottom-- )
-      for ( int i = 0; loop && (i < THIS->viewport[0]); i++ )
-	for ( int c = 0; loop && (c < components); c++ )
-	  if ( buffer[(bottom*components*THIS->viewport[0])+(i*components)+c] != bg[c] )
-	    loop = FALSE;
-    left -= THIS->cropborder + 1;
-    right += THIS->cropborder + 1;
-    top -= THIS->cropborder + 1;
-    bottom += THIS->cropborder + 1;
+      for ( int i = 0; loop && (i < PIMPL->viewport[0]); i++ )
+        for ( int c = 0; loop && (c < components); c++ )
+          if ( buffer[(bottom*components*PIMPL->viewport[0])+(i*components)+c] != bg[c] )
+            loop = FALSE;
+    left -= PIMPL->cropborder + 1;
+    right += PIMPL->cropborder + 1;
+    top -= PIMPL->cropborder + 1;
+    bottom += PIMPL->cropborder + 1;
 
     // cropping support is a hack, but it works
     SoOffscreenRenderer * cropped = new SoOffscreenRenderer(SbViewportRegion(right-left+1, bottom-top+1));
-    if ( !THIS->transparency ) {
+    if ( !PIMPL->transparency ) {
       cropped->setComponents(SoOffscreenRenderer::RGB);
     } else {
       cropped->setComponents(SoOffscreenRenderer::RGB_TRANSPARENCY);
@@ -351,12 +351,12 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
     } while ( FALSE );
     unsigned char * newbuf = cropped->getBuffer();
     for ( int y = top; y <= bottom; y++ ) {
-      if ( (y >= 0) && (y < THIS->viewport[1]) ) {
+      if ( (y >= 0) && (y < PIMPL->viewport[1]) ) {
         for ( int x = left; x <= right; x++ ) {
-          if ( (x >= 0) && (x < THIS->viewport[0]) ) {
+          if ( (x >= 0) && (x < PIMPL->viewport[0]) ) {
             for ( int a = 0; a < components; a++ ) {
               newbuf[((y-top)*components*(right-left+1))+((x-left)*components)+a] =
-                buffer[(y*components*THIS->viewport[0])+(x*components)+a];
+                buffer[(y*components*PIMPL->viewport[0])+(x*components)+a];
             }
           }
         }
@@ -377,11 +377,11 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
   if ( !renderer->writeToFile(filename, format) ) {
     SoDebugError::post("So@Gui@SnapshotViewer::createSnapshot",
                        "error writing snapshot with format %s\n", format);
-    THIS->infotext->string.set1Value(STATUS_LINE, "SAVE ERROR");
+    PIMPL->infotext->string.set1Value(STATUS_LINE, "SAVE ERROR");
   } else {
     SbString status;
     status.sprintf("SAVE OK (%dx%d%+d%+d)", right - left + 1, bottom - top + 1, left, top);
-    THIS->infotext->string.set1Value(STATUS_LINE, status);
+    PIMPL->infotext->string.set1Value(STATUS_LINE, status);
   }
   delete renderer;
   this->showInfo(INFO_TIME);
@@ -390,19 +390,19 @@ So@Gui@SnapshotViewer::createSnapshot(const char * filename)
 void
 So@Gui@SnapshotViewer::setSceneGraph(SoNode * root)
 {
-  if ( THIS->realroot != NULL ) {
-    THIS->realroot->unref();
-    THIS->realroot = NULL;
+  if ( PIMPL->realroot != NULL ) {
+    PIMPL->realroot->unref();
+    PIMPL->realroot = NULL;
   }
   SoGroup * myroot = new SoGroup;
   SoCallback * snoop = new SoCallback;
-  snoop->setCallback(SoGuiSnapshotViewerP::snoopCB, THIS);
+  snoop->setCallback(SoGuiSnapshotViewerP::snoopCB, PIMPL);
   myroot->addChild(snoop);
   myroot->addChild(root);
   So@Gui@ExaminerViewer::setSceneGraph(myroot);
 
-  this->addSuperimposition(THIS->inforoot);
-  this->setSuperimpositionEnabled(THIS->inforoot, TRUE);
+  this->addSuperimposition(PIMPL->inforoot);
+  this->setSuperimpositionEnabled(PIMPL->inforoot, TRUE);
 }
 
 SoNode *
@@ -421,7 +421,7 @@ So@Gui@SnapshotViewer::processSoEvent(const SoEvent * const event)
     switch ( kbevent->getKey() ) {
     case SoKeyboardEvent::A: // 'a' for antialiasing
       if ( kbevent->getState() == SoButtonEvent::DOWN ) {
-	this->setAntialiasingEnabled(this->isAntialiasingEnabled() ? FALSE : TRUE);
+        this->setAntialiasingEnabled(this->isAntialiasingEnabled() ? FALSE : TRUE);
         this->showInfo(INFO_TIME);
       }
       return TRUE;
@@ -433,16 +433,16 @@ So@Gui@SnapshotViewer::processSoEvent(const SoEvent * const event)
       return TRUE;
     case SoKeyboardEvent::C: // 'c' for cropping
       if ( kbevent->getState() == SoButtonEvent::DOWN ) {
-	this->setAutoCroppingEnabled(this->isAutoCroppingEnabled() ? FALSE : TRUE);
+        this->setAutoCroppingEnabled(this->isAutoCroppingEnabled() ? FALSE : TRUE);
         this->showInfo(INFO_TIME);
       }
       return TRUE;
     case SoKeyboardEvent::B: // 'b' for border
       if ( kbevent->getState() == SoButtonEvent::DOWN ) {
         if ( !kbevent->wasShiftDown() ) {
-	  this->setCropBorderSize(this->getCropBorderSize() + 1);
+          this->setCropBorderSize(this->getCropBorderSize() + 1);
         } else {
-	  this->setCropBorderSize(this->getCropBorderSize() - 1);
+          this->setCropBorderSize(this->getCropBorderSize() - 1);
         }
         this->showInfo(INFO_TIME);
       }
@@ -476,20 +476,20 @@ void
 So@Gui@SnapshotViewer::sizeChanged(const SbVec2s & size)
 {
   So@Gui@ExaminerViewer::sizeChanged(size);
-  THIS->viewport = this->getGLSize();
-  float aspect = float(THIS->viewport[0]) / float(THIS->viewport[1]);
+  PIMPL->viewport = this->getGLSize();
+  float aspect = float(PIMPL->viewport[0]) / float(PIMPL->viewport[1]);
   float x = 0, y = 0;
-  if ( aspect < 1.0 ) {
-    x = -0.5;
-    y = 0.5 * 1.0/aspect;
+  if ( aspect < 1.0f ) {
+    x = -0.5f;
+    y = 0.5f * 1.0f/aspect;
   } else {
-    x = -0.5 * aspect;
-    y = 0.5;
+    x = -0.5f * aspect;
+    y = 0.5f;
   }
   // need air - adjust inwards by four pixels
-  x -= ((2.0 * x) / THIS->viewport[0]) * 4;
-  y -= ((2.0 * y) / THIS->viewport[1]) * 4;
-  THIS->infotrans->translation.setValue(SbVec3f(x, y, 0.1));
+  x -= ((2.0f * x) / PIMPL->viewport[0]) * 4;
+  y -= ((2.0f * y) / PIMPL->viewport[1]) * 4;
+  PIMPL->infotrans->translation.setValue(SbVec3f(x, y, 0.1f));
   this->showInfo(INFO_TIME);
 }
 

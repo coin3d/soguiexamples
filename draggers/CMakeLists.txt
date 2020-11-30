@@ -1,47 +1,26 @@
-INCLUDE_DIRECTORIES(./)
-SET(CONF_FILE_DIR ${PROJECT_BINARY_DIR}/draggers)
-INCLUDE_DIRECTORIES(${CONF_FILE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 #jackdragger example
-CONFIGURE_FILE(jackdragger.cpp.in ${CONF_FILE_DIR}/jackdragger.cpp)
-SET(jackdragger_SOURCE ${CONF_FILE_DIR}/jackdragger.cpp)
-ADD_EXECUTABLE(jackdragger ${jackdragger_SOURCE})
-TARGET_LINK_LIBRARIES(jackdragger ${LINK_LIBRARY})
+configure_file(jackdragger.cpp.in jackdragger.cpp)
+add_executable(jackdragger ${CMAKE_CURRENT_BINARY_DIR}/jackdragger.cpp)
+target_link_libraries(jackdragger PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS jackdragger RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/draggers)
 
 #translate1 example
-CONFIGURE_FILE(translate1.cpp.in ${CONF_FILE_DIR}/translate1.cpp)
-SET(translate1_SOURCE ${CONF_FILE_DIR}/translate1.cpp)
-ADD_EXECUTABLE(translate1 ${translate1_SOURCE})
-TARGET_LINK_LIBRARIES(translate1 ${LINK_LIBRARY})
+configure_file(translate1.cpp.in translate1.cpp)
+add_executable(translate1 ${CMAKE_CURRENT_BINARY_DIR}/translate1.cpp)
+target_link_libraries(translate1 PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS translate1 RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/draggers)
 
 #translate2 example
-CONFIGURE_FILE(translate2.cpp.in ${CONF_FILE_DIR}/translate2.cpp)
-SET(translate2_SOURCE ${CONF_FILE_DIR}/translate2.cpp)
-ADD_EXECUTABLE(translate2 ${translate2_SOURCE})
-TARGET_LINK_LIBRARIES(translate2 ${LINK_LIBRARY})
+configure_file(translate2.cpp.in translate2.cpp)
+add_executable(translate2 ${CMAKE_CURRENT_BINARY_DIR}/translate2.cpp)
+target_link_libraries(translate2 PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS translate2 RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/draggers)
 
 #dragpoint example
-CONFIGURE_FILE(dragpoint.cpp.in ${CONF_FILE_DIR}/dragpoint.cpp)
-SET(dragpoint_SOURCE ${CONF_FILE_DIR}/dragpoint.cpp)
-ADD_EXECUTABLE(dragpoint ${dragpoint_SOURCE})
-TARGET_LINK_LIBRARIES(dragpoint ${LINK_LIBRARY})
-
-
-#Generate the tree structure in the VS Projects.
-SIM_VS_GENERATE_BASIC_TREE()
-
-INSTALL(TARGETS jackdragger
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/draggers
-)
-
-INSTALL(TARGETS translate1
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/draggers
-)
-
-INSTALL(TARGETS translate2
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/draggers
-)
-
-INSTALL(TARGETS dragpoint
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/draggers
-)
+configure_file(dragpoint.cpp.in dragpoint.cpp)
+add_executable(dragpoint ${CMAKE_CURRENT_BINARY_DIR}/dragpoint.cpp)
+target_link_libraries(dragpoint PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS dragpoint RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/draggers)

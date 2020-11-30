@@ -41,7 +41,7 @@
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoPointSet.h>
@@ -71,20 +71,20 @@
 #include <Inventor/@Gui@/So@Gui@RenderArea.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 
-#define STAR_INNER_RAD 0.25
+#define STAR_INNER_RAD 0.25f
 
 float starpts[11][3] = {
-  { 0.000, 0.000, 0.2},
-  { 0.951, 0.309, 0},
-  { 0.000, 1.000, 0},
-  {-0.951, 0.309, 0},
-  {-0.588,-0.809, 0},
-  { 0.588,-0.809, 0},
-  { 0.588*STAR_INNER_RAD, 0.809*STAR_INNER_RAD, 0},
-  {-0.588*STAR_INNER_RAD, 0.809*STAR_INNER_RAD, 0},
-  {-0.951*STAR_INNER_RAD,-0.309*STAR_INNER_RAD, 0},
-  { 0.000*STAR_INNER_RAD,-1.000*STAR_INNER_RAD, 0},
-  { 0.951*STAR_INNER_RAD,-0.309*STAR_INNER_RAD, 0},
+  { 0.000f, 0.000f, 0.2f},
+  { 0.951f, 0.309f, 0},
+  { 0.000f, 1.000f, 0},
+  {-0.951f, 0.309f, 0},
+  {-0.588f,-0.809f, 0},
+  { 0.588f,-0.809f, 0},
+  { 0.588f*STAR_INNER_RAD, 0.809f*STAR_INNER_RAD, 0},
+  {-0.588f*STAR_INNER_RAD, 0.809f*STAR_INNER_RAD, 0},
+  {-0.951f*STAR_INNER_RAD,-0.309f*STAR_INNER_RAD, 0},
+  { 0.000f*STAR_INNER_RAD,-1.000f*STAR_INNER_RAD, 0},
+  { 0.951f*STAR_INNER_RAD,-0.309f*STAR_INNER_RAD, 0},
 };
 
 int starindices[40] = {
@@ -101,90 +101,90 @@ int starindices[40] = {
 };
 
 float planepts[4][3] = {
-  {5,-2.2,-5},
-  {5,-2.2,5},
-  {-5,-2.2,-5},
-  {-5,-2.2,5}
+  {5,-2.2f,-5},
+  {5,-2.2f,5},
+  {-5,-2.2f,-5},
+  {-5,-2.2f,5}
 };
 
 float pts[11*7][3] = {
-  {0,-0.5,0},
-  {0,-0.5,0},
-  {0,-0.5,0},
-  {0,-0.5,0},
-  {0,-0.5,0},
-  {0,-0.5,0},
-  {0,-0.5,0},
-  {0,-0.5,0},
-  {0,-0.5,0},
-  {0,-0.5,0},
-  {0,-0.5,0},
-  {0.102341,-0.5,0.102341},
-  {0.144732,-0.5,0},
-  {0.102341,-0.5,-0.102341},
-  {0,-0.5,-0.144732},
-  {-0.102341,-0.5,-0.102341},
-  {-0.144732,-0.5,0},
-  {-0.102341,-0.5,0.102341},
-  {0,-0.5,0.144732},
-  {0.102341,-0.5,0.102341},
-  {0.144732,-0.5,0},
-  {0.102341,-0.5,-0.102341},
-  {0.307024,-0.391806,0.307024},
-  {0.434197,-0.391806,0},
-  {0.307024,-0.391806,-0.307024},
-  {0,-0.391806,-0.434197},
-  {-0.307024,-0.391806,-0.307024},
-  {-0.434197,-0.391806,0},
-  {-0.307024,-0.391806,0.307024},
-  {0,-0.391806,0.434197},
-  {0.307024,-0.391806,0.307024},
-  {0.434197,-0.391806,0},
-  {0.307024,-0.391806,-0.307024},
-  {0.434197,0,0.434197},
-  {0.614047,0,0},
-  {0.434197,0,-0.434197},
-  {0,0,-0.614047},
-  {-0.434197,0,-0.434197},
-  {-0.614047,0,0},
-  {-0.434197,0,0.434197},
-  {0,0,0.614047},
-  {0.434197,0,0.434197},
-  {0.614047,0,0},
-  {0.434197,0,-0.434197},
-  {0.307024,0.391806,0.307024},
-  {0.434197,0.391806,0},
-  {0.307024,0.391806,-0.307024},
-  {0,0.391806,-0.434197},
-  {-0.307024,0.391806,-0.307024},
-  {-0.434197,0.391806,0},
-  {-0.307024,0.391806,0.307024},
-  {0,0.391806,0.434197},
-  {0.307024,0.391806,0.307024},
-  {0.434197,0.391806,0},
-  {0.307024,0.391806,-0.307024},
-  {0.102341,0.5,0.102341},
-  {0.144732,0.5,0},
-  {0.102341,0.5,-0.102341},
-  {0,0.5,-0.144732},
-  {-0.102341,0.5,-0.102341},
-  {-0.144732,0.5,0},
-  {-0.102341,0.5,0.102341},
-  {0,0.5,0.144732},
-  {0.102341,0.5,0.102341},
-  {0.144732,0.5,0},
-  {0.102341,0.5,-0.102341},
-  {0,0.5,0},
-  {0,0.5,0},
-  {0,0.5,0},
-  {0,0.5,0},
-  {0,0.5,0},
-  {0,0.5,0},
-  {0,0.5,0},
-  {0,0.5,0},
-  {0,0.5,0},
-  {0,0.5,0},
-  {0,0.5,0}
+  {0,-0.5f,0},
+  {0,-0.5f,0},
+  {0,-0.5f,0},
+  {0,-0.5f,0},
+  {0,-0.5f,0},
+  {0,-0.5f,0},
+  {0,-0.5f,0},
+  {0,-0.5f,0},
+  {0,-0.5f,0},
+  {0,-0.5f,0},
+  {0,-0.5f,0},
+  {0.102341f,-0.5f,0.102341f},
+  {0.144732f,-0.5f,0},
+  {0.102341f,-0.5f,-0.102341f},
+  {0,-0.5f,-0.144732f},
+  {-0.102341f,-0.5f,-0.102341f},
+  {-0.144732f,-0.5f,0},
+  {-0.102341f,-0.5f,0.102341f},
+  {0,-0.5f,0.144732f},
+  {0.102341f,-0.5f,0.102341f},
+  {0.144732f,-0.5f,0},
+  {0.102341f,-0.5f,-0.102341f},
+  {0.307024f,-0.391806f,0.307024f},
+  {0.434197f,-0.391806f,0},
+  {0.307024f,-0.391806f,-0.307024f},
+  {0,-0.391806f,-0.434197f},
+  {-0.307024f,-0.391806f,-0.307024f},
+  {-0.434197f,-0.391806f,0},
+  {-0.307024f,-0.391806f,0.307024f},
+  {0,-0.391806f,0.434197f},
+  {0.307024f,-0.391806f,0.307024f},
+  {0.434197f,-0.391806f,0},
+  {0.307024f,-0.391806f,-0.307024f},
+  {0.434197f,0,0.434197f},
+  {0.614047f,0,0},
+  {0.434197f,0,-0.434197f},
+  {0,0,-0.614047f},
+  {-0.434197f,0,-0.434197f},
+  {-0.614047f,0,0},
+  {-0.434197f,0,0.434197f},
+  {0,0,0.614047f},
+  {0.434197f,0,0.434197f},
+  {0.614047f,0,0},
+  {0.434197f,0,-0.434197f},
+  {0.307024f,0.391806f,0.307024f},
+  {0.434197f,0.391806f,0},
+  {0.307024f,0.391806f,-0.307024f},
+  {0,0.391806f,-0.434197f},
+  {-0.307024f,0.391806f,-0.307024f},
+  {-0.434197f,0.391806f,0},
+  {-0.307024f,0.391806f,0.307024f},
+  {0,0.391806f,0.434197f},
+  {0.307024f,0.391806f,0.307024f},
+  {0.434197f,0.391806f,0},
+  {0.307024f,0.391806f,-0.307024f},
+  {0.102341f,0.5f,0.102341f},
+  {0.144732f,0.5f,0},
+  {0.102341f,0.5f,-0.102341f},
+  {0,0.5f,-0.144732f},
+  {-0.102341f,0.5f,-0.102341f},
+  {-0.144732f,0.5f,0},
+  {-0.102341f,0.5f,0.102341f},
+  {0,0.5f,0.144732f},
+  {0.102341f,0.5f,0.102341f},
+  {0.144732f,0.5f,0},
+  {0.102341f,0.5f,-0.102341f},
+  {0,0.5f,0},
+  {0,0.5f,0},
+  {0,0.5f,0},
+  {0,0.5f,0},
+  {0,0.5f,0},
+  {0,0.5f,0},
+  {0,0.5f,0},
+  {0,0.5f,0},
+  {0,0.5f,0},
+  {0,0.5f,0},
+  {0,0.5f,0}
 };
 
 // The knot vectors
@@ -199,9 +199,9 @@ void
 sphericalConv(float r, float theta, float phi, 
               float& x, float& y, float& z)
 {
-  x = r * sin(phi) * cos(theta);
-  z = r * sin(phi) * sin(theta);
-  y = r * cos(phi);
+  x = r * (float)sin(phi) * (float)cos(theta);
+  z = r * (float)sin(phi) * (float)sin(theta);
+  y = r * (float)cos(phi);
 }
 
 void
@@ -216,9 +216,9 @@ makeSurface(SoSeparator *root)
   material = new SoMaterial;
   material->diffuseColor.setValue(1,1,0);
   material->specularColor.setValue(1,1,1);
-  material->ambientColor.setValue(0.7,0.7,0);
+  material->ambientColor.setValue(0.7f,0.7f,0);
   SoNurbsSurface  *surface  = new SoNurbsSurface;
-  complexity->value = 1.0;
+  complexity->value = 1.0f;
   
   controlPts->point.setValues(0, 11*7, pts);
   surface->numUControlPoints = 11;
@@ -239,13 +239,13 @@ makeSurface(SoSeparator *root)
   mat->ambientColor.setValue(0,0,0);
   SoSeparator *eyessep = new SoSeparator;
   SoTranslation *e1trans = new SoTranslation;
-  e1trans->translation.setValue(SbVec3f(-0.15,0.25,0.4));
+  e1trans->translation.setValue(SbVec3f(-0.15f,0.25f,0.4f));
   SoSphere *e1 = new SoSphere;
-  e1->radius.setValue(0.05);
+  e1->radius.setValue(0.05f);
   SoTranslation *e2trans = new SoTranslation;
-  e2trans->translation.setValue(SbVec3f(0.30,0,0));
+  e2trans->translation.setValue(SbVec3f(0.30f,0,0));
   SoSphere *e2 = new SoSphere;
-  e2->radius.setValue(0.05);
+  e2->radius.setValue(0.05f);
   eyessep->addChild(mat);
   eyessep->addChild(e1trans);
   eyessep->addChild(e1);
@@ -273,17 +273,17 @@ makeSurface(SoSeparator *root)
 
   float px,py,x,y,z;
   for (i=0;i<16;i++) {
-    px = 35 * cos((190+10*i)*M_PI/180) + 90; //theta
-    py = 90 - 35 * sin((190+10*i)*M_PI/180)-20; //phi
+    px = 35 * (float)cos((190+10*i)*M_PI/180) + 90; //theta
+    py = 90 - 35 * (float)sin((190+10*i)*M_PI/180)-20; //phi
 
-    sphericalConv(0.51,px*M_PI/180,py*M_PI/180,x,y,z);
+    sphericalConv(0.51f,px*float(M_PI)/180,py*float(M_PI)/180,x,y,z);
     mcoord->point.set1Value(i,x,y,z);
   }
   for (i=0;i<16;i++) {
-    px = 45 * cos((190+10*i)*M_PI/180) + 90; //theta
-    py = 90 - 45 * sin((190+10*i)*M_PI/180)-20; //phi
+    px = 45 * (float)cos((190+10*i)*M_PI/180) + 90; //theta
+    py = 90 - 45 * (float)sin((190+10*i)*M_PI/180)-20; //phi
 
-    sphericalConv(0.51,px*M_PI/180,py*M_PI/180,x,y,z);
+    sphericalConv(0.51f,px*float(M_PI)/180,py*float(M_PI)/180,x,y,z);
     mcoord->point.set1Value(i+16,x,y,z);
   }
 
@@ -291,20 +291,20 @@ makeSurface(SoSeparator *root)
   // Create hat
   SoSeparator *hatsep = new SoSeparator;
   SoMaterial *hatmat = new SoMaterial;
-  hatmat->diffuseColor.setValue(0,0.2,0);
-  hatmat->specularColor.setValue(0,0.2,0);
-  hatmat->ambientColor.setValue(0,0.1,0);
+  hatmat->diffuseColor.setValue(0,0.2f,0);
+  hatmat->specularColor.setValue(0,0.2f,0);
+  hatmat->ambientColor.setValue(0,0.1f,0);
   SoTranslation *h1trans = new SoTranslation;
-  h1trans->translation.setValue(SbVec3f(0,0.5,0));
+  h1trans->translation.setValue(SbVec3f(0,0.5f,0));
   SoCylinder *h1 = new SoCylinder;
   h1->parts.setValue(SoCylinder::SIDES|SoCylinder::TOP);
-  h1->radius.setValue(0.4);
-  h1->height.setValue(0.3);
+  h1->radius.setValue(0.4f);
+  h1->height.setValue(0.3f);
   SoTranslation *h2trans = new SoTranslation;
-  h2trans->translation.setValue(SbVec3f(0,-0.14,0.3));
+  h2trans->translation.setValue(SbVec3f(0,-0.14f,0.3f));
   SoCylinder *h2 = new SoCylinder;
-  h2->radius.setValue(0.35);
-  h2->height.setValue(0.02);
+  h2->radius.setValue(0.35f);
+  h2->height.setValue(0.02f);
   hatsep->addChild(hatmat);
   hatsep->addChild(h1trans);
   hatsep->addChild(h1);
@@ -313,12 +313,12 @@ makeSurface(SoSeparator *root)
 
   SoSeparator *starsep = new SoSeparator;
   SoMaterial *starmat = new SoMaterial;
-  starmat->diffuseColor.setValue(0.8,0,0);
+  starmat->diffuseColor.setValue(0.8f,0,0);
   starmat->specularColor.setValue(1,1,1);
-  starmat->ambientColor.setValue(0.3,0,0);
+  starmat->ambientColor.setValue(0.3f,0,0);
   SoTransform *strans = new SoTransform;
-  strans->translation.setValue(SbVec3f(0,0.5,0.4));
-  strans->scaleFactor.setValue(SbVec3f(0.1,0.1,0.1));
+  strans->translation.setValue(SbVec3f(0,0.5f,0.4f));
+  strans->scaleFactor.setValue(SbVec3f(0.1f,0.1f,0.1f));
   SoCoordinate3 *starcoord = new SoCoordinate3;
   starcoord->point.setValues(0,11,starpts);
   SoIndexedFaceSet *star = new SoIndexedFaceSet;
@@ -338,7 +338,7 @@ makeSurface(SoSeparator *root)
   SoSeparator *planesep = new SoSeparator;
   
   SoComplexity *comple = new SoComplexity;
-  comple->textureQuality.setValue(0.1);
+  comple->textureQuality.setValue(0.1f);
   
   SoTexture2 *mapTex = new SoTexture2;
   unsigned char texture[4];
@@ -379,24 +379,24 @@ frameCallback(void *userData, SoAction *action)
     firsttime = new SbTime(SbTime::getTimeOfDay());
   }
   SbTime currtime = SbTime::getTimeOfDay();
-  float deltat = currtime.getMsecValue() - firsttime->getMsecValue();
+  float deltat = float(currtime.getMsecValue() - firsttime->getMsecValue());
 
-  float cosval = cos(360*deltat/2000*M_PI/180);
+  float cosval = (float)cos(360*deltat/2000*M_PI/180);
 
   float newpos = cosval-1;
 
   if (newpos>-1.2)
     material->diffuseColor.setValue(1,1,0);
   else
-    material->diffuseColor.setValue(1,(newpos+2)/0.8,0);
+    material->diffuseColor.setValue(1,(newpos+2)/0.8f,0);
   
   trans->translation.setValue(SbVec3f(0,newpos,0));
 
   int numvals = controlPts->point.getNum();
   SbVec3f *points = controlPts->point.startEditing();
   for (int i=0;i<numvals;i++) {
-    if (pts[i][1]<-2.20-newpos)
-      points[i][1]=-2.20-newpos;
+    if (pts[i][1]<-2.20f-newpos)
+      points[i][1]=-2.20f-newpos;
     else 
       points[i][1]=pts[i][1];
   }
@@ -423,7 +423,7 @@ int main(int argc, char *argv[])
   SoTimeCounter *timecount = new SoTimeCounter;
   timecount->min.setValue(0);
   timecount->max.setValue(359);
-  timecount->frequency.setValue(0.15);
+  timecount->frequency.setValue(0.15f);
 
   SoCalculator *calc = new SoCalculator;
   calc->expression.set1Value(0,"ta = -a*M_PI/180"); // Angle (radians)

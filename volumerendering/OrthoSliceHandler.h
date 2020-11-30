@@ -33,14 +33,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
+#include <qdialog.h>
 #include <qwidget.h>
 
 class SoOrthoSlice;
 class SoVolumeData;
-class SoOrthoSlice_ctrl;
 
-
-class OrthoSliceHandler : QObject
+namespace Ui {
+	class SoOrthoSliceCtrl;
+}
+class OrthoSliceHandler : QDialog
 {
   Q_OBJECT
 
@@ -62,7 +64,7 @@ private:
 
   SoOrthoSlice * node;
   SoVolumeData * vdnode;
-  SoOrthoSlice_ctrl * ctrl;
+  Ui::SoOrthoSliceCtrl * ctrl;
 };
 
 #endif // !CVRTEST_ORTHOSLICEHANDLER_H

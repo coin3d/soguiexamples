@@ -68,7 +68,7 @@ make_transparent_plane(SbColor color, SoSFVec3f * draggerfield)
 
   SoMaterial * mat = new SoMaterial;
   sub->addChild(mat);
-  mat->transparency = 0.1;
+  mat->transparency = 0.1f;
   mat->diffuseColor.setValue(color);
   mat->emissiveColor.setValue(color / 2);
 

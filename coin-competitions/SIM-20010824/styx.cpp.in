@@ -50,9 +50,9 @@
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoCallback.h>
 
-#include <stdlib.h>  // srand(), rand(), exit()
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>  // srand(), rand(), exit()
+#include <cstdio>
+#include <cstring>
 
 /* ********************************************************************** */
 
@@ -191,9 +191,9 @@ const char * scenegraph[] = {
 /* ********************************************************************** */
 
 char *
-strconcat(const char * array[], unsigned int &total)
+strconcat(const char * array[], size_t &total)
 {
-  int i;
+  size_t i;
   for (i = total = 0; array[i]; i++ )
     total += strlen(array[i]) + 1;
   char * buf = new char [total + 1];
@@ -282,13 +282,13 @@ tickLines1(SoCoordinate3 * coords)
     else if ( points[i][2] > 200.0f ) points[i][2] = 400.0f - points[i][2];
   }
 
-  p1dir[0] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p1dir[1] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p1dir[2] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p1dir[0] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p1dir[1] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p1dir[2] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
   p1dir.normalize();
-  p2dir[0] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p2dir[1] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p2dir[2] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p2dir[0] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p2dir[1] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p2dir[2] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
   p2dir.normalize();
   coords->point.finishEditing();
 }
@@ -336,13 +336,13 @@ tickLines2(SoCoordinate3 * coords)
     else if ( points[i][2] > 200.0f ) points[i][2] = 400.0f - points[i][2];
   }
 
-  p1dir[0] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p1dir[1] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p1dir[2] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p1dir[0] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p1dir[1] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p1dir[2] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
   p1dir.normalize();
-  p2dir[0] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p2dir[1] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p2dir[2] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p2dir[0] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p2dir[1] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p2dir[2] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
   p2dir.normalize();
   coords->point.finishEditing();
 }
@@ -390,13 +390,13 @@ tickLines3(SoCoordinate3 * coords)
     else if ( points[i][2] > 200.0f ) points[i][2] = 400.0f - points[i][2];
   }
 
-  p1dir[0] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p1dir[1] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p1dir[2] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p1dir[0] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p1dir[1] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p1dir[2] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
   p1dir.normalize();
-  p2dir[0] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p2dir[1] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
-  p2dir[2] += (fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p2dir[0] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p2dir[1] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
+  p2dir[2] += ((float)fmod(float(rand())/200.0f,10.0f)-5.0f) / 50.0f;
   p2dir.normalize();
   coords->point.finishEditing();
 }
@@ -435,7 +435,7 @@ tickPoints(SoCoordinate3 * coords)
   if ( ! speed ) {
     speed = new float [ POINTS ];
     for ( i = 0; i < POINTS; i++ ) {
-      speed[i] = 2.0f + fmod(float(rand())/20.0f, 3.0f);
+      speed[i] = 2.0f + (float)fmod(float(rand())/20.0f, 3.0f);
     }
   }
   SbVec3f * points = coords->point.startEditing();
@@ -482,7 +482,7 @@ main(
   viewer->setDecoration(FALSE);
 
   SoInput * in = new SoInput;
-  unsigned int len;
+  size_t len;
   char * buffer = strconcat(scenegraph, len);
   in->setBuffer(buffer, len);
   SoNode * scene;

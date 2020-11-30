@@ -1,72 +1,31 @@
-INCLUDE_DIRECTORIES(./)
-SET(CONF_FILE_DIR ${PROJECT_BINARY_DIR}/sound)
-INCLUDE_DIRECTORIES(${CONF_FILE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 #audiocallback example
-CONFIGURE_FILE(audiocallback.cpp.in ${CONF_FILE_DIR}/audiocallback.cpp)
-SET(audiocallback_SOURCE ${CONF_FILE_DIR}/audiocallback.cpp)
-ADD_EXECUTABLE(audiocallback ${audiocallback_SOURCE})
-TARGET_LINK_LIBRARIES(audiocallback ${LINK_LIBRARY})
+configure_file(audiocallback.cpp.in audiocallback.cpp)
+add_executable(audiocallback ${CMAKE_CURRENT_BINARY_DIR}/audiocallback.cpp)
+target_link_libraries(audiocallback PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS audiocallback RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/sound)
 
 #manysources example
-CONFIGURE_FILE(manysources.cpp.in ${CONF_FILE_DIR}/manysources.cpp)
-SET(manysources_SOURCE ${CONF_FILE_DIR}/manysources.cpp)
-ADD_EXECUTABLE(manysources ${manysources_SOURCE})
-TARGET_LINK_LIBRARIES(manysources ${LINK_LIBRARY})
+configure_file(manysources.cpp.in manysources.cpp)
+add_executable(manysources ${CMAKE_CURRENT_BINARY_DIR}/manysources.cpp)
+target_link_libraries(manysources PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS manysources RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/sound)
 
 #interactive example
-CONFIGURE_FILE(interactive.cpp.in ${CONF_FILE_DIR}/interactive.cpp)
-SET(interactive_SOURCE ${CONF_FILE_DIR}/interactive.cpp)
-ADD_EXECUTABLE(interactive ${interactive_SOURCE})
-TARGET_LINK_LIBRARIES(interactive ${LINK_LIBRARY})
+configure_file(interactive.cpp.in interactive.cpp)
+add_executable(interactive ${CMAKE_CURRENT_BINARY_DIR}/interactive.cpp)
+target_link_libraries(interactive PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS interactive RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/sound)
 
-# copy over the .wav .ogg .iv files
-CONFIGURE_FILE(clips/brokenglass.wav ${CONF_FILE_DIR}/clips/brokenglass.wav COPYONLY)
-
-CONFIGURE_FILE(clips/bubbles1.wav ${CONF_FILE_DIR}/clips/bubbles1.wav COPYONLY)
-
-CONFIGURE_FILE(clips/dunk1.wav ${CONF_FILE_DIR}/clips/dunk1.wav COPYONLY)
-
-CONFIGURE_FILE(clips/dunk2.wav ${CONF_FILE_DIR}/clips/dunk2.wav COPYONLY)
-
-CONFIGURE_FILE(clips/dunk3.wav ${CONF_FILE_DIR}/clips/dunk3.wav COPYONLY)
-
-CONFIGURE_FILE(clips/ticktack.wav ${CONF_FILE_DIR}/clips/ticktack.wav COPYONLY)
-
-CONFIGURE_FILE(clips/drumloop_a.ogg ${CONF_FILE_DIR}/clips/drumloop_a.ogg COPYONLY)
-
-CONFIGURE_FILE(clips/synthloop_a.ogg ${CONF_FILE_DIR}/clips/synthloop_a.ogg COPYONLY)
-
-CONFIGURE_FILE(clips/synthloop_b.ogg ${CONF_FILE_DIR}/clips/synthloop_b.ogg COPYONLY)
-
-CONFIGURE_FILE(distance_attenuation.iv ${CONF_FILE_DIR}/distance_attenuation.iv COPYONLY)
-
-CONFIGURE_FILE(head.iv ${CONF_FILE_DIR}/head.iv COPYONLY)
-
-CONFIGURE_FILE(remote_listener.iv ${CONF_FILE_DIR}/remote_listener.iv COPYONLY)
-
-
-#Generate the tree structure in the VS Projects.
-SIM_VS_GENERATE_BASIC_TREE()
-
-INSTALL(TARGETS audiocallback
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/sound
-)
-
-INSTALL(TARGETS manysources
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/sound
-)
-
-INSTALL(TARGETS interactive
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/sound
-)
-
+#copy files to build directory
+file(COPY clips/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/clips FILES_MATCHING PATTERN "*.ogg" PATTERN "*.wav")
+file(COPY distance_attenuation.iv head.iv remote_listener.iv DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 #copy files to install directory
-INSTALL(DIRECTORY ./clips/ DESTINATION ${CONF_FILE_DIR}/sound/clips
-        FILES_MATCHING PATTERN "*"
-        PATTERN ".hg" EXCLUDE)
+install(DIRECTORY clips/ DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/sound/clips
+  FILES_MATCHING PATTERN "*.ogg" PATTERN "*.wav"
+)
 
-INSTALL(DIRECTORY ./ DESTINATION ${CONF_FILE_DIR}/sound
-        FILES_MATCHING PATTERN "*.iv"
-        PATTERN ".hg" EXCLUDE)
+install(FILES distance_attenuation.iv head.iv remote_listener.iv DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/sound/)

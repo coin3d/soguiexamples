@@ -31,12 +31,12 @@
 \**************************************************************************/
 
 #include <strutils.h>
-#include <string.h>
+#include <cstring>
 
 char *
-strconcat(const char * array[], unsigned int &total)
+strconcat(const char * array[], size_t &total)
 {
-  int i;
+  size_t i;
   for (i = total = 0; array[i]; i++ )
     total += strlen(array[i]) + 1;
   char * buf = new char [total + 1];

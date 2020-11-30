@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SbBasic.h>
@@ -189,17 +189,17 @@ main (int, char ** argv)
   root->ref(); // increments the root's reference counter
   root->addChild(hints);
   root->addChild(pointlight(SbVec3f(10, 15, 15), 
-                            SbVec3f(1.0, 0.0, 0.0)));
+                            SbVec3f(1.0f, 0.0f, 0.0f)));
   root->addChild(spotlight(SbVec3f(-10, 0, 30), 
-                           SbVec3f(0.7171, 0.0, -0.7171),
-                           SbVec3f(0.0, 0.0, 1.0)));
+                           SbVec3f(0.7171f, 0.0f, -0.7171f),
+                           SbVec3f(0.0f, 0.0f, 1.0f)));
   root->addChild(spotlight(SbVec3f(10, -20, 0),
-                           SbVec3f(0.0, 1.0, 0.0),
-                           SbVec3f(0.0, 1.0, 0.0)));
+                           SbVec3f(0.0f, 1.0f, 0.0f),
+                           SbVec3f(0.0f, 1.0f, 0.0f)));
   root->addChild(spotlight(SbVec3f(0, 10, -15),
-                           SbVec3f(0.5573, 0.5573, 0.5573),
-                           SbVec3f(1.0, 1.0, 0.5)));
-  root->addChild(scene(2.5, 2.5, 3.0, M_PI/27, 12, 0));
+                           SbVec3f(0.5573f, 0.5573f, 0.5573f),
+                           SbVec3f(1.0f, 1.0f, 0.5f)));
+  root->addChild(scene(2.5f, 2.5f, 3.0f, float(M_PI)/27, 12, 0));
 
   // Set up Examiner Viewer
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);

@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -68,9 +68,9 @@ complexity(int type, SbVec3f col1, SbVec3f col2)
 
   complexity->type.setValue(type);
   if (type==SoComplexity::SCREEN_SPACE)
-    complexity->value.setValue(0.11);
+    complexity->value.setValue(0.11f);
   else
-    complexity->value.setValue(0.5);
+    complexity->value.setValue(0.5f);
   dstyle->style = SoDrawStyle::LINES;
   mat1->diffuseColor.setValue(col1);
   mat2->diffuseColor.setValue(col2);
@@ -99,22 +99,22 @@ scene()
 
   hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   hints->shapeType = SoShapeHints::SOLID;
-  t1->translation.setValue(-1.0, 0.0, 0.0);
-  t2->translation.setValue(2.0, 0.0, 0.0);
-  shuttle->translation0.setValue(0.0, 0.0, 5.0);
-  shuttle->translation0.setValue(0.0, 0.0, -5.0);
-  shuttle->speed = 0.5;
+  t1->translation.setValue(-1.0f, 0.0f, 0.0f);
+  t2->translation.setValue(2.0f, 0.0f, 0.0f);
+  shuttle->translation0.setValue(0.0f, 0.0f, 5.0f);
+  shuttle->translation0.setValue(0.0f, 0.0f, -5.0f);
+  shuttle->speed = 0.5f;
 
   sep->addChild(hints);
   sep->addChild(shuttle);
   sep->addChild(t1);
   sep->addChild(complexity(SoComplexity::OBJECT_SPACE, 
-                           SbVec3f(1.0, 0.0, 0.0),
-                           SbVec3f(0.0, 0.0, 1.0)));
+                           SbVec3f(1.0f, 0.0f, 0.0f),
+                           SbVec3f(0.0f, 0.0f, 1.0f)));
   sep->addChild(t2);
   sep->addChild(complexity(SoComplexity::SCREEN_SPACE,
-                           SbVec3f(0.0, 0.0, 1.0),
-                           SbVec3f(1.0, 0.0, 0.0)));
+                           SbVec3f(0.0f, 0.0f, 1.0f),
+                           SbVec3f(1.0f, 0.0f, 0.0f)));
   return sep;
 }
 

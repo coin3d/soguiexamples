@@ -41,7 +41,7 @@
 #if !defined(__COIN__) || COIN_MAJOR_VERSION < 2
 
 #include <Inventor/nodes/SoText3.h>
-#include <stdio.h>
+#include <cstdio>
 
 int
 main(int argc, char ** argv)
@@ -94,23 +94,22 @@ main(int argc, char ** argv)
 #include <Inventor/nodes/SoBaseColor.h>
 #include <Inventor/draggers/SoTransformerDragger.h>
 
-#include <float.h>
+#include <cfloat>
 
 unsigned char * generateTexture(int w, int h, int d)
 {
   int val;
   float x,y,z;
-  unsigned char pixval;
   unsigned char * bitmap = new unsigned char[w*h*d];
 
   (void)fprintf(stdout, "Generating 3D-texture");
   for (int k = 0;k<d;k++) {
     (void)fprintf(stdout, "."); fflush(stdout);
-    z = k*360/d;
+    z = float(k*360/d);
     for (int j = 0;j<h;j++) {
-      y = (j-h/2)/2;
+      y = float((j-h/2)/2);
       for (int i = 0;i<w;i++) {
-        x = (i-w/2)/2;
+        x = float((i-w/2)/2);
         val = int(x*x + y*y*sin(2*x*M_PI/w + z*M_PI/180));
         val = abs(val%512);
         if (val >= 256) val = 511-val;
@@ -227,7 +226,7 @@ void doClipping(SbVec3f trans, SbRotation rot)
     clip.getVertex(i, v);
     planeVerts->set1Value(planeVerts->getNum(), v);
     v += SbVec3f(5, 5, 5);
-    v /= 10.0;
+    v /= 10.0f;
     planeTVerts->set1Value(planeTVerts->getNum(), v);
   }
   planeVerts->finishEditing();
@@ -257,7 +256,7 @@ int main(int argc, char * argv[])
   root->ref();
 
   SoComplexity * comp = new SoComplexity;
-  comp->textureQuality.setValue(0.9);
+  comp->textureQuality.setValue(0.9f);
   root->addChild(comp);
 
   SoTexture3 * texture = new SoTexture3;

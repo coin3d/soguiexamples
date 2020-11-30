@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -46,7 +46,7 @@
 // HarcCopy features as well...
 #if !defined(HAVE_HARDCOPY) || !defined(__COIN__)
 
-#include <stdio.h>
+#include <cstdio>
 
 int
 main(int argc, char ** argv)
@@ -69,7 +69,7 @@ main(int argc, char ** argv)
 
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/SoInput.h>
-#include <assert.h>
+#include <cassert>
 #include <HardCopy/SoHardCopy.h>
 #include <HardCopy/SoVectorizePSAction.h>
 #include <HardCopy/SoVectorOutput.h>
@@ -123,7 +123,7 @@ main(int argc, char ** argv )
   SoInteraction::init();
 
   init_extra_libraries();
- 
+
   SoInput input;
   SbBool ok = input.openFile(argv[1]);
   if (!ok) { exit(1); }
@@ -135,7 +135,7 @@ main(int argc, char ** argv )
 
   SoVectorizePSAction va;
   va.setBackgroundColor(TRUE, SbColor(1.0f, 1.0f, 1.0f));
-  
+
   SoVectorOutput * out = va.getOutput();
   if (!out->openFile(argv[2])) {
     (void)fprintf(stderr,"Unable to open '%s' for writing\n", argv[2]);
@@ -145,7 +145,7 @@ main(int argc, char ** argv )
   SbViewportRegion vpr(600, 400);
 
   SbVec2s vpsize = vpr.getViewportSizePixels();
-  float vpratio = ((float)vpsize[0]) / ((float)vpsize[1]); 
+  float vpratio = ((float)vpsize[0]) / ((float)vpsize[1]);
 
   if (vpratio > 1.0f) {
     va.setOrientation(SoVectorizeAction::LANDSCAPE);
@@ -159,9 +159,9 @@ main(int argc, char ** argv )
 
   // try to fill as much "paper" as possible
 
-  // FIXME: consider making getPageSize() public 
+  // FIXME: consider making getPageSize() public
   //SbVec2f size = va.getPageSize();
-  SbVec2f size = SbVec2f(210.0f - BORDER*2.0f, 
+  SbVec2f size = SbVec2f(210.0f - BORDER*2.0f,
                          297.0f - BORDER*2.0f);
 
   float pageratio = size[0] / size[1];
@@ -184,14 +184,14 @@ main(int argc, char ** argv )
 
   fprintf(stdout,"Vectorizing...");
   fflush(stdout);
-    
+
   va.apply(root);
   fprintf(stdout,"done\n");
   fflush(stdout);
 
   fprintf(stdout,"Creating postscript file (%s)...", argv[2]);
   fflush(stdout);
-  va.endViewport();    
+  va.endViewport();
   va.endPage();
   out->closeFile();
 

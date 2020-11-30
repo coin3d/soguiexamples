@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // abs()
+#include <cstdlib> // abs()
 #include <qcolor.h>
 #include "SbGuiCubicSpline.h" // FIXME: the SbCubic spline should perhaps be made available in Coin or SoQt 20031016 frodo
 #include "ColorCurve.h"
@@ -65,7 +65,7 @@ ColorCurve::resetCtrlPoints()
   this->ctrlpts.append(SbVec3f(1.0, 1.0, 0.0));
   this->curve->setControlPoints(this->ctrlpts.getArrayPtr(), this->ctrlpts.getLength());
   this->needinterpol = FALSE;
-}  
+}
 
 
 int
@@ -74,7 +74,7 @@ ColorCurve::getNumColors() const
   return this->numcolors;
 }
 
-int 
+int
 ColorCurve::getNumCtrlPoints() const
 {
   return this->ctrlpts.getLength();
@@ -127,11 +127,11 @@ ColorCurve::interpolateColorMapping()
 
     float scale = float(this->numcolors-1);
     this->ctrlpts.append(SbVec3f(0, float(this->colormap[0]) / scale, 0));
-    
+
     for (int i = 2; i < this->numcolors; i+=2) {
       // if the curve is very steep, we'll throw in an extra control point
       int dy = abs(this->colormap[i] - this->colormap[i-2]);
-      if ((i % 32 == 0) || (dy > 16)) { 
+      if ((i % 32 == 0) || (dy > 16)) {
           this->ctrlpts.append(SbVec3f(float(i) / scale, float(this->colormap[i]) / scale, 0));
         }
     }
@@ -180,7 +180,7 @@ ColorCurve::updateCurvePoints()
   }
 }
 
-void 
+void
 ColorCurve::updateColorMap()
 {
   for (int i = 0; i < this->numcolors; i++) {
@@ -194,7 +194,7 @@ ColorCurve::getColorMap(void) const
   return this->colormap;
 }
 
-void 
+void
 ColorCurve::getColors(uint8_t * colors, int num) const
 {
   if (num != this->numcolors) {

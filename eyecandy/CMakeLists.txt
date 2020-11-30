@@ -1,67 +1,38 @@
-INCLUDE_DIRECTORIES(./)
-SET(CONF_FILE_DIR ${PROJECT_BINARY_DIR}/eyecandy)
-INCLUDE_DIRECTORIES(${CONF_FILE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 #moirepatterns example
-CONFIGURE_FILE(moirepatterns.cpp.in ${CONF_FILE_DIR}/moirepatterns.cpp)
-SET(moirepatterns_SOURCE ${CONF_FILE_DIR}/moirepatterns.cpp)
-ADD_EXECUTABLE(moirepatterns ${moirepatterns_SOURCE})
-TARGET_LINK_LIBRARIES(moirepatterns ${LINK_LIBRARY})
+configure_file(moirepatterns.cpp.in moirepatterns.cpp)
+add_executable(moirepatterns ${CMAKE_CURRENT_BINARY_DIR}/moirepatterns.cpp)
+target_link_libraries(moirepatterns PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS moirepatterns RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/eyecandy)
 
 #juliaanim example
-CONFIGURE_FILE(juliaanim.cpp.in ${CONF_FILE_DIR}/juliaanim.cpp)
-SET(juliaanim_SOURCE ${CONF_FILE_DIR}/juliaanim.cpp stone42a.h stone42b.h sky10a.h sky10b.h)
-ADD_EXECUTABLE(juliaanim ${juliaanim_SOURCE})
-TARGET_LINK_LIBRARIES(juliaanim ${LINK_LIBRARY})
+configure_file(juliaanim.cpp.in juliaanim.cpp)
+add_executable(juliaanim ${CMAKE_CURRENT_BINARY_DIR}/juliaanim.cpp stone42a.h stone42b.h sky10a.h sky10b.h)
+target_link_libraries(juliaanim PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS juliaanim RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/eyecandy)
 
 #mandelzoom example
-CONFIGURE_FILE(mandelzoom.cpp.in ${CONF_FILE_DIR}/mandelzoom.cpp)
-SET(mandelzoom_SOURCE ${CONF_FILE_DIR}/mandelzoom.cpp stone42a.h stone42b.h sky10a.h sky10b.h)
-ADD_EXECUTABLE(mandelzoom ${mandelzoom_SOURCE})
-TARGET_LINK_LIBRARIES(mandelzoom ${LINK_LIBRARY})
+configure_file(mandelzoom.cpp.in mandelzoom.cpp)
+add_executable(mandelzoom ${CMAKE_CURRENT_BINARY_DIR}/mandelzoom.cpp stone42a.h stone42b.h sky10a.h sky10b.h)
+target_link_libraries(mandelzoom PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS mandelzoom RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/eyecandy)
 
 #blob example
-CONFIGURE_FILE(blob.cpp.in ${CONF_FILE_DIR}/blob.cpp)
-SET(blob_SOURCE ${CONF_FILE_DIR}/blob.cpp)
-ADD_EXECUTABLE(blob ${blob_SOURCE})
-TARGET_LINK_LIBRARIES(blob ${LINK_LIBRARY})
+configure_file(blob.cpp.in blob.cpp)
+add_executable(blob ${CMAKE_CURRENT_BINARY_DIR}/blob.cpp)
+target_link_libraries(blob PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS blob RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/eyecandy)
 
 #simbuoy example
-CONFIGURE_FILE(simbuoy.cpp.in ${CONF_FILE_DIR}/simbuoy.cpp)
-SET(simbuoy_SOURCE ${CONF_FILE_DIR}/simbuoy.cpp)
-ADD_EXECUTABLE(simbuoy ${simbuoy_SOURCE})
-TARGET_LINK_LIBRARIES(simbuoy ${LINK_LIBRARY})
+configure_file(simbuoy.cpp.in simbuoy.cpp)
+add_executable(simbuoy ${CMAKE_CURRENT_BINARY_DIR}/simbuoy.cpp)
+target_link_libraries(simbuoy PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS simbuoy RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/eyecandy)
 
 #toonshader example
-CONFIGURE_FILE(toonshader.cpp.in ${CONF_FILE_DIR}/toonshader.cpp)
-SET(toonshader_SOURCE ${CONF_FILE_DIR}/toonshader.cpp)
-ADD_EXECUTABLE(toonshader ${toonshader_SOURCE})
-TARGET_LINK_LIBRARIES(toonshader ${LINK_LIBRARY})
-
-
-#Generate the tree structure in the VS Projects.
-SIM_VS_GENERATE_BASIC_TREE()
-
-INSTALL(TARGETS moirepatterns
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/eyecandy
-)
-
-INSTALL(TARGETS juliaanim
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/eyecandy
-)
-
-INSTALL(TARGETS mandelzoom
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/eyecandy
-)
-
-INSTALL(TARGETS blob
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/eyecandy
-)
-
-INSTALL(TARGETS simbuoy
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/eyecandy
-)
-
-INSTALL(TARGETS toonshader
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/eyecandy
-)
+configure_file(toonshader.cpp.in toonshader.cpp)
+add_executable(toonshader ${CMAKE_CURRENT_BINARY_DIR}/toonshader.cpp)
+target_link_libraries(toonshader PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS toonshader RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/eyecandy)

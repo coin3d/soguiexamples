@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -42,7 +42,7 @@
 #if !defined(HAVE_SOTEXTUREUNIT)
 
 #include <Inventor/nodes/SoText3.h>
-#include <stdio.h>
+#include <cstdio>
 
 int
 main(int argc, char ** argv)
@@ -80,7 +80,7 @@ main(int argc, char ** argv)
 
 #else // ! HAVE_SOTEXTUREUNIT
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SbBasic.h>
@@ -116,9 +116,9 @@ static unsigned char * bitmap;
 //  int height  - height of the bitmap
 //  int mult    - number to multiply each color by.
 //  unsigned char * bmp - pointer to the bitmap
-//  int n       - number of itterations 
+//  int n       - number of itterations
 static void
-julia(double crr, double cii, float zoom, int width, int height, int mult, 
+julia(double crr, double cii, float zoom, int width, int height, int mult,
       unsigned char * bmp, int n)
 {
   double zr, zr_old, zi;
@@ -133,7 +133,7 @@ julia(double crr, double cii, float zoom, int width, int height, int mult,
         zr = zr*zr - zi*zi + crr;
         zi = 2*zr_old*zi + cii;
       }
-      
+
       int c = (255-w*mult);
 
       unsigned char r, g, b;
@@ -209,7 +209,7 @@ main (int, char ** argv)
   // Initialize
   @WIDGET@ window = So@Gui@::init(argv[0]);
   if (window==NULL) exit(1);
-  
+
   SoTexture2 * texnode = texture();
 
   // Enable backface culling
@@ -230,7 +230,7 @@ main (int, char ** argv)
   // course.
   SoTextureCoordinate2 * tc = new SoTextureCoordinate2;
   const float tcoords[][2] = {{0.0f,0.0f},{1.0f,0.0f},{1.0f,1.0f},{0.0f, 1.0f}};
-  tc->point.setValues(0, 4, tcoords); 
+  tc->point.setValues(0, 4, tcoords);
 
   root->addChild(mat);
   root->addChild(hints);
@@ -255,12 +255,12 @@ main (int, char ** argv)
     tu->unit = 1; // set texture unit to 1
     unit1->addChild(tu);
     unit1->addChild(tc); // add texture coordinates for unit 1
-    
+
     // just disable all filtering on the texture
     SoComplexity * cmplx = new SoComplexity;
     cmplx->textureQuality = 0.01f;
     unit1->addChild(cmplx);
-    
+
     // create a simple checkerboard texture to modulate the Julia texture
     SoTexture2 * tex1 = new SoTexture2;
     const unsigned char data[] = {0xff, 0x88, 0x88, 0xff};
@@ -273,7 +273,7 @@ main (int, char ** argv)
     ttransform->center = SbVec2f(0.5f, 0.5f);
     unit1->addChild(ttransform);
   }
-  
+
   root->addChild(unit1); // add unit 1 texture data
 
   // create a simple shape that we render the textures onto
@@ -311,7 +311,7 @@ main (int, char ** argv)
   root->unref();
 
   delete[] bitmap;
-  return 0;  
+  return 0;
 }
 
 #endif // HAVE_SOTEXTUREUNIT

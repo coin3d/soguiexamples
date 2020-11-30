@@ -68,11 +68,11 @@ azimuth_angle(SbVec3f north, SbVec3f east, SbVec3f directionvec)
   // Find absolute angle in the [0, PI] range versus the north vector.
   directionvec.normalize();
   north.normalize();
-  float angle = acos(north.dot(directionvec));
+  float angle = (float)acos(north.dot(directionvec));
 
   // Check if the input argument vector is pointing to the "west side"
   // of the north-south axis, and if so, correct the absolute angle.
-  if (directionvec.dot(east) < 0.0f) { angle = M_PI + (M_PI - angle); }
+  if (directionvec.dot(east) < 0.0f) { angle = float(M_PI) + (float(M_PI) - angle); }
 
   return angle;
 }
@@ -95,7 +95,7 @@ elevation_angle(SbPlane groundplane, SbVec3f directionvec)
   // groundplane vector.
   directionvec.normalize();
   groundvec.normalize();
-  float angle = acos(groundvec.dot(directionvec));
+  float angle = (float)acos(groundvec.dot(directionvec));
 
   // Check if the input argument vector is pointing into the ground,
   // and if so, correct the absolute angle.

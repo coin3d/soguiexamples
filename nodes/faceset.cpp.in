@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SbBasic.h>
@@ -58,59 +58,59 @@ makeObject(float w, float h, float d)
   vertices = new SbVec3f[40];
   numvertices = new int32_t[12];
 
-  normals[0].setValue(  0.0,  0.0,  1.0);
-  normals[1].setValue(  1.0,  0.0,  0.0);
-  normals[2].setValue(  0.0,  0.0, -1.0);
-  normals[3].setValue( -1.0,  0.0,  0.0);
-  normals[4].setValue(  0.0,  0.7171, 0.7171);
-  normals[5].setValue(  0.7171, 0.7171, 0);
-  normals[6].setValue(  0.0,  0.7171, -0.7171);
-  normals[7].setValue( -0.7171, 0.7171, 0);
-  normals[8].setValue(  0.0,  -0.7171, 0.7171);
-  normals[9].setValue(  0.7171, -0.7171, 0);
-  normals[10].setValue(  0.0,  -0.7171, -0.7171);
-  normals[11].setValue( -0.7171, -0.7171, 0);
+  normals[0].setValue(  0.0f,  0.0f,  1.0f);
+  normals[1].setValue(  1.0f,  0.0f,  0.0f);
+  normals[2].setValue(  0.0f,  0.0f, -1.0f);
+  normals[3].setValue( -1.0f,  0.0f,  0.0f);
+  normals[4].setValue(  0.0f,  0.7171f, 0.7171f);
+  normals[5].setValue(  0.7171f, 0.7171f, 0.0f);
+  normals[6].setValue(  0.0f,  0.7171f, -0.7171f);
+  normals[7].setValue( -0.7171f, 0.7171f, 0.0f);
+  normals[8].setValue(  0.0f,  -0.7171f, 0.7171f);
+  normals[9].setValue(  0.7171f, -0.7171f, 0.0f);
+  normals[10].setValue(  0.0f,  -0.7171f, -0.7171f);
+  normals[11].setValue( -0.7171f, -0.7171f, 0.0f);
 
-  vertices[0].setValue( -w/2.0,  h/4.0,  d/2.0);
-  vertices[1].setValue(  w/2.0,  h/4.0,  d/2.0);
-  vertices[2].setValue ( w/2.0, -h/4.0,  d/2.0);
-  vertices[3].setValue( -w/2.0, -h/4.0,  d/2.0);
-  vertices[4].setValue(  w/2.0, -h/4.0,  d/2.0);
-  vertices[5].setValue(  w/2.0, -h/4.0, -d/2.0);
-  vertices[6].setValue(  w/2.0,  h/4.0, -d/2.0);
-  vertices[7].setValue(  w/2.0,  h/4.0,  d/2.0);
-  vertices[8].setValue( -w/2.0, -h/4.0, -d/2.0);
-  vertices[9].setValue(  w/2.0, -h/4.0, -d/2.0);
-  vertices[10].setValue( w/2.0,  h/4.0, -d/2.0);
-  vertices[11].setValue(-w/2.0,  h/4.0, -d/2.0);
-  vertices[12].setValue(-w/2.0, -h/4.0, -d/2.0);
-  vertices[13].setValue(-w/2.0, -h/4.0,  d/2.0);
-  vertices[14].setValue(-w/2.0,  h/4.0,  d/2.0);
-  vertices[15].setValue(-w/2.0,  h/4.0, -d/2.0);
-  vertices[16].setValue(-w/2.0,  h/4.0,  d/2.0);
-  vertices[17].setValue(   0.0,  h/2.0,    0.0);
-  vertices[18].setValue( w/2.0,  h/4.0,  d/2.0);
-  vertices[19].setValue( w/2.0,  h/4.0,  d/2.0);
-  vertices[20].setValue(   0.0,  h/2.0,    0.0);
-  vertices[21].setValue( w/2.0,  h/4.0, -d/2.0);
-  vertices[22].setValue( w/2.0,  h/4.0, -d/2.0);
-  vertices[23].setValue(   0.0,  h/2.0,    0.0);
-  vertices[24].setValue(-w/2.0,  h/4.0, -d/2.0);
-  vertices[25].setValue(-w/2.0,  h/4.0, -d/2.0);
-  vertices[26].setValue(   0.0,  h/2.0,    0.0);
-  vertices[27].setValue(-w/2.0,  h/4.0,  d/2.0);
-  vertices[28].setValue(-w/2.0,  -h/4.0,  d/2.0);
-  vertices[29].setValue(   0.0,  -h/2.0,    0.0);
-  vertices[30].setValue( w/2.0,  -h/4.0,  d/2.0);
-  vertices[31].setValue( w/2.0,  -h/4.0,  d/2.0);
-  vertices[32].setValue(   0.0,  -h/2.0,    0.0);
-  vertices[33].setValue( w/2.0,  -h/4.0, -d/2.0);
-  vertices[34].setValue( w/2.0,  -h/4.0, -d/2.0);
-  vertices[35].setValue(   0.0,  -h/2.0,    0.0);
-  vertices[36].setValue(-w/2.0,  -h/4.0, -d/2.0);
-  vertices[37].setValue(-w/2.0,  -h/4.0, -d/2.0);
-  vertices[38].setValue(   0.0,  -h/2.0,    0.0);
-  vertices[39].setValue(-w/2.0,  -h/4.0,  d/2.0);
+  vertices[0].setValue( -w/2.0f,  h/4.0f,  d/2.0f);
+  vertices[1].setValue(  w/2.0f,  h/4.0f,  d/2.0f);
+  vertices[2].setValue ( w/2.0f, -h/4.0f,  d/2.0f);
+  vertices[3].setValue( -w/2.0f, -h/4.0f,  d/2.0f);
+  vertices[4].setValue(  w/2.0f, -h/4.0f,  d/2.0f);
+  vertices[5].setValue(  w/2.0f, -h/4.0f, -d/2.0f);
+  vertices[6].setValue(  w/2.0f,  h/4.0f, -d/2.0f);
+  vertices[7].setValue(  w/2.0f,  h/4.0f,  d/2.0f);
+  vertices[8].setValue( -w/2.0f, -h/4.0f, -d/2.0f);
+  vertices[9].setValue(  w/2.0f, -h/4.0f, -d/2.0f);
+  vertices[10].setValue( w/2.0f,  h/4.0f, -d/2.0f);
+  vertices[11].setValue(-w/2.0f,  h/4.0f, -d/2.0f);
+  vertices[12].setValue(-w/2.0f, -h/4.0f, -d/2.0f);
+  vertices[13].setValue(-w/2.0f, -h/4.0f,  d/2.0f);
+  vertices[14].setValue(-w/2.0f,  h/4.0f,  d/2.0f);
+  vertices[15].setValue(-w/2.0f,  h/4.0f, -d/2.0f);
+  vertices[16].setValue(-w/2.0f,  h/4.0f,  d/2.0f);
+  vertices[17].setValue(   0.0f,  h/2.0f,    0.0f);
+  vertices[18].setValue( w/2.0f,  h/4.0f,  d/2.0f);
+  vertices[19].setValue( w/2.0f,  h/4.0f,  d/2.0f);
+  vertices[20].setValue(   0.0f,  h/2.0f,    0.0f);
+  vertices[21].setValue( w/2.0f,  h/4.0f, -d/2.0f);
+  vertices[22].setValue( w/2.0f,  h/4.0f, -d/2.0f);
+  vertices[23].setValue(   0.0f,  h/2.0f,    0.0f);
+  vertices[24].setValue(-w/2.0f,  h/4.0f, -d/2.0f);
+  vertices[25].setValue(-w/2.0f,  h/4.0f, -d/2.0f);
+  vertices[26].setValue(   0.0f,  h/2.0f,    0.0f);
+  vertices[27].setValue(-w/2.0f,  h/4.0f,  d/2.0f);
+  vertices[28].setValue(-w/2.0f,  -h/4.0f,  d/2.0f);
+  vertices[29].setValue(   0.0f,  -h/2.0f,    0.0f);
+  vertices[30].setValue( w/2.0f,  -h/4.0f,  d/2.0f);
+  vertices[31].setValue( w/2.0f,  -h/4.0f,  d/2.0f);
+  vertices[32].setValue(   0.0f,  -h/2.0f,    0.0f);
+  vertices[33].setValue( w/2.0f,  -h/4.0f, -d/2.0f);
+  vertices[34].setValue( w/2.0f,  -h/4.0f, -d/2.0f);
+  vertices[35].setValue(   0.0f,  -h/2.0f,    0.0f);
+  vertices[36].setValue(-w/2.0f,  -h/4.0f, -d/2.0f);
+  vertices[37].setValue(-w/2.0f,  -h/4.0f, -d/2.0f);
+  vertices[38].setValue(   0.0f,  -h/2.0f,    0.0f);
+  vertices[39].setValue(-w/2.0f,  -h/4.0f,  d/2.0f);
 
   int n;
   for (n=0; n<4; n++) {

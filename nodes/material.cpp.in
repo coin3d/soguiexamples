@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -30,7 +30,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
+#include <cmath> // M_PI
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SbBasic.h>
@@ -54,7 +55,7 @@
 //  float tri : init transparancy
 //  float trs : transparancy step
 //  int n     : number of itterations
-//  int flag  : Must be 0 when initialize 
+//  int flag  : Must be 0 when initialize
 // Return:
 //  SoSeparator *
 SoSeparator *
@@ -70,10 +71,10 @@ scene(float t, float r, float s, float ci, float cs, float tri, float trs, int n
     tg->addChild(material);
     tg->addChild(new SoCylinder);
 
-    material->diffuseColor.setValue(ci*1.0, 0.5, -ci+1.0);
-    material->specularColor.setValue(ci*0.5, ci*0.5, ci*0.5);
-    material->emissiveColor.setValue(ci*0.1, ci*0.1, 0.0);
-    material->shininess = ci*0.5;
+    material->diffuseColor.setValue(ci*1.0f, 0.5f, -ci+1.0f);
+    material->specularColor.setValue(ci*0.5f, ci*0.5f, ci*0.5f);
+    material->emissiveColor.setValue(ci*0.1f, ci*0.1f, 0.0f);
+    material->shininess = ci*0.5f;
     material->transparency = tri;
 
     if (flag==0) {
@@ -103,15 +104,15 @@ scene(float t, float r, float s, float ci, float cs, float tri, float trs, int n
 }
 
 int
-main(int, char ** argv) 
+main(int, char ** argv)
 {
   (void)printf("This example shows how to use the SoMaterial node\n");
-  
+
   // Initialize Coin, and return a main window to use
   // If unsuccessful, exit
   @WIDGET@ window = So@Gui@::init(argv[0]); // pass the application name
   if (window==NULL) exit(1);
-  
+
   // Create scene graph
   SoSeparator * root = new SoSeparator;
   SoShapeHints * hints = new SoShapeHints;
@@ -121,8 +122,8 @@ main(int, char ** argv)
 
   root->ref();                   // Increments the reference counter
   root->addChild(hints);
-  root->addChild(scene(2.5, M_PI/15, 0.80, 1.0, 0.06, 0.0, 0.02, 10, 0));
-  
+  root->addChild(scene(2.5f, float(M_PI)/15, 0.80f, 1.0f, 0.06f, 0.0f, 0.02f, 10, 0));
+
   // Set up ExaminerViewer
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);
   viewer->setSceneGraph(root);

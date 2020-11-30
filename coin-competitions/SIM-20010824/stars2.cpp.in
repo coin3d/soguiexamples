@@ -41,7 +41,7 @@
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
@@ -70,14 +70,14 @@
 
 static float vertices[18][3] =
 {
-  { -0.5, 0.5, 0 }, { 0.5, 0.5, 0 }, { 0.5, -0.5, 0 },
-  { -0.5, 0.5, 0 }, { -0.5, -0.5, 0 }, { 0.5, -0.5, 0 },
+  { -0.5f, 0.5f, 0 }, { 0.5f, 0.5f, 0 }, { 0.5f, -0.5f, 0 },
+  { -0.5f, 0.5f, 0 }, { -0.5f, -0.5f, 0 }, { 0.5f, -0.5f, 0 },
 
-  { -0.5, 0, 0.5 }, { 0.5, 0, 0.5 }, { 0.5, 0, -0.5 },
-  { -0.5, 0, 0.5 }, { -0.5, 0, -0.5 }, { 0.5, 0, -0.5 },
+  { -0.5f, 0, 0.5f }, { 0.5f, 0, 0.5f }, { 0.5f, 0, -0.5f },
+  { -0.5f, 0, 0.5f }, { -0.5f, 0, -0.5f }, { 0.5f, 0, -0.5f },
 
-  { 0 ,-0.5, 0.5}, { 0, 0.5, 0.5 }, { 0, 0.5, -0.5 },
-  { 0, -0.5, 0.5 }, { 0, -0.5, -0.5 }, { 0, 0.5, -0.5 }
+  { 0, -0.5f, 0.5f }, { 0, 0.5f, 0.5f }, { 0, 0.5f, -0.5f },
+  { 0, -0.5f, 0.5f }, { 0, -0.5f, -0.5f }, { 0, 0.5f, -0.5f }
 };
 
 static int numVertices[3] =
@@ -93,7 +93,7 @@ create_texture(int width, int height, int bpp, unsigned char * raw, bool blend)
   SoTexture2 * texture = new SoTexture2;
   texture->image.setValue(SbVec2s(width, height), bpp, raw);
   texture->model = (blend?SoTexture2::BLEND:SoTexture2::DECAL);
-  texture->blendColor.setValue(1.0, 0.0, 0.0);
+  texture->blendColor.setValue(1.0f, 0.0f, 0.0f);
   return texture;
 }
 /*
@@ -281,7 +281,7 @@ generateTexture( SoNode * root, SoTexture2 * texture, short width, short height 
     renderer->getGLRenderAction()->setTransparencyType(SoGLRenderAction::ADD);
   }
 
-  renderer->setBackgroundColor( SbColor( 0.0, 0.0, 0.8 ) );
+  renderer->setBackgroundColor( SbColor( 0.0f, 0.0f, 0.8f ) );
   renderer->render( root );
   texture->image.setValue( SbVec2s( width, height ), SoOffscreenRenderer::RGB, renderer->getBuffer( ) );
 
@@ -320,17 +320,17 @@ main (int, char ** argv)
 
   SoRotor * rotor = new SoRotor;
   rotor->speed = 0.05f;
-  rotor->rotation.setValue(SbVec3f(0, 1., 0), 0.4);
+  rotor->rotation.setValue(SbVec3f(0, 1, 0), 0.4f);
   root->addChild(rotor);
 
   rotor = new SoRotor;
   rotor->speed = 0.10f;
-  rotor->rotation.setValue(SbVec3f(1., 0, 0), 0.4);
+  rotor->rotation.setValue(SbVec3f(1, 0, 0), 0.4f);
   root->addChild(rotor);
 
   rotor = new SoRotor;
   rotor->speed = 0.07f;
-  rotor->rotation.setValue(SbVec3f(0, 0, 1), -0.4);
+  rotor->rotation.setValue(SbVec3f(0, 0, 1), -0.4f);
   root->addChild(rotor);
 
   SoSeparator * logo = new SoSeparator;
@@ -339,35 +339,35 @@ main (int, char ** argv)
 
   rotor = new SoRotor;
   rotor->speed = 0.10f;
-  rotor->rotation.setValue(SbVec3f(1, 0, 0), 0.8);
+  rotor->rotation.setValue(SbVec3f(1, 0, 0), 0.8f);
   root->addChild(rotor);
 
   rotor = new SoRotor;
   rotor->speed = 0.07f;
-  rotor->rotation.setValue(SbVec3f(0, 0, 1), 0.8);
+  rotor->rotation.setValue(SbVec3f(0, 0, 1), 0.8f);
   root->addChild(rotor);
 
   SoSeparator * stars = new SoSeparator;
-  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(2.5,2.5,2.5)));
-  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(-2.5,-2.5,-2.5)));
+  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(2.5f,2.5f,2.5f)));
+  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(-2.5f,-2.5f,-2.5f)));
   root->addChild(stars);
 
   rotor = new SoRotor;
   rotor->speed = 0.07f;
-  rotor->rotation.setValue(SbVec3f(1, 0, 0), -0.2);
+  rotor->rotation.setValue(SbVec3f(1, 0, 0), -0.2f);
   root->addChild(rotor);
 
-  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(0,3.0,3.0)));
-  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(-3.0,3.0,-3.0)));
+  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(0,3.0f,3.0f)));
+  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(-3.0f,3.0f,-3.0f)));
 
   root->addChild(stars);
 
-  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(4.0,0,4.0)));
-  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(-4.0,0,-4.0)));
+  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(4.0f,0,4.0f)));
+  stars->addChild(create_star(create_texture(64,64,4,(unsigned char*)star_raw,false),SbVec3f(-4.0f,0,-4.0f)));
 
   rotor = new SoRotor;
   rotor->speed = 0.07f;
-  rotor->rotation.setValue(SbVec3f(0, 1, 0), 0.4);
+  rotor->rotation.setValue(SbVec3f(0, 1, 0), 0.4f);
   root->addChild(rotor);
 
   root->addChild(stars);
@@ -381,7 +381,7 @@ main (int, char ** argv)
   realroot->addChild( gentext );
   rotor = new SoRotor;
   rotor->speed = 0.07f;
-  rotor->rotation.setValue(SbVec3f(1, 1, 0), -0.2);
+  rotor->rotation.setValue(SbVec3f(1, 1, 0), -0.2f);
   realroot->addChild(rotor);
   realroot->addChild( new SoCube );
   SoTimerSensor * timer = new SoTimerSensor( timerSensorCallback, gentext );

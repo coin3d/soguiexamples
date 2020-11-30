@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -88,7 +88,7 @@ texture()
   SoTexture2 * texture = new SoTexture2;
   texture->image.setValue(SbVec2s(texturewidth, textureheight), 1, bitmap);
   texture->model = SoTexture2::BLEND;
-  texture->blendColor.setValue(0.2, 0.0, 1.0);
+  texture->blendColor.setValue(0.2f, 0.0f, 1.0f);
   return texture;
 }
 // Function that sets up the object in the scene
@@ -100,10 +100,10 @@ scene()
   SoSeparator * sep = new SoSeparator;
   SoTransform * t1 = new SoTransform;
   SoTransform * t2 = new SoTransform;
-  t1->translation.setValue(0.5, 1.0, 0.0);
-  t1->scaleFactor.setValue(0.5, 1.5, 1.11);
-  t2->translation.setValue(-1.0, 0.0, 0.0);
-  t2->scaleFactor.setValue(1.5, 0.4, 1.2);
+  t1->translation.setValue(0.5f, 1.0f, 0.0f);
+  t1->scaleFactor.setValue(0.5f, 1.5f, 1.11f);
+  t2->translation.setValue(-1.0f, 0.0f, 0.0f);
+  t2->scaleFactor.setValue(1.5f, 0.4f, 1.2f);
   sep->addChild(t1);
   sep->addChild(new SoSphere);
   sep->addChild(t2);

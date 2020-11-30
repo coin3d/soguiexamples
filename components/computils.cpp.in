@@ -30,11 +30,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <math.h>
-#include <stdlib.h>
-#include <time.h>
-#include <errno.h>
-#include <string.h>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cerrno>
+#include <cstring>
 
 #include <Inventor/@Gui@/viewers/So@Gui@Viewer.h>
 #include <Inventor/SoDB.h>
@@ -292,12 +292,10 @@ config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
       i++;
     }
     else if (!strcmp(argv[i], "--stereooffset") && (i < argc - 1)) {
-      viewer->setStereoOffset(atoi(argv[i+1]));
+      viewer->setStereoOffset((float)atof(argv[i+1]));
       i += 2;
     }
-    else
-
-    if (!strcmp(argv[i], "--title") && (i < argc - 1)) {
+    else if (!strcmp(argv[i], "--title") && (i < argc - 1)) {
       viewer->setTitle(argv[i+1]);
       i += 2;
     }
@@ -337,7 +335,7 @@ config_viewer(So@Gui@Viewer * viewer, int argc, char ** argv)
         errno = 0;
         for (int j=0; (j < 3) && !err; j++) {
           const char * nptr = argv[i+1+j];
-          col[j] = strtod(nptr, &chk);
+          col[j] = (float)strtod(nptr, &chk);
           if (((col[j] == 0.0f) && (chk == nptr)) || (errno!=0) ||
               (col[j] < 0.0f) || (col[j] > 1.0f)) {
             err = TRUE;

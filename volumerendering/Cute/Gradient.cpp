@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <assert.h>
+#include <cassert>
 #include <qfile.h>
 #include <qimage.h>
 #include "Gradient.h"
@@ -42,8 +42,8 @@ public:
   GradientP(Gradient * publ);
   unsigned int getColorIndex(unsigned int i, Gradient::TickSide s) const;
   Gradient * pub;
-  QValueList<float> parameters;
-  QValueList<QRgb> colors;
+  QList<float> parameters;
+  QList<QRgb> colors;
   Gradient::ChangeCB * callBack;
   void * callBackData;
   void copy(const GradientP * p);
@@ -59,8 +59,8 @@ GradientP::GradientP(Gradient * publ)
   PUBLIC(this) = publ;
 }
 
-void 
-GradientP::copy(const GradientP * p) 
+void
+GradientP::copy(const GradientP * p)
 {
   this->callBack = p->callBack;
   this->callBackData = p->callBackData;
@@ -87,7 +87,7 @@ Gradient::Gradient(const QColor& color0, const QColor& color1)
 {
   this->pimpl = new GradientP(this);
   PRIVATE(this)->callBack = NULL;
-  
+
   // parameter values will be in the range [0 - 1]
   PRIVATE(this)->parameters.append(0.0f);
   PRIVATE(this)->parameters.append(1.0f);
@@ -184,8 +184,8 @@ Gradient::insertTick(float t)
 {
   // find position to insert before
   int i = 0;
-  QValueList<float>::Iterator it = PRIVATE(this)->parameters.begin();
-  QValueList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
+  QList<float>::Iterator it = PRIVATE(this)->parameters.begin();
+  QList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
   // it2 = it * 2 - 1, (+= operator wasnt available until Qt 3.1.0)
   while ((*it) < t) { i++; it++; it2++; it2++; }
   it2--;
@@ -193,7 +193,8 @@ Gradient::insertTick(float t)
   // we use the color of the gradient at this parameter value
   QRgb color = this->eval(t);
   PRIVATE(this)->parameters.insert(it, t);
-  PRIVATE(this)->colors.insert(it2, 2, color);
+  it2 = PRIVATE(this)->colors.insert(it2, color);
+  PRIVATE(this)->colors.insert(it2, color);
 
   if (PRIVATE(this)->callBack) { PRIVATE(this)->callBack(*this, PRIVATE(this)->callBackData); }
   return i;
@@ -202,16 +203,16 @@ Gradient::insertTick(float t)
 void
 Gradient::removeTick(unsigned int i)
 {
-  QValueList<float>::Iterator it = PRIVATE(this)->parameters.begin();
-  QValueList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
+  QList<float>::Iterator it = PRIVATE(this)->parameters.begin();
+  QList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
   // the += operator wasn't available until Qt 3.1.0. Just iterate
   // and use ++. pederb, 2003-09-22
   for (unsigned int j = 0; j < i; j++) { it++; it2++; it2++; }
   it2--;
 
-  PRIVATE(this)->parameters.remove(it);
-  it2 = PRIVATE(this)->colors.remove(it2);
-  PRIVATE(this)->colors.remove(it2);
+  PRIVATE(this)->parameters.erase(it);
+  it2 = PRIVATE(this)->colors.erase(it2);
+  PRIVATE(this)->colors.erase(it2);
 
   if (PRIVATE(this)->callBack) { PRIVATE(this)->callBack(*this, PRIVATE(this)->callBackData); }
 }
@@ -268,9 +269,9 @@ Gradient::getColorArray(QRgb * colorArray, unsigned int num) const
 }
 
 QImage
-Gradient::getImage(unsigned int width, unsigned int height, unsigned int depth) const
+Gradient::getImage(unsigned int width, unsigned int height, QImage::Format fmt) const
 {
-  QImage gradImage(width, height, depth);
+  QImage gradImage(width, height, fmt);
   QRgb * colors = new QRgb[width];
   this->getColorArray(colors, width);
 
@@ -286,7 +287,7 @@ Gradient::getImage(unsigned int width, unsigned int height, unsigned int depth) 
       const unsigned char r = (unsigned char)(alpha * float(qRed(colors[i])) + bg);
       const unsigned char g = (unsigned char)(alpha * float(qGreen(colors[i])) + bg);
       const unsigned char b = (unsigned char)(alpha * float(qBlue(colors[i])) + bg);
-      
+
       gradImage.setPixel(i, j, qRgb(r, g, b));
     }
   }
@@ -298,12 +299,12 @@ void
 Gradient::save(const QString & filename) const
 {
   QFile outfile(filename);
-  if (outfile.open(IO_WriteOnly)) {
+  if (outfile.open(QIODevice::WriteOnly)) {
     QTextStream stream(&outfile);
 
     stream << PRIVATE(this)->parameters.size() << " ";
 
-    QValueList<float>::Iterator it = PRIVATE(this)->parameters.begin();
+    QList<float>::Iterator it = PRIVATE(this)->parameters.begin();
     for (; it != PRIVATE(this)->parameters.end(); it++) {
       stream << (*it) << " ";
 
@@ -314,7 +315,7 @@ Gradient::save(const QString & filename) const
 
     stream << PRIVATE(this)->colors.size() << " ";
 
-    QValueList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
+    QList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
     for (; it2 != PRIVATE(this)->colors.end(); it2++) {
       stream << (*it2) << " ";
 
@@ -335,7 +336,7 @@ Gradient::load(const QString & filename)
   PRIVATE(this)->parameters.clear();
 
   QFile infile(filename);
-  if (infile.open(IO_ReadOnly)) {
+  if (infile.open(QIODevice::ReadOnly)) {
     QTextStream stream(&infile);
     this->load(stream);
     infile.close();
@@ -355,7 +356,7 @@ Gradient::load(QTextStream & stream)
 
   int numParameters;
   stream >> numParameters;
-    
+
   for (i = 0; i < numParameters; i++) {
     float t;
     stream >> t;

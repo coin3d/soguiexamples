@@ -34,10 +34,10 @@
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
-#include <assert.h>
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h> // exit()
+#include <cassert>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib> // exit()
 
 #include <Inventor/SbLinear.h>
 #include <Inventor/SbTime.h>
@@ -87,9 +87,9 @@ static const char * ascii_scene[] = {
 };
 
 char *
-strconcat(const char * array[], unsigned int &total)
+strconcat(const char * array[], size_t &total)
 {
-  int i;
+  size_t i;
   for (i = total = 0; array[i]; i++ )
     total += strlen(array[i]) + 1;
   char * buf = new char [total + 1];
@@ -133,8 +133,8 @@ event_cb(void * closure, SoAction * action)
   if ( action->isOfType(SoGLRenderAction::getClassTypeId()) ) {
     SbTime now(SbTime::getTimeOfDay());
     float deltat = (float) (now - *starttime).getMsecValue();
-    float pos = -2.0f + 8.0f * sin(deltat/600.0f);
-    float width = 5.0f + 2.0 * sin(deltat/300.0f);
+    float pos = -2.0f + 8.0f * (float)sin(deltat/600.0f);
+    float width = 5.0f + 2.0f * (float)sin(deltat/300.0f);
     t1->translation.setValue(SbVec3f(pos, 0.0f, 0.0f));
     t2->translation.setValue(SbVec3f(width, 0.0f, 0.0f));
     t3->translation.setValue(SbVec3f(-width - pos, 0.0f, 0.0f));
@@ -150,7 +150,7 @@ main(
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(mainw);
 
   SoInput * in = new SoInput;
-  unsigned int len;
+  size_t len;
   char * buffer = strconcat(ascii_scene, len);
   in->setBuffer(buffer, len);
   SoNode * scene;

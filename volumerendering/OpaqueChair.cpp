@@ -283,7 +283,8 @@ OpaqueChair::loadVolumeData(const char * filename)
   
   void * discardptr;
   SoVolumeData::DataType type;
-  assert(voldat->getVolumeData(this->volumeslices, discardptr, type));
+  SbBool success = voldat->getVolumeData(this->volumeslices, discardptr, type);
+  assert(success);
    
   this->setupDraggers(); // Make the draggers fit the new data set
   this->setupGeometry();

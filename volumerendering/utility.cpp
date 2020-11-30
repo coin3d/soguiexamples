@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -31,8 +31,8 @@
 \**************************************************************************/
 
 #include <Inventor/SbLinear.h>
-#include <string.h>
-#include <assert.h>
+#include <cstring>
+#include <cassert>
 
 #include "utility.h"
 
@@ -46,9 +46,9 @@ generate8bitVoxelSet(SbVec3s & dim)
   float t = 0;
 
   while (t < 50) {
-    SbVec3f v(sin((t + 1.4234) * 1.9) * sin(t) * 0.45 + 0.5,
-              cos((t * 2.5) - 10) * 0.45 + 0.5,
-              cos((t - 0.23123) * 3) * sin(t + 0.5) * cos(t) * 0.45 + 0.5);
+    SbVec3f v((float)sin((t + 1.4234f) * 1.9f) * (float)sin(t) * 0.45f + 0.5f,
+              (float)cos((t * 2.5f) - 10) * 0.45f + 0.5f,
+              (float)cos((t - 0.23123f) * 3) * (float)sin(t + 0.5f) * (float)cos(t) * 0.45f + 0.5f);
 
     assert(v[0] < 1.0f && v[1] < 1.0f && v[2] < 1.0f);
     const int nx = int(dim[0] * v[0]);
@@ -58,7 +58,7 @@ generate8bitVoxelSet(SbVec3s & dim)
     const int memposition = nz*dim[0]*dim[1] + ny*dim[0] + nx;
     voxels[memposition] = (uint8_t)(255.0 * cos(t));
 
-    t += 0.001;
+    t += 0.001f;
   }
 
   return voxels;

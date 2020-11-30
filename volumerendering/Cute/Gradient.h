@@ -34,7 +34,7 @@
 \**************************************************************************/
 
 #include <qcolor.h>
-#include <qvaluelist.h>
+#include <QTextStream>
 #include <Inventor/SbBasic.h>
 
 // *************************************************************************
@@ -66,7 +66,7 @@ public:
   void load(const QString & filename);
   void load(QTextStream & stream);
 
-  QImage getImage(unsigned int w, unsigned int h, unsigned int d) const;
+  QImage getImage(unsigned int w, unsigned int h, QImage::Format fmt) const;
 
   Gradient & operator = (const Gradient & grad);
   SbBool operator == (const Gradient & grad) const;

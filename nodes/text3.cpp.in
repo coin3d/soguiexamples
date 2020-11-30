@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -44,15 +44,15 @@
 
 // Global constants
 const int scrollbuffersize = 20;
-const float scrolldist = 8.0;
-const float scrollstep = 1.75;
+const float scrolldist = 8.0f;
+const float scrollstep = 1.75f;
 const float ymult = 50;
 const float zmult = 50;
-const float yradstep1 = M_PI/40;
-const float yradstep2 = M_PI/25;
-const float zradstep1 = M_PI/50;
-const float zradstep2 = M_PI/20;
-const float depth = 3.0;
+const float yradstep1 = float(M_PI)/40;
+const float yradstep2 = float(M_PI)/25;
+const float zradstep1 = float(M_PI)/50;
+const float zradstep2 = float(M_PI)/20;
+const float depth = 3.0f;
 const int ncolors = 7;
 
 // Global stucture/misc
@@ -72,13 +72,13 @@ float zrad1[scrollbuffersize];
 float zrad2[scrollbuffersize];
 SbVec3f colorbuffer[scrollbuffersize];
 scrollstruct scroll;
-SbVec3f colors[]={SbVec3f(1.0, 0.0, 0.0),
-                  SbVec3f(1.0, 1.0, 0.0),
-                  SbVec3f(0.0, 1.0, 0.0),
-                  SbVec3f(0.0, 1.0, 1.0),
-                  SbVec3f(1.0, 1.0, 1.0),
-                  SbVec3f(0.0, 0.0, 1.0),
-                  SbVec3f(1.0, 1.0, 0.5)};
+SbVec3f colors[]={SbVec3f(1.0f, 0.0f, 0.0f),
+                  SbVec3f(1.0f, 1.0f, 0.0f),
+                  SbVec3f(0.0f, 1.0f, 0.0f),
+                  SbVec3f(0.0f, 1.0f, 1.0f),
+                  SbVec3f(1.0f, 1.0f, 1.0f),
+                  SbVec3f(0.0f, 0.0f, 1.0f),
+                  SbVec3f(1.0f, 1.0f, 0.5f)};
 
 char scrolltext[ ] = { "This example shows how to use the SoText3 node...  " };
 
@@ -123,7 +123,7 @@ scrollfunction( )
 
   sep->addChild(scroll.translation);
 
-  transl->translation.setValue(scrolldist, 0.0, 0.0);
+  transl->translation.setValue(scrolldist, 0.0f, 0.0f);
   for (int n = 0; n < scrollbuffersize; n++) {
     sep->addChild(char3dnode(n));
     sep->addChild(transl);
@@ -147,8 +147,8 @@ scene( )
   hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   hints->faceType = SoShapeHints::SOLID;
 
-  leftclip->plane.setValue(SbPlane(SbVec3f(1.0, 0.0, 0.0), 1.0));
-  rightclip->plane.setValue(SbPlane(SbVec3f(-1.0, 0.0, 0.0),
+  leftclip->plane.setValue(SbPlane(SbVec3f(1.0f, 0.0f, 0.0f), 1.0f));
+  rightclip->plane.setValue(SbPlane(SbVec3f(-1.0f, 0.0f, 0.0f),
                                     -(scrollbuffersize-2)*scrolldist));
 
   sep->addChild(hints);
@@ -211,11 +211,11 @@ timersensorcallback(void * data, SoSensor *)
     zrad1[n]+=zradstep1;
     zrad2[n]+=zradstep2;
     transf[n]->translation.setValue(0.0, 
-                                    ymult*sin(yrad1[n])*sin(yrad2[n]), 
-                                    zmult*cos(zrad1[n])*cos(zrad2[n]));
-    transf[n]->scaleFactor.setValue(0.85, 1.0, depth);
+                                    ymult*(float)sin(yrad1[n])*(float)sin(yrad2[n]), 
+                                    zmult*(float)cos(zrad1[n])*(float)cos(zrad2[n]));
+    transf[n]->scaleFactor.setValue(0.85f, 1.0f, depth);
   }
-  transl->translation.setValue(scroll.position, 0.0, 0.0);
+  transl->translation.setValue(scroll.position, 0.0f, 0.0f);
 }
 
 int
@@ -232,14 +232,14 @@ main (int, char ** argv)
     scroll.textnodes[n] = new SoText3;
     scroll.materialnodes[n] = new SoMaterial;
     scroll.transformnodes[n] = new SoTransform; 
-    yrad1[n] = (float)n/(1.5*M_PI);
-    yrad2[n] = (float)n/(2.5*M_PI);
-    zrad1[n] = (float)n/(1.0*M_PI);
-    zrad2[n] = (float)n/(2.0*M_PI);
+    yrad1[n] = (float)n/(1.5f*float(M_PI));
+    yrad2[n] = (float)n/(2.5f*float(M_PI));
+    zrad1[n] = (float)n/(1.0f*float(M_PI));
+    zrad2[n] = (float)n/(2.0f*float(M_PI));
   }
 
   scroll.translation = new SoTranslation;
-  scroll.position = 0.0;
+  scroll.position = 0.0f;
   scroll.textposition = 0;
 
   // Timer sensor

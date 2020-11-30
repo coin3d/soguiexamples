@@ -53,7 +53,7 @@
 #include <VolumeViz/nodes/SoTransferFunction.h>
 #include <VolumeViz/nodes/SoVolumeRender.h>
 
-#include <assert.h>
+#include <cassert>
 
 // *************************************************************************
 
@@ -184,7 +184,7 @@ main(int argc, char ** argv)
   // Create a viewer with a blue tinted background and a stereo offset
   // of 200.0f.
   SoQtExaminerViewer * examinerviewer = new SoQtExaminerViewer(window);
-  examinerviewer->setBackgroundColor(SbColor(0.176, 0.234, 0.477));
+  examinerviewer->setBackgroundColor(SbColor(0.176f, 0.234f, 0.477f));
   examinerviewer->setTransparencyType(SoGLRenderAction::BLEND); 
   examinerviewer->setStereoOffset(200.0f);	
 

@@ -33,7 +33,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <qcanvas.h>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QList>
+#include <QGraphicsItem>
 #include <qimage.h>
 #include <Inventor/SbBasic.h>
 #include <Inventor/lists/SbList.h>
@@ -42,23 +45,22 @@
 #include "SoQtColorTableEditor.h"
 #include "ColorCurve.h"
 
-class QCanvasItemList;
 class QMouseEvent;
-class QCanvasItem;
+class QGraphicsRectItem;
 
 // *************************************************************************
 
-class CurveView : public QCanvasView 
+class CurveView : public QGraphicsView 
 {
   Q_OBJECT
 
 public:
   CurveView(int numcolors,
             SoQtColorTableEditor::Mode mode, 
-            QCanvas * canvas, 
+            QGraphicsScene * canvas, 
             QWidget * parent = 0, 
             const char * name = 0, 
-            WFlags flags = 0);
+            Qt::WindowFlags flags = 0);
   
   ~CurveView();
 
@@ -95,15 +97,15 @@ private:
   void initGrid(void);
   
   QPixmap makePixmap(int w, int h, const uint8_t * r, const uint8_t * g, const uint8_t * b) const;
-  QCanvasRectangle * newControlPoint(int x, int y);
-  QCanvasItemList newCanvasCtrlPtList(void);
-  QCanvasItem * smallestItem(QCanvasItemList * list);
-
+  QGraphicsRectItem * newControlPoint(int x, int y);
+  QList<QGraphicsItem*> newCanvasCtrlPtList(void);
+  QGraphicsItem * smallestItem(QList<QGraphicsItem*> * list);
   SbBool mousepressed;
   QPoint movingstart;
   QPoint lastpos;
-  QCanvas * canvas;
-  QCanvasItem * movingitem;
+
+  QGraphicsScene * canvas;
+  QGraphicsItem * movingitem;
 
   CurveType curvemode;
   SoQtColorTableEditor::Mode colormode;
@@ -112,11 +114,11 @@ private:
   int size;
   int maxval;
   
-  SbList<QCanvasItemList> canvasctrlpts;
+  SbList<QList<QGraphicsItem*>> canvasctrlpts;
   SbList<ColorCurve*> colorcurves;
     
-  QCanvasItemList curvesegments;
-  QCanvasItemList grid;
+  QList<QGraphicsItem*> curvesegments;
+  QList<QGraphicsItem*> grid;
 };
 
 // *************************************************************************

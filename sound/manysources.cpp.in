@@ -30,10 +30,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
@@ -65,7 +65,7 @@ Source *sources;
 SbColor color_grey = SbColor(0.2f, 0.2f, 0.2f);
 SoSelection *root;
 
-double round(double val)
+double cc_round(double val)
 {
   double f = fmod(val, 1.0);
   if (f>=0.5)
@@ -77,7 +77,7 @@ double round(double val)
 void
 timerCB(void *data, SoSensor *sensor)
 {
-  int num = (int) (round((double)rand() / (double)RAND_MAX * (double)(num_sources-1)));
+  int num = (int) (cc_round((double)rand() / (double)RAND_MAX * (double)(num_sources-1)));
   char str[5];
   sprintf(str, "N%d", num);
   SoNode *node = SoNode::getByName(str);

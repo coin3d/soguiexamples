@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SbBasic.h>
@@ -64,9 +64,9 @@ text(const char * txtstring, SbVec2f pos1, SbVec2f pos2, float speed, SbVec3f co
 
   txt->string.setValue(txtstring);
   pos1.getValue(x, y);
-  shuttle->translation0.setValue(x, y, 0.0);
+  shuttle->translation0.setValue(x, y, 0.0f);
   pos2.getValue(x, y);
-  shuttle->translation1.setValue(x, y, 0.0);
+  shuttle->translation1.setValue(x, y, 0.0f);
   shuttle->speed = speed;
   material->diffuseColor.setValue(col);
 
@@ -87,19 +87,19 @@ scene( )
   SoFont * font = new SoFont;
   SoCube * cube = new SoCube;
   
-  cube->width = 30.0;
-  cube->height = 20.0;
-  cube->depth = 1.0;
+  cube->width = 30.0f;
+  cube->height = 20.0f;
+  cube->depth = 1.0f;
   font->name.setValue("Courier");
-  font->size.setValue(48.0);
+  font->size.setValue(48.0f);
 
   sep->addChild(font);
-  sep->addChild(text("Coin", SbVec2f(-5.0, 5.0), SbVec2f(5.0, 5.0), 0.2,
-                SbVec3f(1.0, 0.0, 0.0)));
-  sep->addChild(text("by", SbVec2f(1.0, 2.5), SbVec2f(1.0, -2.5), 0.25,
+  sep->addChild(text("Coin", SbVec2f(-5.0f, 5.0f), SbVec2f(5.0f, 5.0f), 0.2f,
+                SbVec3f(1.0f, 0.0f, 0.0f)));
+  sep->addChild(text("by", SbVec2f(1.0f, 2.5f), SbVec2f(1.0f, -2.5f), 0.25f,
                 SbVec3f(0.0, 0.0, 1.0)));
-  sep->addChild(text("SIM", SbVec2f(5.0, -5.0), SbVec2f(-5.0, -5.0), 0.3,
-                SbVec3f(0.0, 1.0, 0.0))); 
+  sep->addChild(text("SIM", SbVec2f(5.0f, -5.0f), SbVec2f(-5.0f, -5.0f), 0.3f,
+                SbVec3f(0.0f, 1.0f, 0.0f))); 
 
   return sep;
 }
@@ -117,7 +117,7 @@ main (int, char ** argv)
   SoSeparator * root = new SoSeparator;
   SoPerspectiveCamera * camera = new SoPerspectiveCamera;
   
-  camera->position.setValue(2.5, 0.0, 20.0);
+  camera->position.setValue(2.5f, 0.0f, 20.0f);
 
   root->ref();
   root->addChild(camera);

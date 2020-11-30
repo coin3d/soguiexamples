@@ -80,10 +80,10 @@
 #define GL_SEPARATE_SPECULAR_COLOR              0x81FA
 #endif // !GL_SEPARATE_SPECULAR_COLOR
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h> // exit()
-#include <time.h>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib> // exit()
+#include <ctime>
 
 typedef struct
 {
@@ -110,7 +110,7 @@ gentorus(double r, double R, int nsides, int rings,
          SoCoordinate3 * c, SoNormal * n, SoQuadMesh * qm,
          SoTextureCoordinate2 * tc)
 {
-  double theta, phi, theta1;
+  double theta, phi;
   double costheta, sintheta;
   double ringdelta, sidedelta;
   double cosPhi, sinPhi, dist;
@@ -163,10 +163,10 @@ gentorus(double r, double R, int nsides, int rings,
 #if 0
       tcptr[cnt] = SbVec2f(tadd + tx, tadd + ty);
 #else
-      tcptr[cnt][0] = cptr[cnt][0] + nt;
-      tcptr[cnt][0] /= nt*2.0;
-      tcptr[cnt][1] = cptr[cnt][1] + nt;
-      tcptr[cnt][1] /= nt*2.0;
+      tcptr[cnt][0] = cptr[cnt][0] + float(nt);
+      tcptr[cnt][0] /= float(nt)*2.0f;
+      tcptr[cnt][1] = cptr[cnt][1] + float(nt);
+      tcptr[cnt][1] /= float(nt)*2.0f;
 #endif
       cnt++;
       phi += sidedelta;
@@ -522,7 +522,7 @@ main(int argc, char **argv)
                0.5f);
   axis.normalize();
   rot->rotation = SbRotation(axis, 0.01f);
-  rot->speed = 0.1;
+  rot->speed = 0.1f;
   rot->on = TRUE;
   root->insertChild(rot, 0);
 

@@ -31,8 +31,8 @@
 \**************************************************************************/
 
 #include "Board.h"
-#include <stdio.h>
-#include <assert.h>
+#include <cstdio>
+#include <cassert>
 
 SBoard *Board::sboard = new SBoard;
 

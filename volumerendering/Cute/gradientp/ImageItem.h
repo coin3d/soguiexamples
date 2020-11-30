@@ -33,18 +33,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <qcanvas.h>
+#include <QGraphicsRectItem>
 #include <qimage.h>
 
+class QGraphicsScene;
 class QPainter;
 
-class ImageItem: public QCanvasRectangle
+class ImageItem: public QGraphicsRectItem
 {
 public:
-  ImageItem(QCanvas *canvas);
-  void setImage(QImage img);
-
-
+  ImageItem(QGraphicsScene *canvas);
+  void setImage(const QImage& img);
   void drawShape(QPainter &);
 
 private:

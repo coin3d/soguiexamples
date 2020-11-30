@@ -56,10 +56,10 @@
 #include <Inventor/SoPickedPoint.h>
 #include <Inventor/errors/SoDebugError.h>
 
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h> // exit()
+#include <cassert>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib> // exit()
 
 /* ********************************************************************** */
 
@@ -313,9 +313,9 @@ const char * scenegraph[] = {
 /* ********************************************************************** */
 
 char *
-strconcat(const char * array[], unsigned int &total)
+strconcat(const char * array[], size_t &total)
 {
-  int i;
+  size_t i;
   for (i = total = 0; array[i]; i++ )
     total += strlen(array[i]) + 1;
   char * buf = new char [total + 1];
@@ -365,9 +365,9 @@ void adjust_row(SoNode * scene, int row)
     else
       delta = spherepositions[0][row];
     if ( i == 0 )
-      delta = (13.7-1.93) * delta;
+      delta = (13.7f-1.93f) * delta;
     else
-      delta = 1.93 + (13.7-1.93) * delta;
+      delta = 1.93f + (13.7f-1.93f) * delta;
     // fprintf(stderr, "delta for %s = %g\n", name, delta);
     translation->translation.setValue(delta, 0.0f, 0.0f);
   }
@@ -471,7 +471,7 @@ event_cb(void * closure, SoAction * action)
       // fprintf(stderr, "it's a drag (sphere %dx%d)  = delta %g\n", row, sphere,
       float delta = thispoint[0] - (*lastpoint)[0];
       float pos = lastval;
-      pos = pos + delta / (13.7-1.93);
+      pos = pos + delta / (13.7f-1.93f);
       if ( pos < 0.0f ) pos = 0.0f;
       if ( pos > 1.0f ) pos = 1.0f;
       spherepositions[sphere][row] = pos;
@@ -521,7 +521,7 @@ main(
   viewer->setDecoration(FALSE);
 
   SoInput * in = new SoInput;
-  unsigned int len;
+  size_t len;
   char * buffer = strconcat(scenegraph, len);
   in->setBuffer(buffer, len);
   SoNode * scene;

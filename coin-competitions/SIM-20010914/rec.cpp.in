@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -42,7 +42,7 @@ createLogo() function adopted from plasmaball by Morten Eriksen
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
@@ -53,7 +53,7 @@ createLogo() function adopted from plasmaball by Morten Eriksen
 #include <Inventor/nodes/SoMaterial.h>
 #include <Inventor/nodes/SoEventCallback.h>
 #include <Inventor/nodes/SoRotor.h>
-#include <Inventor/nodes/SoIndexedLineSet.h> 
+#include <Inventor/nodes/SoIndexedLineSet.h>
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoTransform.h>
@@ -61,107 +61,106 @@ createLogo() function adopted from plasmaball by Morten Eriksen
 #include <Inventor/nodes/SoScale.h>
 #include <Inventor/events/SoKeyboardEvent.h>
 
-#include "math.h"
+#include <cmath>
 
 static SoSeparator *
 createLogo(void)
 {
-	  SoSeparator * sep = new SoSeparator;
-	  sep->ref();
+  SoSeparator * sep = new SoSeparator;
+  sep->ref();
 
-	  SoMaterial * mat = new SoMaterial;
-	  mat->specularColor.setValue( 1.0f, 0.0f, 0.0f );
-	  mat->emissiveColor.setValue( 0.5f, 0.3f, 0.0f );
-	  mat->shininess = 0.8f;
+  SoMaterial * mat = new SoMaterial;
+  mat->specularColor.setValue( 1.0f, 0.0f, 0.0f );
+  mat->emissiveColor.setValue( 0.5f, 0.3f, 0.0f );
+  mat->shininess = 0.8f;
 
-	  sep->addChild(mat);
+  sep->addChild(mat);
 
-	  SoTranslation * trans = new SoTranslation;
-	  trans->translation.setValue(-2.0f, -2.5f, 0.2f);
-	  sep->addChild(trans);
+  SoTranslation * trans = new SoTranslation;
+  trans->translation.setValue(-2.0f, -2.5f, 0.2f);
+  sep->addChild(trans);
 
-	  SoScale * scale = new SoScale;
-	  scale->scaleFactor.setValue(0.6f, 0.7f, 0.6f);
-	  sep->addChild(scale);
-		
-	  // C
-	  SoText3 * c = new SoText3;
-	  c->string.setValue( "C" );
-	  c->parts.setValue( SoText3::ALL );
-	  sep->addChild(c);
+  SoScale * scale = new SoScale;
+  scale->scaleFactor.setValue(0.6f, 0.7f, 0.6f);
+  sep->addChild(scale);
 
-	  SoSeparator * separator = new SoSeparator;
+  // C
+  SoText3 * c = new SoText3;
+  c->string.setValue( "C" );
+  c->parts.setValue( SoText3::ALL );
+  sep->addChild(c);
 
-	  // O
-	  SoTranslation * trans_o = new SoTranslation;
-	  trans_o->translation.setValue(1.75f, 2.5f, 0.0f);
-	  separator->addChild(trans_o);
+  SoSeparator * separator = new SoSeparator;
 
-	  SoScale * scale_o = new SoScale;
-	  scale_o->scaleFactor.setValue(0.57f, 0.57f, 1.0f);
-	  separator->addChild(scale_o);
+  // O
+  SoTranslation * trans_o = new SoTranslation;
+  trans_o->translation.setValue(1.75f, 2.5f, 0.0f);
+  separator->addChild(trans_o);
 
-	  SoText3 * o = new SoText3;
-	  o->string.setValue( "O" );
-	  o->parts.setValue( SoText3::ALL );
-	  separator->addChild(o);
+  SoScale * scale_o = new SoScale;
+  scale_o->scaleFactor.setValue(0.57f, 0.57f, 1.0f);
+  separator->addChild(scale_o);
 
-	  // I
-	  SoTranslation * trans_i = new SoTranslation;
-	  trans_i->translation.setValue(2.5f, 1.1f, 0.0f);
-	  separator->addChild(trans_i);
+  SoText3 * o = new SoText3;
+  o->string.setValue( "O" );
+  o->parts.setValue( SoText3::ALL );
+  separator->addChild(o);
 
-	  SoScale * scale_i = new SoScale;
-	  scale_i->scaleFactor.setValue(0.7f, 0.7f, 1.0f);
-	  separator->addChild(scale_i);
+  // I
+  SoTranslation * trans_i = new SoTranslation;
+  trans_i->translation.setValue(2.5f, 1.1f, 0.0f);
+  separator->addChild(trans_i);
 
-	  SoText3 * i = new SoText3;
-	  i->string.setValue( "I" );
-	  i->parts.setValue( SoText3::ALL );
-	  separator->addChild(i);
+  SoScale * scale_i = new SoScale;
+  scale_i->scaleFactor.setValue(0.7f, 0.7f, 1.0f);
+  separator->addChild(scale_i);
 
-	  // N
-	  SoTranslation * trans_n = new SoTranslation;
-	  trans_n->translation.setValue(-0.8f, -6.3f, 0.0f);
-	  separator->addChild(trans_n);
+  SoText3 * i = new SoText3;
+  i->string.setValue( "I" );
+  i->parts.setValue( SoText3::ALL );
+  separator->addChild(i);
 
-	  SoScale * scale_n = new SoScale;
-	  scale_n->scaleFactor.setValue(0.6f, 0.6f, 1.0f);
-	  separator->addChild(scale_n);
+  // N
+  SoTranslation * trans_n = new SoTranslation;
+  trans_n->translation.setValue(-0.8f, -6.3f, 0.0f);
+  separator->addChild(trans_n);
 
-	  SoText3 * n = new SoText3;
-	  n->string.setValue( "N" );
-	  n->parts.setValue( SoText3::ALL );
-	  separator->addChild(n);
+  SoScale * scale_n = new SoScale;
+  scale_n->scaleFactor.setValue(0.6f, 0.6f, 1.0f);
+  separator->addChild(scale_n);
 
-	  // separator
-	  sep->addChild(separator);
+  SoText3 * n = new SoText3;
+  n->string.setValue( "N" );
+  n->parts.setValue( SoText3::ALL );
+  separator->addChild(n);
 
-	  // top
-	  SoTranslation * trans_t = new SoTranslation;
-	  trans_t->translation.setValue(3.6f, -0.9f, -0.5f);
-	  sep->addChild(trans_t);
+  // separator
+  sep->addChild(separator);
 
-	  SoScale * scale_t = new SoScale;
-	  scale_t->scaleFactor.setValue(0.2f, 0.8f, 0.5f);
-	  sep->addChild(scale_t);
+  // top
+  SoTranslation * trans_t = new SoTranslation;
+  trans_t->translation.setValue(3.6f, -0.9f, -0.5f);
+  sep->addChild(trans_t);
 
-	  SoCube * t = new SoCube;
-	  sep->addChild(t);
+  SoScale * scale_t = new SoScale;
+  scale_t->scaleFactor.setValue(0.2f, 0.8f, 0.5f);
+  sep->addChild(scale_t);
 
-	  // bottom
-	  SoTranslation * trans_b = new SoTranslation;
-	  trans_b->translation.setValue(0.0f, 11.4f, 0.0f);
-	  sep->addChild(trans_b);
+  SoCube * t = new SoCube;
+  sep->addChild(t);
 
-	  SoCube * b = new SoCube;
-	  sep->addChild(b);
+  // bottom
+  SoTranslation * trans_b = new SoTranslation;
+  trans_b->translation.setValue(0.0f, 11.4f, 0.0f);
+  sep->addChild(trans_b);
 
-	  sep->unrefNoDelete();
-		
-	  return sep;
+  SoCube * b = new SoCube;
+  sep->addChild(b);
+
+  sep->unrefNoDelete();
+
+  return sep;
 }
-
 
 SoSeparator *triangle;
 
@@ -174,268 +173,266 @@ SoSeparator *line1 = NULL;
 SoSeparator *line2 = NULL;
 SoSeparator *line3 = NULL;
 
+void createIndexedLineSetRek(int rekDepth, int actFirstIndex, int actLastIndex, SbVec3f v1, SbVec3f v2)
+{
+  if(rekDepth<=maxRekDepth){
+    float x1,x2,y1,y2,z1,z2;
+    v1.getValue(x1,y1,z1);
+    v2.getValue(x2,y2,z2);
 
+    int firstIndex=actFirstIndex;
+    int lastIndex=actLastIndex;
+    int secondIndex=actFirstIndex+(lastIndex-firstIndex)*1/4;
+    int thirdIndex=actFirstIndex+(lastIndex-firstIndex)*2/4;
+    int fourthIndex=actFirstIndex+(lastIndex-firstIndex)*3/4;
 
-void createIndexedLineSetRek(int rekDepth, int actFirstIndex, int actLastIndex, SbVec3f v1, SbVec3f v2){
+    SbVec3f theVector;
+    theVector.setValue(x2-x1,y2-y1,z2-z1);
+    float heightLength = (float)sqrt(pow(theVector.length()/3,2)+pow(theVector.length()/6,2));
 
-	if(rekDepth<=maxRekDepth){
-		float x1,x2,y1,y2,z1,z2;
-		v1.getValue(x1,y1,z1);
-		v2.getValue(x2,y2,z2);
+    SbVec3f normalVector;
+    normalVector.setValue(0.0f,0.0f,1.0f);
 
-		int firstIndex=actFirstIndex;
-		int lastIndex=actLastIndex;
-		int secondIndex=actFirstIndex+(lastIndex-firstIndex)*1/4;
-		int thirdIndex=actFirstIndex+(lastIndex-firstIndex)*2/4;
-		int fourthIndex=actFirstIndex+(lastIndex-firstIndex)*3/4;
-		
-		SbVec3f theVector;
-		theVector.setValue(x2-x1,y2-y1,z2-z1);
-		float heightLength = sqrt(pow(theVector.length()/3,2)+pow(theVector.length()/6,2));
+    SbVec3f heightVector;
+    heightVector.setValue((theVector.cross(normalVector)).getValue());
+    heightVector.normalize();
+    heightVector*=heightLength;
 
-		SbVec3f normalVector;
-		normalVector.setValue(0.0f,0.0f,1.0f);
+    SbVec3f secondPoint;
+    SbVec3f thirdPoint;
+    SbVec3f fourthPoint;
 
-		SbVec3f heightVector;
-		heightVector.setValue((theVector.cross(normalVector)).getValue());
-		heightVector.normalize();
-		heightVector*=heightLength;
-		
-		SbVec3f secondPoint;
-		SbVec3f thirdPoint;
-		SbVec3f fourthPoint;
+    secondPoint.setValue(x1+(x2-x1)/3,y1+(y2-y1)/3,z1+(z2-z1)/3);
+    thirdPoint.setValue(x1+(x2-x1)/2,y1+(y2-y1)/2,z1+(z2-z1)/2);
+    thirdPoint+=heightVector;
+    fourthPoint.setValue(x1+(x2-x1)*2/3,y1+(y2-y1)*2/3,z1+(z2-z1)*2/3);
 
-		secondPoint.setValue(x1+(x2-x1)/3,y1+(y2-y1)/3,z1+(z2-z1)/3);
-		thirdPoint.setValue(x1+(x2-x1)/2,y1+(y2-y1)/2,z1+(z2-z1)/2);
-		thirdPoint+=heightVector;
-		fourthPoint.setValue(x1+(x2-x1)*2/3,y1+(y2-y1)*2/3,z1+(z2-z1)*2/3);
+    secondPoint.getValue(x1,y1,z1);
+    thirdPoint.getValue(x1,y1,z1);
+    fourthPoint.getValue(x1,y1,z1);
 
-		secondPoint.getValue(x1,y1,z1);
-		thirdPoint.getValue(x1,y1,z1);
-		fourthPoint.getValue(x1,y1,z1);
+    coords->point.set1Value(secondIndex,secondPoint);
+    coords->point.set1Value(thirdIndex,thirdPoint);
+    coords->point.set1Value(fourthIndex,fourthPoint);
 
-		coords->point.set1Value(secondIndex,secondPoint);
-		coords->point.set1Value(thirdIndex,thirdPoint);
-		coords->point.set1Value(fourthIndex,fourthPoint);
+    rekDepth++;
 
-		rekDepth++;
-
-		createIndexedLineSetRek(rekDepth, actFirstIndex, secondIndex, v1, secondPoint);
-		createIndexedLineSetRek(rekDepth, secondIndex, thirdIndex, secondPoint, thirdPoint);
-		createIndexedLineSetRek(rekDepth, thirdIndex, fourthIndex, thirdPoint, fourthPoint);
-		createIndexedLineSetRek(rekDepth, fourthIndex, actLastIndex, fourthPoint, v2);
-	}
-	else{
-//		printf("maximale Rekursionstiefe erreicht\n");
-	}
+    createIndexedLineSetRek(rekDepth, actFirstIndex, secondIndex, v1, secondPoint);
+    createIndexedLineSetRek(rekDepth, secondIndex, thirdIndex, secondPoint, thirdPoint);
+    createIndexedLineSetRek(rekDepth, thirdIndex, fourthIndex, thirdPoint, fourthPoint);
+    createIndexedLineSetRek(rekDepth, fourthIndex, actLastIndex, fourthPoint, v2);
+  }
+  else {
+//  printf("maximale Rekursionstiefe erreicht\n");
+  }
 }
 
 SoSeparator* createIndexedLineSet(SbVec3f firstPoint, SbVec3f lastPoint){
-	SoSeparator *root = new SoSeparator;
-	root->ref();
+  SoSeparator *root = new SoSeparator;
+  root->ref();
 
-	maxNrIndex=(int)pow(2.0f,2*maxRekDepth);
-	
-	SoIndexedLineSet *lineSet = new SoIndexedLineSet;
-	coords = new SoCoordinate3;
-	root->addChild(coords);
-	root->addChild(lineSet);
+  maxNrIndex=(int)pow(2.0f,2*maxRekDepth);
 
-	coords->point.set1Value(0,firstPoint);
-	coords->point.set1Value(maxNrIndex,lastPoint);
+  SoIndexedLineSet *lineSet = new SoIndexedLineSet;
+  coords = new SoCoordinate3;
+  root->addChild(coords);
+  root->addChild(lineSet);
 
-	createIndexedLineSetRek(1, 0, maxNrIndex, firstPoint, lastPoint);
-	
-	int32_t * indices = new int32_t[maxNrIndex+2];
-	for(int i=0; i<=maxNrIndex; i++) {
-		indices[i]=i;
-	}
-	
-	indices[maxNrIndex+1]=SO_END_LINE_INDEX;
-	lineSet->coordIndex.setValues(0,maxNrIndex+2,indices);
+  coords->point.set1Value(0,firstPoint);
+  coords->point.set1Value(maxNrIndex,lastPoint);
 
-	root->unrefNoDelete();
-	return root;
+  createIndexedLineSetRek(1, 0, maxNrIndex, firstPoint, lastPoint);
+
+  int32_t * indices = new int32_t[maxNrIndex+2];
+  for(int i=0; i<=maxNrIndex; i++) {
+    indices[i]=i;
+  }
+
+  indices[maxNrIndex+1]=SO_END_LINE_INDEX;
+  lineSet->coordIndex.setValues(0,maxNrIndex+2,indices);
+
+  root->unrefNoDelete();
+  return root;
 }
 
 void myKeyPressCB(void *userData, SoEventCallback *eventCB){
-	const SoEvent *event = eventCB->getEvent();
-	bool redraw=false;
-		
-	if (SO_KEY_PRESS_EVENT(event, PAGE_UP)) {
-		if(maxRekDepth<8) {
-			maxRekDepth++;
-			redraw=true;
-		}
-		else printf("detailled enough!\n");
-		eventCB->setHandled();
-	} 
+  const SoEvent *event = eventCB->getEvent();
+  bool redraw=false;
 
-	if (SO_KEY_PRESS_EVENT(event, PAGE_DOWN)) {
-		if(maxRekDepth>0){
-			maxRekDepth--;
-			redraw=true;
-		}
-		else printf("zeroline reached!\n");
-		eventCB->setHandled();
-	}
-	if(redraw) {		
-		triangle->removeChild(line1);
-		triangle->removeChild(line2);
-		triangle->removeChild(line3);
-		line1=createIndexedLineSet(SbVec3f(0.0f,0.0f,0.0f),SbVec3f(3.0f,0.0f,0.0f));
-		line2=createIndexedLineSet(SbVec3f(3.0f,0.0f,0.0f),SbVec3f(1.5f,2.5980762113533159402911695122588f,0.0f));
-		line3=createIndexedLineSet(SbVec3f(1.5f,2.5980762113533159402911695122588f,0.0f),SbVec3f(0.0f,0.0f,0.0f));
-		triangle->addChild(line1);
-		triangle->addChild(line2);
-		triangle->addChild(line3);		
-	}
+  if (SO_KEY_PRESS_EVENT(event, PAGE_UP)) {
+    if(maxRekDepth<8) {
+      maxRekDepth++;
+      redraw=true;
+    }
+    else printf("detailled enough!\n");
+    eventCB->setHandled();
+  }
+
+  if (SO_KEY_PRESS_EVENT(event, PAGE_DOWN)) {
+    if(maxRekDepth>0){
+      maxRekDepth--;
+      redraw=true;
+    }
+    else printf("zeroline reached!\n");
+    eventCB->setHandled();
+  }
+  if(redraw) {
+    triangle->removeChild(line1);
+    triangle->removeChild(line2);
+    triangle->removeChild(line3);
+    line1=createIndexedLineSet(SbVec3f(0.0f,0.0f,0.0f),SbVec3f(3.0f,0.0f,0.0f));
+    line2=createIndexedLineSet(SbVec3f(3.0f,0.0f,0.0f),SbVec3f(1.5f,2.5980762113533159402911695122588f,0.0f));
+    line3=createIndexedLineSet(SbVec3f(1.5f,2.5980762113533159402911695122588f,0.0f),SbVec3f(0.0f,0.0f,0.0f));
+    triangle->addChild(line1);
+    triangle->addChild(line2);
+    triangle->addChild(line3);
+  }
 }
 
-int main(int, char ** argv){
-	
-	@WIDGET@ window = So@Gui@::init(argv[0]);
-	if (window==NULL) exit(1);
+int main(int, char ** argv)
+{
+  @WIDGET@ window = So@Gui@::init(argv[0]);
+  if (window==NULL) exit(1);
 
         line1 = new SoSeparator;
         line2 = new SoSeparator;
         line3 = new SoSeparator;
 
 
-	examinerviewer = new So@Gui@ExaminerViewer(window);
-	examinerviewer->setViewing(FALSE);
-		
-	SoSeparator *myRoot = new SoSeparator;
+  examinerviewer = new So@Gui@ExaminerViewer(window);
+  examinerviewer->setViewing(FALSE);
 
-	myRoot->ref();
+  SoSeparator *myRoot = new SoSeparator;
 
-	SoPerspectiveCamera *camera= new SoPerspectiveCamera;
-	camera->position.setValue(0.0f,0.0f,15.0f);
-	myRoot->addChild(camera);
+  myRoot->ref();
 
-	SoMaterial *mat = new SoMaterial;
-	mat->diffuseColor.setValue(1.0f,1.0f,1.0f);
-	myRoot->addChild(mat);
+  SoPerspectiveCamera *camera= new SoPerspectiveCamera;
+  camera->position.setValue(0.0f,0.0f,15.0f);
+  myRoot->addChild(camera);
 
-	SoEventCallback *myEventCB = new SoEventCallback;
-	myEventCB->addEventCallback(
+  SoMaterial *mat = new SoMaterial;
+  mat->diffuseColor.setValue(1.0f,1.0f,1.0f);
+  myRoot->addChild(mat);
+
+  SoEventCallback *myEventCB = new SoEventCallback;
+  myEventCB->addEventCallback(
          SoKeyboardEvent::getClassTypeId(),
          myKeyPressCB);
-	myRoot->addChild(myEventCB);
+  myRoot->addChild(myEventCB);
 
-	SoSeparator *rekStuff = new SoSeparator;
-	SoRotor *myRotor = new SoRotor;
-	myRotor->rotation = SbRotation(SbVec3f(1.0f, 0.0f, 0.0f), 1);
-	myRotor->speed=-0.2f;
-	rekStuff->addChild(myRotor);
-	
-	triangle = new SoSeparator;
-	SoTransform *transf = new SoTransform;
-	transf->translation.setValue(-1.5f,-1.2990381056766579701455847561294f,0.0f);
-	triangle->addChild(transf);
-	SoMaterial *material = new SoMaterial;
-	material->diffuseColor.setValue(0.0f,0.0f,0.0f);
-	triangle->addChild(material);
-	line1->setName("line1");
-	line2->setName("line2");
-	line3->setName("line3");
-	triangle->addChild(line1 = createIndexedLineSet(SbVec3f(0.0f,0.0f,0.0f),SbVec3f(3.0f,0.0f,0.0f)));
-	triangle->addChild(line2 = createIndexedLineSet(SbVec3f(3.0f,0.0f,0.0f),SbVec3f(1.5f,2.5980762113533159402911695122588f,0.0f)));
-	triangle->addChild(line3 = createIndexedLineSet(SbVec3f(1.5f,2.5980762113533159402911695122588f,0.0f),SbVec3f(0.0f,0.0f,0.0f)));
+  SoSeparator *rekStuff = new SoSeparator;
+  SoRotor *myRotor = new SoRotor;
+  myRotor->rotation = SbRotation(SbVec3f(1.0f, 0.0f, 0.0f), 1);
+  myRotor->speed=-0.2f;
+  rekStuff->addChild(myRotor);
 
-	SoSeparator *triangle1 = new SoSeparator;
-	SoTransform *transf1 = new SoTransform;
-	transf1->translation.setValue(0.0f,0.0f,-5.0f);
-	transf1->rotation.setValue(SbVec3f(1.0f,0.0f,0.0f),M_PI);
-	triangle1->addChild(transf1);
-	triangle1->addChild(triangle);
+  triangle = new SoSeparator;
+  SoTransform *transf = new SoTransform;
+  transf->translation.setValue(-1.5f,-1.2990381056766579701455847561294f,0.0f);
+  triangle->addChild(transf);
+  SoMaterial *material = new SoMaterial;
+  material->diffuseColor.setValue(0.0f,0.0f,0.0f);
+  triangle->addChild(material);
+  line1->setName("line1");
+  line2->setName("line2");
+  line3->setName("line3");
+  triangle->addChild(line1 = createIndexedLineSet(SbVec3f(0.0f,0.0f,0.0f),SbVec3f(3.0f,0.0f,0.0f)));
+  triangle->addChild(line2 = createIndexedLineSet(SbVec3f(3.0f,0.0f,0.0f),SbVec3f(1.5f,2.5980762113533159402911695122588f,0.0f)));
+  triangle->addChild(line3 = createIndexedLineSet(SbVec3f(1.5f,2.5980762113533159402911695122588f,0.0f),SbVec3f(0.0f,0.0f,0.0f)));
 
-	SoSeparator *triangle2 = new SoSeparator;
-	SoTransform *transf2 = new SoTransform;
-	transf2->translation.setValue(-2.5f,0.0f,-2.5f);
-	transf2->rotation.setValue(SbVec3f(0.0f,1.0f,0.0f),M_PI/2);
-	triangle2->addChild(transf2);
-	triangle2->addChild(triangle);
-	
-	SoSeparator *triangle3 = new SoSeparator;
-	SoTransform *transf3 = new SoTransform;
-	transf3->translation.setValue(2.5f,0.0f,-2.5f);
-	transf3->rotation.setValue(SbVec3f(0.0f,1.0f,0.0f),M_PI/2);
-	triangle3->addChild(transf3);
-	triangle3->addChild(triangle);
+  SoSeparator *triangle1 = new SoSeparator;
+  SoTransform *transf1 = new SoTransform;
+  transf1->translation.setValue(0.0f,0.0f,-5.0f);
+  transf1->rotation.setValue(SbVec3f(1.0f,0.0f,0.0f),float(M_PI));
+  triangle1->addChild(transf1);
+  triangle1->addChild(triangle);
 
-	SoSeparator *triangle4 = new SoSeparator;
-	SoTransform *transf4 = new SoTransform;
-	transf4->translation.setValue(0.0f,2.5f,-2.5f);
-	transf4->rotation.setValue(SbVec3f(1.0f,0.0f,0.0f),-M_PI/2);
-	triangle4->addChild(transf4);
-	triangle4->addChild(triangle);
+  SoSeparator *triangle2 = new SoSeparator;
+  SoTransform *transf2 = new SoTransform;
+  transf2->translation.setValue(-2.5f,0.0f,-2.5f);
+  transf2->rotation.setValue(SbVec3f(0.0f,1.0f,0.0f),float(M_PI)/2);
+  triangle2->addChild(transf2);
+  triangle2->addChild(triangle);
 
-	SoSeparator *triangle5 = new SoSeparator;
-	SoTransform *transf5 = new SoTransform;
-	transf5->translation.setValue(0.0f,-2.5f,-2.5f);
-	transf5->rotation.setValue(SbVec3f(1.0f,0.0f,0.0f),M_PI/2);
-	triangle5->addChild(transf5);
-	triangle5->addChild(triangle);
+  SoSeparator *triangle3 = new SoSeparator;
+  SoTransform *transf3 = new SoTransform;
+  transf3->translation.setValue(2.5f,0.0f,-2.5f);
+  transf3->rotation.setValue(SbVec3f(0.0f,1.0f,0.0f),float(M_PI)/2);
+  triangle3->addChild(transf3);
+  triangle3->addChild(triangle);
 
-	rekStuff->addChild(triangle);	//vorne
-	rekStuff->addChild(triangle1);	//hinten
-	rekStuff->addChild(triangle2);	//links
-	rekStuff->addChild(triangle3);	//rechts
-	rekStuff->addChild(triangle4);	//oben
-	rekStuff->addChild(triangle5);	//unten
+  SoSeparator *triangle4 = new SoSeparator;
+  SoTransform *transf4 = new SoTransform;
+  transf4->translation.setValue(0.0f,2.5f,-2.5f);
+  transf4->rotation.setValue(SbVec3f(1.0f,0.0f,0.0f),float(-M_PI)/2);
+  triangle4->addChild(transf4);
+  triangle4->addChild(triangle);
 
-	myRoot->addChild(rekStuff);
+  SoSeparator *triangle5 = new SoSeparator;
+  SoTransform *transf5 = new SoTransform;
+  transf5->translation.setValue(0.0f,-2.5f,-2.5f);
+  transf5->rotation.setValue(SbVec3f(1.0f,0.0f,0.0f),float(M_PI)/2);
+  triangle5->addChild(transf5);
+  triangle5->addChild(triangle);
 
-	SoSeparator *logo = new SoSeparator;
-	SoTransform *transfLogo = new SoTransform;
-	transfLogo->translation.setValue(-6.0f,-4.5f,0.0f);
-	SoScale *scale = new SoScale;
-	scale->scaleFactor.setValue(0.3f,0.3f,0.3f);
-	logo->addChild(transfLogo);
-	logo->addChild(scale);
-	logo->addChild(createLogo());
-	myRoot->addChild(logo);
+  rekStuff->addChild(triangle);	//vorne
+  rekStuff->addChild(triangle1);	//hinten
+  rekStuff->addChild(triangle2);	//links
+  rekStuff->addChild(triangle3);	//rechts
+  rekStuff->addChild(triangle4);	//oben
+  rekStuff->addChild(triangle5);	//unten
 
-	SoSeparator *instruction = new SoSeparator;
-	SoText2 * text = new SoText2;
-	const char * str[] = {
-	"This demonstration shows a line which vertices","are calculated through a recursive function.",
-	"",
+  myRoot->addChild(rekStuff);
+
+  SoSeparator *logo = new SoSeparator;
+  SoTransform *transfLogo = new SoTransform;
+  transfLogo->translation.setValue(-6.0f,-4.5f,0.0f);
+  SoScale *scale = new SoScale;
+  scale->scaleFactor.setValue(0.3f,0.3f,0.3f);
+  logo->addChild(transfLogo);
+  logo->addChild(scale);
+  logo->addChild(createLogo());
+  myRoot->addChild(logo);
+
+  SoSeparator *instruction = new SoSeparator;
+  SoText2 * text = new SoText2;
+  const char * str[] = {
+  "This demonstration shows a line which vertices","are calculated through a recursive function.",
+  "",
         "PAGE UP button:   increases recursion depth",
         "PAGE DOWN button: decreases recursion depth",
-	"You can toggle between 8 recursion depths.",
-	"",
+  "You can toggle between 8 recursion depths.",
+  "",
         // FIXME: not really correct, only works under MSWin with
         // default configuration settings.  I'm not sure if there
         // actually _is_ a general way to quit the app that works for
         // all window systems and both Coin and SGI / TGS Inventor
         // (the 'q to quit' is specific for our
         // So*-libraries). 20010920 mortene.
-	"Enter ALT+F4 to end the demonstration."
-	};
-	text->string.setValues(0, sizeof(str) / sizeof(char *), str);
-	text->justification = SoText2::LEFT;
-	SoTransform *instrTransf = new SoTransform;
-	instrTransf->translation.setValue(-7.0f,5.0f,0.0f);
-	instruction->addChild(instrTransf);
-	instruction->addChild(text);
+  "Enter ALT+F4 to end the demonstration."
+  };
+  text->string.setValues(0, sizeof(str) / sizeof(char *), str);
+  text->justification = SoText2::LEFT;
+  SoTransform *instrTransf = new SoTransform;
+  instrTransf->translation.setValue(-7.0f,5.0f,0.0f);
+  instruction->addChild(instrTransf);
+  instruction->addChild(text);
 
-	myRoot->addChild(instruction);
+  myRoot->addChild(instruction);
 
-	examinerviewer->setSceneGraph(myRoot);
-	examinerviewer->setTransparencyType(SoGLRenderAction::DELAYED_BLEND);
-	examinerviewer->setBackgroundColor(SbColor(0.8,0.2,0.1));
-	examinerviewer->setDecoration(FALSE);
-	
-	examinerviewer->show();
+  examinerviewer->setSceneGraph(myRoot);
+  examinerviewer->setTransparencyType(SoGLRenderAction::DELAYED_BLEND);
+  examinerviewer->setBackgroundColor(SbColor(0.8f,0.2f,0.1f));
+  examinerviewer->setDecoration(FALSE);
+
+  examinerviewer->show();
 #ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
-	examinerviewer->setFullScreen(TRUE);
+  examinerviewer->setFullScreen(TRUE);
 #endif // HAVE_SOCOMPONENT_SETFULLSCREEN
-	
-	So@Gui@::mainLoop();
-	delete examinerviewer;
-	myRoot->unref();
 
-	return 0;
+  So@Gui@::mainLoop();
+  delete examinerviewer;
+  myRoot->unref();
+
+  return 0;
 }

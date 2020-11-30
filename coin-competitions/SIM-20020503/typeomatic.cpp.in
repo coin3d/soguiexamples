@@ -46,9 +46,9 @@
 #include <Inventor/actions/SoHandleEventAction.h>
 #include <Inventor/events/SoMouseButtonEvent.h>
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <assert.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cassert>
 
 #include <strutils.h>
 
@@ -1395,7 +1395,7 @@ main(
   viewer->show();
   So@Gui@::show(window);
 
-  unsigned int totlen;
+  size_t totlen;
   char * buf = strconcat(keyboard_iv, totlen);
   SoInput in;
   in.setBuffer(buf, totlen);
