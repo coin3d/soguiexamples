@@ -111,16 +111,16 @@
 #include <Inventor/actions/SoWriteAction.h>
 #include <Inventor/SoPickedPoint.h>
 
-#include <coin-competitions/coinlogo.h>
-#include <coin-competitions/TextureWriter.h>
+#include <coinlogo.h>
+#include <TextureWriter.h>
 
 #include "GameLogic.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h> // exit()
-#include <time.h>
-#include <assert.h>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib> // exit()
+#include <ctime>
+#include <cassert>
 
 So@Gui@RenderArea *viewer;
 //  So@Gui@ExaminerViewer *viewer;
@@ -160,8 +160,8 @@ void enable_token(Token color)
 void move_token(int x, int y)
 {
   SbVec3f currPos = tokenTrans->translation.getValue();
-  currPos[0] = x*2-3;
-  currPos[2] = -y*2+3;
+  currPos[0] = float(x*2-3);
+  currPos[2] = float(-y*2+3);
   tokenTrans->translation.setValue(currPos);
 }
 
@@ -386,7 +386,7 @@ void setViewportCB(void *data, SoAction *action)
     SbViewportRegion curVP, newVP;
     curVP = ((SoGLRenderAction*)action)->getViewportRegion();
     newVP = curVP;
-    newVP.setViewport( 0.0, 0.0, 0.1, 0.1);
+    newVP.setViewport( 0.0f, 0.0f, 0.1f, 0.1f);
     SoState *state = action->getState();
     SoViewportRegionElement::set( state, newVP );
   }
@@ -409,12 +409,12 @@ SoSeparator *create_board(SoEngineOutput *rotxfield,SoEngineOutput *rotyfield)
 
   // Bottom plate
   SoMaterial *mat = new SoMaterial;
-  mat->diffuseColor.setValue(0.44,0.20,0.11);
-  mat->specularColor.setValue(0.71,0.33,0.18);
+  mat->diffuseColor.setValue(0.44f,0.20f,0.11f);
+  mat->specularColor.setValue(0.71f,0.33f,0.18f);
   bsep->addChild(mat);
 
   SoCube *plate = new SoCube;
-  plate->height.setValue(0.5);
+  plate->height.setValue(0.5f);
   plate->width.setValue(10);
   plate->depth.setValue(10);
 
@@ -427,7 +427,7 @@ SoSeparator *create_board(SoEngineOutput *rotxfield,SoEngineOutput *rotyfield)
   imat->transparency.setValue(1);
   intersep->addChild(imat);
   SoTranslation *itrans = new SoTranslation;
-  itrans->translation.setValue(0,4.375,0);
+  itrans->translation.setValue(0,4.375f,0);
   intersep->addChild(itrans);
   SoCoordinate3 *coord = new SoCoordinate3;
   coord->point.set1Value(0,-5,0,-5);
@@ -451,10 +451,10 @@ SoSeparator *create_board(SoEngineOutput *rotxfield,SoEngineOutput *rotyfield)
 
 
   SoCylinder *cyl = new SoCylinder;
-  cyl->radius.setValue(0.05);
-  cyl->height.setValue(4.25);
+  cyl->radius.setValue(0.05f);
+  cyl->height.setValue(4.25f);
   SbVec3f move;
-  move.setValue(-3,2.25,-3);
+  move.setValue(-3,2.25f,-3);
   for (int j=0;j<4;j++) {
     for (int i=0;i<4;i++) {
       SoTranslation *trans = new SoTranslation;
@@ -481,27 +481,27 @@ SoSeparator *create_board(SoEngineOutput *rotxfield,SoEngineOutput *rotyfield)
   tokenmat->addChild(bluemat);
   tokensw->addChild(token);
   
-  token->radius.setValue(0.5);
+  token->radius.setValue(0.5f);
   tokensw->whichChild.setValue(SO_SWITCH_NONE);
   tokenmat->whichChild.setValue(SO_SWITCH_NONE);
-  redmat->diffuseColor.setValue(1.0, 0.0, 0.0);
-  redmat->specularColor.setValue(1.0, 1.0, 1.0);
-  bluemat->diffuseColor.setValue(0.0, 0.0, 1.0);
-  bluemat->specularColor.setValue(1.0, 1.0, 1.0);
-  tokenTrans->translation.setValue(0,4.75,0);
+  redmat->diffuseColor.setValue(1.0f, 0.0f, 0.0f);
+  redmat->specularColor.setValue(1.0f, 1.0f, 1.0f);
+  bluemat->diffuseColor.setValue(0.0f, 0.0f, 1.0f);
+  bluemat->specularColor.setValue(1.0f, 1.0f, 1.0f);
+  tokenTrans->translation.setValue(0,4.75f,0);
 
   SoSeparator *redsep;
   SoSeparator *bluesep;
   SoMaterial *redmats = new SoMaterial;
-  redmats->diffuseColor.setValue(1.0, 0.0, 0.0);
-  redmats->specularColor.setValue(1.0, 1.0, 1.0);
+  redmats->diffuseColor.setValue(1.0f, 0.0f, 0.0f);
+  redmats->specularColor.setValue(1.0f, 1.0f, 1.0f);
   board->addChild(redmats);
   redsep = new SoSeparator;
   board->addChild(redsep);
 
   SoMaterial *bluemats = new SoMaterial;
-  bluemats->diffuseColor.setValue(0.0, 0.0, 1.0);
-  bluemats->specularColor.setValue(1.0, 1.0, 1.0);
+  bluemats->diffuseColor.setValue(0.0f, 0.0f, 1.0f);
+  bluemats->specularColor.setValue(1.0f, 1.0f, 1.0f);
   board->addChild(bluemats);
   bluesep = new SoSeparator;
   board->addChild(bluesep);
@@ -512,7 +512,7 @@ SoSeparator *create_board(SoEngineOutput *rotxfield,SoEngineOutput *rotyfield)
   for (int k=0;k<4;k++)
     for (int j=0;j<4;j++)
       for (int i=0;i<4;i++) {
-        newTrans.setValue(i*2-3, k+0.75, -j*2+3);
+        newTrans.setValue(float(i*2-3), k+0.75f, float(-j*2+3));
         newTrans-=prevTrans;
 
         sw = new SoSwitch;
@@ -521,7 +521,7 @@ SoSeparator *create_board(SoEngineOutput *rotxfield,SoEngineOutput *rotyfield)
         tt->translation.setValue(newTrans);
         redsep->addChild(tt);
         SoSphere *s = new SoSphere;
-        s->radius.setValue(0.5);
+        s->radius.setValue(0.5f);
         sw->addChild(s);
         redsep->addChild(sw);
 
@@ -531,7 +531,7 @@ SoSeparator *create_board(SoEngineOutput *rotxfield,SoEngineOutput *rotyfield)
         tt->translation.setValue(newTrans);
         bluesep->addChild(tt);
         s = new SoSphere;
-        s->radius.setValue(0.5);
+        s->radius.setValue(0.5f);
         sw->addChild(s);
         bluesep->addChild(sw);
 
@@ -556,7 +556,7 @@ SoSeparator *create_winnerboard(int i0, int i1, int i2, int i3)
   SoSeparator *board = new SoSeparator;
 
   SoRotation *rot = new SoRotation;
-  rot->rotation = SbRotation(SbVec3f(1,0,0),30*M_PI/180);
+  rot->rotation = SbRotation(SbVec3f(1,0,0),30.f*float(M_PI)/180.f);
   board->addChild(rot);
 
   SoRotor *rotor = new SoRotor;
@@ -566,13 +566,13 @@ SoSeparator *create_winnerboard(int i0, int i1, int i2, int i3)
 
   // Bottom plate
   SoMaterial *mat = new SoMaterial;
-  mat->diffuseColor.setValue(0.44,0.20,0.11);
-  mat->specularColor.setValue(0.71,0.33,0.18);
-  mat->transparency.setValue(0.7);
+  mat->diffuseColor.setValue(0.44f,0.20f,0.11f);
+  mat->specularColor.setValue(0.71f,0.33f,0.18f);
+  mat->transparency.setValue(0.7f);
   board->addChild(mat);
 
   SoCube *plate = new SoCube;
-  plate->height.setValue(0.5);
+  plate->height.setValue(0.5f);
   plate->width.setValue(10);
   plate->depth.setValue(10);
 
@@ -585,16 +585,16 @@ SoSeparator *create_winnerboard(int i0, int i1, int i2, int i3)
   mat = new SoMaterial;
   mat->specularColor.setValue(1.0f, 0.0f, 0.0f);
   mat->emissiveColor.setValue(0.5f, 0.3f, 0.0f);
-  mat->transparency.setValue(0.7);
+  mat->transparency.setValue(0.7f);
   mat->shininess = 0.8f;
   cylsep->addChild(mat);
 
 
   SoCylinder *cyl = new SoCylinder;
-  cyl->radius.setValue(0.05);
-  cyl->height.setValue(4.25);
+  cyl->radius.setValue(0.05f);
+  cyl->height.setValue(4.25f);
   SbVec3f move;
-  move.setValue(-3,2.25,-3);
+  move.setValue(-3,2.25f,-3);
   for (int j=0;j<4;j++) {
     for (int i=0;i<4;i++) {
       SoTranslation *trans = new SoTranslation;
@@ -607,9 +607,9 @@ SoSeparator *create_winnerboard(int i0, int i1, int i2, int i3)
   }
 
   SoMaterial *redmats = new SoMaterial;
-  redmats->diffuseColor.setValue(1.0, 0.0, 0.0);
-  redmats->specularColor.setValue(1.0, 1.0, 1.0);
-  redmats->transparency.setValue(0.7);
+  redmats->diffuseColor.setValue(1.0f, 0.0f, 0.0f);
+  redmats->specularColor.setValue(1.0f, 1.0f, 1.0f);
+  redmats->transparency.setValue(0.7f);
   board->addChild(redmats);
 
   int idx[4] = {i0,i1,i2,i3};
@@ -619,13 +619,13 @@ SoSeparator *create_winnerboard(int i0, int i1, int i2, int i3)
     int i = idx[a]&0x03;
     int j = (idx[a]&0x0c)>>2;
     int k = (idx[a]&0x30)>>4;
-    newTrans.setValue(i*2-3, k+0.75, -j*2+3);
+    newTrans.setValue(float(i*2-3), k+0.75f, float(-j*2+3));
     newTrans-=prevTrans;
     SoTranslation *t0 = new SoTranslation;
     t0->translation.setValue(newTrans);
     board->addChild(t0);
     SoSphere *s = new SoSphere;
-    s->radius.setValue(0.5);
+    s->radius.setValue(0.5f);
     board->addChild(s);
     prevTrans+=newTrans;
   }
@@ -656,7 +656,7 @@ SoSeparator *create_helpscene()
   SoSeparator *boards = new SoSeparator;
   root->addChild(boards);
   SoTranslation *trans = new SoTranslation;
-  trans->translation.setValue(0,7.5,0);
+  trans->translation.setValue(0,7.5f,0);
   boards->addChild(trans);
   SoSeparator *b1 = create_winnerboard(4,5,6,7);
   boards->addChild(b1);
@@ -701,7 +701,7 @@ SoSeparator *create_helpscene()
   //FIXME: Uncommented is workaround for camera/text2 problem (gcc-2.96)
 //    ocam->position.setValue(0,0,-10);
   ocam->viewportMapping.setValue(SoCamera::LEAVE_ALONE);
-  ocam->nearDistance.setValue(0.1);
+  ocam->nearDistance.setValue(0.1f);
   ocam->farDistance.setValue(100);
   instructsep->addChild(ocam);
 
@@ -749,10 +749,10 @@ SoSeparator *create_helpscene()
   instructsep->addChild(coord);
   float aspect = out.getAspectRatio();
   ocam->aspectRatio.setValue(aspect);
-  coord->point.set1Value(0, SbVec3f(-1.0*aspect, -1.0, 0));
-  coord->point.set1Value(1, SbVec3f( 1.0*aspect, -1.0, 0));
-  coord->point.set1Value(2, SbVec3f( 1.0*aspect,  1.0, 0));
-  coord->point.set1Value(3, SbVec3f(-1.0*aspect,  1.0, 0));
+  coord->point.set1Value(0, SbVec3f(-1.0f*aspect, -1.0f, 0));
+  coord->point.set1Value(1, SbVec3f( 1.0f*aspect, -1.0f, 0));
+  coord->point.set1Value(2, SbVec3f( 1.0f*aspect,  1.0f, 0));
+  coord->point.set1Value(3, SbVec3f(-1.0f*aspect,  1.0f, 0));
 
   // Define the consol texture coordinates
   SoTextureCoordinate2 *tex_coord = new SoTextureCoordinate2;
@@ -812,21 +812,21 @@ main(int argc, char **argv)
   SoSeparator *draggersep = new SoSeparator;
   gameroot->addChild(draggersep);
   SoTranslation *dtrans = new SoTranslation;
-  dtrans->translation.setValue(-0.6,0,0);
+  dtrans->translation.setValue(-0.6f,0,0);
   draggersep->addChild(dtrans);
   SoTranslate1Dragger *xdragger = new SoTranslate1Dragger;
-  xdragger->translation.setValue(0.6,-3,10);
+  xdragger->translation.setValue(0.6f,-3,10);
 //    xdragger->addValueChangedCallback(draggerCB,NULL);
   draggersep->addChild(xdragger);
 
   SoRotation *drot = new SoRotation;
-  drot->rotation.setValue(SbVec3f(0,0,1),-90*M_PI/180);
+  drot->rotation.setValue(SbVec3f(0,0,1),-90.f*float(M_PI)/180.f);
   draggersep->addChild(drot);
   dtrans = new SoTranslation;
-  dtrans->translation.setValue(2.4,0,0);
+  dtrans->translation.setValue(2.4f,0,0);
   draggersep->addChild(dtrans);
   SoTranslate1Dragger *ydragger = new SoTranslate1Dragger;
-  ydragger->translation.setValue(0.6,0.6,10);
+  ydragger->translation.setValue(0.6f,0.6f,10);
 //    ydragger->addValueChangedCallback(draggerCB,NULL);
   draggersep->addChild(ydragger);
   
@@ -912,7 +912,7 @@ main(int argc, char **argv)
   //FIXME: Uncommented is workaround for camera/text2 problem (gcc-2.96)
 //    ocam->orientation.setValue(SbRotation(SbVec3f(0,1,0),M_PI));
   ocam->viewportMapping.setValue(SoCamera::LEAVE_ALONE);
-  ocam->nearDistance.setValue(0.1);
+  ocam->nearDistance.setValue(0.1f);
   instructsep->addChild(ocam);
 
   SoTranslation *instructtrans = new SoTranslation;

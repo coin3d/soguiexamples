@@ -82,11 +82,11 @@
 #include <Inventor/SoPickedPoint.h>
 #include <Inventor/SoPath.h>
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
-#include <math.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cassert>
+#include <cmath>
 
 /* to facilitate picking on 0-level bars
  * picking is not affected by the PolygonOffset node */
@@ -120,14 +120,14 @@ main(
   srand(SbTime::getTimeOfDay().getMsecValue());
   viewer = new So@Gui@ExaminerViewer(win);
   viewer->setViewing(false);
-  int x, y, w = 12, d = 12;
+  int w = 12, d = 12;
   SoNode * scene = initSceneGraph( w, d );
   viewer->setSceneGraph(scene);
   viewer->show();
   So@Gui@::show(win);
   SoCamera * camera = viewer->getCamera();
-  camera->orientation.setValue( SbRotation(SbVec3f(1, 0, 0), (M_PI/3.0f)) *
-                                SbRotation(SbVec3f(0, 0, 1), -(M_PI/4.0f)) );
+  camera->orientation.setValue( SbRotation(SbVec3f(1, 0, 0), (float(M_PI)/3.0f)) *
+                                SbRotation(SbVec3f(0, 0, 1), -(float(M_PI)/4.0f)) );
   viewer->viewAll();
   So@Gui@::mainLoop();
   delete viewer;
@@ -233,7 +233,7 @@ initSceneGraph(
   do { // set up topfaces
     int i, j;
     const int offset = 8 + (WIDTH+1) * (DEPTH+1);
-    int * indexvalues, * iptr, * materialindex, * mptr, * normalindex, * nptr;
+    int * indexvalues, * iptr, * materialindex, * normalindex;
     indexvalues = new int [ 6 * WIDTH * DEPTH ];
     iptr = indexvalues;
     materialindex = new int [ WIDTH * DEPTH + 1 ];
@@ -484,7 +484,7 @@ setRandomDemoMode(void)
     do {
       for ( y = 0; y < d; y++ )
         for ( x = 0; x < w; x++ )
-          setLevel( w, d, x, y, 0.15 * float(x+y) );
+          setLevel( w, d, x, y, 0.15f * float(x+y) );
     } while ( 0 );
     break;
   case 5:
@@ -536,8 +536,8 @@ setRandomDemoMode(void)
     do {
       for ( y = 0; y < d; y++ ) {
         for ( x = 0; x < w; x++ ) {
-          float disty = 5.5 - float(y);
-          float distx = 5.5 - float(x);
+          float disty = 5.5f - float(y);
+          float distx = 5.5f - float(x);
           disty = disty * disty;
           distx = distx * distx;
           float height = 4.0f;
@@ -561,8 +561,8 @@ setRandomDemoMode(void)
     do {
       for ( y = 0; y < d; y++ ) {
         for ( x = 0; x < w; x++ ) {
-          float disty = 5.5 - float(y);
-          float distx = 5.5 - float(x);
+          float disty = 5.5f - float(y);
+          float distx = 5.5f - float(x);
           disty = disty * disty;
           distx = distx * distx;
           float height = 4.0f;

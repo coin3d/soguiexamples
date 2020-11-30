@@ -53,8 +53,8 @@
  *
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
-#include <time.h>
+#include <cstdlib> // exit()
+#include <ctime>
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -121,11 +121,11 @@ light()
 
    // two directional white lights from front and back
    SoDirectionalLight * dl1 = new SoDirectionalLight;
-   dl1->direction.setValue(-0.5, 0, -1);
+   dl1->direction.setValue(-0.5f, 0, -1);
    dl1->color.setValue(1, 1, 1);  
 
    SoDirectionalLight * dl2 = new SoDirectionalLight;
-   dl2->direction.setValue(0.5, 0, 1);
+   dl2->direction.setValue(0.5f, 0, 1);
    dl2->color.setValue(1, 1, 1);     
 
    tfs->addChild(dl1);
@@ -170,17 +170,17 @@ createParticle(float gravity, bool isRandom)
 
     // shape for particle
     SoCube * sBox = new SoCube;
-    sBox->width = .06;
-    sBox->height = .06;
-    sBox->depth = .06;
+    sBox->width = .06f;
+    sBox->height = .06f;
+    sBox->depth = .06f;
 
     // arithmetic calculator engine 
     // calculate y movement ("wurfparabel") according to formula
     // y = vt - 0.5 at^ 2  --- this is the same as  y = t(v - 0.5at)
     SoCalculator *calcXZ = new SoCalculator; 
-    calcXZ->b = 2 * (-0.5 + (1 * rand()/(float)(RAND_MAX + 1.0)));      // x direction
-    calcXZ->c = 2 * (-0.5 + (1 * rand()/(float)(RAND_MAX + 1.0)));  
-    calcXZ->d = 2 * (-0.5 + (1 * rand()/(float)(RAND_MAX + 1.0)));      // z direction
+    calcXZ->b = 2 * (-0.5f + (1 * rand()/(float)(RAND_MAX + 1.0f)));      // x direction
+    calcXZ->c = 2 * (-0.5f + (1 * rand()/(float)(RAND_MAX + 1.0f)));  
+    calcXZ->d = 2 * (-0.5f + (1 * rand()/(float)(RAND_MAX + 1.0f)));      // z direction
     calcXZ->e = gravity;                                                // gravity
 
     if (isRandom) {
@@ -226,14 +226,14 @@ plane()
     SoSeparator * plane = new SoSeparator;
 
     SoTransform * tfPlane = new SoTransform;
-    SbRotation r (SbVec3f(1., 0., 0.), M_PI/2);
-    tfPlane->translation.setValue(0.0, 0.0, 0.0);
+    SbRotation r (SbVec3f(1, 0, 0), float(M_PI)/2);
+    tfPlane->translation.setValue(0, 0, 0);
     tfPlane->rotation = r;
 
     SoCube * sPlane = new SoCube;
     sPlane->width = 5;
     sPlane->height = 5;
-    sPlane->depth = .05;
+    sPlane->depth = .05f;
 
     plane->addChild(tfPlane);
     plane->addChild(sPlane);
@@ -244,13 +244,13 @@ plane()
 
 void addParticles(int numParticles, SoGroup * node){
     for (int i = 0; i < numParticles; i++){
-        node->addChild(createParticle(0.9, false));
+        node->addChild(createParticle(0.9f, false));
      }
 }
 
 void addExplosionParticles(int numParticles, SoGroup * node){
     for (int i = 0; i < numParticles; i++){
-        node->addChild(createParticle(0.2, true));
+        node->addChild(createParticle(0.2f, true));
      }
 }
 
@@ -267,31 +267,31 @@ scene()
     one->flags.setValue(SoOneShot::HOLD_FINAL);
 
     SoMaterial * mPlain = new SoMaterial;
-    mPlain->ambientColor.setValue(0.5, 0.5, 0.5);
+    mPlain->ambientColor.setValue(0.5f, 0.5f, 0.5f);
     mPlain->diffuseColor.setValue(1, 1, 1);
-    mPlain->specularColor.setValue(.5, .5, .5);
-    mPlain->shininess = .5;
+    mPlain->specularColor.setValue(0.5f, 0.5f, 0.5f);
+    mPlain->shininess = 0.5f;
     mPlain->transparency = 0;
 
     SoMaterial * mInv = new SoMaterial;
     mInv->transparency = 1;
 
     SoMaterial * mMetalS = new SoMaterial;
-    mMetalS->ambientColor.setValue(0.5, 0.5, 0.5);
-    mMetalS->diffuseColor.setValue(0.5, 0.7, 0.9);
-    mMetalS->specularColor.setValue(.5, .5, .5);
-    mMetalS->shininess = .5;
+    mMetalS->ambientColor.setValue(0.5f, 0.5f, 0.5f);
+    mMetalS->diffuseColor.setValue(0.5f, 0.7f, 0.9f);
+    mMetalS->specularColor.setValue(0.5f, 0.5f, 0.5f);
+    mMetalS->shininess = 0.5f;
     mMetalS->transparency = 0;
     mMetalS->transparency.connectFrom(&one->ramp);
 
     SoCube * sBox = new SoCube;
-    sBox->width = .1;
-    sBox->height = .1;
-    sBox->depth = .1;
+    sBox->width = .1f;
+    sBox->height = .1f;
+    sBox->depth = .1f;
 
     SoSeparator * box1 = new SoSeparator;
     SoTransform * tfBox1 = new SoTransform;
-    tfBox1->translation.setValue(1.9, 8.0, 1.9);
+    tfBox1->translation.setValue(1.9f, 8.0f, 1.9f);
     box1->addChild(tfBox1);
     box1->addChild(sBox);
 

@@ -32,7 +32,7 @@
 
 // Written by Tor-Helge Skei <skei@sim.no>.
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 
 #include <Inventor/SoDB.h>
 #include <Inventor/nodes/SoBaseColor.h>
@@ -78,9 +78,9 @@ main(
   for ( x = 0; x < SIZEX; x++ ) {
     for ( y = 0; y < SIZEY; y++ ) {
       for ( z = 0; z < SIZEZ; z++ ) {
-        cube_vertices[num][0] = (SIZEX/2)-x;
-        cube_vertices[num][1] = (SIZEY/2)-y;
-        cube_vertices[num][2] = (SIZEZ/2)-z;
+        cube_vertices[num][0] = float((SIZEX/2)-x);
+        cube_vertices[num][1] = float((SIZEY/2)-y);
+        cube_vertices[num][2] = float((SIZEZ/2)-z);
         cl[num][0] = (float) x / (float) SIZEX;
         cl[num][1] = (float) y / (float) SIZEY;
         cl[num][2] = (float) z / (float) SIZEZ;

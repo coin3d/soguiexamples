@@ -33,13 +33,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <qcanvas.h>
+#include <QGraphicsPolygonItem>
 #include <Inventor/SbBasic.h>
 
-class TickMark : public QCanvasPolygon
+class QGraphicsScene;
+
+class TickMark : public QGraphicsPolygonItem
 {
 public:
-  TickMark(QCanvas * canvas);
+  TickMark(QGraphicsScene* canvas);
   ~TickMark();
 
   float getPos(void) const;

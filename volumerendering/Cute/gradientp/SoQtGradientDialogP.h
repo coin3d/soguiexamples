@@ -33,7 +33,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <qvaluelist.h>
+#include <QList>
 #include <qobject.h>
 #include "../Gradient.h"
 
@@ -59,7 +59,7 @@ public:
 
   QFileDialog * filedialog;
   GradientView * gradview;
-  QValueList<Gradient> gradients;
+  QList<Gradient> gradients;
   QComboBox * gradientlist;
   QCheckBox * contupdate;
   Gradient gradientcopy;

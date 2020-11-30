@@ -42,9 +42,9 @@
 #include <Inventor/nodes/SoMaterial.h>
 #include <Inventor/nodes/SoFaceSet.h>
 #include <Inventor/nodes/SoTextureCoordinate2.h>
-#include <stdio.h>
-#include <stdlib.h> // exit()
-#include <math.h>
+#include <cstdio>
+#include <cstdlib> // exit()
+#include <cmath>
 
 #include "star.h"
 
@@ -74,9 +74,9 @@ matter how close will diverge, usually sooner rather than later.\n\n";
 
 static float vertices[18][3] =
 {
-  { -0.5, 0.5, 0 }, { 0.5, 0.5, 0 }, { 0.5, -0.5, 0 },  { -0.5, -0.5, 0 },
-  { -0.5, 0, 0.5 }, { 0.5, 0, 0.5 }, { 0.5, 0, -0.5 }, { -0.5, 0, -0.5 },
-  { 0, -0.5, 0.5}, { 0, 0.5, 0.5 }, { 0, 0.5, -0.5 }, { 0, -0.5, -0.5 }
+  { -0.5f, 0.5f, 0 }, { 0.5f, 0.5f, 0 }, { 0.5f, -0.5f, 0 }, { -0.5f, -0.5f, 0 },
+  { -0.5f, 0, 0.5f }, { 0.5f, 0, 0.5f }, { 0.5f, 0, -0.5f }, { -0.5f, 0, -0.5f },
+  { 0, -0.5f, 0.5f}, { 0, 0.5f, 0.5f }, { 0, 0.5f, -0.5f }, { 0, -0.5f, -0.5f }
 };
 
 SoSeparator * create_star(SbVec3f pos)
@@ -146,7 +146,7 @@ main (int argc, char ** argv)
   SoTexture2 * texture = new SoTexture2;
   texture->image.setValue(SbVec2s(64, 64), 4, (unsigned char *)star_raw);
   texture->model = SoTexture2::DECAL;
-  texture->blendColor.setValue(1.0, 0.0, 0.0);
+  texture->blendColor.setValue(1.0f, 0.0f, 0.0f);
   stars->addChild(texture);
 
   SoTextureCoordinate2 * texcoord = new SoTextureCoordinate2;
@@ -176,7 +176,7 @@ main (int argc, char ** argv)
     y0 = y1;
     z0 = z1;
     if (i > 100) { // skip the first 100 to avoid a too tight cluster
-      stars->addChild(create_star(SbVec3f(x0, y0, z0)));
+      stars->addChild(create_star(SbVec3f(float(x0), float(y0), float(z0))));
     }
   }
 

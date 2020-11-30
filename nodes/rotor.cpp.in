@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SbBasic.h>
@@ -62,13 +62,13 @@ scene(float h, float r, float c, float cs, int n)
 
     cyl->height = h;
     cyl->radius = r;
-    mat->diffuseColor.setValue(c, 0.5, -c+1.0);
-    rotor->speed = (float)n/100.0;
+    mat->diffuseColor.setValue(c, 0.5f, -c+1.0f);
+    rotor->speed = (float)n/100.0f;
     if ((n%2)==0)
-      rotor->rotation.setValue(SbVec3f(0, 0, 1), 0.1); // counterclockwise
+      rotor->rotation.setValue(SbVec3f(0, 0, 1), 0.1f); // counterclockwise
     else
-      rotor->rotation.setValue(SbVec3f(0, 0, 1), -0.1);// clockwise
-    rot->rotation.setValue(SbVec3f(1, 0, 0), M_PI/5);
+      rotor->rotation.setValue(SbVec3f(0, 0, 1), -0.1f);// clockwise
+    rot->rotation.setValue(SbVec3f(1, 0, 0), float(M_PI)/5);
 
     sep->addChild(rotor);
     sep->addChild(mat);
@@ -100,7 +100,7 @@ main (int, char ** argv)
 
   root->ref();  // increments the reference counter
   root->addChild(hints);
-  root->addChild(scene(10.0, 0.3, 1.0, 0.1, 8));
+  root->addChild(scene(10.0f, 0.3f, 1.0f, 0.1f, 8));
 
   // Set up Examiner Viewer
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);

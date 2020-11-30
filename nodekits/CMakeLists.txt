@@ -1,46 +1,24 @@
-INCLUDE_DIRECTORIES(./)
-SET(CONF_FILE_DIR ${PROJECT_BINARY_DIR}/nodekits)
-INCLUDE_DIRECTORIES(${CONF_FILE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 #scalemarker example
-if (SIMVoleon_FOUND)
-  CONFIGURE_FILE(scalemarker.cpp.in ${CONF_FILE_DIR}/scalemarker.cpp)
-  SET(scalemarker_SOURCE ${CONF_FILE_DIR}/scalemarker.cpp)
-  ADD_EXECUTABLE(scalemarker ${scalemarker_SOURCE})
-  TARGET_LINK_LIBRARIES(scalemarker ${LINK_LIBRARY})
+if(SIMVoleon_FOUND)
+  configure_file(scalemarker.cpp.in scalemarker.cpp)
+  add_executable(scalemarker ${CMAKE_CURRENT_BINARY_DIR}/scalemarker.cpp)
+  target_link_libraries(scalemarker PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+  install(TARGETS scalemarker RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodekits)
 endif()
 
 #wavekitdemo example
-CONFIGURE_FILE(wavekitdemo.cpp.in ${CONF_FILE_DIR}/wavekitdemo.cpp)
-SET(wavekitdemo_SOURCE ${CONF_FILE_DIR}/wavekitdemo.cpp WaveSurfaceKit.cpp WaveSurfaceKit.h)
-ADD_EXECUTABLE(wavekitdemo ${wavekitdemo_SOURCE})
-TARGET_LINK_LIBRARIES(wavekitdemo ${LINK_LIBRARY})
-dump_variable(
-LINK_LIBRARY
+configure_file(wavekitdemo.cpp.in wavekitdemo.cpp)
+add_executable(wavekitdemo ${CMAKE_CURRENT_BINARY_DIR}/wavekitdemo.cpp WaveSurfaceKit.cpp WaveSurfaceKit.h)
+target_link_libraries(wavekitdemo PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS wavekitdemo RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodekits)
+
+#copy textures to build directory
+file(COPY textures/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/textures FILES_MATCHING PATTERN "*.jpg")
+
+#copy the textures directory to install directory
+install(DIRECTORY textures/ DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodekits/textures
+  FILES_MATCHING PATTERN "*.jpg"
 )
-# copy over the textures pic
-CONFIGURE_FILE(textures/envmap.jpg ${CONF_FILE_DIR}/textures/envmap.jpg COPYONLY)
-
-CONFIGURE_FILE(textures/stone.jpg ${CONF_FILE_DIR}/textures/stone.jpg COPYONLY)
-
-CONFIGURE_FILE(textures/stone2.jpg ${CONF_FILE_DIR}/textures/stone2.jpg COPYONLY)
-
-CONFIGURE_FILE(textures/wood2.jpg ${CONF_FILE_DIR}/textures/wood2.jpg COPYONLY)
-
-
-#Generate the tree structure in the VS Projects.
-SIM_VS_GENERATE_BASIC_TREE()
-
-if (SIMVoleon_FOUND)
-  INSTALL(TARGETS scalemarker RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodekits)
-endif()
-
-INSTALL(TARGETS wavekitdemo
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodekits
-)
-
-
-#copy the textures directory to debug directory
-INSTALL(DIRECTORY ./textures/ DESTINATION ${CURRENT_BUILD_DIR}/nodekits/textures
-        FILES_MATCHING PATTERN "*.jpg"
-        PATTERN ".hg" EXCLUDE)

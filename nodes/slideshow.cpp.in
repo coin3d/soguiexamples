@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/So@Gui@RenderArea.h>
 #include <Inventor/engines/SoCompose.h>
@@ -79,8 +79,8 @@ alarm_trigger( void * userdata, SoSensor * sensor )
 
   camera->viewAll( root, renderarea->getViewportRegion() );
   // Lots of slack for models which are not centered in (0,0,0).
-  camera->nearDistance = camera->nearDistance.getValue() * 0.1;
-  camera->farDistance = (camera->farDistance.getValue() + 1.0 ) * 10.0;
+  camera->nearDistance = camera->nearDistance.getValue() * 0.1f;
+  camera->farDistance = (camera->farDistance.getValue() + 1.0f ) * 10.0f;
 
   argposition = ( argposition + 1 ) % argcount;
   if ( argposition == 0 ) argposition++;
@@ -110,7 +110,6 @@ main(
   argcount = argc;
   argptr = argv;
 
-
   // Set up scene graph.
 
   root = new SoGroup;
@@ -135,13 +134,12 @@ main(
 
   SoElapsedTime * timeengine = new SoElapsedTime;
   SoComposeRotation * rotationengine = new SoComposeRotation;
-  rotationengine->axis.setValue( 0.2, 1, 0.5 );
+  rotationengine->axis.setValue( 0.2f, 1.0f, 0.5f );
   rotationengine->angle.connectFrom( & timeengine->timeOut );
   objectrotation->rotation.connectFrom( & rotationengine->rotation );
 
   filenode = new SoFile;
   root->addChild( filenode );
-
 
   // Instantiate renderarea.
 
@@ -149,12 +147,10 @@ main(
   renderarea->setSceneGraph( root );
   renderarea->show();
 
-
   // Configure alarm sensor.
 
   SoAlarmSensor * alarm = new SoAlarmSensor(alarm_trigger, NULL);
   alarm_trigger(NULL, alarm);
-
 
   // Map widgets to display.
 

@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/So@Gui@RenderArea.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -40,7 +40,7 @@
 #include <Inventor/nodes/SoSphere.h>
 
 int
-main(int, char **argv) 
+main(int, char **argv)
 {
   (void)printf("This example shows how to put color on a sphere by using the field diffuseColor in the SoMaterial node\n");
 
@@ -48,7 +48,7 @@ main(int, char **argv)
   // If unsuccessful, exit
   @WIDGET@ window = So@Gui@::init(argv[0]); // pass the application name
   if (window==NULL) exit(1);
-  
+
   // Create a scene cointaining a blue sphere
   SoSeparator *root = new SoSeparator;
   SoPerspectiveCamera *camera = new SoPerspectiveCamera;
@@ -63,19 +63,19 @@ main(int, char **argv)
   root->addChild(light);   // add directional light to the scene
   root->addChild(material);// add material (with default settings)
   root->addChild(sphere);  // add sphere node to the scene graph
-  
+
   // Create a renderingarea which will be used to display the
   // scene graph in the main window
   So@Gui@RenderArea *renderArea = new So@Gui@RenderArea(window);
-  
+
   // Adjust the camera to fit the scene graph
   camera->viewAll(root, renderArea->getViewportRegion());
-  
+
   // Display the scene in our renderArea and change the title
   renderArea->setSceneGraph(root);
   renderArea->setTitle("Sphere with color");
   renderArea->show();
-  
+
   So@Gui@::show(window); // display the main window
   So@Gui@::mainLoop();   // main Coin event loop
   delete renderArea;     // free up the resources used by the renderArea

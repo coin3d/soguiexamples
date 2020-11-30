@@ -1,367 +1,242 @@
-INCLUDE_DIRECTORIES(./)
-SET(CONF_FILE_DIR ${PROJECT_BINARY_DIR}/nodes)
-INCLUDE_DIRECTORIES(${CONF_FILE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 #atmospheric example
-CONFIGURE_FILE(atmospheric.cpp.in ${CONF_FILE_DIR}/atmospheric.cpp)
-SET(atmospheric_SOURCE ${CONF_FILE_DIR}/atmospheric.cpp)
-ADD_EXECUTABLE(atmospheric ${atmospheric_SOURCE})
-TARGET_LINK_LIBRARIES(atmospheric ${LINK_LIBRARY})
+configure_file(atmospheric.cpp.in atmospheric.cpp)
+add_executable(atmospheric ${CMAKE_CURRENT_BINARY_DIR}/atmospheric.cpp)
+target_link_libraries(atmospheric PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS atmospheric RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #bigimage example
-CONFIGURE_FILE(bigimage.cpp.in ${CONF_FILE_DIR}/bigimage.cpp)
-SET(bigimage_SOURCE ${CONF_FILE_DIR}/bigimage.cpp)
-ADD_EXECUTABLE(bigimage ${bigimage_SOURCE})
-TARGET_LINK_LIBRARIES(bigimage ${LINK_LIBRARY})
+configure_file(bigimage.cpp.in bigimage.cpp)
+add_executable(bigimage ${CMAKE_CURRENT_BINARY_DIR}/bigimage.cpp)
+target_link_libraries(bigimage PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS bigimage RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #blinker example
-CONFIGURE_FILE(blinker.cpp.in ${CONF_FILE_DIR}/blinker.cpp)
-SET(blinker_SOURCE ${CONF_FILE_DIR}/blinker.cpp)
-ADD_EXECUTABLE(blinker ${blinker_SOURCE})
-TARGET_LINK_LIBRARIES(blinker ${LINK_LIBRARY})
+configure_file(blinker.cpp.in blinker.cpp)
+add_executable(blinker ${CMAKE_CURRENT_BINARY_DIR}/blinker.cpp)
+target_link_libraries(blinker PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS blinker RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #bumpmap example
-CONFIGURE_FILE(bumpmap.cpp.in ${CONF_FILE_DIR}/bumpmap.cpp)
-SET(bumpmap_SOURCE ${CONF_FILE_DIR}/bumpmap.cpp)
-ADD_EXECUTABLE(bumpmap ${bumpmap_SOURCE})
-TARGET_LINK_LIBRARIES(bumpmap ${LINK_LIBRARY})
+configure_file(bumpmap.cpp.in bumpmap.cpp)
+add_executable(bumpmap ${CMAKE_CURRENT_BINARY_DIR}/bumpmap.cpp )
+target_link_libraries(bumpmap PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS bumpmap RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #camera example
-CONFIGURE_FILE(camera.cpp.in ${CONF_FILE_DIR}/camera.cpp)
-SET(camera_SOURCE ${CONF_FILE_DIR}/camera.cpp)
-ADD_EXECUTABLE(camera ${camera_SOURCE})
-TARGET_LINK_LIBRARIES(camera ${LINK_LIBRARY})
+configure_file(camera.cpp.in camera.cpp)
+add_executable(camera ${CMAKE_CURRENT_BINARY_DIR}/camera.cpp)
+target_link_libraries(camera PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS camera RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #clipplane example
-CONFIGURE_FILE(clipplane.cpp.in ${CONF_FILE_DIR}/clipplane.cpp)
-SET(clipplane_SOURCE ${CONF_FILE_DIR}/clipplane.cpp)
-ADD_EXECUTABLE(clipplane ${clipplane_SOURCE})
-TARGET_LINK_LIBRARIES(clipplane ${LINK_LIBRARY})
+configure_file(clipplane.cpp.in clipplane.cpp)
+add_executable(clipplane ${CMAKE_CURRENT_BINARY_DIR}/clipplane.cpp)
+target_link_libraries(clipplane PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS clipplane RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #complexity example
-CONFIGURE_FILE(complexity.cpp.in ${CONF_FILE_DIR}/complexity.cpp)
-SET(complexity_SOURCE ${CONF_FILE_DIR}/complexity.cpp)
-ADD_EXECUTABLE(complexity ${complexity_SOURCE})
-TARGET_LINK_LIBRARIES(complexity ${LINK_LIBRARY})
+configure_file(complexity.cpp.in complexity.cpp)
+add_executable(complexity ${CMAKE_CURRENT_BINARY_DIR}/complexity.cpp)
+target_link_libraries(complexity PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS complexity RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #directionallight example
-CONFIGURE_FILE(directionallight.cpp.in ${CONF_FILE_DIR}/directionallight.cpp)
-SET(directionallight_SOURCE ${CONF_FILE_DIR}/directionallight.cpp)
-ADD_EXECUTABLE(directionallight ${directionallight_SOURCE})
-TARGET_LINK_LIBRARIES(directionallight ${LINK_LIBRARY})
+configure_file(directionallight.cpp.in directionallight.cpp)
+add_executable(directionallight ${CMAKE_CURRENT_BINARY_DIR}/directionallight.cpp)
+target_link_libraries(directionallight PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS directionallight RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #drawstyle example
-CONFIGURE_FILE(drawstyle.cpp.in ${CONF_FILE_DIR}/drawstyle.cpp)
-SET(drawstyle_SOURCE ${CONF_FILE_DIR}/drawstyle.cpp)
-ADD_EXECUTABLE(drawstyle ${drawstyle_SOURCE})
-TARGET_LINK_LIBRARIES(drawstyle ${LINK_LIBRARY})
+configure_file(drawstyle.cpp.in drawstyle.cpp)
+add_executable(drawstyle ${CMAKE_CURRENT_BINARY_DIR}/drawstyle.cpp)
+target_link_libraries(drawstyle PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS drawstyle RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #environment example
-CONFIGURE_FILE(environment.cpp.in ${CONF_FILE_DIR}/environment.cpp)
-SET(environment_SOURCE ${CONF_FILE_DIR}/environment.cpp)
-ADD_EXECUTABLE(environment ${environment_SOURCE})
-TARGET_LINK_LIBRARIES(environment ${LINK_LIBRARY})
+configure_file(environment.cpp.in environment.cpp)
+add_executable(environment ${CMAKE_CURRENT_BINARY_DIR}/environment.cpp)
+target_link_libraries(environment PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS environment RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #extselection example
-CONFIGURE_FILE(extselection.cpp.in ${CONF_FILE_DIR}/extselection.cpp)
-SET(extselection_SOURCE ${CONF_FILE_DIR}/extselection.cpp)
-ADD_EXECUTABLE(extselection ${extselection_SOURCE})
-TARGET_LINK_LIBRARIES(extselection ${LINK_LIBRARY})
+configure_file(extselection.cpp.in extselection.cpp)
+add_executable(extselection ${CMAKE_CURRENT_BINARY_DIR}/extselection.cpp)
+target_link_libraries(extselection PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS extselection RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #faceset example
-CONFIGURE_FILE(faceset.cpp.in ${CONF_FILE_DIR}/faceset.cpp)
-SET(faceset_SOURCE ${CONF_FILE_DIR}/faceset.cpp)
-ADD_EXECUTABLE(faceset ${faceset_SOURCE})
-TARGET_LINK_LIBRARIES(faceset ${LINK_LIBRARY})
+configure_file(faceset.cpp.in faceset.cpp)
+add_executable(faceset ${CMAKE_CURRENT_BINARY_DIR}/faceset.cpp)
+target_link_libraries(faceset PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS faceset RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #facesetindexed example
-CONFIGURE_FILE(facesetindexed.cpp.in ${CONF_FILE_DIR}/facesetindexed.cpp)
-SET(facesetindexed_SOURCE ${CONF_FILE_DIR}/facesetindexed.cpp)
-ADD_EXECUTABLE(facesetindexed ${facesetindexed_SOURCE})
-TARGET_LINK_LIBRARIES(facesetindexed ${LINK_LIBRARY})
+configure_file(facesetindexed.cpp.in facesetindexed.cpp)
+add_executable(facesetindexed ${CMAKE_CURRENT_BINARY_DIR}/facesetindexed.cpp)
+target_link_libraries(facesetindexed PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS facesetindexed RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #image example
-CONFIGURE_FILE(image.cpp.in ${CONF_FILE_DIR}/image.cpp)
-SET(image_SOURCE ${CONF_FILE_DIR}/image.cpp)
-ADD_EXECUTABLE(image ${image_SOURCE})
-TARGET_LINK_LIBRARIES(image ${LINK_LIBRARY})
+configure_file(image.cpp.in image.cpp)
+add_executable(image ${CMAKE_CURRENT_BINARY_DIR}/image.cpp)
+target_link_libraries(image PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS image RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #levelofdetail example
-CONFIGURE_FILE(levelofdetail.cpp.in ${CONF_FILE_DIR}/levelofdetail.cpp)
-SET(levelofdetail_SOURCE ${CONF_FILE_DIR}/levelofdetail.cpp)
-ADD_EXECUTABLE(levelofdetail ${levelofdetail_SOURCE})
-TARGET_LINK_LIBRARIES(levelofdetail ${LINK_LIBRARY})
+configure_file(levelofdetail.cpp.in levelofdetail.cpp)
+add_executable(levelofdetail ${CMAKE_CURRENT_BINARY_DIR}/levelofdetail.cpp)
+target_link_libraries(levelofdetail PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS levelofdetail RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #lights example
-CONFIGURE_FILE(lights.cpp.in ${CONF_FILE_DIR}/lights.cpp)
-SET(lights_SOURCE ${CONF_FILE_DIR}/lights.cpp)
-ADD_EXECUTABLE(lights ${lights_SOURCE})
-TARGET_LINK_LIBRARIES(lights ${LINK_LIBRARY})
+configure_file(lights.cpp.in lights.cpp)
+add_executable(lights ${CMAKE_CURRENT_BINARY_DIR}/lights.cpp)
+target_link_libraries(lights PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS lights RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #markerset example
-CONFIGURE_FILE(markerset.cpp.in ${CONF_FILE_DIR}/markerset.cpp)
-SET(markerset_SOURCE ${CONF_FILE_DIR}/markerset.cpp)
-ADD_EXECUTABLE(markerset ${markerset_SOURCE})
-TARGET_LINK_LIBRARIES(markerset ${LINK_LIBRARY})
+configure_file(markerset.cpp.in markerset.cpp)
+add_executable(markerset ${CMAKE_CURRENT_BINARY_DIR}/markerset.cpp)
+target_link_libraries(markerset PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS markerset RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #material example
-CONFIGURE_FILE(material.cpp.in ${CONF_FILE_DIR}/material.cpp)
-SET(material_SOURCE ${CONF_FILE_DIR}/material.cpp)
-ADD_EXECUTABLE(material ${material_SOURCE})
-TARGET_LINK_LIBRARIES(material ${LINK_LIBRARY})
+configure_file(material.cpp.in material.cpp)
+add_executable(material ${CMAKE_CURRENT_BINARY_DIR}/material.cpp)
+target_link_libraries(material PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS material RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #nurbssurface example
-CONFIGURE_FILE(nurbssurface.cpp.in ${CONF_FILE_DIR}/nurbssurface.cpp)
-SET(nurbssurface_SOURCE ${CONF_FILE_DIR}/nurbssurface.cpp)
-ADD_EXECUTABLE(nurbssurface ${nurbssurface_SOURCE})
-TARGET_LINK_LIBRARIES(nurbssurface ${LINK_LIBRARY})
+configure_file(nurbssurface.cpp.in nurbssurface.cpp)
+add_executable(nurbssurface ${CMAKE_CURRENT_BINARY_DIR}/nurbssurface.cpp)
+target_link_libraries(nurbssurface PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS nurbssurface RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #pointlight example
-CONFIGURE_FILE(pointlight.cpp.in ${CONF_FILE_DIR}/pointlight.cpp)
-SET(pointlight_SOURCE ${CONF_FILE_DIR}/pointlight.cpp)
-ADD_EXECUTABLE(pointlight ${pointlight_SOURCE})
-TARGET_LINK_LIBRARIES(pointlight ${LINK_LIBRARY})
+configure_file(pointlight.cpp.in pointlight.cpp)
+add_executable(pointlight ${CMAKE_CURRENT_BINARY_DIR}/pointlight.cpp)
+target_link_libraries(pointlight PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS pointlight RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #pointset example
-CONFIGURE_FILE(pointset.cpp.in ${CONF_FILE_DIR}/pointset.cpp)
-SET(pointset_SOURCE ${CONF_FILE_DIR}/pointset.cpp)
-ADD_EXECUTABLE(pointset ${pointset_SOURCE})
-TARGET_LINK_LIBRARIES(pointset ${LINK_LIBRARY})
+configure_file(pointset.cpp.in pointset.cpp)
+add_executable(pointset ${CMAKE_CURRENT_BINARY_DIR}/pointset.cpp)
+target_link_libraries(pointset PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS pointset RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #quadmesh example
-CONFIGURE_FILE(quadmesh.cpp.in ${CONF_FILE_DIR}/quadmesh.cpp)
-SET(quadmesh_SOURCE ${CONF_FILE_DIR}/quadmesh.cpp)
-ADD_EXECUTABLE(quadmesh ${quadmesh_SOURCE})
-TARGET_LINK_LIBRARIES(quadmesh ${LINK_LIBRARY})
+configure_file(quadmesh.cpp.in quadmesh.cpp)
+add_executable(quadmesh ${CMAKE_CURRENT_BINARY_DIR}/quadmesh.cpp)
+target_link_libraries(quadmesh PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS quadmesh RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #rotation example
-CONFIGURE_FILE(rotation.cpp.in ${CONF_FILE_DIR}/rotation.cpp)
-SET(rotation_SOURCE ${CONF_FILE_DIR}/rotation.cpp)
-ADD_EXECUTABLE(rotation ${rotation_SOURCE})
-TARGET_LINK_LIBRARIES(rotation ${LINK_LIBRARY})
+configure_file(rotation.cpp.in rotation.cpp)
+add_executable(rotation ${CMAKE_CURRENT_BINARY_DIR}/rotation.cpp)
+target_link_libraries(rotation PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS rotation RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #rotor example
-CONFIGURE_FILE(rotor.cpp.in ${CONF_FILE_DIR}/rotor.cpp)
-SET(rotor_SOURCE ${CONF_FILE_DIR}/rotor.cpp)
-ADD_EXECUTABLE(rotor ${rotor_SOURCE})
-TARGET_LINK_LIBRARIES(rotor ${LINK_LIBRARY})
+configure_file(rotor.cpp.in rotor.cpp)
+add_executable(rotor ${CMAKE_CURRENT_BINARY_DIR}/rotor.cpp)
+target_link_libraries(rotor PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS rotor RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #scale example
-CONFIGURE_FILE(scale.cpp.in ${CONF_FILE_DIR}/scale.cpp)
-SET(scale_SOURCE ${CONF_FILE_DIR}/scale.cpp)
-ADD_EXECUTABLE(scale ${scale_SOURCE})
-TARGET_LINK_LIBRARIES(scale ${LINK_LIBRARY})
+configure_file(scale.cpp.in scale.cpp)
+add_executable(scale ${CMAKE_CURRENT_BINARY_DIR}/scale.cpp)
+target_link_libraries(scale PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS scale RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #scenetexture example
-CONFIGURE_FILE(scenetexture.cpp.in ${CONF_FILE_DIR}/scenetexture.cpp)
-SET(scenetexture_SOURCE ${CONF_FILE_DIR}/scenetexture.cpp)
-ADD_EXECUTABLE(scenetexture ${scenetexture_SOURCE})
-TARGET_LINK_LIBRARIES(scenetexture ${LINK_LIBRARY})
+configure_file(scenetexture.cpp.in scenetexture.cpp)
+add_executable(scenetexture ${CMAKE_CURRENT_BINARY_DIR}/scenetexture.cpp)
+target_link_libraries(scenetexture PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS scenetexture RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #selection example
-CONFIGURE_FILE(selection.cpp.in ${CONF_FILE_DIR}/selection.cpp)
-SET(selection_SOURCE ${CONF_FILE_DIR}/selection.cpp)
-ADD_EXECUTABLE(selection ${selection_SOURCE})
-TARGET_LINK_LIBRARIES(selection ${LINK_LIBRARY})
+configure_file(selection.cpp.in selection.cpp)
+add_executable(selection ${CMAKE_CURRENT_BINARY_DIR}/selection.cpp)
+target_link_libraries(selection PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS selection RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #shuttle example
-CONFIGURE_FILE(shuttle.cpp.in ${CONF_FILE_DIR}/shuttle.cpp)
-SET(shuttle_SOURCE ${CONF_FILE_DIR}/shuttle.cpp)
-ADD_EXECUTABLE(shuttle ${shuttle_SOURCE})
-TARGET_LINK_LIBRARIES(shuttle ${LINK_LIBRARY})
+configure_file(shuttle.cpp.in shuttle.cpp)
+add_executable(shuttle ${CMAKE_CURRENT_BINARY_DIR}/shuttle.cpp)
+target_link_libraries(shuttle PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS shuttle RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #slideshow example
-CONFIGURE_FILE(slideshow.cpp.in ${CONF_FILE_DIR}/slideshow.cpp)
-SET(slideshow_SOURCE ${CONF_FILE_DIR}/slideshow.cpp)
-ADD_EXECUTABLE(slideshow ${slideshow_SOURCE})
-TARGET_LINK_LIBRARIES(slideshow ${LINK_LIBRARY})
+configure_file(slideshow.cpp.in slideshow.cpp)
+add_executable(slideshow ${CMAKE_CURRENT_BINARY_DIR}/slideshow.cpp)
+target_link_libraries(slideshow PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS slideshow RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #sphere example
-CONFIGURE_FILE(sphere.cpp.in ${CONF_FILE_DIR}/sphere.cpp)
-SET(sphere_SOURCE ${CONF_FILE_DIR}/sphere.cpp)
-ADD_EXECUTABLE(sphere ${sphere_SOURCE})
-TARGET_LINK_LIBRARIES(sphere ${LINK_LIBRARY})
+configure_file(sphere.cpp.in sphere.cpp)
+add_executable(sphere ${CMAKE_CURRENT_BINARY_DIR}/sphere.cpp)
+target_link_libraries(sphere PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS sphere RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #spherecolor example
-CONFIGURE_FILE(spherecolor.cpp.in ${CONF_FILE_DIR}/spherecolor.cpp)
-SET(spherecolor_SOURCE ${CONF_FILE_DIR}/spherecolor.cpp)
-ADD_EXECUTABLE(spherecolor ${spherecolor_SOURCE})
-TARGET_LINK_LIBRARIES(spherecolor ${LINK_LIBRARY})
+configure_file(spherecolor.cpp.in spherecolor.cpp)
+add_executable(spherecolor ${CMAKE_CURRENT_BINARY_DIR}/spherecolor.cpp)
+target_link_libraries(spherecolor PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS spherecolor RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #spotlight example
-CONFIGURE_FILE(spotlight.cpp.in ${CONF_FILE_DIR}/spotlight.cpp)
-SET(spotlight_SOURCE ${CONF_FILE_DIR}/spotlight.cpp)
-ADD_EXECUTABLE(spotlight ${spotlight_SOURCE})
-TARGET_LINK_LIBRARIES(spotlight ${LINK_LIBRARY})
+configure_file(spotlight.cpp.in spotlight.cpp)
+add_executable(spotlight ${CMAKE_CURRENT_BINARY_DIR}/spotlight.cpp)
+target_link_libraries(spotlight PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS spotlight RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #text2 example
-CONFIGURE_FILE(text2.cpp.in ${CONF_FILE_DIR}/text2.cpp)
-SET(text2_SOURCE ${CONF_FILE_DIR}/text2.cpp)
-ADD_EXECUTABLE(text2 ${text2_SOURCE})
-TARGET_LINK_LIBRARIES(text2 ${LINK_LIBRARY})
+configure_file(text2.cpp.in text2.cpp)
+add_executable(text2 ${CMAKE_CURRENT_BINARY_DIR}/text2.cpp)
+target_link_libraries(text2 PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS text2 RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #text3 example
-CONFIGURE_FILE(text3.cpp.in ${CONF_FILE_DIR}/text3.cpp)
-SET(text3_SOURCE ${CONF_FILE_DIR}/text3.cpp)
-ADD_EXECUTABLE(text3 ${text3_SOURCE})
-TARGET_LINK_LIBRARIES(text3 ${LINK_LIBRARY})
+configure_file(text3.cpp.in text3.cpp)
+add_executable(text3 ${CMAKE_CURRENT_BINARY_DIR}/text3.cpp)
+target_link_libraries(text3 PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS text3 RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #texture example
-CONFIGURE_FILE(texture.cpp.in ${CONF_FILE_DIR}/texture.cpp)
-SET(texture_SOURCE ${CONF_FILE_DIR}/texture.cpp)
-ADD_EXECUTABLE(texture ${texture_SOURCE})
-TARGET_LINK_LIBRARIES(texture ${LINK_LIBRARY})
+configure_file(texture.cpp.in texture.cpp)
+add_executable(texture ${CMAKE_CURRENT_BINARY_DIR}/texture.cpp)
+target_link_libraries(texture PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS texture RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #texture3 example
-CONFIGURE_FILE(texture3.cpp.in ${CONF_FILE_DIR}/texture3.cpp)
-SET(texture3_SOURCE ${CONF_FILE_DIR}/texture3.cpp)
-ADD_EXECUTABLE(texture3 ${texture3_SOURCE})
-TARGET_LINK_LIBRARIES(texture3 ${LINK_LIBRARY})
+configure_file(texture3.cpp.in texture3.cpp)
+add_executable(texture3 ${CMAKE_CURRENT_BINARY_DIR}/texture3.cpp)
+target_link_libraries(texture3 PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS texture3 RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #textureunit example
-CONFIGURE_FILE(textureunit.cpp.in ${CONF_FILE_DIR}/textureunit.cpp)
-SET(textureunit_SOURCE ${CONF_FILE_DIR}/textureunit.cpp)
-ADD_EXECUTABLE(textureunit ${textureunit_SOURCE})
-TARGET_LINK_LIBRARIES(textureunit ${LINK_LIBRARY})
+configure_file(textureunit.cpp.in textureunit.cpp)
+add_executable(textureunit ${CMAKE_CURRENT_BINARY_DIR}/textureunit.cpp)
+target_link_libraries(textureunit PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS textureunit RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #transform example
-CONFIGURE_FILE(transform.cpp.in ${CONF_FILE_DIR}/transform.cpp)
-SET(transform_SOURCE ${CONF_FILE_DIR}/transform.cpp)
-ADD_EXECUTABLE(transform ${transform_SOURCE})
-TARGET_LINK_LIBRARIES(transform ${LINK_LIBRARY})
+configure_file(transform.cpp.in transform.cpp)
+add_executable(transform ${CMAKE_CURRENT_BINARY_DIR}/transform.cpp)
+target_link_libraries(transform PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS transform RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #translation example
-CONFIGURE_FILE(translation.cpp.in ${CONF_FILE_DIR}/translation.cpp)
-SET(translation_SOURCE ${CONF_FILE_DIR}/translation.cpp)
-ADD_EXECUTABLE(translation ${translation_SOURCE})
-TARGET_LINK_LIBRARIES(translation ${LINK_LIBRARY})
+configure_file(translation.cpp.in translation.cpp)
+add_executable(translation ${CMAKE_CURRENT_BINARY_DIR}/translation.cpp)
+target_link_libraries(translation PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS translation RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)
 
 #trianglestripset example
-CONFIGURE_FILE(trianglestripset.cpp.in ${CONF_FILE_DIR}/trianglestripset.cpp)
-SET(trianglestripset_SOURCE ${CONF_FILE_DIR}/trianglestripset.cpp)
-ADD_EXECUTABLE(trianglestripset ${trianglestripset_SOURCE})
-TARGET_LINK_LIBRARIES(trianglestripset ${LINK_LIBRARY})
-
-
-#Generate the tree structure in the VS Projects.
-SIM_VS_GENERATE_BASIC_TREE()
-
-INSTALL(TARGETS atmospheric RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS bigimage RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS blinker RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS bumpmap RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS camera RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS clipplane RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS complexity RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS directionallight RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS drawstyle RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS environment RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS extselection RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS faceset RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS facesetindexed RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS image RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS levelofdetail RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS lights RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS markerset RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS material RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS nurbssurface RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS pointlight RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS pointset RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS quadmesh RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS rotation RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS rotor RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS scale RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS scenetexture RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS selection RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS shuttle RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS slideshow RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS sphere RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS spherecolor RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS spotlight RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS text2 RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS text3 RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS texture RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS texture3 RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS textureunit RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS transform RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS translation RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
-
-INSTALL(TARGETS trianglestripset RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/nodes
-)
+configure_file(trianglestripset.cpp.in trianglestripset.cpp)
+add_executable(trianglestripset ${CMAKE_CURRENT_BINARY_DIR}/trianglestripset.cpp)
+target_link_libraries(trianglestripset PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS trianglestripset RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/nodes)

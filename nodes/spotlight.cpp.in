@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SbBasic.h>
@@ -44,11 +44,11 @@
 #include <Inventor/nodes/SoShapeHints.h>
 
 // lightsource constants
-const float light_xp = 0.0;
-const float light_yp = -20.0;
-const float light_zp = 10.0;
-const float light_color[] = {1.0, 1.0, 0.5};
-const SbVec3f light_direction(0.0, 1.0, 0.0);
+const float light_xp = 0.0f;
+const float light_yp = -20.0f;
+const float light_zp = 10.0f;
+const float light_color[] = {1.0f, 1.0f, 0.5f};
+const SbVec3f light_direction(0.0f, 1.0f, 0.0f);
 // Recursive function that generates a scene graph with spheres
 // Parameters:
 //  float xt - translation in x-direction for each sphere
@@ -66,7 +66,7 @@ scene(float xt, float yt, float zt, int n)
 
   if (n>0) {
     transf->translation.setValue(xt, yt, zt);
-    transf->rotation.setValue(SbVec3f(0, 0, 1), M_PI/(float)(n+1));
+    transf->rotation.setValue(SbVec3f(0, 0, 1), float(M_PI)/(float)(n+1));
     sep->addChild(transf);
     sep->addChild(new SoSphere);
     sep->addChild(scene(xt, yt, zt, n-1));
@@ -77,7 +77,8 @@ scene(float xt, float yt, float zt, int n)
 }
 
 int
-main(int, char ** argv) {
+main(int, char ** argv)
+{
   (void)printf("This example shows how to use the SoSpotLight node\n");
   
   // Initialize
@@ -98,14 +99,14 @@ main(int, char ** argv) {
 
   // Setting up the spotlight
   light->color.setValue(light_color[0], light_color[1], light_color[2]);
-  light->intensity.setValue(0.95);
+  light->intensity.setValue(0.95f);
   light->location.setValue(light_xp, light_yp, light_zp);
   light->direction.setValue(light_direction);
-  light->dropOffRate.setValue(0.20);
-  light->cutOffAngle.setValue(M_PI/6);
+  light->dropOffRate.setValue(0.20f);
+  light->cutOffAngle.setValue(float(M_PI)/6);
   
   root->addChild(light);
-  root->addChild(scene(2.0, 3.0, 2.5, 10));
+  root->addChild(scene(2.0f, 3.0f, 2.5f, 10));
   
   // Set up an object to represent the lightsource
   SoLightModel * lmodel = new SoLightModel;
@@ -118,7 +119,7 @@ main(int, char ** argv) {
                                    light_color[1], 
                                    light_color[2]);
   ltransform->translation.setValue(light_xp, light_yp, light_zp);
-  ltransform->rotation.setValue(SbVec3f(1.0, 0.0, 0.0), M_PI);
+  ltransform->rotation.setValue(SbVec3f(1.0f, 0.0f, 0.0f), float(M_PI));
 
   root->addChild(lmodel);
   root->addChild(lmaterial);

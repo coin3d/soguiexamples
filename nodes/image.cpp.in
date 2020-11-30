@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,7 +36,7 @@
 
 #ifndef HAVE_SOIMAGE
 
-#include <stdio.h>
+#include <cstdio>
 
 int
 main(void)
@@ -51,7 +51,7 @@ main(void)
 
 #else // HAVE_SOIMAGE
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -72,7 +72,7 @@ main(void)
 //  unsigned char * bmp = pointer to bitmap
 //  int n               = number of iterations.
 void
-mandel(double sr, double si, double width, double height, 
+mandel(double sr, double si, double width, double height,
        int bwidth, int bheight, int mult, unsigned char * bmp, int n)
 {
   double zr, zr_old, zi, cr, ci;
@@ -86,7 +86,7 @@ mandel(double sr, double si, double width, double height,
       for (w = 0; (w < n) && (zr*zr + zi*zi)<n; w++) {
         zr_old = zr;
         zr = zr*zr - zi*zi + cr;
-        zi = 2*zr_old*zi + ci;    
+        zi = 2*zr_old*zi + ci;
       }
       bmp[y*bwidth+x] = w*mult;
     }
@@ -102,7 +102,7 @@ sensorCB(void * data, SoSensor * sensor)
 
   SbVec2s dimensions;
   int components;
-  static float mandeldim = 0.025;
+  static float mandeldim = 0.025f;
 
   mandeldim /= 1.05f;
 
@@ -116,7 +116,7 @@ int
 main(int argc, char ** argv)
 {
   @WIDGET@ mainwin = So@Gui@::init(argv[0]);
-  
+
   SoSeparator * root = new SoSeparator;
   root->ref();
 

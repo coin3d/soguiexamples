@@ -51,7 +51,7 @@ main(int argc, char ** argv)
   root->addChild(cam);
 
   SoDirectionalLight * light = new SoDirectionalLight;
-  light->direction.setValue(0.25, 0.25, -0.8);
+  light->direction.setValue(0.25f, 0.25f, -0.8f);
   root->addChild(light);
 
   SoSeparator * geomroot = new SoSeparator;

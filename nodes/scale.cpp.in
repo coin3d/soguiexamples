@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -112,7 +112,7 @@ main(int, char ** argv)
 
   root->ref();                   // Increments the reference counter
   root->addChild(hints);
-  root->addChild(scene(3.0, 3.0, 3.0, 0.8, 10, 0));
+  root->addChild(scene(3.0f, 3.0f, 3.0f, 0.8f, 10, 0));
   
   // Set up ExaminerViewer
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);

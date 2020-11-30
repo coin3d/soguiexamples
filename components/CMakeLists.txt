@@ -1,272 +1,181 @@
-INCLUDE_DIRECTORIES(./)
-SET(CONF_FILE_DIR ${PROJECT_BINARY_DIR}/components)
-INCLUDE_DIRECTORIES(${CONF_FILE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 #configure files
-CONFIGURE_FILE(SoGuiSnapshotViewer.h.in ${CONF_FILE_DIR}/SoGuiSnapshotViewer.h)
-CONFIGURE_FILE(SoGuiSnapshotViewer.cpp.in ${CONF_FILE_DIR}/SoGuiSnapshotViewer.cpp)
-CONFIGURE_FILE(backgroundimg.cpp.in ${CONF_FILE_DIR}/backgroundimg.cpp)
-CONFIGURE_FILE(computils.h.in ${CONF_FILE_DIR}/computils.h)
-CONFIGURE_FILE(computils.cpp.in ${CONF_FILE_DIR}/computils.cpp)
-CONFIGURE_FILE(directionallighteditor.cpp.in ${CONF_FILE_DIR}/directionallighteditor.cpp)
-CONFIGURE_FILE(examinerviewer.cpp.in ${CONF_FILE_DIR}/examinerviewer.cpp)
-CONFIGURE_FILE(flyviewer.cpp.in ${CONF_FILE_DIR}/flyviewer.cpp)
-CONFIGURE_FILE(grapheditor.cpp.in ${CONF_FILE_DIR}/grapheditor.cpp)
-CONFIGURE_FILE(lightsliderset.cpp.in ${CONF_FILE_DIR}/lightsliderset.cpp)
-CONFIGURE_FILE(materialeditor.cpp.in ${CONF_FILE_DIR}/materialeditor.cpp)
-CONFIGURE_FILE(materiallist.cpp.in ${CONF_FILE_DIR}/materiallist.cpp)
-CONFIGURE_FILE(materiallist2.cpp.in ${CONF_FILE_DIR}/materiallist2.cpp)
-CONFIGURE_FILE(materialsliderset.cpp.in ${CONF_FILE_DIR}/materialsliderset.cpp)
-CONFIGURE_FILE(materialsliderset2.cpp.in ${CONF_FILE_DIR}/materialsliderset2.cpp)
-CONFIGURE_FILE(multifileviewer.cpp.in ${CONF_FILE_DIR}/multifileviewer.cpp)
-CONFIGURE_FILE(overlay.cpp.in ${CONF_FILE_DIR}/overlay.cpp)
-CONFIGURE_FILE(planeviewer.cpp.in ${CONF_FILE_DIR}/planeviewer.cpp)
-CONFIGURE_FILE(printdialog.cpp.in ${CONF_FILE_DIR}/printdialog.cpp)
-CONFIGURE_FILE(renderarea.cpp.in ${CONF_FILE_DIR}/renderarea.cpp)
-CONFIGURE_FILE(roster.cpp.in ${CONF_FILE_DIR}/roster.cpp)
-CONFIGURE_FILE(simpleexviewer.cpp.in ${CONF_FILE_DIR}/simpleexviewer.cpp)
-CONFIGURE_FILE(simplerenderarea.cpp.in ${CONF_FILE_DIR}/simplerenderarea.cpp)
-CONFIGURE_FILE(snapshotviewer.cpp.in ${CONF_FILE_DIR}/snapshotviewer.cpp)
-CONFIGURE_FILE(subfullviewer.cpp.in ${CONF_FILE_DIR}/subfullviewer.cpp)
-CONFIGURE_FILE(subviewer.cpp.in ${CONF_FILE_DIR}/subviewer.cpp)
-CONFIGURE_FILE(transformsliderset.cpp.in ${CONF_FILE_DIR}/transformsliderset.cpp)
-#CONFIGURE_FILE(walkviewer.cpp.in ${CONF_FILE_DIR}/walkviewer.cpp)
-CONFIGURE_FILE(computils.h.in ${CONF_FILE_DIR}/computils.h)
+configure_file(SoGuiSnapshotViewer.h.in SoGuiSnapshotViewer.h)
+configure_file(SoGuiSnapshotViewer.cpp.in SoGuiSnapshotViewer.cpp)
+configure_file(computils.h.in computils.h)
+configure_file(computils.cpp.in computils.cpp)
 
-SET(COMPUTILS_SOURCE ${CONF_FILE_DIR}/computils.h ${CONF_FILE_DIR}/computils.cpp)
-SET(VIEWER_SOURCE ${CONF_FILE_DIR}/SoGuiSnapshotViewer.h ${CONF_FILE_DIR}/SoGuiSnapshotViewer.cpp)
+set(COMPUTILS_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/computils.h ${CMAKE_CURRENT_BINARY_DIR}/computils.cpp)
+set(VIEWER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/SoGuiSnapshotViewer.h ${CMAKE_CURRENT_BINARY_DIR}/SoGuiSnapshotViewer.cpp)
 
 #HAVE_SLIDERSETS found
-IF(HAVE_SLIDERSETS)
-#lightsliderset example
-SET(lightsliderset_SOURCE ${CONF_FILE_DIR}/lightsliderset.cpp)
-ADD_EXECUTABLE(lightsliderset ${lightsliderset_SOURCE})
-TARGET_LINK_LIBRARIES(lightsliderset ${LINK_LIBRARY})
+if(HAVE_SLIDERSETS)
+  #lightsliderset example
+  configure_file(lightsliderset.cpp.in lightsliderset.cpp)
+  add_executable(lightsliderset ${CMAKE_CURRENT_BINARY_DIR}/lightsliderset.cpp)
+  target_link_libraries(lightsliderset PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+  install(TARGETS lightsliderset RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
-#materialsliderset example
-SET(materialsliderset_SOURCE ${CONF_FILE_DIR}/materialsliderset.cpp)
-ADD_EXECUTABLE(materialsliderset ${materialsliderset_SOURCE})
-TARGET_LINK_LIBRARIES(materialsliderset ${LINK_LIBRARY})
+  #materialsliderset example
+  configure_file(materialsliderset.cpp.in materialsliderset.cpp)
+  add_executable(materialsliderset ${CMAKE_CURRENT_BINARY_DIR}/materialsliderset.cpp)
+  target_link_libraries(materialsliderset PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+  install(TARGETS materialsliderset RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
-#materialsliderset2 example
-SET(materialsliderset2_SOURCE ${CONF_FILE_DIR}/materialsliderset2.cpp)
-ADD_EXECUTABLE(materialsliderset2 ${materialsliderset2_SOURCE})
-TARGET_LINK_LIBRARIES(materialsliderset2 ${LINK_LIBRARY})
+  #materialsliderset2 example
+  configure_file(materialsliderset2.cpp.in materialsliderset2.cpp)
+  add_executable(materialsliderset2 ${CMAKE_CURRENT_BINARY_DIR}/materialsliderset2.cpp)
+  target_link_libraries(materialsliderset2 PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+  install(TARGETS materialsliderset2 RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
-#transformsliderset example
-SET(transformsliderset_SOURCE ${CONF_FILE_DIR}/transformsliderset.cpp)
-ADD_EXECUTABLE(transformsliderset ${transformsliderset_SOURCE})
-TARGET_LINK_LIBRARIES(transformsliderset ${LINK_LIBRARY})
+  #transformsliderset example
+  configure_file(transformsliderset.cpp.in transformsliderset.cpp)
+  add_executable(transformsliderset ${CMAKE_CURRENT_BINARY_DIR}/transformsliderset.cpp)
+  target_link_libraries(transformsliderset PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+  install(TARGETS transformsliderset RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
-MESSAGE(STATUS "Found HAVE_SLIDERSETS")
-ENDIF(HAVE_SLIDERSETS)
+  message(STATUS "Found HAVE_SLIDERSETS")
+endif()
 
 #HAVE_SLIDERSETS found
-IF(HAVE_MATERIALEDITOR)
-#materialeditor example
-SET(materialeditor_SOURCE ${CONF_FILE_DIR}/materialeditor.cpp)
-ADD_EXECUTABLE(materialeditor ${materialeditor_SOURCE})
-TARGET_LINK_LIBRARIES(materialeditor ${LINK_LIBRARY})
-
-MESSAGE(STATUS "Found HAVE_SLIDERSETS")
-ENDIF(HAVE_MATERIALEDITOR)
+if(HAVE_MATERIALEDITOR)
+  #materialeditor example
+  configure_file(materialeditor.cpp.in materialeditor.cpp)
+  add_executable(materialeditor ${CMAKE_CURRENT_BINARY_DIR}/materialeditor.cpp)
+  target_link_libraries(materialeditor PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+  install(TARGETS materialeditor RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
+  message(STATUS "Found HAVE_SLIDERSETS")
+endif()
 
 #HAVE_MATERIALLIST found
-IF(HAVE_MATERIALLIST)
-#materiallist example
-SET(materiallist_SOURCE ${CONF_FILE_DIR}/materiallist.cpp)
-ADD_EXECUTABLE(materiallist ${materiallist_SOURCE})
-TARGET_LINK_LIBRARIES(materiallist ${LINK_LIBRARY})
+if(HAVE_MATERIALLIST)
+  #materiallist example
+  configure_file(materiallist.cpp.in materiallist.cpp)
+  add_executable(materiallist ${CMAKE_CURRENT_BINARY_DIR}/materiallist.cpp)
+  target_link_libraries(materiallist PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+  install(TARGETS materiallist RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
-#materiallist2 example
-SET(materiallist2_SOURCE ${CONF_FILE_DIR}/materiallist2.cpp)
-ADD_EXECUTABLE(materiallist2 ${materiallist2_SOURCE})
-TARGET_LINK_LIBRARIES(materiallist2 ${LINK_LIBRARY})
+  #materiallist2 example
+  configure_file(materiallist2.cpp.in materiallist2.cpp)
+  add_executable(materiallist2 ${CMAKE_CURRENT_BINARY_DIR}/materiallist2.cpp)
+  target_link_libraries(materiallist2 PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+  install(TARGETS materiallist2 RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
-MESSAGE(STATUS "Found HAVE_MATERIALLIST")
-ENDIF(HAVE_MATERIALLIST)
+  message(STATUS "Found HAVE_MATERIALLIST")
+endif()
 
 #HAVE_PRINTDIALOG Found
-IF(HAVE_PRINTDIALOG)
-#printdialog example
-SET(printdialog_SOURCE ${CONF_FILE_DIR}/printdialog.cpp)
-ADD_EXECUTABLE(printdialog ${printdialog_SOURCE})
-TARGET_LINK_LIBRARIES(printdialog ${LINK_LIBRARY})
-
-MESSAGE(STATUS "Found HAVE_PRINTDIALOG")
-ENDIF(HAVE_PRINTDIALOG)
+if(HAVE_PRINTDIALOG)
+  #printdialog example
+  configure_file(printdialog.cpp.in printdialog.cpp)
+  add_executable(printdialog ${CMAKE_CURRENT_BINARY_DIR}/printdialog.cpp)
+  target_link_libraries(printdialog PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+  install(TARGETS printdialog RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
+  message(STATUS "Found HAVE_PRINTDIALOG")
+endif()
 
 #HAVE_ROSTER Found
-IF(HAVE_ROSTER)
-#roster example
-SET(roster_SOURCE ${CONF_FILE_DIR}/roster.cpp)
-ADD_EXECUTABLE(roster ${roster_SOURCE})
-TARGET_LINK_LIBRARIES(roster ${LINK_LIBRARY})
-
-MESSAGE(STATUS "Found HAVE_ROSTER")
-ENDIF(HAVE_ROSTER)
+if(HAVE_ROSTER)
+  #roster example
+  configure_file(roster.cpp.in roster.cpp)
+  add_executable(roster ${CMAKE_CURRENT_BINARY_DIR}/roster.cpp)
+  target_link_libraries(roster PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+  install(TARGETS roster RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
+  message(STATUS "Found HAVE_ROSTER")
+endif()
 
 #HAVE_DIRECTIONALLIGHTEDITOR Found
-IF(HAVE_DIRECTIONALLIGHTEDITOR)
-#directionallighteditor example
-SET(directionallighteditor_SOURCE ${CONF_FILE_DIR}/directionallighteditor.cpp)
-ADD_EXECUTABLE(directionallighteditor ${directionallighteditor_SOURCE})
-TARGET_LINK_LIBRARIES(directionallighteditor ${LINK_LIBRARY})
-
-MESSAGE(STATUS "HAVE_DIRECTIONALLIGHTEDITOR Found")
-ENDIF(HAVE_DIRECTIONALLIGHTEDITOR)
+if(HAVE_DIRECTIONALLIGHTEDITOR)
+  #directionallighteditor example
+  configure_file(directionallighteditor.cpp.in directionallighteditor.cpp)
+  add_executable(directionallighteditor ${CMAKE_CURRENT_BINARY_DIR}/directionallighteditor.cpp)
+  target_link_libraries(directionallighteditor PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+  install(TARGETS directionallighteditor RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
+  message(STATUS "HAVE_DIRECTIONALLIGHTEDITOR Found")
+endif()
 
 #backgroundimg example
-SET(backgroundimg_SOURCE ${CONF_FILE_DIR}/backgroundimg.cpp)
-ADD_EXECUTABLE(backgroundimg ${backgroundimg_SOURCE})
-TARGET_LINK_LIBRARIES(backgroundimg ${LINK_LIBRARY} ${OPENGL_LIBRARIES})
+configure_file(backgroundimg.cpp.in backgroundimg.cpp)
+add_executable(backgroundimg ${CMAKE_CURRENT_BINARY_DIR}/backgroundimg.cpp)
+target_link_libraries(backgroundimg PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES} ${OPENGL_LIBRARIES})
+install(TARGETS backgroundimg RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #examinerviewer example
-SET(examinerviewer_SOURCE ${CONF_FILE_DIR}/examinerviewer.cpp ${COMPUTILS_SOURCE})
-ADD_EXECUTABLE(examinerviewer ${examinerviewer_SOURCE})
-TARGET_LINK_LIBRARIES(examinerviewer ${LINK_LIBRARY})
+configure_file(examinerviewer.cpp.in examinerviewer.cpp)
+add_executable(examinerviewer ${CMAKE_CURRENT_BINARY_DIR}/examinerviewer.cpp ${COMPUTILS_SOURCE})
+target_link_libraries(examinerviewer PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS examinerviewer RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #flyviewer example
-SET(flyviewer_SOURCE ${CONF_FILE_DIR}/flyviewer.cpp ${COMPUTILS_SOURCE})
-ADD_EXECUTABLE(flyviewer ${flyviewer_SOURCE})
-TARGET_LINK_LIBRARIES(flyviewer ${LINK_LIBRARY})
+configure_file(flyviewer.cpp.in flyviewer.cpp)
+add_executable(flyviewer ${CMAKE_CURRENT_BINARY_DIR}/flyviewer.cpp ${COMPUTILS_SOURCE})
+target_link_libraries(flyviewer PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS flyviewer RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #grapheditor example
-#SET(grapheditor_SOURCE ${CONF_FILE_DIR}/grapheditor.cpp ${COMPUTILS_SOURCE})
-#ADD_EXECUTABLE(grapheditor ${grapheditor_SOURCE})
-#TARGET_LINK_LIBRARIES(grapheditor ${LINK_LIBRARY})
+#configure_file(grapheditor.cpp.in grapheditor.cpp)
+#add_executable(grapheditor ${CMAKE_CURRENT_BINARY_DIR}/grapheditor.cpp ${COMPUTILS_SOURCE})
+#target_link_libraries(grapheditor PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+#install(TARGETS grapheditor RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #multifileviewer example
-SET(multifileviewer_SOURCE ${CONF_FILE_DIR}/multifileviewer.cpp)
-ADD_EXECUTABLE(multifileviewer ${multifileviewer_SOURCE})
-TARGET_LINK_LIBRARIES(multifileviewer ${LINK_LIBRARY})
+configure_file(multifileviewer.cpp.in multifileviewer.cpp)
+add_executable(multifileviewer ${CMAKE_CURRENT_BINARY_DIR}/multifileviewer.cpp)
+target_link_libraries(multifileviewer PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS multifileviewer RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #overlay example
-SET(overlay_SOURCE ${CONF_FILE_DIR}/overlay.cpp ${COMPUTILS_SOURCE})
-ADD_EXECUTABLE(overlay ${overlay_SOURCE})
-TARGET_LINK_LIBRARIES(overlay ${LINK_LIBRARY})
+configure_file(overlay.cpp.in overlay.cpp)
+add_executable(overlay ${CMAKE_CURRENT_BINARY_DIR}/overlay.cpp ${COMPUTILS_SOURCE})
+target_link_libraries(overlay PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS overlay RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #planeviewer example
-SET(planeviewer_SOURCE ${CONF_FILE_DIR}/planeviewer.cpp ${COMPUTILS_SOURCE})
-ADD_EXECUTABLE(planeviewer ${planeviewer_SOURCE})
-TARGET_LINK_LIBRARIES(planeviewer ${LINK_LIBRARY})
+configure_file(planeviewer.cpp.in planeviewer.cpp)
+add_executable(planeviewer ${CMAKE_CURRENT_BINARY_DIR}/planeviewer.cpp ${COMPUTILS_SOURCE})
+target_link_libraries(planeviewer PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS planeviewer RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #renderarea example
-SET(renderarea_SOURCE ${CONF_FILE_DIR}/renderarea.cpp ${COMPUTILS_SOURCE})
-ADD_EXECUTABLE(renderarea ${renderarea_SOURCE})
-TARGET_LINK_LIBRARIES(renderarea ${LINK_LIBRARY})
+configure_file(renderarea.cpp.in renderarea.cpp)
+add_executable(renderarea ${CMAKE_CURRENT_BINARY_DIR}/renderarea.cpp ${COMPUTILS_SOURCE})
+target_link_libraries(renderarea PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS renderarea RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #simpleexviewer example
-SET(simpleexviewer_SOURCE ${CONF_FILE_DIR}/simpleexviewer.cpp)
-ADD_EXECUTABLE(simpleexviewer ${simpleexviewer_SOURCE})
-TARGET_LINK_LIBRARIES(simpleexviewer ${LINK_LIBRARY})
+configure_file(simpleexviewer.cpp.in simpleexviewer.cpp)
+add_executable(simpleexviewer ${CMAKE_CURRENT_BINARY_DIR}/simpleexviewer.cpp)
+target_link_libraries(simpleexviewer PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS simpleexviewer RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #simplerenderarea example
-SET(simplerenderarea_SOURCE ${CONF_FILE_DIR}/simplerenderarea.cpp)
-ADD_EXECUTABLE(simplerenderarea ${simplerenderarea_SOURCE})
-TARGET_LINK_LIBRARIES(simplerenderarea ${LINK_LIBRARY})
+configure_file(simplerenderarea.cpp.in simplerenderarea.cpp)
+add_executable(simplerenderarea ${CMAKE_CURRENT_BINARY_DIR}/simplerenderarea.cpp)
+target_link_libraries(simplerenderarea PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS simplerenderarea RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #snapshotviewer example
-SET(snapshotviewer_SOURCE ${CONF_FILE_DIR}/snapshotviewer.cpp ${COMPUTILS_SOURCE} ${VIEWER_SOURCE})
-ADD_EXECUTABLE(snapshotviewer ${snapshotviewer_SOURCE})
-TARGET_LINK_LIBRARIES(snapshotviewer ${LINK_LIBRARY})
+configure_file(snapshotviewer.cpp.in snapshotviewer.cpp)
+add_executable(snapshotviewer ${CMAKE_CURRENT_BINARY_DIR}/snapshotviewer.cpp ${COMPUTILS_SOURCE} ${VIEWER_SOURCE})
+target_link_libraries(snapshotviewer PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS snapshotviewer RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #subfullviewer example
-SET(subfullviewer_SOURCE ${CONF_FILE_DIR}/subfullviewer.cpp)
-ADD_EXECUTABLE(subfullviewer ${subfullviewer_SOURCE})
-TARGET_LINK_LIBRARIES(subfullviewer ${LINK_LIBRARY})
+configure_file(subfullviewer.cpp.in subfullviewer.cpp)
+add_executable(subfullviewer ${CMAKE_CURRENT_BINARY_DIR}/subfullviewer.cpp)
+target_link_libraries(subfullviewer PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS subfullviewer RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #subviewer example
-SET(subviewer_SOURCE ${CONF_FILE_DIR}/subviewer.cpp)
-ADD_EXECUTABLE(subviewer ${subviewer_SOURCE})
-TARGET_LINK_LIBRARIES(subviewer ${LINK_LIBRARY})
+configure_file(subviewer.cpp.in subviewer.cpp)
+add_executable(subviewer ${CMAKE_CURRENT_BINARY_DIR}/subviewer.cpp)
+target_link_libraries(subviewer PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS subviewer RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)
 
 #walkviewer example
-#SET(walkviewer_SOURCE ${CONF_FILE_DIR}/walkviewer.cpp ${COMPUTILS_SOURCE})
-#ADD_EXECUTABLE(walkviewer ${walkviewer_SOURCE})
-#TARGET_LINK_LIBRARIES(walkviewer ${LINK_LIBRARY})
-
-#Generate the tree structure in the VS Projects.
-SIM_VS_GENERATE_BASIC_TREE()
-
-INSTALL(TARGETS backgroundimg RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-IF(HAVE_DIRECTIONALLIGHTEDITOR)
-INSTALL(TARGETS directionallighteditor RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-ENDIF(HAVE_DIRECTIONALLIGHTEDITOR)
-
-INSTALL(TARGETS examinerviewer RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-INSTALL(TARGETS flyviewer RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-#INSTALL(TARGETS grapheditor RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components)
-
-IF(HAVE_SLIDERSETS)
-INSTALL(TARGETS lightsliderset RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-INSTALL(TARGETS materialsliderset RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-INSTALL(TARGETS materialsliderset2 RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-INSTALL(TARGETS transformsliderset RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-ENDIF(HAVE_SLIDERSETS)
-
-IF(HAVE_MATERIALEDITOR)
-INSTALL(TARGETS materialeditor RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-ENDIF(HAVE_MATERIALEDITOR)
-
-IF(HAVE_MATERIALLIST)
-INSTALL(TARGETS materiallist RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-INSTALL(TARGETS materiallist2 RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-ENDIF(HAVE_MATERIALLIST)
-
-INSTALL(TARGETS multifileviewer RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-INSTALL(TARGETS overlay RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-INSTALL(TARGETS planeviewer RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-IF(HAVE_PRINTDIALOG)
-INSTALL(TARGETS printdialog RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-ENDIF(HAVE_PRINTDIALOG)
-
-INSTALL(TARGETS renderarea RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-IF(HAVE_ROSTER)
-INSTALL(TARGETS roster RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-ENDIF(HAVE_ROSTER)
-
-INSTALL(TARGETS simpleexviewer RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-INSTALL(TARGETS simplerenderarea RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-INSTALL(TARGETS snapshotviewer RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-INSTALL(TARGETS subfullviewer RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-INSTALL(TARGETS subviewer RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components
-)
-
-#INSTALL(TARGETS walkviewer RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/components)
+#configure_file(walkviewer.cpp.in walkviewer.cpp)
+#add_executable(walkviewer ${CMAKE_CURRENT_BINARY_DIR}/walkviewer.cpp ${COMPUTILS_SOURCE})
+#target_link_libraries(walkviewer PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+#install(TARGETS walkviewer RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/components)

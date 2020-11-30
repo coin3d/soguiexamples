@@ -61,7 +61,7 @@
 #include <Inventor/elements/SoViewportRegionElement.h>
 #include <Inventor/sensors/SoTimerSensor.h>
 #include <Inventor/fields/SoSFString.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 SbBool room[4][4][14];
 SoSeparator * roomblocks[4][4][14];
@@ -84,52 +84,52 @@ SoSeparator * create_room()
   SoSeparator * roomsep = new SoSeparator;
 
   SoMaterial *mat = new SoMaterial;
-  mat->diffuseColor.setValue(0.9,0.5,0.3);
-  mat->specularColor.setValue(0.51,0.53,0.08);
-  mat->ambientColor.setValue(0.0, 1.0, 0.1);
+  mat->diffuseColor.setValue(0.9f,0.5f,0.3f);
+  mat->specularColor.setValue(0.51f,0.53f,0.08f);
+  mat->ambientColor.setValue(0.0f, 1.0f, 0.1f);
 
   roomsep->addChild(mat);
 
   SoCube *floor = new SoCube;
-  floor->height.setValue(0.2);
-  floor->width.setValue(4);
-  floor->depth.setValue(0.5);
+  floor->height.setValue(0.2f);
+  floor->width.setValue(4.f);
+  floor->depth.setValue(0.5f);
 
   roomsep->addChild(floor);
 
   SbVec3f move;
   SoTranslation *trans = new SoTranslation;
-  move.setValue(0,0,4.5);
+  move.setValue(0.f,0.f,4.5f);
   trans->translation.setValue(move);
 
   roomsep->addChild(trans);
   roomsep->addChild(floor);
 
-  move.setValue(-2.25, 0, -2.25);
+  move.setValue(-2.25f, 0.f, -2.25f);
   trans = new SoTranslation;
   trans->translation.setValue(move);
 
   floor = new SoCube;
-  floor->height.setValue(0.2);
-  floor->width.setValue(0.5);
-  floor->depth.setValue(4);
+  floor->height.setValue(0.2f);
+  floor->width.setValue(0.5f);
+  floor->depth.setValue(4.f);
 
   roomsep->addChild(trans);
   roomsep->addChild(floor);
 
-  move.setValue(4.5, 0, 0);
+  move.setValue(4.5f, 0.f, 0.f);
   trans = new SoTranslation;
   trans->translation.setValue(move);
 
   roomsep->addChild(trans);
   roomsep->addChild(floor);
 
-  move.setValue(-3.75, 0, -1.5);
+  move.setValue(-3.75f, 0.f, -1.5f);
 
   floor = new SoCube;
-  floor->height.setValue(0.2);
-  floor->width.setValue(1);
-  floor->depth.setValue(1);
+  floor->height.setValue(0.2f);
+  floor->width.setValue(1.f);
+  floor->depth.setValue(1.f);
 
   for (int j=0;j<4;j++) {
     for (int i=0;i<4;i++) {
@@ -142,38 +142,38 @@ SoSeparator * create_room()
     move.setValue(-3,0,1);
   }
 
-  move.setValue(0.625, 7.5, 0.625);
+  move.setValue(0.625f, 7.5f, 0.625f);
   trans = new SoTranslation;
   trans->translation.setValue(move);
   roomsep->addChild(trans);
 
   mat = new SoMaterial;
-  mat->diffuseColor.setValue(0.2,0.2,0.2);
-  mat->specularColor.setValue(0.2,0.53,0.78);
-  mat->ambientColor.setValue(0.0, 0.0, 1.0);
+  mat->diffuseColor.setValue(0.2f,0.2f,0.2f);
+  mat->specularColor.setValue(0.2f,0.53f,0.78f);
+  mat->ambientColor.setValue(0.0f, 0.0f, 1.0f);
 
   roomsep->addChild(mat);
 
   SoCube *corner = new SoCube;
-  corner->height.setValue(15.2);
-  corner->width.setValue(0.25);
-  corner->depth.setValue(0.25);
+  corner->height.setValue(15.2f);
+  corner->width.setValue(0.25f);
+  corner->depth.setValue(0.25f);
 
   roomsep->addChild(corner);
 
-  move.setValue(0, 0, -4.25);
+  move.setValue(0.f, 0.f, -4.25f);
   trans = new SoTranslation;
   trans->translation.setValue(move);
   roomsep->addChild(trans);
   roomsep->addChild(corner);
 
-  move.setValue(-4.25, 0, 0);
+  move.setValue(-4.25f, 0.f, 0.f);
   trans = new SoTranslation;
   trans->translation.setValue(move);
   roomsep->addChild(trans);
   roomsep->addChild(corner);
 
-  move.setValue(0, 0, 4.25);
+  move.setValue(0.f, 0.f, 4.25f);
   trans = new SoTranslation;
   trans->translation.setValue(move);
   roomsep->addChild(trans);
@@ -188,7 +188,7 @@ void setViewportCB(void *data, SoAction *action)
     SbViewportRegion curVP, newVP;
     curVP = ((SoGLRenderAction*)action)->getViewportRegion();
     newVP = curVP;
-    newVP.setViewport( -0.07, 0.015, 0.45, 0.35);
+    newVP.setViewport( -0.07f, 0.015f, 0.45f, 0.35f);
     SoState *state = action->getState();
     SoViewportRegionElement::set( state, newVP );
   }
@@ -213,14 +213,14 @@ init_game()
       for(int k = 0; k < 4; k++){
         room[k][j][i] = FALSE;
 
-        move.setValue(-1.5 + k, 0.5 + i, 0.75 + j);
+        move.setValue(-1.5f + k, 0.5f + i, 0.75f + j);
         trans = new SoTranslation;
         trans->translation.setValue(move);
 
         roommaterials[k][j][i] = new SoMaterial;
-        roommaterials[k][j][i]->diffuseColor.setValue(0.2,0.2,0.2);
-        roommaterials[k][j][i]->specularColor.setValue(0.2,0.53,0.78);
-        roommaterials[k][j][i]->transparency.setValue(1.0);
+        roommaterials[k][j][i]->diffuseColor.setValue(0.2f,0.2f,0.2f);
+        roommaterials[k][j][i]->specularColor.setValue(0.2f,0.53f,0.78f);
+        roommaterials[k][j][i]->transparency.setValue(1.0f);
 
         roomblocks[k][j][i] = new SoSeparator;
         roomblocks[k][j][i]->addChild(roommaterials[k][j][i]);
@@ -254,12 +254,12 @@ lower_piece()
   if(ok){
     int i;
     for(i = 0; i < 4; i++){
-      roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0);
+      roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0f);
     }
 
     for(i = 0; i < 4; i++){
       roommaterials[piece[i][0]][piece[i][1]][piece[i][2]-1]->ambientColor = piecematerial->ambientColor;
-      roommaterials[piece[i][0]][piece[i][1]][piece[i][2]-1]->transparency.setValue(0.0);
+      roommaterials[piece[i][0]][piece[i][1]][piece[i][2]-1]->transparency.setValue(0.0f);
 
       piece[i][2] -= 1;
 
@@ -289,12 +289,12 @@ translate_piece(short way)
     }
     if(ok){
       for(i = 0; i < 4; i++){
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0f);
         piece[i][0] -= 1;
       }
       for(i = 0; i < 4; i++){
         roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->ambientColor = piecematerial->ambientColor;
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0f);
       }
     }
     break;
@@ -307,12 +307,12 @@ translate_piece(short way)
     }
     if(ok){
       for(i = 0; i < 4; i++){
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0f);
         piece[i][0] += 1;
       }
       for(i = 0; i < 4; i++){
         roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->ambientColor = piecematerial->ambientColor;
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0f);
       }
     }
     break;
@@ -325,12 +325,12 @@ translate_piece(short way)
     }
     if(ok){
       for(i = 0; i < 4; i++){
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0f);
         piece[i][1] -= 1;
       }
       for(i = 0; i < 4; i++){
         roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->ambientColor = piecematerial->ambientColor;
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0f);
       }
     }
     break;
@@ -343,12 +343,12 @@ translate_piece(short way)
     }
     if(ok){
       for(i = 0; i < 4; i++){
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0f);
         piece[i][1] += 1;
       }
       for(i = 0; i < 4; i++){
         roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->ambientColor = piecematerial->ambientColor;
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0f);
       }
     }
     break;
@@ -494,7 +494,7 @@ rotate_piece(short way)
       }
       for(i = 1; i < 4; i++){
         roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->ambientColor = piecematerial->ambientColor;
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0f);
       }
     }
     break;
@@ -582,7 +582,7 @@ rotate_piece(short way)
 
     if(ok){
       for(i = 1; i < 4; i++){
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0f);
         switch(c[i-1]){
         case 1:
           d1 = 2*(piece[i][0] - piece[0][0]);
@@ -625,7 +625,7 @@ rotate_piece(short way)
 
       for(i = 1; i < 4; i++){
         roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->ambientColor = piecematerial->ambientColor;
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0f);
       }
     }
     break;
@@ -715,7 +715,7 @@ rotate_piece(short way)
 
     if(ok){
       for(i = 1; i < 4; i++){
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0f);
         switch(c[i-1]){
         case 1:
           d1 = 2*(piece[i][1] - piece[0][1]);
@@ -757,7 +757,7 @@ rotate_piece(short way)
       }
       for(i = 1; i < 4; i++){
         roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->ambientColor = piecematerial->ambientColor;
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0f);
       }
     }
     break;
@@ -846,7 +846,7 @@ rotate_piece(short way)
 
     if(ok){
       for(i = 1; i < 4; i++){
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0f);
         switch(c[i-1]){
         case 1:
           d1 = 2*(piece[i][0] - piece[0][0]);
@@ -889,7 +889,7 @@ rotate_piece(short way)
 
       for(i = 1; i < 4; i++){
         roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->ambientColor = piecematerial->ambientColor;
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0f);
       }
     }
     break;
@@ -978,7 +978,7 @@ rotate_piece(short way)
 
     if(ok){
       for(i = 1; i < 4; i++){
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0f);
         switch(c[i-1]){
         case 1:
           d1 = 2*(piece[i][2] - piece[0][2]);
@@ -1020,7 +1020,7 @@ rotate_piece(short way)
       }
       for(i = 1; i < 4; i++){
         roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->ambientColor = piecematerial->ambientColor;
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0f);
       }
     }
     break;
@@ -1108,7 +1108,7 @@ rotate_piece(short way)
 
     if(ok){
       for(i = 1; i < 4; i++){
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(1.0f);
         switch(c[i-1]){
         case 1:
           d1 = 2*(piece[i][1] - piece[0][1]);
@@ -1151,7 +1151,7 @@ rotate_piece(short way)
 
       for(i = 1; i < 4; i++){
         roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->ambientColor = piecematerial->ambientColor;
-        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0);
+        roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0f);
       }
     }
     break;
@@ -1209,7 +1209,7 @@ remove_planes()
     for(i = 0; i < numplanes; i++){
       for(int j = 0; j < 4; j++){
         for(int k = 0; k < 4; k++){
-          roommaterials[k][j][planes2[i]]->transparency.setValue(1.0);
+          roommaterials[k][j][planes2[i]]->transparency.setValue(1.0f);
           room[k][j][planes2[i]] = FALSE;
         }
       }
@@ -1226,11 +1226,11 @@ remove_planes()
           for(int k = 0; k < 4; k++){
             if(room[k][j][i]){
               room[k][j][i] = FALSE;
-              roommaterials[k][j][i]->transparency.setValue(1.0);
+              roommaterials[k][j][i]->transparency.setValue(1.0f);
               tempmat->ambientColor = roommaterials[k][j][i]->ambientColor;
               roommaterials[k][j][i - plnum]->ambientColor = tempmat->ambientColor;
               room[k][j][i - plnum] = TRUE;
-              roommaterials[k][j][i - plnum]->transparency.setValue(0.0);
+              roommaterials[k][j][i - plnum]->transparency.setValue(0.0f);
             }
           }
         }
@@ -1239,7 +1239,7 @@ remove_planes()
     else{
       for(i = planes2[0] + 1; i < 14; i++){
 
-        if(j < numplanes & planes2[j] == i){
+        if(j < numplanes && planes2[j] == i){
           j++;
           plnum++;
         }
@@ -1248,11 +1248,11 @@ remove_planes()
             for(int k = 0; k < 4; k++){
               if(room[k][j][i]){
                 room[k][j][i] = FALSE;
-                roommaterials[k][j][i]->transparency.setValue(1.0);
+                roommaterials[k][j][i]->transparency.setValue(1.0f);
                 tempmat->ambientColor = roommaterials[k][j][i]->ambientColor;
                 roommaterials[k][j][i - plnum]->ambientColor = tempmat->ambientColor;
                 room[k][j][i - plnum] = TRUE;
-                roommaterials[k][j][i - plnum]->transparency.setValue(0.0);
+                roommaterials[k][j][i - plnum]->transparency.setValue(0.0f);
               }
             }
           }
@@ -1398,7 +1398,7 @@ create_piece()
   for (; i < 4; i++){
     if(!room[piece[i][0]][piece[i][1]][piece[i][2]]){
       roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->ambientColor = piecematerial->ambientColor;
-      roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0);
+      roommaterials[piece[i][0]][piece[i][1]][piece[i][2]]->transparency.setValue(0.0f);
     }
     else{
       ok = FALSE;
@@ -1529,7 +1529,7 @@ main(int argc, char **argv)
   instruction->addChild(vpcb);
 
   SoTranslation * instrtrans = new SoTranslation;
-  instrtrans->translation.setValue(7,-5.25,0);
+  instrtrans->translation.setValue(7.f,-5.25f,0.f);
   //instruction->addChild(instrtrans);
 
   SoText2 * text = new SoText2;

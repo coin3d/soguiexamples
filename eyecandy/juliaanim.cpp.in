@@ -30,9 +30,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
-#include <assert.h>
-#include <string.h> // memset()
+#include <cstdlib> // exit()
+#include <cassert>
+#include <cstring> // memset()
 
 #include <Inventor/SbBasic.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -173,7 +173,7 @@ Landscape::smooth(void) {
                           heightbuffer[i-width+1] +
                           heightbuffer[i+width-1] +
                           heightbuffer[i+width] +
-                          heightbuffer[i+width+1])/10.0;
+                          heightbuffer[i+width+1])/10.0f;
       if (smoothbuffer[i] > maxheight)
         maxheight = smoothbuffer[i];
     }
@@ -195,8 +195,8 @@ Landscape::createCoords(void) {
       i = y * width + x;
       lx = x * landscapexstep;
       ly = y * landscapeystep;
-      ptr[i].setValue( lx, smoothbuffer[i] * 2, ly );
-      ptr[i+1].setValue( lx + landscapexstep, smoothbuffer[i+1] * 2, ly );
+      ptr[i].setValue( float(lx), smoothbuffer[i] * 2, float(ly) );
+      ptr[i+1].setValue( float(lx + landscapexstep), smoothbuffer[i+1] * 2, float(ly) );
     }
   }
   coords->point.finishEditing();
@@ -206,7 +206,7 @@ void
 Landscape::createTexture(void)
 {
   float elevation;
-  float elevation_limit_hi = 0.75 * maxheight;
+  float elevation_limit_hi = 0.75f * maxheight;
   int byte_width = width * 4;
   int byte_height = height * 4;
   int x, y, i, j;
@@ -244,9 +244,9 @@ Landscape::updateCoords(void) {
   assert( mesh != NULL );
 
 #if SMALL
-  float add = 0.0001;
+  float add = 0.0001f;
 #else
-  float add = 0.0005;
+  float add = 0.0005f;
 #endif
 
   if ( ! direction ) {
@@ -257,11 +257,11 @@ Landscape::updateCoords(void) {
     ci -= add;
   }
 
-  if ( ci < 0.30 )      direction = ! direction;
-  else if ( ci > 0.83 ) direction = ! direction;
+  if ( ci < 0.30f )      direction = ! direction;
+  else if ( ci > 0.83f ) direction = ! direction;
 
   SbVec3f * coordinates = coords->point.startEditing();
-  createJulia( cr, ci, 1.0, 64 );
+  createJulia( cr, ci, 1.0f, 64 );
   smooth();
   createCoords();
   createTexture();

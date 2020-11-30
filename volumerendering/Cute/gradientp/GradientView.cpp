@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -46,38 +46,41 @@
 
 // *************************************************************************
 
-#include <stdlib.h>
-#include <assert.h>
+#include <cstdlib>
+#include <cassert>
 
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qpainter.h>
-#include <qvaluelist.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qcolordialog.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qstatusbar.h>
+#include <qevent.h>
+#include <qwidget.h>
 
 #include "Gradient.h"
 #include "GradientView.h"
 #include "TickMark.h"
 #include "ImageItem.h"
-#include "moc_GradientView.icc"
+//#include "moc_GradientView.icc"
 
 // *************************************************************************
 
-GradientView::GradientView(QCanvas * c,
+GradientView::GradientView(QGraphicsScene * c,
                            const Gradient & g,
                            QWidget * parent,
                            const char * name,
-                           WFlags f)
-                           
-  : QCanvasView(c, parent, name, f)
+                           Qt::WindowFlags f)
+  : QGraphicsView(c, parent)
 {
+  this->setObjectName(name);
+  this->setWindowFlags(f);
+  //this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  //this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   this->canvas = c;
-  this->canvas->resize(this->sizeHint().width(),
-                       this->sizeHint().height());
+  //this->setGeometry(QRect(QPoint(0, 0), this->sizeHint()));
 
   this->setMinimumHeight(75);
   this->setMaximumHeight(100);
@@ -95,8 +98,8 @@ GradientView::GradientView(QCanvas * c,
   topLayout->setAlignment(Qt::AlignBottom);
   this->statusbar = new QStatusBar(this);
   this->statusbar->setSizeGripEnabled(FALSE);
-  this->selectionmarker = new ImageItem(this->canvas);
-  this->graditem = new ImageItem(this->canvas);
+  this->selectionmarker = new ImageItem(this->scene());
+  this->graditem = new ImageItem(this->scene());
   this->graditem->show();
 
   topLayout->addWidget(this->statusbar);
@@ -113,7 +116,7 @@ GradientView::~GradientView()
 {
   delete this->graditem;
   delete this->selectionmarker;
-  delete this->canvas;
+  //delete this->canvas;
   delete this->menu;
 }
 
@@ -124,9 +127,9 @@ GradientView::sizeHint() const
 }
 
 void
-GradientView::viewportResizeEvent(QResizeEvent * e)
+GradientView::resizeEvent(QResizeEvent * e)
 {
-  this->canvas->resize(e->size().width(), e->size().height());
+  this->setGeometry(QRect(QPoint(0, 0), e->size()));
   this->updateTicks();
   emit this->viewChanged();
 }
@@ -134,11 +137,11 @@ GradientView::viewportResizeEvent(QResizeEvent * e)
 void
 GradientView::updateView(void)
 {
-  const int width = this->canvas->width();
-  const int height = this->canvas->height();
+  const int width = this->width();
+  const int height = this->height();
 
   int h = this->statusbar->height();
-  const QImage gradImage = this->grad.getImage(width, height-10-h, 32);
+  const QImage gradImage = this->grad.getImage(width, height-10-h, QImage::Format_ARGB32_Premultiplied);
   this->graditem->setImage(gradImage);
   // FIXME: tell the graditem to redraw all of itself
   // not just those parts that have been touched by another item
@@ -149,27 +152,27 @@ GradientView::updateView(void)
   if (this->segmentidx != -1) {
     const int selectstart = (int) (this->tickmarks[this->segmentidx]->x());
     const int selectend = (int) (this->tickmarks[this->segmentidx + 1]->x());
-  
-    QImage selectedimage(selectend - selectstart, 10, 32);
+
+    QImage selectedimage(selectend - selectstart, 10, QImage::Format_ARGB32_Premultiplied);
     selectedimage.fill(QColor(100,100,245).rgb());
-    
+
     this->selectionmarker->setImage(selectedimage);
-    this->selectionmarker->move(selectstart, height-10-h);
-    this->selectionmarker->setZ(2);
+    this->selectionmarker->setPos(selectstart, height-10-h);
+    this->selectionmarker->setZValue(2);
     this->selectionmarker->show();
   }
   else {
     this->selectionmarker->hide();
   }
 
-  this->canvas->update();
+  this->scene()->update();
 }
 
 void
-GradientView::contentsMousePressEvent(QMouseEvent * e)
+GradientView::mousePressEvent(QMouseEvent * e)
 {
-  QPoint p = inverseWorldMatrix().map(e->pos());
- 
+  QPoint p = matrix().inverted().map(e->pos());
+
   switch (e->button()) {
   case Qt::LeftButton:
     {
@@ -200,7 +203,7 @@ GradientView::contentsMousePressEvent(QMouseEvent * e)
     }
     break;
 
-  case Qt::RightButton: 
+  case Qt::RightButton:
     if ((this->currenttick != -1) || (this->segmentidx != -1)) {
       this->buildMenu();
       if (this->menu->exec(e->globalPos())) {
@@ -217,17 +220,17 @@ GradientView::contentsMousePressEvent(QMouseEvent * e)
 }
 
 void
-GradientView::contentsMouseReleaseEvent(QMouseEvent * e)
+GradientView::mouseReleaseEvent(QMouseEvent * e)
 {
   this->mousepressed = FALSE;
 }
 
 void
-GradientView::contentsMouseMoveEvent(QMouseEvent * e)
+GradientView::mouseMoveEvent(QMouseEvent * e)
 {
   if (this->mousepressed) {
     if (this->currenttick == -1) { return; }
-    QPoint p = inverseWorldMatrix().map(e->pos());
+    QPoint p = matrix().inverted().map(e->pos());
     int x = p.x();
 
     assert(this->currenttick > 0);
@@ -239,25 +242,25 @@ GradientView::contentsMouseMoveEvent(QMouseEvent * e)
 
     const int movex = x - this->moving_start.x();
     const int newpos = (int) (current->x() + movex);
-    
+
     if ((newpos >= left->x()) && newpos <= right->x()) {
       current->moveBy(movex, 0);
-      
+
       this->moving_start = QPoint(x, p.y());
-      
+
       const float t = current->getPos();
       this->grad.moveTick(this->currenttick, t);
 
       const float value = t * (this->max - this->min) + 0.5f;
       QString s;
       s.sprintf("Color table index: %d", (int)(value + 0.5f));
-      this->statusbar->message(s);
-      
+      this->statusbar->showMessage(s);
+
       emit this->viewChanged();
     }
   } else {
-    QPoint p = inverseWorldMatrix().map(e->pos());
-    float t = (float)p.x() / (float)this->canvas->width();
+    QPoint p = matrix().inverted().map(e->pos());
+    float t = (float)p.x() / (float)this->width();
     // this test should not be necessary, however the mouse coordinates from
     // the mouse event can sometimes be out of bounds, i.e. they can sometimes
     // be smaller than 0 or larger than canvas.width or canvas.height.
@@ -265,7 +268,7 @@ GradientView::contentsMouseMoveEvent(QMouseEvent * e)
       QRgb col = this->grad.eval(t);
       QString s;
       s.sprintf("RGBA: 0x%02x%02x%02x%02x", qRed(col), qGreen(col), qBlue(col), qAlpha(col));
-      this->statusbar->message(s);
+      this->statusbar->showMessage(s);
     }
   }
 }
@@ -273,7 +276,7 @@ GradientView::contentsMouseMoveEvent(QMouseEvent * e)
 void
 GradientView::unselectAll(void)
 {
-  QValueList<TickMark*>::Iterator it = this->tickmarks.begin();
+  QList<TickMark*>::Iterator it = this->tickmarks.begin();
   for (; it != tickmarks.end(); ++it) {
     (*it)->setBrush(Qt::black);
   }
@@ -313,7 +316,7 @@ GradientView::centerTick(void)
   const double right = this->tickmarks[this->currenttick + 1]->x();
   const double center = (right - left) / 2.0 + left;
 
-  this->grad.moveTick(this->currenttick, center / this->canvas->width());
+  this->grad.moveTick(this->currenttick, center / this->width());
 
   this->updateTicks();
   emit this->viewChanged();
@@ -322,10 +325,11 @@ GradientView::centerTick(void)
 TickMark *
 GradientView::newTick(int x)
 {
-  TickMark* i = new TickMark(this->canvas);
+  TickMark* i = new TickMark(this->scene());
+  i->setFlag(QGraphicsItem::ItemIsMovable);
   i->setBrush(QColor(0,0,0));
-  i->move(0, this->canvas->height()-15-this->statusbar->height());
-  i->setZ(3);
+  i->setPos(0, this->height()-15-this->statusbar->height());
+  i->setZValue(3);
   i->setX(x);
   i->show();
   return i;
@@ -341,10 +345,10 @@ GradientView::insertTick(void)
   // x == midpoint of selected section
   const float x = ((selectEnd - selectStart)/2.0f + selectStart);
 
-  const float t = x / (float)this->canvas->width();
+  const float t = x / (float)this->width();
   const int i = this->grad.insertTick(t);
 
-  QValueList<TickMark*>::Iterator it = this->tickmarks.begin();
+  QList<TickMark*>::Iterator it = this->tickmarks.begin();
   // the += operator wasn't available until Qt 3.1.0. Just iterate
   // and use ++. pederb, 2003-09-22
   for (int j = 0; j < i; j++) { it++; }
@@ -368,14 +372,14 @@ GradientView::insertTick(void)
 void
 GradientView::updateTicks(void)
 {
-  QValueList<TickMark*>::Iterator it = this->tickmarks.begin();
+  QList<TickMark*>::Iterator it = this->tickmarks.begin();
   for (; it != tickmarks.end(); ++it) { delete (*it); }
 
   this->tickmarks.clear();
 
   for (unsigned int i = 0; i < this->grad.numTicks(); i++) {
     float t = this->grad.getParameter(i);
-    int x = (int) (t * (float)this->canvas->width() + 0.5f);
+    int x = (int) (t * (float)this->width() + 0.5f);
     TickMark * tick = this->newTick(x);
     this->tickmarks.append(tick);
   }
@@ -396,7 +400,7 @@ void
 GradientView::setGradientColor(unsigned int tickmarkidx, Gradient::TickSide side)
 {
   const QRgb initial = this->grad.getColor(tickmarkidx, side);
-  const QRgb newcol = QColorDialog::getRgba(initial);
+  const QRgb newcol = QColorDialog::getColor(QColor::fromRgba(initial)).rgba();
   if (newcol != initial) {
     this->setGradientColor(tickmarkidx, side, newcol);
   }
@@ -431,38 +435,38 @@ GradientView::copySegmentColorLeft(void)
 
 void
 GradientView::chooseSegmentColorLeft(void)
-{  
+{
   this->setGradientColor(this->segmentidx, Gradient::RIGHT);
 }
 
 void
 GradientView::chooseSegmentColorRight(void)
-{  
+{
   this->setGradientColor(this->segmentidx + 1, Gradient::LEFT);
 }
 
 void
 GradientView::chooseTickColorLeft(void)
-{  
+{
   this->setGradientColor(this->currenttick, Gradient::LEFT);
 }
 
 void
 GradientView::chooseTickColorRight(void)
-{  
+{
   this->setGradientColor(this->currenttick, Gradient::RIGHT);
 }
 
 void
 GradientView::copyTickColorLeft(void)
-{  
+{
   this->setGradientColor(this->currenttick, Gradient::RIGHT,
                          this->grad.getColor(this->currenttick, Gradient::LEFT));
 }
 
 void
 GradientView::copyTickColorRight(void)
-{  
+{
   this->setGradientColor(this->currenttick, Gradient::LEFT,
                          this->grad.getColor(this->currenttick, Gradient::RIGHT));
 }
@@ -486,57 +490,56 @@ GradientView::buildMenu(void)
   // FIXME: instead of building the menu each time, simply use
   // QPopupMenu::changeItem to change the color pixmaps. 20030925 frodo.
   assert(!this->menu);
-  this->menu = new QPopupMenu(this);
-
-  int id;
+  this->menu = new QMenu(this);
+  QAction* id;
 
   // FIXME: use menu titles. 20031008 mortene.
-  
+
   if (this->segmentidx != -1) {
     QPixmap pm(16,16);
     pm.fill(this->grad.getColor(this->segmentidx, Gradient::RIGHT));
-    id = menu->insertItem(pm, "Change left-side color", this, SLOT(chooseSegmentColorLeft()));
+    id = menu->addAction(pm, "Change left-side color", this, SLOT(chooseSegmentColorLeft()));
 
     pm.fill(grad.getColor(this->segmentidx, Gradient::LEFT));
-    id = menu->insertItem(pm, "Copy color from left neighbor", this, SLOT(copySegmentColorLeft()));
-    if (this->grad.leftEqualsRight(this->segmentidx)) menu->setItemEnabled(id, FALSE);
+    id = menu->addAction(pm, "Copy color from left neighbor", this, SLOT(copySegmentColorLeft()));
+    if (this->grad.leftEqualsRight(this->segmentidx)) id->setEnabled(FALSE);
 
-    menu->insertSeparator();
+    menu->addSeparator();
 
     pm.fill(this->grad.getColor(this->segmentidx + 1, Gradient::LEFT));
-    id = menu->insertItem(pm, "Change right-side color", this, SLOT(chooseSegmentColorRight()));
+    id = menu->addAction(pm, "Change right-side color", this, SLOT(chooseSegmentColorRight()));
 
     pm.fill(this->grad.getColor(this->segmentidx + 1, Gradient::RIGHT));
-    id = menu->insertItem(pm, "Copy color from right neighbor", this, SLOT(copySegmentColorRight()));
-    if (this->grad.leftEqualsRight(this->segmentidx + 1)) menu->setItemEnabled(id, FALSE);
+    id = menu->addAction(pm, "Copy color from right neighbor", this, SLOT(copySegmentColorRight()));
+    if (this->grad.leftEqualsRight(this->segmentidx + 1)) id->setEnabled(FALSE);
 
-    menu->insertSeparator();
+    menu->addSeparator();
 
-    id = menu->insertItem("Insert new tick", this, SLOT(insertTick()));
+    id = menu->addAction("Insert new tick", this, SLOT(insertTick()));
   }
   else if (this->currenttick != -1) {
     QPixmap pm(16,16);
     pm.fill(this->grad.getColor(this->currenttick, Gradient::LEFT));
-    (void)menu->insertItem(pm, "Change left color", this, SLOT(chooseTickColorLeft()));
+    (void)menu->addAction(pm, "Change left color", this, SLOT(chooseTickColorLeft()));
 
     pm.fill(this->grad.getColor(this->currenttick, Gradient::RIGHT));
-    (void)menu->insertItem(pm, "Change right color", this, SLOT(chooseTickColorRight()));
+    (void)menu->addAction(pm, "Change right color", this, SLOT(chooseTickColorRight()));
 
-    menu->insertSeparator();
+    menu->addSeparator();
 
     const bool lefteqright = this->grad.leftEqualsRight(this->currenttick);
 
     pm.fill(this->grad.getColor(this->currenttick, Gradient::LEFT));
-    id = menu->insertItem(pm, "Copy left color to right", this, SLOT(copyTickColorLeft()));
-    if (lefteqright) { menu->setItemEnabled(id, FALSE); }
+    id = menu->addAction(pm, "Copy left color to right", this, SLOT(copyTickColorLeft()));
+    if (lefteqright) { id->setEnabled(FALSE); }
 
     pm.fill(this->grad.getColor(this->currenttick, Gradient::RIGHT));
-    id = menu->insertItem(pm, "Copy right color to left", this, SLOT(copyTickColorRight()));
-    if (lefteqright) { menu->setItemEnabled(id, FALSE); }
+    id = menu->addAction(pm, "Copy right color to left", this, SLOT(copyTickColorRight()));
+    if (lefteqright) { menu->setEnabled(FALSE); }
 
-    menu->insertSeparator();
+    menu->addSeparator();
 
-    id = menu->insertItem("Delete tick", this, SLOT(deleteTick()));
-    id = menu->insertItem("Center tick", this, SLOT(centerTick()));
+    id = menu->addAction("Delete tick", this, SLOT(deleteTick()));
+    id = menu->addAction("Center tick", this, SLOT(centerTick()));
   }
 }

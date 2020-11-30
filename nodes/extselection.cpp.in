@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -44,7 +44,7 @@
 #if !defined(HAVE_SOEXTSELECTION) || !defined(__COIN__)
 
 #include <Inventor/nodes/SoText3.h>
-#include <stdio.h>
+#include <cstdio>
 
 
 int
@@ -102,7 +102,7 @@ main(int argc, char ** argv)
 #include <Inventor/nodes/SoCone.h>
 #include <Inventor/actions/SoCallbackAction.h>
 #include <Inventor/sensors/SoIdleSensor.h>
-#include <assert.h>
+#include <cassert>
 #include <Inventor/SoInput.h>
 #include <Inventor/SoOutput.h>
 #include <Inventor/actions/SoBoxHighlightRenderAction.h>
@@ -111,7 +111,7 @@ main(int argc, char ** argv)
 #include <Inventor/details/SoFaceDetail.h>
 #include <Inventor/details/SoPointDetail.h>
 
-#include <string.h>
+#include <cstring>
 
 // *************************************************************************
 
@@ -171,10 +171,10 @@ finish_callback(void * userdata, SoSelection * sel)
   mypointcoords->point.finishEditing();
 }
 
-static SbBool 
-lineCB(void * userdata, 
-       SoCallbackAction * action, 
-       const SoPrimitiveVertex * v1, 
+static SbBool
+lineCB(void * userdata,
+       SoCallbackAction * action,
+       const SoPrimitiveVertex * v1,
        const SoPrimitiveVertex * v2)
 {
   const SbMatrix & mm = action->getModelMatrix();
@@ -183,22 +183,22 @@ lineCB(void * userdata,
 
   SbVec3f vec1 = v1->getPoint();
   SbVec3f vec2 = v2->getPoint();
-  
+
   mm.multVecMatrix(v1->getPoint(),vec1);
   mm.multVecMatrix(v2->getPoint(),vec2);
 
   myidxlist.append(mybsptree.addPoint(vec1)); // Ugly hack. A 'line' must have 3 points...
   myidxlist.append(mybsptree.addPoint(vec2));
   myidxlist.append(mybsptree.addPoint(vec1));
- 
+
   myidxlist.append(-1);
 
   return FALSE;
 }
 
-static SbBool 
-pointCB(void * userdata, 
-        SoCallbackAction * action, 
+static SbBool
+pointCB(void * userdata,
+        SoCallbackAction * action,
         const SoPrimitiveVertex * v1)
 {
   const SbMatrix & mm = action->getModelMatrix();
@@ -214,11 +214,11 @@ pointCB(void * userdata,
   return FALSE;
 }
 
-static SbBool 
-triangleCB(void * userdata, 
-           SoCallbackAction * action, 
-           const SoPrimitiveVertex * v1, 
-           const SoPrimitiveVertex * v2, 
+static SbBool
+triangleCB(void * userdata,
+           SoCallbackAction * action,
+           const SoPrimitiveVertex * v1,
+           const SoPrimitiveVertex * v2,
            const SoPrimitiveVertex * v3)
 {
 
@@ -249,12 +249,12 @@ triangleCB(void * userdata,
     mm.multVecMatrix(op, wp);
     myidxlist.append(mybsptree.addPoint(wp));
   }
-  
+
   myidxlist.append(-1);
   return FALSE;
 }
 
-static SoSeparator * 
+static SoSeparator *
 make_line_sg(void)
 {
   SoSeparator * sep = new SoSeparator;
@@ -289,7 +289,7 @@ make_line_sg(void)
 void
 show_instructions( void )
 {
-  (void)fprintf(stdout, 
+  (void)fprintf(stdout,
                 "\nThis example program demonstrates the use of the SoExtSelection node type.\n"
                 "\nQuick instructions:\n\n"
                 "  * draw a polygon by selecting vertices with the left mouse button\n"
@@ -380,8 +380,8 @@ main(int argc, char ** argv)
 
   So@Gui@ExaminerViewer * ex1 = new So@Gui@ExaminerViewer( window );
 
-  ex1->setBackgroundColor(SbColor(0.5, 0.5, 0.7));
-  
+  ex1->setBackgroundColor(SbColor(0.5f, 0.5f, 0.7f));
+
   SoInput input;
   SbBool ok = input.openFile(argv[1]);
   if (!ok) {
@@ -389,8 +389,8 @@ main(int argc, char ** argv)
     return -1;
   }
 
-  SoSeparator *root = SoDB::readAll(&input); 
-  
+  SoSeparator *root = SoDB::readAll(&input);
+
   if (root == NULL) {
     (void) fprintf(stderr, "Unable to read file: %s\n", argv[1]);
     return -1;
@@ -426,14 +426,14 @@ main(int argc, char ** argv)
   selection->setLineSegmentFilterCallback(lineCB, NULL);
   selection->setPointFilterCallback(pointCB, NULL);
 
-  
+
   SoEventCallback * cb = new SoEventCallback;
   cb->addEventCallback(SoKeyboardEvent::getClassTypeId(),
                        event_cb, NULL);
   root->insertChild(cb, 0);
-  
+
   selection->addChild(root);
-  
+
 
   SoSeparator * newroot = new SoSeparator;
   newroot->ref();
@@ -482,7 +482,7 @@ main(int argc, char ** argv)
   // Make sure the overlay lines we render are within the same camera
   // scope as the actual geometry from the input file.
   overlaylines->insertChild(ex1->getCamera(), 0);
-  
+
   ex1->show();
   So@Gui@::show( window );
 

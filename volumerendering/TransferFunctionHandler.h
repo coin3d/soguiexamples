@@ -33,14 +33,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
+#include <qdialog.h>
 #include <qwidget.h>
 
 class SoTransferFunction;
-class SoTransferFunction_ctrl;
 class Gradient;
 
-
-class TransferFunctionHandler : QObject
+namespace Ui {
+  class SoTransferFunctionCtrl;
+}
+class TransferFunctionHandler : QDialog
 {
   Q_OBJECT
 
@@ -61,7 +63,7 @@ private:
   void initGUI(void);
 
   SoTransferFunction * node;
-  SoTransferFunction_ctrl * ctrl;
+  Ui::SoTransferFunctionCtrl * ctrl;
 
   int remap[2];
 

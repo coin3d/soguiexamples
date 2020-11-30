@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -31,9 +31,9 @@
 \**************************************************************************/
 
 #include "VolumeRenderHandler.h"
-#include "SoVolumeRender_ctrl.h"
+#include "ui_SoVolumeRender.h"
 
-#include <assert.h>
+#include <cassert>
 
 #include <qvalidator.h>
 #include <qlineedit.h>
@@ -52,6 +52,7 @@
 VolumeRenderHandler::VolumeRenderHandler(SoVolumeRender * rendernode,
                                          SoVolumeData * volumedatanode,
                                          QWidget * parent)
+  : QDialog(parent)
 {
   this->node = rendernode;
   // FIXME: should better place a sensor on it and detect when the
@@ -61,8 +62,9 @@ VolumeRenderHandler::VolumeRenderHandler(SoVolumeRender * rendernode,
   this->vdnode = volumedatanode;
   this->vdnode->ref();
 
-  this->ctrl = new SoVolumeRender_ctrl(parent);
-  this->ctrl->show();
+  this->ctrl = new Ui::SoVolumeRenderCtrl;
+  this->ctrl->setupUi(this);
+  this->show();
 
   this->initGUI();
 }
@@ -83,9 +85,9 @@ VolumeRenderHandler::initGUI(void)
 
   // "numSlices" slider & edit
 
-  this->ctrl->numSlicesSlider->setMinValue(0);
+  this->ctrl->numSlicesSlider->setMinimum(0);
   const unsigned short maxdim = SbGuiExMax(dimension[0], SbGuiExMax(dimension[1], dimension[2]));
-  this->ctrl->numSlicesSlider->setMaxValue(maxdim);
+  this->ctrl->numSlicesSlider->setMaximum(maxdim);
   this->ctrl->numSlicesSlider->setValue(this->node->numSlices.getValue());
 
   QObject::connect(this->ctrl->numSlicesSlider, SIGNAL(valueChanged(int)),
@@ -101,7 +103,7 @@ VolumeRenderHandler::initGUI(void)
 
   // numSlicesControl combobox
 
-  this->ctrl->numSlicesControlCombo->setCurrentItem(this->node->numSlicesControl.getValue());
+  this->ctrl->numSlicesControlCombo->setCurrentIndex(this->node->numSlicesControl.getValue());
 
   QObject::connect(this->ctrl->numSlicesControlCombo, SIGNAL(activated(int)),
                    this, SLOT(numSlicesControlUpdate(int)));
@@ -113,14 +115,14 @@ VolumeRenderHandler::initGUI(void)
 
   // interpolation combobox
 
-  this->ctrl->interpolationCombo->setCurrentItem(this->node->interpolation.getValue());
+  this->ctrl->interpolationCombo->setCurrentIndex(this->node->interpolation.getValue());
 
   QObject::connect(this->ctrl->interpolationCombo, SIGNAL(activated(int)),
                    this, SLOT(interpolationUpdate(int)));
 
   // composition combobox
 
-  this->ctrl->compositionCombo->setCurrentItem(this->node->composition.getValue());
+  this->ctrl->compositionCombo->setCurrentIndex(this->node->composition.getValue());
 
   QObject::connect(this->ctrl->compositionCombo, SIGNAL(activated(int)),
                    this, SLOT(compositionUpdate(int)));
@@ -181,6 +183,6 @@ VolumeRenderHandler::compositionUpdate(int idx)
 void
 VolumeRenderHandler::viewAlignedSlicesCheckBoxUpdate(int idx)
 {
-  if (idx == QCheckBox::NoChange) return;
-  this->node->viewAlignedSlices = (idx == QCheckBox::On) ? TRUE : FALSE;
+  if (idx == Qt::PartiallyChecked) return;
+  this->node->viewAlignedSlices = (idx == Qt::Checked) ? TRUE : FALSE;
 }

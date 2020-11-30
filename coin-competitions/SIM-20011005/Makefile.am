@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/coin-competitions
 
 noinst_PROGRAMS = \
 	lorenz \
@@ -9,7 +9,7 @@ lorenz_SOURCES = lorenz.cpp star.h
 nurbscurve_SOURCES = nurbscurve.cpp
 cubes_SOURCES = cubes.cpp \
 	Board.cpp Board.h GameLogic.cpp GameLogic.h Minimax.cpp Minimax.h \
-	$(top_srcdir)/coin-competitions/TextureWriter.cpp
+	TextureWriter.cpp
 
 BUILT_SOURCES = \
 	lorenz.cpp \

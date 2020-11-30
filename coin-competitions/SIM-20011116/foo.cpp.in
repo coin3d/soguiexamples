@@ -91,7 +91,7 @@
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
@@ -212,59 +212,59 @@ boxes()
     SoSeparator* boxes = new SoSeparator;
 
     SoRotor* rotor = new SoRotor;
-    rotor->speed = (float)0.5;
-    rotor->rotation.setValue(SbVec3f(0, 1, 0), -0.1); // counterclockwise
+    rotor->speed = 0.5f;
+    rotor->rotation.setValue(SbVec3f(0, 1, 0), -0.1f); // counterclockwise
     
     SoCube* sBox = new SoCube;
-    sBox->width = .2;
-    sBox->height = .2;
-    sBox->depth = .2;
+    sBox->width = .2f;
+    sBox->height = .2f;
+    sBox->depth = .2f;
 
     SoSeparator* box1 = new SoSeparator;
     SoTransform* tfBox1 = new SoTransform;
-    tfBox1->translation.setValue(1.9, 2.0, 1.9);
+    tfBox1->translation.setValue(1.9f, 2.0f, 1.9f);
     box1->addChild(tfBox1);
     box1->addChild(sBox);
 
     SoSeparator* box2 = new SoSeparator;
     SoTransform* tfBox2 = new SoTransform;
-    tfBox2->translation.setValue(-1.9, 2.0, 1.9);
+    tfBox2->translation.setValue(-1.9f, 2.0f, 1.9f);
     box2->addChild(tfBox2);
     box2->addChild(sBox);
 
     SoSeparator* box3 = new SoSeparator;
     SoTransform* tfBox3 = new SoTransform;
-    tfBox3->translation.setValue(-1.9, 2.0, -1.9);
+    tfBox3->translation.setValue(-1.9f, 2.0f, -1.9f);
     box3->addChild(tfBox3);
     box3->addChild(sBox);
 
     SoSeparator* box4 = new SoSeparator;
     SoTransform* tfBox4 = new SoTransform;
-    tfBox4->translation.setValue(1.9, 2.0, -1.9);
+    tfBox4->translation.setValue(1.9f, 2.0f, -1.9f);
     box4->addChild(tfBox4);
     box4->addChild(sBox);
 
     SoSeparator* box5 = new SoSeparator;
     SoTransform* tfBox5 = new SoTransform;
-    tfBox5->translation.setValue(1.9, -2.0, 1.9);
+    tfBox5->translation.setValue(1.9f, -2.0f, 1.9f);
     box5->addChild(tfBox5);
     box5->addChild(sBox);
 
     SoSeparator* box6 = new SoSeparator;
     SoTransform* tfBox6 = new SoTransform;
-    tfBox6->translation.setValue(-1.9, -2.0, 1.9);
+    tfBox6->translation.setValue(-1.9f, -2.0f, 1.9f);
     box6->addChild(tfBox6);
     box6->addChild(sBox);
 
     SoSeparator* box7 = new SoSeparator;
     SoTransform* tfBox7 = new SoTransform;
-    tfBox7->translation.setValue(-1.9, -2.0, -1.9);
+    tfBox7->translation.setValue(-1.9f, -2.0f, -1.9f);
     box7->addChild(tfBox7);
     box7->addChild(sBox);
 
     SoSeparator* box8 = new SoSeparator;
     SoTransform* tfBox8 = new SoTransform;
-    tfBox8->translation.setValue(1.9, -2.0, -1.9);
+    tfBox8->translation.setValue(1.9f, -2.0f, -1.9f);
     box8->addChild(tfBox8);
     box8->addChild(sBox);
 
@@ -290,36 +290,36 @@ plane()
     SoSeparator* plane = new SoSeparator;
 
     SoTransform* tfPlane = new SoTransform;
-    SbRotation r (SbVec3f(1., 0., 0.), M_PI/2);
-    tfPlane->translation.setValue(0.0, 0.0, 0.0);
+    SbRotation r (SbVec3f(1, 0, 0), float(M_PI)/2);
+    tfPlane->translation.setValue(0.0f, 0.0f, 0.0f);
     tfPlane->rotation = r;
 
     SoCube* sPlane = new SoCube;
     sPlane->width = 4;
     sPlane->height = 4;
-    sPlane->depth = .1;
+    sPlane->depth = 0.1f;
 
     SoMaterial* m = new SoMaterial;
     m->ambientColor.setValue(0, 0, 0);
     m->diffuseColor.setValue(0, 0, 0);
-    m->shininess = .5;
+    m->shininess = 0.5f;
 
     SoScale* s1 = new SoScale;
-    s1->scaleFactor.setValue(0.03, 0.015, 0.015);
+    s1->scaleFactor.setValue(0.03f, 0.015f, 0.015f);
     SoTransform* t = new SoTransform;
-    t->translation.setValue(0,0,0.1);
+    t->translation.setValue(0,0,0.1f);
     SoScale* s2 = new SoScale;
     s2->scaleFactor.setValue(-1, 1, 1);
     SoTransform* t2 = new SoTransform;
-    t2->translation.setValue(0,0,-15.1);
+    t2->translation.setValue(0,0,-15.1f);
 
     text = new SoText3;
     text->string.setValue("> | <");
     text->justification=SoText3::CENTER;
 
     SoRotor* rotor3 = new SoRotor;
-    rotor3->speed = (float)0.5;
-    rotor3->rotation.setValue(SbVec3f(0, 1, 0), 0.1); // clockwise
+    rotor3->speed = 0.5f;
+    rotor3->rotation.setValue(SbVec3f(0, 1, 0), 0.1f); // clockwise
 
     plane->addChild(rotor3);
     plane->addChild(tfPlane);
@@ -341,19 +341,19 @@ scene()
     SoSeparator* obj = new SoSeparator;
 
     SoMaterial* mMetalS = new SoMaterial;
-    mMetalS->ambientColor.setValue(0.5, 0.5, 0.5);
+    mMetalS->ambientColor.setValue(0.5f, 0.5f, 0.5f);
     mMetalS->diffuseColor.setValue(1, 1, 1);
-    mMetalS->specularColor.setValue(.5, .5, .5);
-    mMetalS->shininess = .5;
+    mMetalS->specularColor.setValue(0.5f, 0.5f, 0.5f);
+    mMetalS->shininess = 0.5f;
 
     // general rotations for whole compound object
     SoRotor* rotor1 = new SoRotor;
-    rotor1->speed = (float)0.4;
-    rotor1->rotation.setValue(SbVec3f(1, 0, 0), -0.1); // counterclockwise
+    rotor1->speed = 0.4f;
+    rotor1->rotation.setValue(SbVec3f(1, 0, 0), -0.1f); // counterclockwise
 
     SoRotor* rotor4 = new SoRotor;
-    rotor4->speed = (float)0.05;
-    rotor4->rotation.setValue(SbVec3f(0, 1, 0), 0.1); // clockwise
+    rotor4->speed = 0.05f;
+    rotor4->rotation.setValue(SbVec3f(0, 1, 0), 0.1f); // clockwise
 
     obj->addChild(rotor1);
     obj->addChild(rotor4);

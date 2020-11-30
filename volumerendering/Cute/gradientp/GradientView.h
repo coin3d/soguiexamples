@@ -33,29 +33,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <qcanvas.h>
+#include <QGraphicsView>
+#include <QList>
 #include "Gradient.h"
 
 class TickMark;
 class QPainter;
+class QMenu;
 class QMouseEvent;
 class QResizeEvent;
 class ImageItem;
-class QPopupMenu;
 class QStatusBar;
 
 // *************************************************************************
 
-class GradientView : public QCanvasView
+class GradientView : public QGraphicsView
 {
   Q_OBJECT
 
 public:
-  GradientView(QCanvas * c = 0,
+  GradientView(QGraphicsScene * c = 0,
                const Gradient & g = Gradient(), 
                QWidget * parent = 0, 
                const char * name = 0, 
-               WFlags f = 0);
+               Qt::WindowFlags f = 0);
   
   ~GradientView();
 
@@ -77,10 +78,10 @@ signals:
   void ticksChanged(void);
 
 protected:
-  void contentsMousePressEvent(QMouseEvent *);
-  void contentsMouseReleaseEvent(QMouseEvent *);
-  void contentsMouseMoveEvent(QMouseEvent *);
-  void viewportResizeEvent(QResizeEvent *);
+  void mousePressEvent(QMouseEvent *);
+  void mouseReleaseEvent(QMouseEvent *);
+  void mouseMoveEvent(QMouseEvent *);
+  void resizeEvent(QResizeEvent *);
   void buildMenu();
   void unselectAll(void);
 
@@ -103,12 +104,12 @@ private:
 
 
   TickMark * newTick(int x);
-  QCanvas * canvas;
+  QGraphicsScene * canvas;
   Gradient grad;
   ImageItem * graditem;
   ImageItem * selectionmarker;
-  QPopupMenu * menu;
-  QValueList<TickMark*> tickmarks;
+  QMenu * menu;
+  QList<TickMark*> tickmarks;
   QStatusBar * statusbar;
 
   int currenttick;

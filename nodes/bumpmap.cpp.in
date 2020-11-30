@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -42,7 +42,7 @@
 #if !defined(HAVE_SOBUMPMAP) || !defined(HAVE_SOBUMPMAPTRANSFORM)
 
 #include <Inventor/nodes/SoText3.h>
-#include <stdio.h>
+#include <cstdio>
 
 int
 main(int argc, char ** argv)
@@ -103,10 +103,10 @@ main(int argc, char ** argv)
 #include <Inventor/nodes/SoBumpMap.h>
 #include <Inventor/nodes/SoBumpMapTransform.h>
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h> // exit()
-#include <time.h>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib> // exit()
+#include <ctime>
 
 typedef struct
 {
@@ -136,7 +136,7 @@ gentorus(double r, double R, int nsides, int rings,
          SoCoordinate3 * c, SoNormal * n, SoQuadMesh * qm,
          SoTextureCoordinate2 * tc)
 {
-  double theta, phi, theta1;
+  double theta, phi;
   double costheta, sintheta;
   double ringdelta, sidedelta;
   double cosPhi, sinPhi, dist;
@@ -270,7 +270,7 @@ redraw_plasma(unsigned char * buffer)
       gtpos2 = gtpos2+adders[7];
       btpos1 = btpos1+adders[12];
       btpos2 = btpos2+adders[13];
-    }								
+    }
     rtpos3 = rtpos3+adders[2];
     rtpos4 = rtpos4+adders[3];
     gtpos3 = gtpos3+adders[8];
@@ -394,7 +394,7 @@ update_bump(void)
 {
   SbVec2s size;
   int nc;
-    
+
   unsigned char * image = bumpmap->image.startEditing(size, nc);
   assert(nc == 1);
   assert(size[0] == imagewidth * 2);
@@ -418,7 +418,7 @@ update_bump(void)
 #else // for a different look
       unsigned char tmp = (src[0] * src[1] * src[2]) >> 16;
       image[x+y*bw] = tmp;
-      image[(bw-1)-x+y*bw] = tmp; 
+      image[(bw-1)-x+y*bw] = tmp;
       image[x+((bh-1)-y)*bw] = tmp;;
       image[((bh-1)-y)*bw+(bw-1)-x] = tmp;
 #endif
@@ -451,7 +451,7 @@ event_cb(void * userdata, SoEventCallback * node)
       col = SbColor(0.0f, 0.0f, 0.0f);
     }
     else {
-      col = SbColor(1.0f, 1.0f, 1.0f);      
+      col = SbColor(1.0f, 1.0f, 1.0f);
     }
     bumpmaterial->specularColor = col;
   }

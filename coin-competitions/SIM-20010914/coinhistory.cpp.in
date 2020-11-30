@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -72,9 +72,9 @@
 // Looks like a bug in SGI Inventor that is hard to make a work-around
 // for.  20010919 mortene.
 
-#include <math.h>
-#include <stdlib.h> // exit()
-#include <time.h>
+#include <cmath>
+#include <cstdlib> // exit()
+#include <ctime>
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -97,7 +97,7 @@
 #include <Inventor/nodes/SoDirectionalLight.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoTransform.h>
-#include <Inventor/nodes/SoRotation.h> 
+#include <Inventor/nodes/SoRotation.h>
 #include <Inventor/nodes/SoFont.h>
 #include <Inventor/sensors/SoTimerSensor.h>
 
@@ -117,8 +117,11 @@
 #include <Inventor/actions/SoGLRenderAction.h>
 #include <Inventor/actions/SoGetBoundingBoxAction.h>
 
-// The History of Coin
+#ifndef M_PI
+#define M_PI 3.141592653579f
+#endif // ! M_PI
 
+// The History of Coin
 
 char text2[] = "\
 The History of Coin                  \n\
@@ -162,13 +165,13 @@ software for 3d graphics.        \n\
 .....................................\n\
                     \n";
 
-int textpos;
-int textlen;
+size_t textpos;
+size_t textlen;
 float deltax;
 int line;
 int spos;
 int currpart;
-SbTime lastlettertime; 
+SbTime lastlettertime;
 #define XPOS -9.5f
 
 #define LINE_BREAK 40
@@ -791,7 +794,7 @@ struct particleinfo
   {
     x=y=z=sx=sy=sz=ax=ay=az=m=delay=rotx=srotx=0.0f;
     p=NULL; xf=NULL; t=NULL;
-  };
+  }
 };
 
 int num_particles;
@@ -814,7 +817,7 @@ float speedjitter = 0.5;
 double flexrand(double lower, double upper)
 {
   return lower + ((double)rand()/(double)RAND_MAX)*(upper-lower);
-};
+}
 
 static void timerSensorCallback(void *data, SoSensor *)
 {
@@ -827,7 +830,7 @@ static void timerSensorCallback(void *data, SoSensor *)
   int leader = 0;
 
   // rotate logo
-  logorot->rotation.setValue(SbVec3f(0.0f, 1.0f, 0.0f), sdiff*2*3.14*0.1);
+  logorot->rotation.setValue(SbVec3f(0.0f, 1.0f, 0.0f), (float)sdiff*2*float(M_PI)*0.1f);
 
   // print text
 
@@ -835,7 +838,7 @@ static void timerSensorCallback(void *data, SoSensor *)
   double ldiff = letterdiff.getValue();
   if (ldiff>TEXTDELAY) {
     // print a new letter
-    
+
     char tt[2];
     tt[1] = 0;
     tt[0] = text2[textpos];
@@ -845,57 +848,51 @@ static void timerSensorCallback(void *data, SoSensor *)
     if (spos==0) {
       particles[currpart].x=XPOS;
     }
-    else
-      {
-	SoGetBoundingBoxAction bboxa(vp);
-	if (currpart==0)
-	  {
-	    bboxa.apply(particles[NUM_PARTICLES-1].t);
-	    SbBox3f bbox = bboxa.getBoundingBox();
+    else {
+      SoGetBoundingBoxAction bboxa(vp);
+      if (currpart==0) {
+        bboxa.apply(particles[NUM_PARTICLES-1].t);
+        SbBox3f bbox = bboxa.getBoundingBox();
 
-	    float w, h, d;
-	    bbox.getSize(deltax,h,d);
-	    particles[currpart].x=particles[NUM_PARTICLES-1].x+deltax*0.12f;
-	  }
-	else
-	  {
-	    bboxa.apply(particles[currpart-1].t);
-	    SbBox3f bbox = bboxa.getBoundingBox();
-
-	    float w, h, d;
-	    bbox.getSize(deltax,h,d);
-	    particles[currpart].x=particles[currpart-1].x+deltax*0.12f;
-	  }
+        float h, d;
+        bbox.getSize(deltax,h,d);
+        particles[currpart].x=particles[NUM_PARTICLES-1].x+deltax*0.12f;
       }
+      else {
+        bboxa.apply(particles[currpart-1].t);
+        SbBox3f bbox = bboxa.getBoundingBox();
+
+        float h, d;
+        bbox.getSize(deltax,h,d);
+        particles[currpart].x=particles[currpart-1].x+deltax*0.12f;
+      }
+    }
 
     particles[currpart].y=-(float)line*1.5f;
     particles[currpart].z=-0.0f;
 
-    particles[currpart].sx=flexrand(-1.0, 1.0);
-    particles[currpart].sy=flexrand(-1.0, 1.0);
+    particles[currpart].sx=(float)flexrand(-1.0f, 1.0f);
+    particles[currpart].sy=(float)flexrand(-1.0f, 1.0f);
     particles[currpart].sz=10.0f;
 
     particles[currpart].srotx=2.0f;
     particles[currpart].rotx=0.0f;
 
-    particles[currpart].delay = sdiff+FALLDELAY;
+    particles[currpart].delay = (float)sdiff+FALLDELAY;
 
-    particles[currpart].xf->translation.setValue(particles[currpart].x, 
-						 particles[currpart].y, particles[currpart].z);
+    particles[currpart].xf->translation.setValue(particles[currpart].x,
+                                                 particles[currpart].y,
+                                                 particles[currpart].z);
 
     particles[currpart].rot->rotation.setValue(SbVec3f(0.0f, 1.0f, 0.0f), particles[currpart].rotx);
 
-
     spos++;
     if ( ((text2[textpos] == ' ') && (spos>=LINE_BREAK))
-	 || (text2[textpos] == '\n'))
-      {
-	line++;
-	line %= NUM_LINES;
-	spos=0;
-      }
-
-
+         || (text2[textpos] == '\n')) {
+      line++;
+      line %= NUM_LINES;
+      spos=0;
+    }
     textpos++;
     textpos%=textlen;
 
@@ -903,66 +900,62 @@ static void timerSensorCallback(void *data, SoSensor *)
     currpart %= NUM_PARTICLES;
 
     lastlettertime=now;
-
-
   }
 
   int i;
 
   // animate particles
 
-  for (i=0; i<num_particles; i++)
-    {
-      if (sdiff-particles[i].delay<0)
-	continue;
-      particles[i].x+=diff*particles[i].sx;
-      particles[i].y+=diff*particles[i].sy;
-      particles[i].z+=diff*particles[i].sz;
+  for (i=0; i<num_particles; i++) {
+    if (sdiff-particles[i].delay<0)
+      continue;
+    particles[i].x+=(float)diff*particles[i].sx;
+    particles[i].y+=(float)diff*particles[i].sy;
+    particles[i].z+=(float)diff*particles[i].sz;
 
-      particles[i].sx+=diff*particles[i].ax;
-      particles[i].sy+=diff*particles[i].ay;
-      particles[i].sz+=diff*particles[i].az;
+    particles[i].sx+=(float)diff*particles[i].ax;
+    particles[i].sy+=(float)diff*particles[i].ay;
+    particles[i].sz+=(float)diff*particles[i].az;
 
-      particles[i].rotx+=diff*particles[i].srotx;
+    particles[i].rotx+=(float)diff*particles[i].srotx;
 
-      float bound = 12.0;
-      float absorb = 0.65;
+    float bound = 12.0f;
+    float absorb = 0.65f;
 
-      if (particles[i].y<-bound)
-	{
-	  particles[i].sy=1.0*fabs(particles[i].sy)*absorb;
-	  particles[i].sx += speedjitter*(rand()%100)/100.0;
-	  particles[i].sy += speedjitter*(rand()%100)/100.0;
-	}
-
-
-      if (particles[i].y>bound)
-	particles[i].sy=-1.0*fabs(particles[i].sy)*absorb;
-
-      /*    if (particles[i].x<-bound)
-	    particles[i].sx=1.0*fabs(particles[i].sx)*absorb;
-
-	    if (particles[i].x>bound)
-	    particles[i].sx=-1.0*fabs(particles[i].sx)*absorb;
-      */
-
-      float sbound = 50;
-  
-      if (particles[i].sx>sbound)
-	particles[i].sx = sbound;
-      if (particles[i].sx<-sbound)
-	particles[i].sx = -sbound;
-
-      if (particles[i].sy>sbound)
-	particles[i].sy = sbound;
-      if (particles[i].sy<-sbound)
-	particles[i].sy = -sbound;
-
-      particles[i].xf->translation.setValue(particles[i].x, particles[i].y, particles[i].z);
-      particles[i].rot->rotation.setValue(SbVec3f(0.0f, 1.0f, 0.0f), particles[i].rotx);
+    if (particles[i].y<-bound) {
+      particles[i].sy=1.0f*fabs(particles[i].sy)*absorb;
+      particles[i].sx += speedjitter*(rand()%100)/100.0f;
+      particles[i].sy += speedjitter*(rand()%100)/100.0f;
     }
-}
 
+
+    if (particles[i].y>bound)
+      particles[i].sy=-1.0f*fabs(particles[i].sy)*absorb;
+
+    /*
+    if (particles[i].x<-bound)
+      particles[i].sx=1.0f*fabs(particles[i].sx)*absorb;
+
+    if (particles[i].x>bound)
+      particles[i].sx=-1.0f*fabs(particles[i].sx)*absorb;
+    */
+
+    float sbound = 50;
+
+    if (particles[i].sx>sbound)
+      particles[i].sx = sbound;
+    if (particles[i].sx<-sbound)
+      particles[i].sx = -sbound;
+
+    if (particles[i].sy>sbound)
+      particles[i].sy = sbound;
+    if (particles[i].sy<-sbound)
+      particles[i].sy = -sbound;
+
+    particles[i].xf->translation.setValue(particles[i].x, particles[i].y, particles[i].z);
+    particles[i].rot->rotation.setValue(SbVec3f(0.0f, 1.0f, 0.0f), particles[i].rotx);
+  }
+}
 
 SoSeparator * create_logo(SoTexture2 * texture)
 {
@@ -988,7 +981,7 @@ SoSeparator * create_logo(SoTexture2 * texture)
   SoScale * scale = new SoScale;
   scale->scaleFactor.setValue(0.6f, 0.7f, 0.6f);
   sep->addChild(scale);
-	
+
   // C
   SoText3 * c = new SoText3;
   c->string.setValue( "C" );
@@ -1063,7 +1056,7 @@ SoSeparator * create_logo(SoTexture2 * texture)
   sep->addChild(b);
 
   sep->unrefNoDelete();
-	
+
   return sep;
 }
 
@@ -1078,11 +1071,8 @@ create_texture(int width, int height, int bpp, unsigned char * raw, bool blend)
 }
 
 int
-main(
-     int argc,
-     char ** argv )
+main(int argc, char ** argv )
 {
-
   textpos = 0;
   currpart = 0;
   firstletter = true;
@@ -1091,7 +1081,6 @@ main(
   if (window == NULL) exit(1);
 
   vp.setWindowSize(SbVec2s(400, 400));
-
 
   root = new SoSeparator;
   root->ref();
@@ -1104,7 +1093,7 @@ main(
   hints->creaseAngle = 0.91f;
   root->addChild( hints );
 
-  
+
   SoSeparator * instructsep = new SoSeparator;
   root->addChild(instructsep);
 
@@ -1135,7 +1124,7 @@ main(
   logo->addChild(logorot = new SoRotation);
   logo->addChild(create_logo(create_texture(64,64,4,(unsigned char*)envq_raw,true)));
   root->addChild(logo);
-  
+
   SoBaseColor * basecol = new SoBaseColor;
   basecol->rgb.setValue( float(rand())/float(RAND_MAX),
                          float(rand())/float(RAND_MAX),
@@ -1149,7 +1138,6 @@ main(
   num_particles = NUM_PARTICLES;
   particles = new particleinfo[num_particles];
 
-  SoSphere *ball;
   SoSeparator *textsep = new SoSeparator;
   root->addChild(textsep);
 
@@ -1161,32 +1149,30 @@ main(
   deltax=0.0f;
   textpos = 0;
   // add empty text
-  for (i=0; i<num_particles; i++)
-    {
-      particles[i].ax=0.0;
-      particles[i].ay=-9.8f*2.0f;
-      particles[i].az=-4.0f*2.0f;
+  for (i=0; i<num_particles; i++) {
+    particles[i].ax=0.0;
+    particles[i].ay=-9.8f*2.0f;
+    particles[i].az=-4.0f*2.0f;
 
-      particles[i].delay = -100.0f;
+    particles[i].delay = -100.0f;
 
-      textsep->addChild(particles[i].p = new SoSeparator);
-      particles[i].p->addChild(particles[i].xf = new SoTransform);
+    textsep->addChild(particles[i].p = new SoSeparator);
+    particles[i].p->addChild(particles[i].xf = new SoTransform);
 
-      particles[i].p->addChild(particles[i].rot = new SoRotation);
+    particles[i].p->addChild(particles[i].rot = new SoRotation);
 
-      SoScale * s = new SoScale;
-      s->scaleFactor.setValue(0.1f, 0.1f, 0.1f);
-      particles[i].p->addChild(s);
+    SoScale * s = new SoScale;
+    s->scaleFactor.setValue(0.1f, 0.1f, 0.1f);
+    particles[i].p->addChild(s);
 
-      particles[i].t = new SoText3;
-      tt[0] = ' ';
-      particles[i].t->string.setValue(tt);
-      //	  particles[i].t->parts.setValue(SoText3::FRONT);
-      particles[i].t->parts.setValue(SoText3::ALL);
-      particles[i].t->justification=SoText3::LEFT;
-      particles[i].p->addChild(particles[i].t);
-
-    };
+    particles[i].t = new SoText3;
+    tt[0] = ' ';
+    particles[i].t->string.setValue(tt);
+    //	  particles[i].t->parts.setValue(SoText3::FRONT);
+    particles[i].t->parts.setValue(SoText3::ALL);
+    particles[i].t->justification=SoText3::LEFT;
+    particles[i].p->addChild(particles[i].t);
+  }
 
   lastlettertime = SbTime::getTimeOfDay();
 
@@ -1227,8 +1213,6 @@ main(
   // visible with SoWin. (Bug!)
   (void)viewer->setFullScreen(TRUE);
 #endif // HAVE_SOCOMPONENT_SETFULLSCREEN
-
-
   So@Gui@::mainLoop();
 
   root->unref();

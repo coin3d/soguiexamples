@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SbBasic.h>
@@ -108,8 +108,8 @@ main(int ,char ** argv)
 
   root->ref(); // increments the root's reference counter
   root->addChild(hints);
-  root->addChild(scene(SbVec3f(1,1,1),SbVec3f(0.3, 0.3, 0.3),
-                       SbVec3f(1, 0, 0), M_PI/5, 5));
+  root->addChild(scene(SbVec3f(1,1,1),SbVec3f(0.3f, 0.3f, 0.3f),
+                       SbVec3f(1, 0, 0), float(M_PI)/5, 5));
  
   // Set up the ExaminerViewer
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);

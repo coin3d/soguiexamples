@@ -44,7 +44,7 @@
 #include "CurveView.h"
 #include "SoQtColorTableEditor.h"
 #include "SoQtColorTableEditorP.h"
-#include "moc_SoQtColorTableEditorP.icc"
+//#include "moc_SoQtColorTableEditorP.icc"
 
 // *************************************************************************
 
@@ -92,7 +92,7 @@ SoQtColorTableEditorP::done()
 void
 SoQtColorTableEditorP::reset()
 {
-  this->curvetypelist->setCurrentItem(CurveView::SMOOTH);
+  this->curvetypelist->setCurrentIndex(CurveView::SMOOTH);
   this->curveview->resetActive();
   if (this->callBack) {
     this->callBack(PUBLIC(this), this->callbackData);
@@ -136,50 +136,68 @@ void
 SoQtColorTableEditorP::setConstantValue()
 {
   this->curveview->changeCurveMode(CurveView::FREE);
-  this->curvetypelist->setCurrentItem(CurveView::FREE);
+  this->curvetypelist->setCurrentIndex(CurveView::FREE);
   int value = this->constantvalue->text().toInt();
   this->curveview->setConstantValue(value);
 }
 
 SoQtColorTableEditor::SoQtColorTableEditor(int numcolors, QWidget * parent, const char * name)
-: QWidget(parent, name)
+: QWidget(parent)
 {
+  this->setObjectName(name);
   this->pimpl = new SoQtColorTableEditorP(this);
   PRIVATE(this)->callBack = NULL;
   PRIVATE(this)->mode = SoQtColorTableEditor::RGB;
   
   QSizePolicy sizepolicy;
-  sizepolicy.setVerData(QSizePolicy::MinimumExpanding);
+  sizepolicy.setVerticalPolicy(QSizePolicy::MinimumExpanding);
   this->setSizePolicy(sizepolicy);
 
   QGridLayout * toplayout = new QGridLayout(this);
   toplayout->setMargin(10);
   QVBoxLayout * buttonlayout = new QVBoxLayout();
 
-  QGroupBox * controlgroup = new QGroupBox(3, Qt::Horizontal, this);
+  QGroupBox * controlgroup = new QGroupBox(this);
+  controlgroup->setAlignment(Qt::Horizontal);
+  QHBoxLayout * hboxlayout = new QHBoxLayout();
 
+  QVBoxLayout * col1layout = new QVBoxLayout();
   PRIVATE(this)->modetext = new QLabel(controlgroup);
   PRIVATE(this)->modetext->setText("Modify channel: ");
+  col1layout->addWidget(PRIVATE(this)->modetext);
 
   PRIVATE(this)->colormodelist = new QComboBox(controlgroup);
   PRIVATE(this)->colormodelist->show();
-  controlgroup->addSpace(1);
+  col1layout->addWidget(PRIVATE(this)->colormodelist);
+  col1layout->addStretch(1);
   
+  QVBoxLayout * col2layout = new QVBoxLayout();
   PRIVATE(this)->curvetypetext = new QLabel(controlgroup);
   PRIVATE(this)->curvetypetext->setText("Curve Type: ");
+  col2layout->addWidget(PRIVATE(this)->curvetypetext);
  
   PRIVATE(this)->curvetypelist = new QComboBox(controlgroup);
   PRIVATE(this)->curvetypelist->show();
-  PRIVATE(this)->curvetypelist->insertItem("Smooth");
-  PRIVATE(this)->curvetypelist->insertItem("Free");
-  controlgroup->addSpace(1);
+  PRIVATE(this)->curvetypelist->addItem("Smooth");
+  PRIVATE(this)->curvetypelist->addItem("Free");
+  col2layout->addWidget(PRIVATE(this)->curvetypelist);
+  col2layout->addStretch(1);
 
+  QVBoxLayout * col3layout = new QVBoxLayout();
   PRIVATE(this)->constanttext = new QLabel(controlgroup);
   PRIVATE(this)->constanttext->setText(" Set constant value: ");
+  col3layout->addWidget(PRIVATE(this)->constanttext);
+
   PRIVATE(this)->constantvalue = new QLineEdit(controlgroup);
   PRIVATE(this)->constantvalue->setMaxLength(3);
   PRIVATE(this)->constantvalue->setValidator(new QIntValidator(0, numcolors-1, this));
-  controlgroup->addSpace(1);
+  col3layout->addWidget(PRIVATE(this)->constantvalue);
+  col3layout->addStretch(1);
+
+  hboxlayout->addLayout(col1layout);
+  hboxlayout->addLayout(col2layout);
+  hboxlayout->addLayout(col3layout);
+  controlgroup->setLayout(hboxlayout);
 
   PRIVATE(this)->contupdate = FALSE;
   PRIVATE(this)->instantupdate = new QCheckBox(controlgroup);
@@ -189,7 +207,7 @@ SoQtColorTableEditor::SoQtColorTableEditor(int numcolors, QWidget * parent, cons
 
   QWidget * curvewidget = new QWidget(this);
   curvewidget->setFixedSize(QSize(numcolors+40,numcolors+40));
-  QGridLayout * curvelayout = new QGridLayout(curvewidget, 2, 2, 0);
+  QGridLayout * curvelayout = new QGridLayout(curvewidget);
 
   PRIVATE(this)->vertgrad = new QLabel(curvewidget);
   PRIVATE(this)->horgrad = new QLabel(curvewidget);
@@ -202,7 +220,7 @@ SoQtColorTableEditor::SoQtColorTableEditor(int numcolors, QWidget * parent, cons
   curvelayout->addWidget(PRIVATE(this)->horgrad, 1, 1);
 
   PRIVATE(this)->curveview = 
-    new CurveView(numcolors, PRIVATE(this)->mode, new QCanvas, curvewidget);
+    new CurveView(numcolors, PRIVATE(this)->mode, new QGraphicsScene, curvewidget);
   PRIVATE(this)->curveview->show();
 
   curvelayout->addWidget(PRIVATE(this)->curveview, 0, 1);
@@ -267,7 +285,7 @@ SoQtColorTableEditor::getColors(uint8_t * color, int num) const
 void 
 SoQtColorTableEditor::setColors(uint8_t * color, int num)
 {
-  PRIVATE(this)->curvetypelist->setCurrentItem(CurveView::FREE);
+  PRIVATE(this)->curvetypelist->setCurrentIndex(CurveView::FREE);
   PRIVATE(this)->curveview->setColors(color, num);
   if (PRIVATE(this)->callBack) {
     PRIVATE(this)->callBack(this, PRIVATE(this)->callbackData);
@@ -303,24 +321,24 @@ SoQtColorTableEditor::setMode(Mode mode)
   case SoQtColorTableEditor::LUMINANCE:
   case SoQtColorTableEditor::LUMINANCE_ALPHA:
     pm.fill(Qt::gray);
-    PRIVATE(this)->colormodelist->insertItem(pm, "Gray");
+    PRIVATE(this)->colormodelist->addItem(pm, "Gray");
     break;
 
   case SoQtColorTableEditor::RGB:
   case SoQtColorTableEditor::RGBA:
     pm.fill(Qt::red);
-    PRIVATE(this)->colormodelist->insertItem(pm, "Red");
+    PRIVATE(this)->colormodelist->addItem(pm, "Red");
     pm.fill(Qt::green);
-    PRIVATE(this)->colormodelist->insertItem(pm, "Green");
+    PRIVATE(this)->colormodelist->addItem(pm, "Green");
     pm.fill(Qt::blue);
-    PRIVATE(this)->colormodelist->insertItem(pm, "Blue");
+    PRIVATE(this)->colormodelist->addItem(pm, "Blue");
     break;
   }
 
   if ((mode == SoQtColorTableEditor::LUMINANCE_ALPHA) ||
       (mode == SoQtColorTableEditor::RGBA)) {
     pm.fill(Qt::white);
-    PRIVATE(this)->colormodelist->insertItem(pm, "Alpha");
+    PRIVATE(this)->colormodelist->addItem(pm, "Alpha");
   }
 }
 

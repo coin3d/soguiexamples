@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -42,7 +42,7 @@
 #include "TextureWriter.h"
 #include "bitmapfont8x12.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <memory.h>
 
 //FIXME: Datatype for texture?
@@ -57,13 +57,13 @@ TextureWriter::TextureWriter(unsigned int cols, unsigned int lines)
   this->texXSize = this->fontXSize*this->numCols;
   this->texYSize = this->fontYSize*this->numLines;
   this->texture = new unsigned int[this->texXSize*this->texYSize];
-  
+
   memset(this->buffer, 0, cols*lines);
   memset(this->texture, 0, this->texXSize*this->texYSize * 4);
 
   this->column = 0;
   this->line = 0;
-  
+
   this->setTextColor(0,0,0,0xff);
   this->setBackgroundColor(0,0,0,0);
 }
@@ -72,7 +72,7 @@ TextureWriter::~TextureWriter( void )
 {
 }
 
-void 
+void
 TextureWriter::setTextColor(unsigned char r,unsigned char g,unsigned char b,
                      unsigned char a)
 {
@@ -83,7 +83,7 @@ TextureWriter::setTextColor(unsigned char r,unsigned char g,unsigned char b,
   colptr[3] = a;
 }
 
-void 
+void
 TextureWriter::setBackgroundColor(unsigned char r,unsigned char g,unsigned char b,
                            unsigned char a)
 {
@@ -174,7 +174,7 @@ void TextureWriter::render( int i, unsigned int line, unsigned int column )
   for (bit_pos_y=0;bit_pos_y<this->fontYSize;bit_pos_y++) {
     pixel_line_start = ((bit_pos_y+char_pos_y)*this->texXSize)+char_pos_x;
     for (bit_pos_x=0;bit_pos_x<this->fontXSize;bit_pos_x++) {
-      this->texture[pixel_line_start+bit_pos_x] = 
+      this->texture[pixel_line_start+bit_pos_x] =
         (bitmap[bit_pos_y]&(1<<(this->fontXSize-bit_pos_x)))?this->color:this->background;
     }
   }

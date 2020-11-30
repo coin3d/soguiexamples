@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/So@Gui@RenderArea.h>
 #include <Inventor/SbBasic.h>
@@ -59,15 +59,15 @@ perspective(float t)
   SoRotor * yrot = new SoRotor;
   SoMaterial *material = new SoMaterial;
 
-  camera->position.setValue(SbVec3f(-t, 0.0, 10.0));
-  camera->nearDistance = 8.0;
-  camera->farDistance = 12.0;
+  camera->position.setValue(SbVec3f(-t, 0.0, 10.0f));
+  camera->nearDistance = 8.0f;
+  camera->farDistance = 12.0f;
 
-  xrot->speed = 0.1;
-  xrot->rotation.setValue(SbVec3f(1, 0, 0), 0.1);
-  yrot->speed = 0.09;
-  yrot->rotation.setValue(SbVec3f(0, 1, 0), -0.1);
-  material->diffuseColor.setValue(1.0, 0.0, 0.0);
+  xrot->speed = 0.1f;
+  xrot->rotation.setValue(SbVec3f(1, 0, 0), 0.1f);
+  yrot->speed = 0.09f;
+  yrot->rotation.setValue(SbVec3f(0, 1, 0), -0.1f);
+  material->diffuseColor.setValue(1.0f, 0.0f, 0.0f);
 
   sep->addChild(camera);
   sep->addChild(new SoDirectionalLight);
@@ -98,17 +98,17 @@ orthographic(float t, float s)
   SoRotor * yrot = new SoRotor;
   SoMaterial * material = new SoMaterial;
 
-  camera->position.setValue(SbVec3f(0.0, 0.0, 10.0));
-  camera->nearDistance = 8.0;
-  camera->farDistance = 12.0;
+  camera->position.setValue(SbVec3f(0.0f, 0.0f, 10.0f));
+  camera->nearDistance = 8.0f;
+  camera->farDistance = 12.0f;
 
-  transl->translation.setValue(t, 0.0, 0.0);
+  transl->translation.setValue(t, 0.0f, 0.0f);
   scale->scaleFactor.setValue(SbVec3f(s, s, s));
-  xrot->speed = 0.1;
-  xrot->rotation.setValue(SbVec3f(1, 0, 0), 0.1);
-  yrot->speed = 0.09;
-  yrot->rotation.setValue(SbVec3f(0, 1, 0), -0.1);
-  material->diffuseColor.setValue(0.0, 0.0, 1.0);
+  xrot->speed = 0.1f;
+  xrot->rotation.setValue(SbVec3f(1, 0, 0), 0.1f);
+  yrot->speed = 0.09f;
+  yrot->rotation.setValue(SbVec3f(0, 1, 0), -0.1f);
+  material->diffuseColor.setValue(0.0f, 0.0f, 1.0f);
 
   sep->addChild(camera);
   sep->addChild(transl);
@@ -134,8 +134,8 @@ main (int, char ** argv) {
   SoSeparator * root = new SoSeparator;
 
   root->ref();  // increments the root's reference counter
-  root->addChild(perspective(-2.0));
-  root->addChild(orthographic(0.5, 0.25));
+  root->addChild(perspective(-2.0f));
+  root->addChild(orthographic(0.5f, 0.25f));
 
   // Display the scene in our renderArea and change the title
   So@Gui@RenderArea *renderArea = new So@Gui@RenderArea(window);

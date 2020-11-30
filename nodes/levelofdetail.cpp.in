@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -65,11 +65,11 @@ cubeOfCubes(float t, float s, int n)
   SoTranslation * tz = new SoTranslation;
   SoScale * sc = new SoScale;
 
-  ti->translation.setValue(-t*((float)n/2.0), 
-                           -t*((float)n/2.0),  
-                           -t*((float)n/2.0));
-  tx->translation.setValue(t, 0.0, 0.0);
-  ty->translation.setValue(-t*(float)n, t, 0.0);
+  ti->translation.setValue(-t*((float)n/2.0f), 
+                           -t*((float)n/2.0f),  
+                           -t*((float)n/2.0f));
+  tx->translation.setValue(t, 0.0f, 0.0f);
+  ty->translation.setValue(-t*(float)n, t, 0.0f);
   tz->translation.setValue(0, -t*(float)n, t);
   sc->scaleFactor.setValue(s, s, s);
 
@@ -103,13 +103,13 @@ scene( )
 
   hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   hints->shapeType = SoShapeHints::SOLID;
-  material->diffuseColor.setValue(1.0, 1.0, 0.5);
+  material->diffuseColor.setValue(1.0f, 1.0f, 0.5f);
 
-  detail->addChild(cubeOfCubes(3.0, 1.0, 6));
-  detail->addChild(cubeOfCubes(3.6, 1.2, 5));
-  detail->addChild(cubeOfCubes(4.5, 1.5, 4));
-  detail->addChild(cubeOfCubes(6.0, 2.0, 3));
-  detail->addChild(cubeOfCubes(9.0, 3.0, 2));
+  detail->addChild(cubeOfCubes(3.0f, 1.0f, 6));
+  detail->addChild(cubeOfCubes(3.6f, 1.2f, 5));
+  detail->addChild(cubeOfCubes(4.5f, 1.5f, 4));
+  detail->addChild(cubeOfCubes(6.0f, 2.0f, 3));
+  detail->addChild(cubeOfCubes(9.0f, 3.0f, 2));
   detail->screenArea.setValues(0, 4, levelofdetailvalues);
 
   sep->addChild(hints);

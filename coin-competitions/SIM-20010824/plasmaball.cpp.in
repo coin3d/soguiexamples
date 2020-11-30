@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -65,10 +65,10 @@
 #include <Inventor/nodes/SoTranslation.h>
 #include <Inventor/sensors/SoTimerSensor.h>
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h> // exit()
-#include <time.h>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib> // exit()
+#include <ctime>
 
 #include <coinlogo.h>
 
@@ -156,7 +156,7 @@ redraw_plasma(unsigned char * buffer, SbVec2s size, int components)
       gtpos2 = gtpos2+adders[7];
       btpos1 = btpos1+adders[12];
       btpos2 = btpos2+adders[13];
-    }								
+    }
     rtpos3 = rtpos3+adders[2];
     rtpos4 = rtpos4+adders[3];
     gtpos3 = gtpos3+adders[8];

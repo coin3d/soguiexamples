@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -56,7 +56,11 @@
 #include <Inventor/sensors/SoTimerSensor.h>
 #include <Inventor/sensors/SoAlarmSensor.h>
 #include <Inventor/@Gui@/So@Gui@.h>
-#include <math.h>
+#include <cmath>
+
+#ifndef M_PI
+#define M_PI 3.141592653579f
+#endif // ! M_PI
 
 SoSwitch * sw;
 SoMaterial * ballmaterial;
@@ -75,7 +79,7 @@ int scorefactor = 0;
 SbString tmpstring;
 SoSFString * scorestring;
 SoSFString * livesstring;
-float powervalue = 0.5;
+float powervalue = 0.5f;
 SoTimerSensor * powersensor;
 SoTimerSensor * shootsensor;
 SoAlarmSensor * goalsensor;
@@ -101,19 +105,19 @@ start_ball()
   balltrans->translation.setValue(10,10,0);
 
   elasticityvalue = rand() % 29 + 1;
-  
+
   int i;
   for(i = 0; i < 30; i++){
     if(i < elasticityvalue)
-      elastics[i]->transparency.setValue(0.0);
+      elastics[i]->transparency.setValue(0.0f);
     else
-      elastics[i]->transparency.setValue(0.8);
+      elastics[i]->transparency.setValue(0.8f);
   }
 
-  powervalue = 0.5;
+  powervalue = 0.5f;
   for(i = 0; i < 30; i++)
-    strength[i]->transparency.setValue(0.8);
-    
+    strength[i]->transparency.setValue(0.8f);
+
   fargefelt1 = &elastics[elasticityvalue-1]->diffuseColor;
   ballmaterial->diffuseColor.connectFrom(fargefelt1);
   fargefelt2 = &elastics[elasticityvalue-1]->specularColor;
@@ -200,14 +204,14 @@ event_cb(void *userdata, SoEventCallback *node)
 void
 power_cb(void *userdata, SoSensor *)
 {
-  powervalue += 0.2;
+  powervalue += 0.2f;
   if(powervalue > 30)
     powervalue = 30;
   for(int i = 0; i < 30; i++){
     if(i < powervalue)
-      strength[i]->transparency.setValue(0.0);
+      strength[i]->transparency.setValue(0.0f);
     else
-      strength[i]->transparency.setValue(0.8);
+      strength[i]->transparency.setValue(0.8f);
   }
 }
 
@@ -224,14 +228,14 @@ void
 shoot_cb(void *userdata, SoSensor *)
 {
   SbVec3f tmp= balltrans->translation.getValue();
-  tmp[0]+=startspeed[0]*0.04;
-  tmp[1]+=startspeed[1]*0.04;
-  tmp[2]+=startspeed[2]*0.04;
+  tmp[0]+=startspeed[0]*0.04f;
+  tmp[1]+=startspeed[1]*0.04f;
+  tmp[2]+=startspeed[2]*0.04f;
   if(tmp[0] < 1){
     tmp[0] = 1;
     startspeed[0] = -startspeed[0]*elasticityvalue/31;
-    startspeed[1] = startspeed[1]*25/31;
-    startspeed[2] = startspeed[2]*25/31;
+    startspeed[1] = startspeed[1]*25.f/31.f;
+    startspeed[2] = startspeed[2]*25.f/31.f;
     colorindex = (colorindex+1)%5;
     fs->materialIndex.set1Value(1, colorindex);
     scorefactor++;
@@ -239,8 +243,8 @@ shoot_cb(void *userdata, SoSensor *)
   if(tmp[0] > 19){
     tmp[0] = 19;
     startspeed[0] = -startspeed[0]*elasticityvalue/31;
-    startspeed[1] = startspeed[1]*25/31;
-    startspeed[2] = startspeed[2]*25/31;
+    startspeed[1] = startspeed[1]*25.f/31.f;
+    startspeed[2] = startspeed[2]*25.f/31.f;
     colorindex = (colorindex+1)%5;
     fs->materialIndex.set1Value(3, colorindex);
     scorefactor++;
@@ -248,8 +252,8 @@ shoot_cb(void *userdata, SoSensor *)
   if(tmp[1] < 1){
     tmp[1] = 1;
     startspeed[1] = -startspeed[1]*elasticityvalue/31;
-    startspeed[0] = startspeed[0]*25/31;
-    startspeed[2] = startspeed[2]*25/31;
+    startspeed[0] = startspeed[0]*25.f/31.f;
+    startspeed[2] = startspeed[2]*25.f/31.f;
     colorindex = (colorindex+1)%5;
     fs->materialIndex.set1Value(0, colorindex);
     scorefactor++;
@@ -257,8 +261,8 @@ shoot_cb(void *userdata, SoSensor *)
   if(tmp[1] > 19){
     tmp[1] = 19;
     startspeed[1] = -startspeed[1]*elasticityvalue/31;
-    startspeed[0] = startspeed[0]*25/31;
-    startspeed[2] = startspeed[2]*25/31;
+    startspeed[0] = startspeed[0]*25.f/31.f;
+    startspeed[2] = startspeed[2]*25.f/31.f;
     colorindex = (colorindex+1)%5;
     fs->materialIndex.set1Value(4, colorindex);
     scorefactor++;
@@ -266,26 +270,26 @@ shoot_cb(void *userdata, SoSensor *)
   if(tmp[2] > -1){
     tmp[2] = -1;
     startspeed[2] = -startspeed[2]*elasticityvalue/31;
-    startspeed[1] = startspeed[1]*25/31;
-    startspeed[0] = startspeed[0]*25/31;
+    startspeed[1] = startspeed[1]*25.f/31.f;
+    startspeed[0] = startspeed[0]*25.f/31.f;
     scorefactor++;
   }
   if(tmp[2] < -19){
-    if(tmp[1] < 16.5 && tmp[1] > 13.5 && tmp[0] > 3.5 && tmp[0] < 6.5){
+    if(tmp[1] < 16.5f && tmp[1] > 13.5f && tmp[0] > 3.5f && tmp[0] < 6.5f){
        score += (int) (scorefactor*(elasticityvalue*powervalue)/20*3);
        tmpstring = SbString(score);
        scorestring->setValue(tmpstring.getString());
        goal();
        return;
     }
-    if(tmp[1] < 11.5 && tmp[1] > 8.5 && tmp[0] > 8.5 && tmp[0] < 11.5){
+    if(tmp[1] < 11.5f && tmp[1] > 8.5f && tmp[0] > 8.5f && tmp[0] < 11.5f){
        score += (int) (scorefactor*(elasticityvalue*powervalue)/20*2);
        tmpstring = SbString(score);
        scorestring->setValue(tmpstring.getString());
        goal();
        return;
     }
-    if(tmp[1] < 6.5 && tmp[1] > 3.5 && tmp[0] > 13.5 && tmp[0] < 16.5){
+    if(tmp[1] < 6.5f && tmp[1] > 3.5f && tmp[0] > 13.5f && tmp[0] < 16.5f){
        score += (int) (scorefactor*(elasticityvalue*powervalue)/20);
        tmpstring = SbString(score);
        scorestring->setValue(tmpstring.getString());
@@ -293,22 +297,22 @@ shoot_cb(void *userdata, SoSensor *)
        return;
     }
     scorefactor++;
-   
+
     tmp[2] = -19;
-    startspeed[2] = -startspeed[2]*elasticityvalue/31;
-    startspeed[1] = startspeed[1]*25/31;
-    startspeed[0] = startspeed[0]*25/31;
+    startspeed[2] = -startspeed[2]*elasticityvalue/31.f;
+    startspeed[1] = startspeed[1]*25.f/31.f;
+    startspeed[0] = startspeed[0]*25.f/31.f;
   }
   balltrans->translation.setValue(tmp[0],tmp[1],tmp[2]);
-  if(startspeed.length() < 0.15 || 
-     sqrt(startspeed[0]*startspeed[0] + startspeed[2]*startspeed[2]) < 0.1){ 
+  if(startspeed.length() < 0.15f ||
+     sqrt(startspeed[0]*startspeed[0] + startspeed[2]*startspeed[2]) < 0.1f){
     live--;
     tmpstring = SbString(live);
     livesstring->setValue(tmpstring.getString());
     if(live < 0) start_game();
     else  end_ball();
   }
-  startspeed[1]-=9.1*0.04;
+  startspeed[1]-=9.1f*0.04f;
 }
 
 void
@@ -324,13 +328,13 @@ main(int argc, char **argv)
   @WIDGET@ window = So@Gui@::init(argv[0]);
   if (window == NULL) exit(1);
 
-  
+
   SoSeparator * root = new SoSeparator;
   SoTranslation * tr = new SoTranslation;
   tr->translation.setValue(2,18,-18);
   root->addChild(tr);
   SoPointLight * l = new SoPointLight;
-  l->intensity.setValue(0.5);
+  l->intensity.setValue(0.5f);
   root->addChild(l);
   tr = new SoTranslation;
   tr->translation.setValue(16,0,0);
@@ -352,7 +356,7 @@ main(int argc, char **argv)
   const char * str[] = {
     "","This is a game",
     "It is called 'Ball in the hoop' (tm)", "",
-    "You, as the player, stands in a cubic room with goals on the opposing wall,","(the black rectangles)", 
+    "You, as the player, stands in a cubic room with goals on the opposing wall,","(the black rectangles)",
     "Your purpose is to throw the ball at the surrounding walls. If the ball hits a","goal, you score points.",
     "If you misses, you lose a life. If you score without hitting any walls, you","don't lose a life, but you don't get any points either.",
     "The number of walls you hit, the elasticity (E) of the ball, and the power (P)","you throw the ball with, affects your score",
@@ -377,8 +381,8 @@ main(int argc, char **argv)
   SoMaterial * goalcammat = new SoMaterial;
   SoDirectionalLight * lys = new SoDirectionalLight;
   goalroot->addChild(lys);
-  goalcammat->diffuseColor.setValue(1.0,1.0,1.0);
-  goalcammat->specularColor.setValue(1.0,1.0,1.0);
+  goalcammat->diffuseColor.setValue(1.0f,1.0f,1.0f);
+  goalcammat->specularColor.setValue(1.0f,1.0f,1.0f);
   goalroot->addChild(goalcammat);
   SoFont * font = new SoFont;
   font->size.setValue(4);
@@ -392,21 +396,21 @@ main(int argc, char **argv)
   SoSeparator * gameroot = new SoSeparator;
   sw->addChild(gameroot);
    sw->addChild(goalroot);
- 
+
   SoPerspectiveCamera * gamecam = new SoPerspectiveCamera;
   gamecam->focalDistance = 10;
   gamecam->position.setValue(10,10,25);
- 
+
   gameroot->addChild(gamecam);
-  
+
   SoDirectionalLight * light = new SoDirectionalLight;
   light->direction.setValue(1,-1,-10);
   light->intensity.setValue(0.5);
   gameroot->addChild(light);
   font = new SoFont;
-  font->size.setValue(1.5);
+  font->size.setValue(1.5f);
   gameroot->addChild(font);
-  
+
   //ball
   SoSeparator * ballroot = new SoSeparator;
   gameroot->addChild(ballroot);
@@ -420,18 +424,18 @@ main(int argc, char **argv)
   //elasticity
   SoSeparator * elasticsroot = new SoSeparator;
   tr = new SoTranslation;
-  tr->translation.setValue(-0.7,8.5,0);
+  tr->translation.setValue(-0.7f,8.5f,0.f);
   elasticsroot->addChild(tr);
   SoText3 * elastictext = new SoText3;
   elastictext->string.setValue("E");
   elastictext->justification = SoText3::LEFT;
   elasticsroot->addChild(elastictext);
   tr = new SoTranslation;
-  tr->translation.setValue(0.7,-8.5,0);
+  tr->translation.setValue(0.7f,-8.5f,0.f);
   elasticsroot->addChild(tr);
   SoRotationXYZ * rot = new SoRotationXYZ;
   rot->axis = SoRotationXYZ::Y;
-  rot->angle = -3.14/8;
+  rot->angle = float(-M_PI)/8;
   elasticsroot->addChild(rot);
   SoSeparator * tmp = NULL;
   SoCube * cube = NULL;
@@ -440,25 +444,25 @@ main(int argc, char **argv)
     tmp = new SoSeparator;
     elastics[i] = new SoMaterial;
     if(i < 10){
-      elastics[i]->diffuseColor.setValue(1.0, 1.0-0.1*i, 1.0-0.1*i);
-      elastics[i]->specularColor.setValue(1.0, 1.0-0.1*i, 1.0-0.1*i);
+      elastics[i]->diffuseColor.setValue(1.0f, 1.0f-0.1f*i, 1.0f-0.1f*i);
+      elastics[i]->specularColor.setValue(1.0f, 1.0f-0.1f*i, 1.0f-0.1f*i);
     }
     else if(i < 20){
-      elastics[i]->diffuseColor.setValue(1, 0.0, 0.1*(i-9));
-      elastics[i]->specularColor.setValue(1, 0.0, 0.1*(i-9));
+      elastics[i]->diffuseColor.setValue(1.f, 0.0f, 0.1f*(i-9));
+      elastics[i]->specularColor.setValue(1.f, 0.0f, 0.1f*(i-9));
     }
     else{
-      elastics[i]->diffuseColor.setValue(1-0.1*(i-19), 0, 1);
-      elastics[i]->specularColor.setValue(1-0.1*(i-19), 0, 1);
+      elastics[i]->diffuseColor.setValue(1.f-0.1f*(i-19), 0.f, 1.f);
+      elastics[i]->specularColor.setValue(1.f-0.1f*(i-19), 0.f, 1.f);
     }
     tmp->addChild(elastics[i]);
     tr = new SoTranslation;
-    tr->translation.setValue(0,0.25,0);
+    tr->translation.setValue(0,0.25f,0);
     elasticsroot->addChild(tr);
     cube = new SoCube;
-    cube->width.setValue(1.0);
-    cube->depth.setValue(1.0);
-    cube->height.setValue(0.2);
+    cube->width.setValue(1.0f);
+    cube->depth.setValue(1.0f);
+    cube->height.setValue(0.2f);
     tmp->addChild(cube);
     elasticsroot->addChild(tmp);
   }
@@ -469,42 +473,42 @@ main(int argc, char **argv)
   //strength
   SoSeparator * strengthroot = new SoSeparator;
   tr = new SoTranslation;
-  tr->translation.setValue(-0.5,8.5,0);
+  tr->translation.setValue(-0.5f,8.5f,0.f);
   strengthroot->addChild(tr);
   SoText3 * strengthtext = new SoText3;
   strengthtext->string.setValue("P");
   strengthtext->justification = SoText3::LEFT;
   strengthroot->addChild(strengthtext);
   tr = new SoTranslation;
-  tr->translation.setValue(0.5,-8.5,0);
+  tr->translation.setValue(0.5f,-8.5f,0.f);
   strengthroot->addChild(tr);
   rot = new SoRotationXYZ;
   rot->axis = SoRotationXYZ::Y;
-  rot->angle = 3.14/8;
+  rot->angle = float(M_PI)/8;
   strengthroot->addChild(rot);
   for(i = 0; i < 30; i++){
     tmp = new SoSeparator;
     strength[i] = new SoMaterial;
     if(i < 10){
-      strength[i]->diffuseColor.setValue(1.0, 1.0-0.1*i, 1.0-0.1*i);
-      strength[i]->specularColor.setValue(1.0, 1.0-0.1*i, 1.0-0.1*i);
+      strength[i]->diffuseColor.setValue(1.0f, 1.0f-0.1f*i, 1.0f-0.1f*i);
+      strength[i]->specularColor.setValue(1.0f, 1.0f-0.1f*i, 1.0f-0.1f*i);
     }
     else if(i < 20){
-      strength[i]->diffuseColor.setValue(1, 0.1*(i-9),0);
-      strength[i]->specularColor.setValue(1, 0.1*(i-9),0);
+      strength[i]->diffuseColor.setValue(1.f, 0.1f*(i-9),0.f);
+      strength[i]->specularColor.setValue(1.f, 0.1f*(i-9),0.f);
     }
     else{
-      strength[i]->diffuseColor.setValue(1-0.1*(i-19), 1, 0);
-      strength[i]->specularColor.setValue(1-0.1*(i-19), 1, 0);
+      strength[i]->diffuseColor.setValue(1.f-0.1f*(i-19), 1.f, 0.f);
+      strength[i]->specularColor.setValue(1.f-0.1f*(i-19), 1.f, 0.f);
     }
     tmp->addChild(strength[i]);
     tr = new SoTranslation;
-    tr->translation.setValue(0,0.25,0);
+    tr->translation.setValue(0,0.25f,0);
     strengthroot->addChild(tr);
     cube = new SoCube;
-    cube->width.setValue(1.0);
-    cube->depth.setValue(1.0);
-    cube->height.setValue(0.2);
+    cube->width.setValue(1.0f);
+    cube->depth.setValue(1.0f);
+    cube->height.setValue(0.2f);
     tmp->addChild(cube);
     strengthroot->addChild(tmp);
   }
@@ -514,21 +518,21 @@ main(int argc, char **argv)
   gameroot->addChild(strengthroot);
   //room
   SoSeparator * roomroot = new SoSeparator;
-  
+
   for(i = 0; i < 1; i++){
     walls[i] = new SoMaterial;
     roomroot->addChild(walls[i]);
   }
-  walls[0]->diffuseColor.set1Value(0, 0.9, 0.0, 0.0);
-  walls[0]->specularColor.set1Value(0,0.9, 0.0, 0.0);
-  walls[0]->diffuseColor.set1Value(1,0.0, 0.9, 0.0);
-  walls[0]->specularColor.set1Value(1,0.0, 0.9, 0.0);
-  walls[0]->diffuseColor.set1Value(2,0.0, 0.0, 0.9);
-  walls[0]->specularColor.set1Value(2,0.0, 0.0, 0.9);
-  walls[0]->diffuseColor.set1Value(3,0.9, 0.0, 0.9);
-  walls[0]->specularColor.set1Value(3,0.9, 0.0, 0.9);
-  walls[0]->diffuseColor.set1Value(4,0.9, 0.9, 0.0);
-  walls[0]->specularColor.set1Value(4,0.9, 0.9, 0.0);
+  walls[0]->diffuseColor.set1Value(0, 0.9f, 0.0f, 0.0f);
+  walls[0]->specularColor.set1Value(0,0.9f, 0.0f, 0.0f);
+  walls[0]->diffuseColor.set1Value(1,0.0f, 0.9f, 0.0f);
+  walls[0]->specularColor.set1Value(1,0.0f, 0.9f, 0.0f);
+  walls[0]->diffuseColor.set1Value(2,0.0f, 0.0f, 0.9f);
+  walls[0]->specularColor.set1Value(2,0.0f, 0.0f, 0.9f);
+  walls[0]->diffuseColor.set1Value(3,0.9f, 0.0f, 0.9f);
+  walls[0]->specularColor.set1Value(3,0.9f, 0.0f, 0.9f);
+  walls[0]->diffuseColor.set1Value(4,0.9f, 0.9f, 0.0f);
+  walls[0]->specularColor.set1Value(4,0.9f, 0.9f, 0.0f);
 
 
   SoVertexProperty * vp = new SoVertexProperty;
@@ -556,14 +560,14 @@ main(int argc, char **argv)
   fs->materialIndex.set1Value(4, 2);
 
   roomroot->addChild(fs);
-  
+
   SoMaterial * goalmat = new SoMaterial;
-  goalmat->diffuseColor.setValue(0.0,0.0,0.0);
-  goalmat->specularColor.setValue(0.0,0.0,0.0);
+  goalmat->diffuseColor.setValue(0.0f,0.0f,0.0f);
+  goalmat->specularColor.setValue(0.0f,0.0f,0.0f);
   roomroot->addChild(goalmat);
 
   tr = new SoTranslation;
-  tr->translation.setValue(5,15,-20.5);
+  tr->translation.setValue(5.f,15.f,-20.5f);
   roomroot->addChild(tr);
 
   SoCube * goal = new SoCube;
@@ -582,12 +586,12 @@ main(int argc, char **argv)
   roomroot->addChild(goal);
 
   SoMaterial * scoremat = new SoMaterial;
-  scoremat->diffuseColor.setValue(1.0,1.0,1.0);
-  scoremat->specularColor.setValue(1.0,1.0,1.0);
+  scoremat->diffuseColor.setValue(1.0f,1.0f,1.0f);
+  scoremat->specularColor.setValue(1.0f,1.0f,1.0f);
   roomroot->addChild(scoremat);
 
   font = new SoFont;
-  font->size.setValue(0.7);
+  font->size.setValue(0.7f);
   roomroot->addChild(font);
 
   tr = new SoTranslation;
@@ -627,14 +631,14 @@ main(int argc, char **argv)
   lives->string.connectFrom(livesstring);
   lives->justification = SoText3::LEFT;
   roomroot->addChild(lives);
- 
+
 
   tr = new SoTranslation;
   tr->translation.setValue(-22,0,0);
   gameroot->addChild(tr);
   tr = NULL;
   gameroot->addChild(roomroot);
-  
+
   SoEventCallback *cb = new SoEventCallback;
   cb->addEventCallback(SoKeyboardEvent::getClassTypeId(), event_cb, NULL);
   cb->addEventCallback(SoMouseButtonEvent::getClassTypeId(), event_cb, NULL);
@@ -643,7 +647,7 @@ main(int argc, char **argv)
   powersensor = new SoTimerSensor(power_cb, NULL);
   shootsensor = new SoTimerSensor(shoot_cb, NULL);
   goalsensor = new SoAlarmSensor(goal_cb, NULL);
-  
+
   viewer = new So@Gui@RenderArea(window);
   instrcam->viewAll(instrroot, viewer->getViewportRegion());
   goalcam->viewAll(goalroot, viewer->getViewportRegion());
@@ -654,12 +658,12 @@ main(int argc, char **argv)
   gamecam->focalDistance.setValue(15);
   viewer->setSceneGraph(root);
   viewer->setTitle("Ball in the hoop");
-  
-  powersensor->setInterval(0.02);
-  shootsensor->setInterval(0.04);
-  
+
+  powersensor->setInterval(0.02f);
+  shootsensor->setInterval(0.04f);
+
   viewer->show();
-  
+
   #ifdef HAVE_SOCOMPONENT_SETFULLSCREEN
   viewer->setFullScreen(TRUE);
   viewer->setTransparencyType(SoGLRenderAction::BLEND);
@@ -668,7 +672,7 @@ main(int argc, char **argv)
   So@Gui@::show(window);
 
   So@Gui@::mainLoop();
-  
+
   delete viewer;
   delete scorestring;
   delete livesstring;

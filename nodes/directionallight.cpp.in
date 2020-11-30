@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SbBasic.h>
@@ -57,7 +57,7 @@ scene(float xt, float yt, float zt, int n)
 
   if (n>0) {
     transf->translation.setValue(xt, yt, zt);
-    transf->rotation.setValue(SbVec3f(0, 0, 1), M_PI/(float)(n+1));
+    transf->rotation.setValue(SbVec3f(0, 0, 1), float(M_PI)/(float)(n+1));
     sep->addChild(transf);
     sep->addChild(new SoSphere);
     sep->addChild(scene(xt, yt, zt, n-1));
@@ -88,12 +88,12 @@ main(int, char ** argv) {
   root->addChild(hints);
 
   // Setting up the directional light
-  light->color.setValue(1.0, 1.0, 0.5);
-  light->intensity.setValue(0.95);
-  light->direction.setValue(SbVec3f(-1.5, 1.25, -1.0));
+  light->color.setValue(1.0f, 1.0f, 0.5f);
+  light->intensity.setValue(0.95f);
+  light->direction.setValue(SbVec3f(-1.5f, 1.25f, -1.0f));
   
   root->addChild(light);
-  root->addChild(scene(2.0, 3.0, 2.5, 20));
+  root->addChild(scene(2.0f, 3.0f, 2.5f, 20));
   
   // Set up the ExaminerViewer
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer(window);

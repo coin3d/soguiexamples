@@ -4,7 +4,7 @@ noinst_PROGRAMS = ballinthehoop flow typeomatic
 
 ballinthehoop_SOURCES = ballinthehoop.cpp
 flow_SOURCES = flow.cpp
-typeomatic_SOURCES = typeomatic.cpp $(srcdir)/../strutils.cpp
+typeomatic_SOURCES = typeomatic.cpp strutils.cpp
 
 BUILT_SOURCES = ballinthehoop.cpp flow.cpp typeomatic.cpp
 

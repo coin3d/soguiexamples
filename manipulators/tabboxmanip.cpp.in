@@ -61,7 +61,7 @@ main(int argc, char ** argv)
   examinerviewer->setViewing(FALSE);
 
   SoCamera * cam = examinerviewer->getCamera();
-  cam->orientation = SbRotation(SbVec3f(0, 1, 0), M_PI / 6.0f);
+  cam->orientation = SbRotation(SbVec3f(0, 1, 0), float(M_PI) / 6.0f);
   examinerviewer->viewAll();
 
   examinerviewer->show();

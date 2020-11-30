@@ -1,26 +1,15 @@
-INCLUDE_DIRECTORIES(./)
-INCLUDE_DIRECTORIES(${Coin_INCLUDE_DIR}/Inventor/annex)
-SET(CONF_FILE_DIR ${PROJECT_BINARY_DIR}/annex)
-INCLUDE_DIRECTORIES(${CONF_FILE_DIR})
+include_directories(${Coin_INCLUDE_DIR}/Inventor/annex)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 #hardcopy example
-CONFIGURE_FILE(hardcopy.cpp.in ${CONF_FILE_DIR}/hardcopy.cpp)
-SET(hardcopy_SOURCE ${CONF_FILE_DIR}/hardcopy.cpp)
-ADD_EXECUTABLE(hardcopy ${hardcopy_SOURCE})
-TARGET_LINK_LIBRARIES(hardcopy ${LINK_LIBRARY})
+configure_file(hardcopy.cpp.in hardcopy.cpp)
+add_executable(hardcopy ${CMAKE_CURRENT_BINARY_DIR}/hardcopy.cpp)
+target_link_libraries(hardcopy PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS hardcopy RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/annex)
 
 #rawhardcopy example
-CONFIGURE_FILE(rawhardcopy.cpp ${CONF_FILE_DIR}/rawhardcopy.cpp)
-SET(rawhardcopy_SOURCE ${CONF_FILE_DIR}/rawhardcopy.cpp)
-ADD_EXECUTABLE(rawhardcopy ${rawhardcopy_SOURCE})
-TARGET_LINK_LIBRARIES(rawhardcopy ${LINK_LIBRARY})
-
-#Generate the tree structure in the VS Projects.
-SIM_VS_GENERATE_BASIC_TREE()
-
-INSTALL(TARGETS hardcopy
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/annex
-)
-INSTALL(TARGETS rawhardcopy
-  RUNTIME DESTINATION ${CURRENT_BUILD_DIR}/annex
-)
+configure_file(rawhardcopy.cpp rawhardcopy.cpp)
+add_executable(rawhardcopy ${CMAKE_CURRENT_BINARY_DIR}/rawhardcopy.cpp)
+target_link_libraries(rawhardcopy PRIVATE ${SOGUIEXAMPLES_LINK_LIBRARIES})
+install(TARGETS rawhardcopy RUNTIME DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/So${Gui}Examples/annex)

@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -57,7 +57,7 @@
 #include <Inventor/nodes/SoDirectionalLight.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoTransform.h>
-#include <Inventor/nodes/SoRotation.h> 
+#include <Inventor/nodes/SoRotation.h>
 #include <Inventor/nodes/SoFont.h>
 #include <Inventor/sensors/SoTimerSensor.h>
 
@@ -87,10 +87,15 @@
 
 #include <Inventor/SoOffscreenRenderer.h>
 
-#include <stdlib.h>  // srand(), rand()
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>  // srand(), rand()
+#include <cstdio>
+#include <cstring>
+#include <cmath> // M_PI
 
+
+#ifndef M_PI
+#define M_PI 3.141592653579f
+#endif // ! M_PI
 
 
 SoOffscreenRenderer * renderer;
@@ -115,16 +120,16 @@ textTexture(const char* text) //,int texturewidth,int texturewidth)
   scene = new SoSeparator;
   scene->ref();
   SoMaterial* ma = new SoMaterial;
-//    float r=1.0*rand()/RAND_MAX;
-//    float g=1.0*rand()/RAND_MAX;
-//    float b=1.0*rand()/RAND_MAX;
-  ma->ambientColor.setValue(0.33,0.22,0.27);
+//    float r=1.0f*rand()/RAND_MAX;
+//    float g=1.0f*rand()/RAND_MAX;
+//    float b=1.0f*rand()/RAND_MAX;
+  ma->ambientColor.setValue(0.33f,0.22f,0.27f);
   ma->diffuseColor.setValue(0,0,0);
-  ma->specularColor.setValue(0.99,0.94,0.81);
-  ma->shininess = 0.28;
+  ma->specularColor.setValue(0.99f,0.94f,0.81f);
+  ma->shininess = 0.28f;
   scene->addChild(ma);
   SoTransform* xf = new SoTransform;
-  xf->rotation.setValue(SbVec3f(1,0,0),-3.14/4);
+  xf->rotation.setValue(SbVec3f(1,0,0),float(-M_PI)/4);
   scene->addChild(xf);
   SoText3* ttext = new SoText3;
   ttext->string.setValue(text);
@@ -133,7 +138,7 @@ textTexture(const char* text) //,int texturewidth,int texturewidth)
   SbViewportRegion vp;
   vp.setWindowSize(SbVec2s(width, height));
 
-  
+
   renderer = new SoOffscreenRenderer( vp );
   renderer->setBackgroundColor( SbColor( 0.78f, 0.57f, 0.11f )  );
 
@@ -162,7 +167,7 @@ makeCoin(const char* text)
   SoTexture2* texture = textTexture(text);
 
   global_xf[c] = new SoTransform;
-  global_xf[c]->rotation.setValue(SbVec3f(1,0,0),-3.14/4);
+  global_xf[c]->rotation.setValue(SbVec3f(1,0,0),float(-M_PI)/4);
   coin->addChild(global_xf[c]);
   coin->addChild(texture);
   coin->addChild(global_cyl[c]);
@@ -198,54 +203,54 @@ timer_callback(void * data, SoSensor * sensor)
     framecounter=0;
   }
 
-    
+
   coincounter2++;
   if (coincounter2>100 && flagg) {
     coincounter++;
     if (coincounter==COINS) {
-      flagg=false;  
+      flagg=false;
       for (int i=0; i<COINS; i++) {
-	rx[i]=1.0*rand()/RAND_MAX;
-	ry[i]=1.0*rand()/RAND_MAX;
-	rz[i]=1.0*rand()/RAND_MAX;
-	r[i]=0.5*rand()/RAND_MAX;
+        rx[i]=1.0f*rand()/RAND_MAX;
+        ry[i]=1.0f*rand()/RAND_MAX;
+        rz[i]=1.0f*rand()/RAND_MAX;
+        r[i]=0.5f*rand()/RAND_MAX;
       }
     }
     coincounter2=0;
     f2=0;
   }
 
-  f-=0.01;
-  f2-=0.02;
+  f-=0.01f;
+  f2-=0.02f;
 
-  float step=2*3.14159/8;
+  float step=2*float(M_PI)/8;
 
   for (int i=0; i<COINS; i++) {
-    if (i==coincounter) { 
+    if (i==coincounter) {
       float z=18;
-      r[i]-=0.2;
+      r[i]-=0.2f;
       if (r[i]<0) r[i]=0;
-      global_xf[i]->translation.setValue(r[i]*cos(step*i+f),
-					 r[i]*sin(step*i+f),z);
+      global_xf[i]->translation.setValue(r[i]*(float)cos(step*i+f),
+					 r[i]*(float)sin(step*i+f),z);
       global_xf[i]->rotation.setValue(SbVec3f(1,0,0),f2);
     } else {
-      r[i]+=0.1;
+      r[i]+=0.1f;
       if (r[i]>4) r[i]=4;
       float z=0;
       if (!flagg)
-	z=6*r[i]*sin(step*i+f);
-      global_xf[i]->translation.setValue(r[i]*cos(step*i+f),
-					 r[i]*sin(step*i+f),z);
+	z=6*r[i]*(float)sin(step*i+f);
+      global_xf[i]->translation.setValue(r[i]*(float)cos(step*i+f),
+					 r[i]*(float)sin(step*i+f),z);
       if (!flagg) {
 	global_xf[i]->rotation.setValue(SbVec3f(rx[i],ry[i],rz[i]),f2);
-	
+
 
       }
 
     }
-    
-  } 
-    
+
+  }
+
 
 
 }
@@ -272,7 +277,7 @@ main(
 //create graph
 
 
-	
+
   SoSeparator* scene;
   scene = new SoSeparator;
   scene->ref();
@@ -286,11 +291,11 @@ main(
   scene->addChild( makeCoin("Love") );
   scene->addChild( makeCoin("Coin3D!") );
 
-  float step=2*3.14159/8;
-  float r=4.0;
-  for (int i=0; i<COINS; i++) {    
-    global_xf[i]->translation.setValue(r*cos(step*i),r*sin(step*i),0);
-    global_cyl[i]->height.setValue(0.1);
+  float step=2*float(M_PI)/8;
+  float r=4.0f;
+  for (int i=0; i<COINS; i++) {
+    global_xf[i]->translation.setValue(float(r*cos(step*i)),float(r*sin(step*i)),0);
+    global_cyl[i]->height.setValue(0.1f);
   }
 
 

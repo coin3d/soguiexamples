@@ -44,7 +44,7 @@ int main(int argc, char ** argv)
   QWidget *widget = SoQt::init(argc,argv,argv[0]);
 
   if (argc < 2) {
-    printf("Usage: $%s [file]\n", argv[0]);
+    printf("\nUsage: %s dataset.vol\n\n", argv[0]);
     exit(0);
   }
 
@@ -58,7 +58,7 @@ int main(int argc, char ** argv)
 
   // Setup viewer
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer(widget);
-  eviewer->setBackgroundColor(SbColor(0.051,0.051,0.35));
+  eviewer->setBackgroundColor(SbColor(0.051f,0.051f,0.35f));
   eviewer->show();
 
   // Add scenegraph

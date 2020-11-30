@@ -1,22 +1,22 @@
 /**************************************************************************\
  * Copyright (c) Kongsberg Oil & Gas Technologies AS
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,11 +36,11 @@
 
 // Yep, this code is ugly...
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h> // exit()
-#include <math.h>
-#include <string.h> // memset()
+#include <cassert>
+#include <cstdio>
+#include <cstdlib> // exit()
+#include <cmath>
+#include <cstring> // memset()
 
 #include <Inventor/SbLinear.h>
 #include <Inventor/SoDB.h>
@@ -60,6 +60,10 @@
 
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
+
+#ifndef M_PI
+#define M_PI 3.141592653579f
+#endif // ! M_PI
 
 static void timerSensorCallback( void *, SoSensor * );
 
@@ -108,7 +112,7 @@ typedef struct BALL {
   float sx_add, sy_add, sz_add;
   float strength;
 } BALL;
- 
+
 int vertTable[12][6] = {
   { 0, 0, 0,  0, 0, 1},  { 0,-1, 0,  0,-1,+1},
   { 0, 0, 0,  0,-1, 0},  { 0, 0, 1,  0,-1, 1},
@@ -179,7 +183,7 @@ int32_t rendernumvert[ MAXPOLYS ];
 #define BF  9  // bottom far edge
 #define TN  10 // top near edge
 #define TF  11 // top far edge
- 
+
 // Corners
 //
 //   3---7
@@ -189,7 +193,7 @@ int32_t rendernumvert[ MAXPOLYS ];
 // | 1-|-5
 // |/  |/
 // 0---4
- 
+
 #define LBN 0      // left bottom near corner
 #define LBF 1      // left bottom far corner
 #define LTN 2      // left top near corner
@@ -200,7 +204,7 @@ int32_t rendernumvert[ MAXPOLYS ];
 #define RTF 7      // right top far corner
 
 #define BIT(i, bit) (((i)>>(bit))&1)
- 
+
 typedef struct intlist {
   int i;
   struct intlist * next;
@@ -236,35 +240,35 @@ main(
     exit( 1 );
 
   SoSeparator * root = new SoSeparator;
-	
+
   // Light model
   SoLightModel * lm = new SoLightModel;
   lm->model.setValue( SoLightModel::PHONG );
   root->addChild( lm );
-  
+
   // Shape hints
   SoShapeHints * shint = new SoShapeHints;
   shint->vertexOrdering.setValue( SoShapeHints::CLOCKWISE );
   shint->shapeType.setValue( SoShapeHints::SOLID );
-  shint->creaseAngle = 3.14;
+  shint->creaseAngle = float(M_PI);
   root->addChild( shint );
-  
+
   // Normals & Normal binding
   blob_normals = new SoNormal;
   root->addChild( blob_normals );
   SoNormalBinding *normbind = new SoNormalBinding;
   normbind->value.setValue( SoNormalBinding::PER_VERTEX );
   root->addChild(normbind);
-  
+
   // Material & binding
   SoMaterial * mat = new SoMaterial;
-  mat->diffuseColor.setValue( 0.3, 0.6, 0.5 );
+  mat->diffuseColor.setValue( 0.3f, 0.6f, 0.5f );
   mat->specularColor.setValue( 1, 1, 1 );
   root->addChild( mat );
   SoMaterialBinding * matbind = new SoMaterialBinding;
   matbind->value.setValue( SoMaterialBinding::OVERALL );
   root->addChild( matbind );
-  
+
   // Vertices / Faceset
   blob_coords = new SoCoordinate3;
   root->addChild( blob_coords );
@@ -272,22 +276,22 @@ main(
   root->addChild( blob_faceset );
 
   Polygons = (sPolygon *) malloc( MAXPOLYS * sizeof(sPolygon) );
-  
+
   for ( num = 0; num < MAXPOLYS; num++ )
     rendernumvert[num] = 3;
 
   initCube();
 
   for ( num = 0; num < NUMBALLS; num++ ) {
-    balls[num].sx = num;
-    balls[num].sy = num;
-    balls[num].sz = num;
+    balls[num].sx = (float)num;
+    balls[num].sy = (float)num;
+    balls[num].sz = (float)num;
     balls[num].sx_add = 0.01f  * (num+1);
     balls[num].sy_add = 0.02f  * (num+1);
     balls[num].sz_add = 0.015f * (num+1);
     balls[num].strength = 1;
   }
-  
+
   updateBalls();
 
   SoTimerSensor * timer = new SoTimerSensor( timerSensorCallback, NULL );
@@ -485,7 +489,7 @@ initCube(
 // ----------
 
 // Calculate ISO values for entire grid (brute force!)
- 
+
 void
 CalcField(
   void )
@@ -505,7 +509,7 @@ CalcField(
           dy = y - balls[k].y;
           dz = z - balls[k].z;
           dst = dx * dx + dy * dy + dz * dz;
-          if ( dst > 0.00001 )
+          if ( dst > 0.00001f )
             IsoGrid[ix][iy][iz] += (1000000/dst) * balls[k].strength;
         }
         z += GRIDSIZE;
@@ -529,7 +533,7 @@ interpolate(
   int z2 )
 {
   float nx1, ny1, nz1, nx2, ny2, nz2, c1, c2, pc;
-  float int_x, int_y, int_z, qwe, inv_z;
+  float int_x, int_y, int_z, qwe;
 
   c1 = IsoGrid[x1][y1][z1];
   c2 = IsoGrid[x2][y2][z2];
@@ -680,7 +684,7 @@ updateBalls(
     SbVec3f * coords  = blob_coords->point.startEditing();
     blob_normals->vector.setNum( NumPolys*3 );
     SbVec3f * normals = blob_normals->vector.startEditing();
-		
+
     for ( i = 0; i < NumPolys; i++ ) {
       P = &Polygons[i];
       V1 = P->v[0];

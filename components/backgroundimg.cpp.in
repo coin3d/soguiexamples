@@ -111,8 +111,8 @@ MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
   cam->position = SbVec3f(0, 0, 1);
   cam->height = 1;
   // SoImage will be at z==0.0.
-  cam->nearDistance = 0.5;
-  cam->farDistance = 1.5;
+  cam->nearDistance = 0.5f;
+  cam->farDistance = 1.5f;
 
   this->bckgroundroot->addChild(cam);
 
@@ -134,7 +134,7 @@ MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
   this->bckgroundroot->addChild(imglm);
 
   SoComplexity * complexity = new SoComplexity;
-  complexity->textureQuality = 0.1;
+  complexity->textureQuality = 0.1f;
   this->bckgroundroot->addChild(complexity);
 
   SoTexture2 * img = new SoTexture2;
@@ -142,7 +142,7 @@ MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
   this->bckgroundroot->addChild(img);
 
   static float vertices[][3] = {
-    {0.5, 0.5, 0}, {0.5, -0.5, 0}, {-0.5, 0.5, 0}, {-0.5, -0.5, 0},
+    {0.5f, 0.5f, 0}, {0.5f, -0.5f, 0}, {-0.5f, 0.5f, 0}, {-0.5f, -0.5f, 0},
   };
   
   SoCoordinate3 * coords = new SoCoordinate3;
@@ -175,20 +175,20 @@ MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
   cam->nearDistance = 0;
   cam->farDistance = 10;
 
-  const double ARROWSIZE = 2.0;
+  const float ARROWSIZE = 2.0f;
 
   SoTranslation * posit = new SoTranslation;
-  posit->translation = SbVec3f(-2.5 * ARROWSIZE, 1.5 * ARROWSIZE, 0);
+  posit->translation = SbVec3f(-2.5f * ARROWSIZE, 1.5f * ARROWSIZE, 0);
 
   arrowrotation = new SoRotationXYZ;
   arrowrotation->axis = SoRotationXYZ::Z;
 
   SoTranslation * offset = new SoTranslation;
-  offset->translation = SbVec3f(ARROWSIZE/2.0, 0, 0);
+  offset->translation = SbVec3f(ARROWSIZE/2.0f, 0, 0);
 
   SoCube * cube = new SoCube;
   cube->width = ARROWSIZE;
-  cube->height = ARROWSIZE/15.0;
+  cube->height = ARROWSIZE/15.0f;
 
   this->foregroundroot->addChild(cam);
   this->foregroundroot->addChild(lm);
@@ -231,7 +231,7 @@ MyExaminerViewer::actualRedraw(void)
 
 
   // Increase arrow angle with 1/1000 ° every frame.
-  arrowrotation->angle = arrowrotation->angle.getValue() + (0.001 / M_PI * 180);
+  arrowrotation->angle = arrowrotation->angle.getValue() + (0.001f / float(M_PI) * 180);
   // Render overlay front scenegraph.
   glClear(GL_DEPTH_BUFFER_BIT);
   glra->apply(this->foregroundroot);

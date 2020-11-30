@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
-#include <stdlib.h> // exit()
+#include <cstdlib> // exit()
 #include <Inventor/@Gui@/So@Gui@.h>
 #include <Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h>
 #include <Inventor/SbBasic.h>
@@ -54,16 +54,16 @@ makeObject(float w, float h, float d)
   vertices = new SbVec3f[10];
   con = new int32_t[52];
 
-  vertices[0].setValue(-w/2.0, -h/4.0,  d/2.0);
-  vertices[1].setValue( w/2.0, -h/4.0,  d/2.0);
-  vertices[2].setValue( w/2.0,  h/4.0,  d/2.0);
-  vertices[3].setValue(-w/2.0,  h/4.0,  d/2.0);
-  vertices[4].setValue(-w/2.0, -h/4.0, -d/2.0);
-  vertices[5].setValue( w/2.0, -h/4.0, -d/2.0);
-  vertices[6].setValue( w/2.0,  h/4.0, -d/2.0);
-  vertices[7].setValue(-w/2.0,  h/4.0, -d/2.0);
-  vertices[8].setValue(   0.0,  h/2.0,    0.0);
-  vertices[9].setValue(   0.0, -h/2.0,    0.0);
+  vertices[0].setValue(-w/2.0f, -h/4.0f,  d/2.0f);
+  vertices[1].setValue( w/2.0f, -h/4.0f,  d/2.0f);
+  vertices[2].setValue( w/2.0f,  h/4.0f,  d/2.0f);
+  vertices[3].setValue(-w/2.0f,  h/4.0f,  d/2.0f);
+  vertices[4].setValue(-w/2.0f, -h/4.0f, -d/2.0f);
+  vertices[5].setValue( w/2.0f, -h/4.0f, -d/2.0f);
+  vertices[6].setValue( w/2.0f,  h/4.0f, -d/2.0f);
+  vertices[7].setValue(-w/2.0f,  h/4.0f, -d/2.0f);
+  vertices[8].setValue(   0.0f,  h/2.0f,    0.0f);
+  vertices[9].setValue(   0.0f, -h/2.0f,    0.0f);
 
   con[0] = 0; con[1] = 1; con[2] = 2; con[3] = 3; con[4] = SO_END_FACE_INDEX;
   con[5] = 1; con[6] = 5; con[7] = 6; con[8] = 2; con[9] = SO_END_FACE_INDEX;

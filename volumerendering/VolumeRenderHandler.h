@@ -33,14 +33,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
+#include <qdialog.h>
 #include <qwidget.h>
 
 class SoVolumeRender;
 class SoVolumeData;
-class SoVolumeRender_ctrl;
 
-
-class VolumeRenderHandler : QObject
+namespace Ui {
+	class SoVolumeRenderCtrl;
+}
+class VolumeRenderHandler : QDialog
 {
   Q_OBJECT
 
@@ -61,7 +63,7 @@ private:
 
   SoVolumeRender * node;
   SoVolumeData * vdnode;
-  SoVolumeRender_ctrl * ctrl;
+  Ui::SoVolumeRenderCtrl * ctrl;
 };
 
 #endif // !CVRTEST_VOLUMERENDERHANDLER_H
