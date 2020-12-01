@@ -96,7 +96,7 @@ jobs:
           set DOWNLOAD_FILE_SMALLCHANGE=smallchange-latest-msvc16-x64.zip
           for /f %%i in ('curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/coin3d/smallchange/releases ^| jq -r --arg SMALLCHANGE_REPO_TAG_NAME "CI-builds" ".[] | select(.tag_name==$SMALLCHANGE_REPO_TAG_NAME) | .id"') do set RELEASE_ID=%%i
           for /f %%i in ('curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/coin3d/smallchange/releases/%RELEASE_ID% ^| jq -r --arg DOWNLOAD_FILE_SMALLCHANGE "%DOWNLOAD_FILE_SMALLCHANGE%" ".assets[] | select(.name==$DOWNLOAD_FILE_SMALLCHANGE) | .id"') do set ASSET_ID=%%i
-          set DOWNLOAD_ADDRESS_SOQT=https://api.github.com/repos/coin3d/smallchange/releases/assets/%ASSET_ID%
+          set DOWNLOAD_ADDRESS_SMALLCHANGE=https://api.github.com/repos/coin3d/smallchange/releases/assets/%ASSET_ID%
           echo download file %DOWNLOAD_FILE_SMALLCHANGE% from address %DOWNLOAD_ADDRESS_SMALLCHANGE%
           curl -s -S -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" -o %DOWNLOAD_FILE_SMALLCHANGE% %DOWNLOAD_ADDRESS_SMALLCHANGE%
           7z x %DOWNLOAD_FILE_SMALLCHANGE% -ocmake_download_dir
