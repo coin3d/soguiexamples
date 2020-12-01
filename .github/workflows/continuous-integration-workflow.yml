@@ -44,7 +44,7 @@ jobs:
           DOWNLOAD_FILE_SIMVOLEON=simvoleon-latest-Ubuntu-gcc7-x64.tar.gz
           RELEASE_ID=`curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/coin3d/simvoleon/releases | jq -r --arg SIMVOLEON_REPO_TAG_NAME "CI-builds" '.[] | select(.tag_name==$SIMVOLEON_REPO_TAG_NAME) | .id'`
           ASSET_ID=`curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/coin3d/simvoleon/releases/$RELEASE_ID | jq -r --arg DOWNLOAD_FILE_SIMVOLEON "$DOWNLOAD_FILE_SIMVOLEON" '.assets[] | select(.name==$DOWNLOAD_FILE_SIMVOLEON) | .id'`
-          export DOWNLOAD_ADDRESS_SMALLCHANGE=https://api.github.com/repos/coin3d/simvoleon/releases/assets/$ASSET_ID
+          export DOWNLOAD_ADDRESS_SIMVOLEON=https://api.github.com/repos/coin3d/simvoleon/releases/assets/$ASSET_ID
           echo download file $DOWNLOAD_FILE_SIMVOLEON from address $DOWNLOAD_ADDRESS_SIMVOLEON
           curl -s -S -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" -o $DOWNLOAD_FILE_SIMVOLEON $DOWNLOAD_ADDRESS_SIMVOLEON
           tar xzf $DOWNLOAD_FILE_SIMVOLEON -C cmake_download_dir
