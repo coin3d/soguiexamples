@@ -66,6 +66,7 @@ include(GNUInstallDirs)
 # ############################################################################
 
 cmake_dependent_option(SOGUIEXAMPLES_USE_QT5 "Prefer Qt5 over Qt4 if available" ON "SOQTEXAMPLES" OFF)
+cmake_dependent_option(SOGUIEXAMPLES_USE_QT6 "Prefer Qt6 over Qt5 if available" ON "SOQTEXAMPLES" OFF)
 
 # ############################################################################
 # Find all necessary and optional So${Gui} dependencies
@@ -75,7 +76,7 @@ find_package(OpenGL REQUIRED)
 find_package(Coin REQUIRED)
 find_package(So${Gui} REQUIRED)
 
-list(APPEND SOGUIEXAMPLES_LINK_LIBRARIES So${Gui}::So${Gui} Coin::Coin)
+list(APPEND SOGUIEXAMPLES_LINK_LIBRARIES So${Gui}::So${Gui})# Coin::Coin)
 
 find_package(SmallChange)
 if(SmallChange_FOUND)
@@ -88,16 +89,28 @@ if(SIMVoleon_FOUND)
 endif()
 
 if(SOQTEXAMPLES)
-  if(SOGUIEXAMPLES_USE_QT5)
-    find_package(Qt5 COMPONENTS Core Gui OpenGL Widgets UiTools QUIET)
+  if(SOGUIEXAMPLES_USE_QT6)
+    find_package(Qt6 COMPONENTS Widgets UiTools OpenGL OpenGLWidgets QUIET)
   endif()
 
-  if(Qt5_FOUND)
-    set(SOGUIEXAMPLES_QT_TARGETS Qt5::Widgets Qt5::Gui Qt5::Core Qt5::OpenGL Qt5::UiTools)
-  else()
+  if(NOT Qt6_FOUND AND SOGUIEXAMPLES_USE_QT5)
+    find_package(Qt5 COMPONENTS Widgets UiTools OpenGL QUIET)
+  endif()
+
+  if(NOT Qt6_FOUND AND NOT Qt5_FOUND)
+    set(QT_USE_QTGUI true)
+    set(QT_USE_QTOPENGL true)
+    set(QT_USE_QTUITOOLS true)
     set(QT_USE_IMPORTED_TARGETS ON)
-    find_package(Qt4 COMPONENTS QtGui QtCore QtOpenGL QtUiTools REQUIRED)
-    set(SOGUIEXAMPLES_QT_TARGETS Qt4::QtGui Qt4::QtCore Qt4::QtOpenGL Qt4::QtUiTools)
+    find_package(Qt4 COMPONENTS QtGui QtUiTools QtOpenGL REQUIRED)
+  endif()
+
+  if(Qt6_FOUND)
+    set(SOGUIEXAMPLES_QT_TARGETS Qt6::Widgets Qt6::UiTools Qt6::OpenGL Qt6::OpenGLWidgets)
+  elseif(Qt5_FOUND)
+    set(SOGUIEXAMPLES_QT_TARGETS Qt5::Widgets Qt5::UiTools Qt5::OpenGL)
+  else()
+    set(SOGUIEXAMPLES_QT_TARGETS Qt4::QtGui Qt4::QtUiTools Qt4::QtOpenGL)
     include(${QT_USE_FILE})
   endif()
 
