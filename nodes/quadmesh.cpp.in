@@ -58,10 +58,10 @@ static float vertices[25][3] = {
 //
 // Parameters:
 //  SbVec3f sinit - scale init value
-//  SbVec3f sstep - scale step (added to sinit for each itteration)
+//  SbVec3f sstep - scale step (added to sinit for each iteration)
 //  SBVec3f rvec  - Rotation axis
 //  float rang    - Rotation angle
-//  float n       - number of itterations
+//  float n       - number of iterations
 // Return:
 //  SoSeparator *
 static SoSeparator *

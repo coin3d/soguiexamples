@@ -55,7 +55,7 @@ const float zradstep2 = float(M_PI)/20;
 const float depth = 3.0f;
 const int ncolors = 7;
 
-// Global stucture/misc
+// Global structure/misc
 struct scrollstruct {
   float position;
   int textposition;

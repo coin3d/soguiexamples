@@ -43,7 +43,7 @@
 SbVec3f * vertices;
 int32_t * con;
 
-// Function that generats the object's vertices and connections
+// Function that generates the object's vertices and connections
 // Parameters
 //  float w - width
 //  float h - height

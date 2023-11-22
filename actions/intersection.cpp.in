@@ -173,7 +173,7 @@ intersectionCB(void * closure, const SoIntersectingPrimitive * pr1, const SoInte
 SbBool
 filterCB(void * closure, const SoPath * p1, const SoPath * p2)
 {
-  // the overlayed polygons must be ignored...
+  // the overlaid polygons must be ignored...
   if ( p1->getTail() == faces || p2->getTail() == faces ) return FALSE;
   return TRUE;
 }

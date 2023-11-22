@@ -53,7 +53,7 @@
 static const char * info =
 "-------------------------------- Lorenz Attractor ------------------------------\n\
 The so called \"lorenz attractor\" was first studied by Ed N. Lorenz, \n\
-a meterologist, around 1963. It was derived from a simplified model \n\
+a meteorologist, around 1963. It was derived from a simplified model \n\
 of convention in the earths atmosphere. It also arises naturally in \n\
 models of lasers and dynamos. The system is most commonly expressed \n\
 as 3 coupled non-linear differential equations. \n\
@@ -67,7 +67,7 @@ where a = 10, b = 28, c = 8 / 3.\n\
 \n\
 \"a\" is sometimes known as the Prandtl number and \"b\" the Rayleigh number. \n\
 \n\
-The series does not form limit cyles nor does it ever reach a steady state.\n\
+The series does not form limit cycles nor does it ever reach a steady state.\n\
 Instead it is an example of deterministic chaos. As with other chaotic systems\n\
 the Lorenz system is sensitive to the initial conditions, two initial states no\n\
 matter how close will diverge, usually sooner rather than later.\n\n";

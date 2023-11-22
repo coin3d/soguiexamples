@@ -47,8 +47,8 @@ public:
   MooString( const char * string );             // constructor
   ~MooString( void );                           // destructor
 
-  //void append( const char * string );         // concatinate string
-  //void append( MooString & string );          // concatinate to string
+  //void append( const char * string );         // concatenate string
+  //void append( MooString & string );          // concatenate to string
   void append( char c );                        // append char to string
   void remove( void );                          // remove last char
   void clear( void );                           // delete char list

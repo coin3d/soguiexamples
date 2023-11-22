@@ -14,7 +14,7 @@ SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS True)
 
 IF(USE_SIM_FIND)
   # FIXME: Experimental find mechanism. Should be tested on several platforms with several
-  # configurations and someone extended before becomming the one and only thing. 20081105 larsm
+  # configurations and someone extended before becoming the one and only thing. 20081105 larsm
   INCLUDE(SimFind)
   SIM_FIND(Coin RELEASELIBNAMES Coin Coin3 Coin3s Coin4
                   DEBUGLIBNAMES Coind Coin3d Coin4d

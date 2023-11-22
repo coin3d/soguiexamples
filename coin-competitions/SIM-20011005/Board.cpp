@@ -348,7 +348,7 @@ Board::getSolution(int sol, int& i0, int& i1, int& i2, int& i3)
 }
 
 //
-// Checks if a winning condition occured after placing a token of
+// Checks if a winning condition occurred after placing a token of
 // color col at position x,y,z. Returns the solution index in solution.
 //
 bool

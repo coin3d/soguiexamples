@@ -2,11 +2,11 @@ Frequently Asked Questions for Coin related to implementation
 techniques / programming idioms.
 
 
-Section 1. Tranformations
-=========================
+Section 1. Transformations
+==========================
 
 Q1.1: I have a vector v=(x,y,z). I want to instantiate some geometry,
-      for instance a SoCylinder that is parallell with vector
+      for instance a SoCylinder that is parallel with vector
       v.  What's the "by the book" procedure for this?
 
 A:    See the parallel.cpp.in code example.

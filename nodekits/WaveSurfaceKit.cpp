@@ -216,7 +216,7 @@ void WaveSurfaceKit::idle(void)
     }
   }
 
-  // update boundary points (homogenous neumann boundary condition)
+  // update boundary points (homogeneous neumann boundary condition)
   i=0;
   for(j=1; j<h-1; j++) {
     u2(i,j) = (C*( 2*u1(i+1,j) + u1(i,j-1) + u1(i,j+1) - 4*u1(i,j) ) + 2*u1(i,j) - u0(i,j) + B*u0(i,j))/(1+B);

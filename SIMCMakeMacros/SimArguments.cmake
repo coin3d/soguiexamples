@@ -14,15 +14,15 @@
 # SIM_HAS_ARGUMENT(hasargument keyword argumentstoparse)
 # Smart argument parsing for using arguments in a CMake way, e.g
 # MY_MAGIC_MACRO(ARGUMENT1 value1 ARGUMENT2 value2 ARGUMENTLIST value31 value 32)
-# This macro checks wheter a list of arguments contains the given argument or not.
+# This macro checks whether a list of arguments contains the given argument or not.
 # Usage example:
 #   A user calls the macro MY_MACRO(DESTINATION "lib/" FILES lib1.lib lib2.lib lib3.lib)
 #   MY_MACRO calls SIM_HAS_ARGUMENT() to check if has a couple of arguments:
 #   SIM_HAS_ARGUMENT(Destination DESTINATION ${ARGV})
 #   SIM_HAS_ARGUMENT(Files FILES ${ARGV})
-#   SIM_HAS_ARGUMENT(Nonexistant NONEXISTANT ${ARGV}
+#   SIM_HAS_ARGUMENT(Nonexistent NONEXISTENT ${ARGV}
 #
-#   ${Destination} and ${Files} is now TRUE, while ${Nonexistant} is FALSE.
+#   ${Destination} and ${Files} is now TRUE, while ${Nonexistent} is FALSE.
 # Note that the result will be true regardless of if the argument has a value or not.
 MACRO(SIM_HAS_ARGUMENT hasargument keyword)
   SET(${hasargument} FALSE)
@@ -53,7 +53,7 @@ ENDMACRO(SIM_HAS_ARGUMENT)
 # Smart argument parsing for using arguments in a CMake way, e.g
 # MY_MAGIC_MACRO(ARGUMENT1 value1 ARGUMENT2 value2 ARGUMENTLIST value31 value 32)
 # This macro fetches one list of arguments after a given keyword (should be uppercase),
-# untill an all uppercase word is encountered.
+# until an all uppercase word is encountered.
 #
 # Usage example:
 #   A user calls the macro MY_MACRO(DESTINATION "lib/" FILES lib1.lib lib2.lib lib3.lib)
@@ -112,7 +112,7 @@ ENDMACRO(SIM_FETCH_ARGUMENTS)
 # Checks if arguments given by the last argument contains the required
 # arguments, and that all arguments are allowed.
 #
-# Outputs a ERROR message if one of the required arguments wasnt found,
+# Outputs an ERROR message if one of the required arguments wasn't found,
 # and sets Result to TRUE or FALSE.
 MACRO(SIM_VALIDATE_ARGUMENTS success method required allowed args)
   SET(${success} TRUE)

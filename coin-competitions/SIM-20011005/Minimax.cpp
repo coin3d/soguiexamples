@@ -80,7 +80,7 @@ Minimax::buildTree(Token col)
         int s = newnode->evaluate(col,i,j,k);
         newnode->depth = this->depth+1;
         this->children[j*4+i]=newnode;
-        if (abs(s)>=HEUR_FORCED) {  //Pre-empt winner/blocker
+        if (abs(s)>=HEUR_FORCED) {  //Preempt winner/blocker
           forcedMove = newnode;
           break;
         }

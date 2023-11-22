@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 # **************************************************************************
-# This script generats a Microsoft Developer Studio project
+# This script generates a Microsoft Developer Studio project
 # and workspace files (.dsp/.dsw) for simple projects. It hooks into
 # the Automake process as a fake compiler, building the project file
 # instead of the sources.

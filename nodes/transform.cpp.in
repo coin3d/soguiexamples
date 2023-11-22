@@ -45,7 +45,7 @@
 //  float t : translation steps
 //  float r : rotation steps
 //  float s : scaleFactor steps
-//  int n   : number of itterations
+//  int n   : number of iterations
 //  int flag: direction (must be 0)
 // Return:
 //  SoSeparator *

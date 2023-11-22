@@ -45,7 +45,7 @@ SbVec3f * vertices;
 SbVec3f * normals;
 int32_t * numvertices;
 
-// Function that generats the object's vertices, normals and number of vertices
+// Function that generates the object's vertices, normals and number of vertices
 // in each polygon.
 // Parameters
 //  float w - width

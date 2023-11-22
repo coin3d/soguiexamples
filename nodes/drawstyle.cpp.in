@@ -43,7 +43,7 @@
 // Recursive function for generating the scene graph
 // Parameters:
 //  float t    - translation step
-//  int n      - number of itterations
+//  int n      - number of iterations
 //  short flag - must be 0 when calling this function
 // Return:
 //  SoSeparator *

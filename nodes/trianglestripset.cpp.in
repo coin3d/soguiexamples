@@ -112,7 +112,7 @@ main(int, char ** argv)
 
   So@Gui@::show(window); // display the main window
   So@Gui@::mainLoop();   // main Coin event loop
-  delete viewer;      // free up alle resources occupied by viewer
+  delete viewer;      // free up all resources occupied by viewer
   root->unref();      // decrements the root's reference counter
   return 0;
 }

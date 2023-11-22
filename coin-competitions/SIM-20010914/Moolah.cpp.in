@@ -507,7 +507,7 @@ main( int argc, char ** argv )
 
   root->addChild( consol_texture );
 
-  // Define the consol's spatial coordinates ( 4:3 )
+  // Define the console's spatial coordinates ( 4:3 )
   SoCoordinate3 * coord = new SoCoordinate3;
   root->addChild(coord);
   coord->point.set1Value(0, SbVec3f(-4, -3, 0));
@@ -515,12 +515,12 @@ main( int argc, char ** argv )
   coord->point.set1Value(2, SbVec3f( 4, 3, 0));
   coord->point.set1Value(3, SbVec3f(-4, 3, 0));
 
-  // Define the consol normal
+  // Define the console's normal
   SoNormal * normal = new SoNormal;
   root->addChild( normal );
   normal->vector.set1Value( 0, SbVec3f( 0, 0, 1 ) );
 
-  // Define the consol texture coordinates
+  // Define the console's texture coordinates
   SoTextureCoordinate2 * tex_coord = new SoTextureCoordinate2;
   root->addChild( tex_coord );
   tex_coord->point.set1Value( 0, SbVec2f( 0.0f, 300.0f/512.0f ) );

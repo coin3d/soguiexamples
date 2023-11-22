@@ -2,7 +2,7 @@ INCLUDE(SimMSVC)
 
 # SIM_QT4_WRAP_CPP(outfiles infiles ... )
 MACRO(SIM_QT4_AUTO_WRAP_CPP outfiles )
-  # Clear list to be sure - QT4_WRAP_CPP doesnt do it
+  # Clear list to be sure - QT4_WRAP_CPP doesn't do it
   # FIXME: Is this what we want, really? Several of the built-in macros
   # behave as "append", not "set" - rolvs
   SET(${outfiles} )
@@ -28,7 +28,7 @@ ENDMACRO(SIM_QT4_AUTO_WRAP_CPP)
 # SIM_QT4_WRAP_ALL(outfile SOURCE infiles ... [OUTFILENAME outfilename])
 # Optimized version of SIM_QT4_WRAP_CPP(). This file
 # concats all mocs together before compiling, potentially reducing the
-# compiletime. Note that this macro requires Python.
+# compile time. Note that this macro requires Python.
 MACRO(SIM_QT4_AUTO_WRAP_ALL outfile)
   SIM_VALIDATE_ARGUMENTS(ValidArguments SIM_QT4_AUTO_WRAP_ALL
                          "SOURCES"                               # Required
@@ -221,7 +221,7 @@ ENDMACRO(SIM_CREATE_QT4_END_JOINTRUNNER)
 
 # - Set up a simple unittest, with name header and source
 # SIM_CREATE_QT4_UNITTEST(NAME HEADER SOURCE LIBRARIES...)
-#  NAME - the name of the unittest as it will be registred
+#  NAME - the name of the unittest as it will be registered
 #  HEADER - Headerfile of the testrunner
 #  SOURCE - Sourcefile, with main().
 #
@@ -256,7 +256,7 @@ ENDMACRO(SIM_CREATE_QT4_UNITTEST)
 # "basename", from the files basename.h and basename.cpp, which must exist,
 # QtTest tests, using QTEST_MAIN().
 MACRO(SIM_CREATE_QT4_UNITTEST2 name)
-    # FIXME: We are not guarranteed that the filename is .cpp - could perhaps
+    # FIXME: We are not guaranteed that the filename is .cpp - could perhaps
     # check for the other c++ extensions.
     SIM_CREATE_QT4_UNITTEST(${name} ${name}.h ${name}.cpp ${ARGN})
 ENDMACRO(SIM_CREATE_QT4_UNITTEST2)
@@ -264,7 +264,7 @@ ENDMACRO(SIM_CREATE_QT4_UNITTEST2)
 # Creates a plugin from one header and cpp file.
 # SIM_CREATE_QT_PLUGIN(targetname ...)
 # - targetname is the name of the plugin. There must be a header and a cpp
-#   file correspoding to the targetname given.
+#   file corresponding to the targetname given.
 # - remaining params are libraries that the plugin is to be linked against
 MACRO(SIM_CREATE_QT_PLUGIN targetname)
   SET(Source ${targetname}.cpp)

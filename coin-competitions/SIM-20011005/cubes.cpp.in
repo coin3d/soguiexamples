@@ -754,7 +754,7 @@ SoSeparator *create_helpscene()
   coord->point.set1Value(2, SbVec3f( 1.0f*aspect,  1.0f, 0));
   coord->point.set1Value(3, SbVec3f(-1.0f*aspect,  1.0f, 0));
 
-  // Define the consol texture coordinates
+  // Define the console's texture coordinates
   SoTextureCoordinate2 *tex_coord = new SoTextureCoordinate2;
   instructsep->addChild( tex_coord );
   tex_coord->point.set1Value(0, SbVec2f(0.0f, 1.0f));

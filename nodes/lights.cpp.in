@@ -127,7 +127,7 @@ spotlight(SbVec3f pos, SbVec3f dir, SbVec3f col)
 //  float y   : translation between each cube in the y-direction
 //  float z   : translation between each cube in the z-direction
 //  float rot : rotation angle
-//  int n     : number of itterations
+//  int n     : number of iterations
 //  int flag  : 0 = x-direction
 //              1 = y-direction
 //              2.= z-direction 

@@ -186,7 +186,7 @@ Gradient::insertTick(float t)
   int i = 0;
   QList<float>::Iterator it = PRIVATE(this)->parameters.begin();
   QList<QRgb>::Iterator it2 = PRIVATE(this)->colors.begin();
-  // it2 = it * 2 - 1, (+= operator wasnt available until Qt 3.1.0)
+  // it2 = it * 2 - 1, (+= operator wasn't available until Qt 3.1.0)
   while ((*it) < t) { i++; it++; it2++; it2++; }
   it2--;
 

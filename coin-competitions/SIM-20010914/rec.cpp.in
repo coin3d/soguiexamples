@@ -264,7 +264,7 @@ void myKeyPressCB(void *userData, SoEventCallback *eventCB){
       maxRekDepth++;
       redraw=true;
     }
-    else printf("detailled enough!\n");
+    else printf("detailed enough!\n");
     eventCB->setHandled();
   }
 

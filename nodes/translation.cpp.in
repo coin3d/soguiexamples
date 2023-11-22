@@ -44,7 +44,7 @@
 //  float x   : translation between each cube in the x-direction
 //  float y   : translation between each cube in the y-direction
 //  float z   : translation between each cube in the z-direction
-//  int n     : number of itterations
+//  int n     : number of iterations
 //  int flag  : 0 = x-direction
 //              1 = y-direction
 //              2... = z-direction

@@ -62,7 +62,7 @@ MACRO(SIM_GENERATE_MSVC_PROJECT GroupPrefix)
    SOURCE_GROUP("${RelativePath}" FILES ${Source})
  ENDFOREACH(Source)
 
- # Put all generated stuff in a seperate folder
+ # Put all generated stuff in a separate folder
  IF(HasGeneratedSources)
    SOURCE_GROUP(".generated" FILES ${GeneratedSources})
  ENDIF(HasGeneratedSources)

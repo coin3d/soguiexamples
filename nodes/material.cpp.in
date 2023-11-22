@@ -52,9 +52,9 @@
 //  float s   : scaleFactor step
 //  float ci  : init color strength
 //  float cs  : color step
-//  float tri : init transparancy
-//  float trs : transparancy step
-//  int n     : number of itterations
+//  float tri : init transparency
+//  float trs : transparency step
+//  int n     : number of iterations
 //  int flag  : Must be 0 when initialize
 // Return:
 //  SoSeparator *

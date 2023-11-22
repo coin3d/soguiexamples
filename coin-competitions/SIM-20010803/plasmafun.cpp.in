@@ -90,7 +90,7 @@ typedef struct
   unsigned char r,g,b,a;
 } myrgb;
 
-// yeah, statics :)
+// yeah, static variables :)
 static int * plasma;
 static unsigned int palette[256];
 static myrgb colors[256];

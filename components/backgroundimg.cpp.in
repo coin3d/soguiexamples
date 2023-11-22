@@ -158,7 +158,7 @@ MyExaminerViewer::MyExaminerViewer(@WIDGET@ parent, const char * filename)
 #endif // !HAVE_SOIMAGE
 
 
-  // Set up foreground, overlayed scenegraph.
+  // Set up foreground, overlaid scenegraph.
 
   this->foregroundroot = new SoSeparator;
   this->foregroundroot->ref();

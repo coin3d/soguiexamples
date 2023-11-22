@@ -38,7 +38,7 @@
     (Like for instance .pdb files.)
 
     One way to fix this could be to hook into ``make clean'' (how can
-    that be done wtih Automake) with something like this:
+    that be done with Automake) with something like this:
 
         clean-local:
         	@for file in $(noinst_PROGRAMS); do \
@@ -175,7 +175,7 @@
     I get coin warning SbTime:getMsecValue():timer overflow, during
     startup, but they seem to run fine. In addition, when running
     Smiley, I get a SoNode::GlRenderS(): GL_ERROR:
-    GL_INVALID_OPERATION; nodetype:Seperator too. Even though I try to
+    GL_INVALID_OPERATION; nodetype:Separator too. Even though I try to
     set the envvar COIN_GLERROR_DEBUGGING=1, I get the same message
     (with no more information as it promises). The app runs fine.
     ----8<------ [snip] ----------8<------ [snip] ------
@@ -190,7 +190,7 @@
     examples:
 
     ----8<------ [snip] ----------8<------ [snip] ------
-    During startup I get sbvec3::Normalize(): lenght 
+    During startup I get sbvec3::Normalize(): length 
     must be > 0, And the applications renders only black.
     ----8<------ [snip] ----------8<------ [snip] ------
 

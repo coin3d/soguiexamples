@@ -49,7 +49,7 @@ main(int, char **argv)
   @WIDGET@ window = So@Gui@::init(argv[0]); // pass the application name
   if (window==NULL) exit(1);
 
-  // Create a scene cointaining a blue sphere
+  // Create a scene containing a blue sphere
   SoSeparator *root = new SoSeparator;
   SoPerspectiveCamera *camera = new SoPerspectiveCamera;
   SoDirectionalLight *light = new SoDirectionalLight;

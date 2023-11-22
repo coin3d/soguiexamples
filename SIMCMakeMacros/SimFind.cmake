@@ -11,7 +11,7 @@
 # variables ${INCLUDE_DIR_VAR} which will be set to
 # "Library_INCLUDE_DIR".
 #
-# Should be extended with more functionallity, such as
+# Should be extended with more functionality, such as
 # integration with NSIS installers and pkgconfig support.
 # -------------------------------------------------------
 

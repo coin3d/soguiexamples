@@ -58,7 +58,7 @@ unsigned char * mandelbmp = new unsigned char[texturewidth*textureheight];
 //  int height          = height of the bitmap
 //  int mult            = number to multiply each oolor by
 //  unsigned char * bmp = pointer to bitmap
-//  int n               = number of itterations.
+//  int n               = number of iterations.
 void
 mandel(double sr, double si, double width, double height,
        int bwidth, int bheight, int mult, unsigned char * bmp, int n)

@@ -559,7 +559,7 @@ cvs2cl script used to generate this file.
 
 	* cfg/m4/msvccc.m4:
 	
-	Protect against multiple invokations - which isn't supported.
+	Protect against multiple invocations - which isn't supported.
 
 2001-01-11 21:25  larsa
 
@@ -1193,7 +1193,7 @@ cvs2cl script used to generate this file.
 	* cfg/m4/check_inventor.m4:
 	
 	SIM_AC_HAVE_INVENTOR_IMAGE_IFELSE: New macro to detect if -limage
-	can be used.  SIM_CHECK_INVENTOR: reomved -limage from link line.
+	can be used.  SIM_CHECK_INVENTOR: removed -limage from link line.
 
 2000-10-02 15:33  mortene
 
@@ -2557,7 +2557,7 @@ cvs2cl script used to generate this file.
 
 	* cfg/m4/simage.m4:
 	
-	Commited macro for simage library detection.
+	Committed macro for simage library detection.
 
 2000-01-22 18:35  mortene
 
