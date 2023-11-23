@@ -65,21 +65,21 @@ jobs:
         echo download file $DOWNLOAD_FILE_COIN from address $DOWNLOAD_ADDRESS_COIN
         curl -s -S -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" -o $DOWNLOAD_FILE_COIN $DOWNLOAD_ADDRESS_COIN
         tar xzf $DOWNLOAD_FILE_COIN -C cmake_download_dir
-        DOWNLOAD_FILE_SOQT=soqt-latest-Ubuntu2004-gcc9-x64.tar.gz
+        DOWNLOAD_FILE_SOQT=soqt-latest-Qt5-Ubuntu2004-gcc9-x64.tar.gz
         RELEASE_ID=`curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/coin3d/soqt/releases | jq -r --arg SOQT_REPO_TAG_NAME "CI-builds" '.[] | select(.tag_name==$SOQT_REPO_TAG_NAME) | .id'`
         ASSET_ID=`curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/coin3d/soqt/releases/$RELEASE_ID | jq -r --arg DOWNLOAD_FILE_SOQT "$DOWNLOAD_FILE_SOQT" '.assets[] | select(.name==$DOWNLOAD_FILE_SOQT) | .id'`
         export DOWNLOAD_ADDRESS_SOQT=https://api.github.com/repos/coin3d/soqt/releases/assets/$ASSET_ID
         echo download file $DOWNLOAD_FILE_SOQT from address $DOWNLOAD_ADDRESS_SOQT
         curl -s -S -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" -o $DOWNLOAD_FILE_SOQT $DOWNLOAD_ADDRESS_SOQT
         tar xzf $DOWNLOAD_FILE_SOQT -C cmake_download_dir
-        DOWNLOAD_FILE_SMALLCHANGE=smallchange-latest-Ubuntu2004-gcc9-x64.tar.gz
+        DOWNLOAD_FILE_SMALLCHANGE=smallchange-Qt5-latest-Ubuntu2004-gcc9-x64.tar.gz
         RELEASE_ID=`curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/coin3d/smallchange/releases | jq -r --arg SMALLCHANGE_REPO_TAG_NAME "CI-builds" '.[] | select(.tag_name==$SMALLCHANGE_REPO_TAG_NAME) | .id'`
         ASSET_ID=`curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/coin3d/smallchange/releases/$RELEASE_ID | jq -r --arg DOWNLOAD_FILE_SMALLCHANGE "$DOWNLOAD_FILE_SMALLCHANGE" '.assets[] | select(.name==$DOWNLOAD_FILE_SMALLCHANGE) | .id'`
         export DOWNLOAD_ADDRESS_SMALLCHANGE=https://api.github.com/repos/coin3d/smallchange/releases/assets/$ASSET_ID
         echo download file $DOWNLOAD_FILE_SMALLCHANGE from address $DOWNLOAD_ADDRESS_SMALLCHANGE
         curl -s -S -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" -o $DOWNLOAD_FILE_SMALLCHANGE $DOWNLOAD_ADDRESS_SMALLCHANGE
         tar xzf $DOWNLOAD_FILE_SMALLCHANGE -C cmake_download_dir
-        DOWNLOAD_FILE_SIMVOLEON=simvoleon-latest-Ubuntu2004-gcc9-x64.tar.gz
+        DOWNLOAD_FILE_SIMVOLEON=simvoleon-latest-Qt5-Ubuntu2004-gcc9-x64.tar.gz
         RELEASE_ID=`curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/coin3d/simvoleon/releases | jq -r --arg SIMVOLEON_REPO_TAG_NAME "CI-builds" '.[] | select(.tag_name==$SIMVOLEON_REPO_TAG_NAME) | .id'`
         ASSET_ID=`curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/coin3d/simvoleon/releases/$RELEASE_ID | jq -r --arg DOWNLOAD_FILE_SIMVOLEON "$DOWNLOAD_FILE_SIMVOLEON" '.assets[] | select(.name==$DOWNLOAD_FILE_SIMVOLEON) | .id'`
         export DOWNLOAD_ADDRESS_SIMVOLEON=https://api.github.com/repos/coin3d/simvoleon/releases/assets/$ASSET_ID
