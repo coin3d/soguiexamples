@@ -1,5 +1,4 @@
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #moirepatterns example
 configure_file(moirepatterns.cpp.in moirepatterns.cpp)

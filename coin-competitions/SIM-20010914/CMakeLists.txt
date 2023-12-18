@@ -1,5 +1,4 @@
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #moolah example
 configure_file(Moolah.cpp.in Moolah.cpp)

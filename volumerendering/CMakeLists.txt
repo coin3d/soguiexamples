@@ -1,9 +1,8 @@
 if(Qt6_FOUND OR Qt5_FOUND OR Qt4_FOUND)
-  set(CMAKE_AUTOMOC TRUE)
-  set(CMAKE_AUTOUIC TRUE)
+  set(CMAKE_AUTOMOC ON)
+  set(CMAKE_AUTOUIC ON)
 
-  include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  include_directories(${CMAKE_CURRENT_BINARY_DIR})
+  set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
   add_subdirectory(Cute)
 

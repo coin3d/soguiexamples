@@ -1,5 +1,4 @@
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #configure files
 configure_file(SoGuiSnapshotViewer.h.in SoGuiSnapshotViewer.h)

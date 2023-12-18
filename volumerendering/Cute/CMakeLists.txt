@@ -1,8 +1,8 @@
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/curvep
   ${CMAKE_CURRENT_BINARY_DIR}/gradientp
-  ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 set(cute_SRC

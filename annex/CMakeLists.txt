@@ -1,6 +1,5 @@
 include_directories(${Coin_INCLUDE_DIR}/Inventor/annex)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #hardcopy example
 configure_file(hardcopy.cpp.in hardcopy.cpp)

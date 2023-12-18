@@ -1,27 +1,25 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(Gui "Qt" CACHE STRING "Target GUI for the examples")
-set_property(CACHE Gui PROPERTY STRINGS Qt Xt Win)
+set(Gui "Qt" CACHE STRING "Target GUI for the GUI toolkit examples")
+set(GuiValues "Qt;Xt;Win;Wx" CACHE INTERNAL "List of supported values for the Gui cache variable")
+set_property(CACHE Gui PROPERTY STRINGS ${GuiValues})
 message(STATUS "Gui='${Gui}'")
 
 # ############################################################################
 
 if(Gui STREQUAL "Qt")
   set(SOQTEXAMPLES TRUE)
-  set(GUI QT)
   set(WIDGET QWidget*)
 elseif(Gui STREQUAL "Xt")
-  set(GUI XT)
   set(WIDGET Widget)
 elseif(Gui STREQUAL "Win")
-  set(GUI WIN)
   set(WIDGET HWND)
 elseif(Gui STREQUAL "Wx")
-  set(GUI WX)
   set(WIDGET wxWindow*)
 else()
   message(FATAL_ERROR "Only Qt, Win, Xt and Wx supported: please set Gui to one of these values")
 endif()
+string(TOUPPER ${Gui} GUI)
 
 project(So${Gui}Examples VERSION 1.0.0)
 string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
