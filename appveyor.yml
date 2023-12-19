@@ -260,7 +260,7 @@ before_build:
       rem ##############
       if defined APPVEYOR_REPO_TAG_NAME (set SMALLCHANGE_REPO_VERSION=%SMALLCHANGE_VERSION%) else (set SMALLCHANGE_REPO_VERSION=latest)
       if defined APPVEYOR_REPO_TAG_NAME (set SMALLCHANGE_REPO_TAG_NAME=v%SMALLCHANGE_VERSION%) else (set SMALLCHANGE_REPO_TAG_NAME=CI-builds)
-      set DOWNLOAD_FILE_SMALLCHANGE=soqt-%SMALLCHANGE_REPO_VERSION%-%QT_ID%-%COMPILER_ID%-%CMAKE_PLATFORM%.zip
+      set DOWNLOAD_FILE_SMALLCHANGE=smallchange-%SMALLCHANGE_REPO_VERSION%-%QT_ID%-%COMPILER_ID%-%CMAKE_PLATFORM%.zip
       for /f %%i in ('curl -s -H "Authorization: token %GH_AUTH_TOKEN%" https://api.github.com/repos/coin3d/smallchange/releases ^| jq -r --arg SMALLCHANGE_REPO_TAG_NAME "%SMALLCHANGE_REPO_TAG_NAME%" ".[] | select(.tag_name==$SMALLCHANGE_REPO_TAG_NAME) | .id"') do set RELEASE_ID=%%i
       for /f %%i in ('curl -s -H "Authorization: token %GH_AUTH_TOKEN%" https://api.github.com/repos/coin3d/smallchange/releases/%RELEASE_ID% ^| jq -r --arg DOWNLOAD_FILE_SMALLCHANGE "%DOWNLOAD_FILE_SMALLCHANGE%" ".assets[] | select(.name==$DOWNLOAD_FILE_SMALLCHANGE) | .id"') do set ASSET_ID=%%i
       set DOWNLOAD_ADDRESS_SMALLCHANGE=https://api.github.com/repos/coin3d/smallchange/releases/assets/%ASSET_ID%
@@ -270,7 +270,7 @@ before_build:
       rem ##############
       if defined APPVEYOR_REPO_TAG_NAME (set SIMVOLEON_REPO_VERSION=%SIMVOLEON_VERSION%) else (set SIMVOLEON_REPO_VERSION=latest)
       if defined APPVEYOR_REPO_TAG_NAME (set SIMVOLEON_REPO_TAG_NAME=v%SIMVOLEON_VERSION%) else (set SIMVOLEON_REPO_TAG_NAME=CI-builds)
-      set DOWNLOAD_FILE_SIMVOLEON=soqt-%SIMVOLEON_REPO_VERSION%-%QT_ID%-%COMPILER_ID%-%CMAKE_PLATFORM%.zip
+      set DOWNLOAD_FILE_SIMVOLEON=simvoleon-%SIMVOLEON_REPO_VERSION%-%QT_ID%-%COMPILER_ID%-%CMAKE_PLATFORM%.zip
       for /f %%i in ('curl -s -H "Authorization: token %GH_AUTH_TOKEN%" https://api.github.com/repos/coin3d/simvoleon/releases ^| jq -r --arg SIMVOLEON_REPO_TAG_NAME "%SIMVOLEON_REPO_TAG_NAME%" ".[] | select(.tag_name==$SIMVOLEON_REPO_TAG_NAME) | .id"') do set RELEASE_ID=%%i
       for /f %%i in ('curl -s -H "Authorization: token %GH_AUTH_TOKEN%" https://api.github.com/repos/coin3d/simvoleon/releases/%RELEASE_ID% ^| jq -r --arg DOWNLOAD_FILE_SIMVOLEON "%DOWNLOAD_FILE_SIMVOLEON%" ".assets[] | select(.name==$DOWNLOAD_FILE_SIMVOLEON) | .id"') do set ASSET_ID=%%i
       set DOWNLOAD_ADDRESS_SIMVOLEON=https://api.github.com/repos/coin3d/simvoleon/releases/assets/%ASSET_ID%
@@ -325,7 +325,7 @@ before_build:
       ###############
       if [ -n "${APPVEYOR_REPO_TAG_NAME}" ]; then export SMALLCHANGE_REPO_VERSION=$SMALLCHANGE_VERSION; else export SMALLCHANGE_REPO_VERSION=latest; fi
       if [ -n "${APPVEYOR_REPO_TAG_NAME}" ]; then export SMALLCHANGE_REPO_TAG_NAME=v$SMALLCHANGE_VERSION; else export SMALLCHANGE_REPO_TAG_NAME=CI-builds; fi
-      DOWNLOAD_FILE_SMALLCHANGE=soqt-$SMALLCHANGE_REPO_VERSION-$QT_ID-$COMPILER_ID-$CMAKE_PLATFORM.tar.gz
+      DOWNLOAD_FILE_SMALLCHANGE=smallchange-$SMALLCHANGE_REPO_VERSION-$QT_ID-$COMPILER_ID-$CMAKE_PLATFORM.tar.gz
       RELEASE_ID=`curl -s -H "Authorization: token $GH_AUTH_TOKEN" https://api.github.com/repos/coin3d/smallchange/releases | jq -r --arg SMALLCHANGE_REPO_TAG_NAME "$SMALLCHANGE_REPO_TAG_NAME" '.[] | select(.tag_name==$SMALLCHANGE_REPO_TAG_NAME) | .id'`
       ASSET_ID=`curl -s -H "Authorization: token $GH_AUTH_TOKEN" https://api.github.com/repos/coin3d/smallchange/releases/$RELEASE_ID | jq -r --arg DOWNLOAD_FILE_SMALLCHANGE "$DOWNLOAD_FILE_SMALLCHANGE" '.assets[] | select(.name==$DOWNLOAD_FILE_SMALLCHANGE) | .id'`
       export DOWNLOAD_ADDRESS_SMALLCHANGE=https://api.github.com/repos/coin3d/smallchange/releases/assets/$ASSET_ID
@@ -335,7 +335,7 @@ before_build:
       ###############
       if [ -n "${APPVEYOR_REPO_TAG_NAME}" ]; then export SIMVOLEON_REPO_VERSION=$SIMVOLEON_VERSION; else export SIMVOLEON_REPO_VERSION=latest; fi
       if [ -n "${APPVEYOR_REPO_TAG_NAME}" ]; then export SIMVOLEON_REPO_TAG_NAME=v$SIMVOLEON_VERSION; else export SIMVOLEON_REPO_TAG_NAME=CI-builds; fi
-      DOWNLOAD_FILE_SIMVOLEON=soqt-$SIMVOLEON_REPO_VERSION-$QT_ID-$COMPILER_ID-$CMAKE_PLATFORM.tar.gz
+      DOWNLOAD_FILE_SIMVOLEON=simvoleon-$SIMVOLEON_REPO_VERSION-$QT_ID-$COMPILER_ID-$CMAKE_PLATFORM.tar.gz
       RELEASE_ID=`curl -s -H "Authorization: token $GH_AUTH_TOKEN" https://api.github.com/repos/coin3d/simvoleon/releases | jq -r --arg SIMVOLEON_REPO_TAG_NAME "$SIMVOLEON_REPO_TAG_NAME" '.[] | select(.tag_name==$SIMVOLEON_REPO_TAG_NAME) | .id'`
       ASSET_ID=`curl -s -H "Authorization: token $GH_AUTH_TOKEN" https://api.github.com/repos/coin3d/simvoleon/releases/$RELEASE_ID | jq -r --arg DOWNLOAD_FILE_SIMVOLEON "$DOWNLOAD_FILE_SIMVOLEON" '.assets[] | select(.name==$DOWNLOAD_FILE_SIMVOLEON) | .id'`
       export DOWNLOAD_ADDRESS_SIMVOLEON=https://api.github.com/repos/coin3d/simvoleon/releases/assets/$ASSET_ID
