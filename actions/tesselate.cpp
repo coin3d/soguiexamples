@@ -69,7 +69,7 @@ find_coord3_idx(const SoCoordinate3 * c, const SbVec3f & v)
 #else // __COIN__
 
   // FIXME: the run-time of this algorithm could quickly get very
-  // ugly.. like O(n²)-time ugly. Use an oct-tree or something to
+  // ugly.. like O(n^2)-time ugly. Use an oct-tree or something to
   // fix. 20011009 mortene.
   int size = c->point.getNum();
   for (int i=0; i < size; i++) {

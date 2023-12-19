@@ -56,7 +56,12 @@ public:
                const Gradient & g = Gradient(), 
                QWidget * parent = 0, 
                const char * name = 0, 
-               Qt::WindowFlags f = 0);
+#if QT_VERSION >= 0x050F00
+               Qt::WindowFlags f = Qt::WindowFlags()
+#else
+               Qt::WindowFlags f = 0
+#endif
+  );
   
   ~GradientView();
 

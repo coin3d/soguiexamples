@@ -171,7 +171,11 @@ GradientView::updateView(void)
 void
 GradientView::mousePressEvent(QMouseEvent * e)
 {
+#if QT_VERSION >= 0x050D00
+  QPoint p = transform().inverted().map(e->pos());
+#else
   QPoint p = matrix().inverted().map(e->pos());
+#endif
 
   switch (e->button()) {
   case Qt::LeftButton:
@@ -206,7 +210,11 @@ GradientView::mousePressEvent(QMouseEvent * e)
   case Qt::RightButton:
     if ((this->currenttick != -1) || (this->segmentidx != -1)) {
       this->buildMenu();
+#if QT_VERSION >= 0x060000
+      if (this->menu->exec(e->globalPosition().toPoint())) {
+#else
       if (this->menu->exec(e->globalPos())) {
+#endif
         // FIXME: this seems unnecessary. 20031008 mortene.
         delete this->menu;
         this->menu = NULL;
@@ -230,7 +238,11 @@ GradientView::mouseMoveEvent(QMouseEvent * e)
 {
   if (this->mousepressed) {
     if (this->currenttick == -1) { return; }
+#if QT_VERSION >= 0x050D00
+    QPoint p = transform().inverted().map(e->pos());
+#else
     QPoint p = matrix().inverted().map(e->pos());
+#endif
     int x = p.x();
 
     assert(this->currenttick > 0);
@@ -253,13 +265,21 @@ GradientView::mouseMoveEvent(QMouseEvent * e)
 
       const float value = t * (this->max - this->min) + 0.5f;
       QString s;
+#if QT_VERSION >= 0x050E00
+      s = QString("Color table index: %1").arg((int)(value + 0.5f));
+#else
       s.sprintf("Color table index: %d", (int)(value + 0.5f));
+#endif
       this->statusbar->showMessage(s);
 
       emit this->viewChanged();
     }
   } else {
+#if QT_VERSION >= 0x050D00
+    QPoint p = transform().inverted().map(e->pos());
+#else
     QPoint p = matrix().inverted().map(e->pos());
+#endif
     float t = (float)p.x() / (float)this->width();
     // this test should not be necessary, however the mouse coordinates from
     // the mouse event can sometimes be out of bounds, i.e. they can sometimes
@@ -267,7 +287,11 @@ GradientView::mouseMoveEvent(QMouseEvent * e)
     if ((t >= 0.0f) && (t <= 1.0f)) {
       QRgb col = this->grad.eval(t);
       QString s;
+#if QT_VERSION >= 0x050E00
+      s = QString("RGBA: 0x%1%2%3%4").arg(qRed(col), 2, 16, '0').arg(qGreen(col), 2, 16, '0').arg(qBlue(col, 2, 16, '0').arg(qAlpha(col, 2, 16, '0'));
+#else
       s.sprintf("RGBA: 0x%02x%02x%02x%02x", qRed(col), qGreen(col), qBlue(col), qAlpha(col));
+#endif
       this->statusbar->showMessage(s);
     }
   }

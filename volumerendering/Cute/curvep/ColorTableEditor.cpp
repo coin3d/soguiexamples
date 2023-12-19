@@ -154,7 +154,11 @@ SoQtColorTableEditor::SoQtColorTableEditor(int numcolors, QWidget * parent, cons
   this->setSizePolicy(sizepolicy);
 
   QGridLayout * toplayout = new QGridLayout(this);
+#if QT_VERSION >= 0x050000
+  toplayout->setContentsMargins(10, 10, 10, 10);
+#else
   toplayout->setMargin(10);
+#endif
   QVBoxLayout * buttonlayout = new QVBoxLayout();
 
   QGroupBox * controlgroup = new QGroupBox(this);

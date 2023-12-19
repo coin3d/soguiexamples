@@ -90,7 +90,7 @@ main(
   }
 
   (void)fprintf( stdout, "PointSet contains a total of %d points.\n\n", num );
-  (void)fprintf( stdout, "Spin the pointset to see the moiré patterns change.\n" );
+  (void)fprintf( stdout, "Spin the pointset to see the moirÃ¨ patterns change.\n" );
   (void)fprintf( stdout, "You can also change between perspective camera and\n" );
   (void)fprintf( stdout, "orthographic camera to get different types of patterns.\n" );
   (void)fprintf( stdout, "\n" );
@@ -128,7 +128,7 @@ main(
   // set up viewer
   So@Gui@ExaminerViewer * viewer = new So@Gui@ExaminerViewer( window );
   viewer->setSceneGraph( root );
-  viewer->setTitle( "Moiré Patterns" );
+  viewer->setTitle( "MoirÃ¨ Patterns" );
   viewer->show();
   
   So@Gui@::show( window );

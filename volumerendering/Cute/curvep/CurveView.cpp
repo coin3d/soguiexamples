@@ -141,7 +141,11 @@ void CurveView::contentsMousePressEvent(QMouseEvent* e)
   if (e->button() == Qt::LeftButton) {
     this->mousepressed = TRUE;
   }
+#if QT_VERSION >= 0x050D00
+  QPoint p = transform().inverted().map(e->pos());
+#else
   QPoint p = matrix().inverted().map(e->pos());
+#endif
   this->movingstart = p;
   this->lastpos = p;
   QList<QGraphicsItem*> list = this->canvas->items(p);

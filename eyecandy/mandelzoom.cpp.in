@@ -208,7 +208,7 @@ Landscape::~Landscape(void)
  
 void
 Landscape::createJulia(int n) { 
-  register double zr, zr_old, zi, cr, ci; 
+  double zr, zr_old, zi, cr, ci; 
   int w,minw=293284296;
   static int oldw = 0;
 

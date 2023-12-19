@@ -53,8 +53,8 @@ static SoCoordinate3 * pickpoints = NULL;
 
 // Calculates azimuth angle for the "directionvec" input argument. An
 // azimuth angle is the angle of a vector versus the direction of
-// compass north, where 0° means the input vector points straight
-// north, 90° is east, 180° south and 270° is west.
+// compass north, where 0Â° means the input vector points straight
+// north, 90Â° is east, 180Â° south and 270Â° is west.
 static float
 azimuth_angle(SbVec3f north, SbVec3f east, SbVec3f directionvec)
 {

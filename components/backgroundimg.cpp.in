@@ -230,7 +230,7 @@ MyExaminerViewer::actualRedraw(void)
   So@Gui@ExaminerViewer::actualRedraw();
 
 
-  // Increase arrow angle with 1/1000 ° every frame.
+  // Increase arrow angle with 1/1000 Â° every frame.
   arrowrotation->angle = arrowrotation->angle.getValue() + (0.001f / float(M_PI) * 180);
   // Render overlay front scenegraph.
   glClear(GL_DEPTH_BUFFER_BIT);
