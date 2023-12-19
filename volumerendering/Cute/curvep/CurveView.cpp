@@ -186,7 +186,11 @@ CurveView::contentsMouseReleaseEvent(QMouseEvent * e)
 void
 CurveView::contentsMouseMoveEvent(QMouseEvent* e)
 {
+#if QT_VERSION >= 0x050D00
+  QPoint p = transform().inverted().map(e->pos());
+#else
   QPoint p = matrix().inverted().map(e->pos());
+#endif
 
   if (this->curvemode == CurveView::SMOOTH) {
     // change the cursor if it is over a control point

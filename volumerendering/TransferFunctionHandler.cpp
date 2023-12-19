@@ -85,9 +85,17 @@ TransferFunctionHandler::initGUI(void)
   this->ctrl->highEdit->setValidator(v);
 
   QString s;
+#if QT_VERSION >= 0x050E00
+  s = QString("%1").arg(this->remap[0]);
+#else
   s.sprintf("%d", this->remap[0]);
+#endif
   this->ctrl->lowEdit->setText(s);
+#if QT_VERSION >= 0x050E00
+  s = QString("%1").arg(this->remap[1]);
+#else
   s.sprintf("%d", this->remap[1]);
+#endif
   this->ctrl->highEdit->setText(s);
 
   QObject::connect(this->ctrl->lowEdit, SIGNAL(returnPressed()),
@@ -112,9 +120,17 @@ TransferFunctionHandler::initGUI(void)
   this->ctrl->shiftEdit->setValidator(v);
   this->ctrl->offsetEdit->setValidator(v);
 
+#if QT_VERSION >= 0x050E00
+  s = QString("%1").arg(this->node->shift.getValue());
+#else
   s.sprintf("%d", this->node->shift.getValue());
+#endif
   this->ctrl->shiftEdit->setText(s);
+#if QT_VERSION >= 0x050E00
+  s = QString("%1").arg(this->node->offset.getValue());
+#else
   s.sprintf("%d", this->node->offset.getValue());
+#endif
   this->ctrl->offsetEdit->setText(s);
 
   QObject::connect(this->ctrl->shiftEdit, SIGNAL(returnPressed()),

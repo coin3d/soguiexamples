@@ -93,7 +93,11 @@ OrthoSliceHandler::initGUI(void)
 
 
   QString s;
+#if QT_VERSION >= 0x050E00
+  s = QString("%1").arg(this->node->sliceNumber.getValue());
+#else
   s.sprintf("%d", this->node->sliceNumber.getValue());
+#endif
   this->ctrl->sliceNumberEdit->setText(s);
 
   QObject::connect(this->ctrl->sliceNumberEdit, SIGNAL(returnPressed()),
@@ -142,7 +146,11 @@ OrthoSliceHandler::sliceNumberSliderUpdate(int val)
   this->node->sliceNumber = val;
 
   QString s;
+#if QT_VERSION >= 0x050E00
+  s = QString("%1").arg(val);
+#else
   s.sprintf("%d", val);
+#endif
   this->ctrl->sliceNumberEdit->setText(s);
 }
 

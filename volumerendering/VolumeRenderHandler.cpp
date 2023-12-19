@@ -95,7 +95,11 @@ VolumeRenderHandler::initGUI(void)
 
 
   QString s;
+#if QT_VERSION >= 0x050E00
+  s = QString("%1").arg(this->node->numSlices.getValue());
+#else
   s.sprintf("%d", this->node->numSlices.getValue());
+#endif
   this->ctrl->numSlicesEdit->setText(s);
 
   QObject::connect(this->ctrl->numSlicesEdit, SIGNAL(returnPressed()),
@@ -145,7 +149,11 @@ VolumeRenderHandler::numSlicesSliderUpdate(int val)
   this->node->numSlices = val;
 
   QString s;
+#if QT_VERSION >= 0x050E00
+  s = QString("%1").arg(val);
+#else
   s.sprintf("%d", val);
+#endif
   this->ctrl->numSlicesEdit->setText(s);
 }
 
