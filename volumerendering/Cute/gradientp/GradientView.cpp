@@ -288,7 +288,11 @@ GradientView::mouseMoveEvent(QMouseEvent * e)
       QRgb col = this->grad.eval(t);
       QString s;
 #if QT_VERSION >= 0x050E00
-      s = QString("RGBA: 0x%1%2%3%4").arg(qRed(col), 2, 16, '0').arg(qGreen(col), 2, 16, '0').arg(qBlue(col), 2, 16, '0').arg(qAlpha(col), 2, 16, '0');
+      s = QString("RGBA: 0x%1%2%3%4")
+             .arg(qRed(col), 2, 16, QChar('0'))
+             .arg(qGreen(col), 2, 16, QChar('0'))
+             .arg(qBlue(col), 2, 16, QChar('0'))
+             .arg(qAlpha(col), 2, 16, QChar('0'));
 #else
       s.sprintf("RGBA: 0x%02x%02x%02x%02x", qRed(col), qGreen(col), qBlue(col), qAlpha(col));
 #endif
