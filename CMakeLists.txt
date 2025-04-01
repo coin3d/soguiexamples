@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.0...3.29)
 
 set(Gui "Qt" CACHE STRING "Target GUI for the GUI toolkit examples")
 set(GuiValues "Qt;Xt;Win;Wx" CACHE INTERNAL "List of supported values for the Gui cache variable")
